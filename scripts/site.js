@@ -398,7 +398,7 @@
     // regions so later passes cannot re-tokenize inside them.
     var store = [];
     function stash(cls, text) {
-      var token = " " + store.length + " ";
+      var token = " " + String.fromCharCode(0xF000 + store.length) + " ";
       store.push('<span class="' + cls + '">' + text + "</span>");
       return token;
     }
@@ -439,8 +439,8 @@
     }
 
     // Restore placeholders.
-    out = out.replace(/ (\d+) /g, function (_, i) {
-      return store[Number(i)];
+    out = out.replace(/ ([\uF000-\uF8FF]) /g, function (_, ch) {
+      return store[ch.charCodeAt(0) - 0xF000];
     });
     return out;
   }
@@ -449,7 +449,7 @@
     // For html: comments, tags, attribute strings.
     var store = [];
     function stash(cls, text) {
-      var token = " " + store.length + " ";
+      var token = " " + String.fromCharCode(0xF000 + store.length) + " ";
       store.push('<span class="' + cls + '">' + text + "</span>");
       return token;
     }
@@ -473,8 +473,8 @@
       return stash("tok-string", m);
     });
 
-    out = out.replace(/ (\d+) /g, function (_, i) {
-      return store[Number(i)];
+    out = out.replace(/ ([\uF000-\uF8FF]) /g, function (_, ch) {
+      return store[ch.charCodeAt(0) - 0xF000];
     });
     return out;
   }
@@ -482,7 +482,7 @@
   function highlightCss(escaped) {
     var store = [];
     function stash(cls, text) {
-      var token = " " + store.length + " ";
+      var token = " " + String.fromCharCode(0xF000 + store.length) + " ";
       store.push('<span class="' + cls + '">' + text + "</span>");
       return token;
     }
@@ -505,8 +505,8 @@
     out = out.replace(/@[a-zA-Z-]+/g, function (m) {
       return stash("tok-keyword", m);
     });
-    out = out.replace(/ (\d+) /g, function (_, i) {
-      return store[Number(i)];
+    out = out.replace(/ ([\uF000-\uF8FF]) /g, function (_, ch) {
+      return store[ch.charCodeAt(0) - 0xF000];
     });
     return out;
   }

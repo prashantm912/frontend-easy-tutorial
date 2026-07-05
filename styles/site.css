@@ -16,6 +16,7 @@
   --accent-contrast: #ffffff;
   --code-bg: #f3f5f8;
   --code-text: #1b1f24;
+  --code-sel: rgba(11, 99, 206, 0.22);   /* translucent editor selection */
   --preview-bg: #ffffff;
 
   /* Syntax token colors */
@@ -53,6 +54,7 @@
   --accent-contrast: #0f1319;
   --code-bg: #12171e;
   --code-text: #e6edf3;
+  --code-sel: rgba(77, 156, 255, 0.32);   /* translucent editor selection */
   --preview-bg: #ffffff;
 
   --tok-comment: #8b949e;
@@ -538,8 +540,14 @@ kbd {
   overflow: hidden;            /* auto-grow replaces the inner scrollbar */
 }
 
+/* Translucent highlight so the colored <pre> text stays visible when the
+   (transparent-text) textarea is selected. An opaque color would hide it. */
 .code-wrap > .code::selection {
-  background: var(--accent-weak);
+  background: var(--code-sel);
+  color: transparent;
+}
+.code-wrap > .code::-moz-selection {
+  background: var(--code-sel);
   color: transparent;
 }
 
