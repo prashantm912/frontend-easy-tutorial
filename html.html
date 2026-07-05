@@ -1,0 +1,2594 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML — DevDocs</title>
+  <meta name="description" content="A concept-by-concept HTML reference covering semantics, text, links, media, forms, accessibility, metadata, templates, data attributes, and web components.">
+  <link rel="stylesheet" href="styles/site.css">
+  <script src="scripts/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html">DevDocs</a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="html.html">HTML</a>
+      <a href="css.html">CSS</a>
+      <a href="javascript.html">JavaScript</a>
+      <a href="typescript.html">TypeScript</a>
+    </nav>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme</button>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="toc" aria-label="On this page">
+        <label class="toc-search-label" for="toc-search">Filter topics</label>
+        <input type="search" id="toc-search" class="toc-search" placeholder="Type to filter…" autocomplete="off">
+        <ul class="toc-list">
+          <li><a href="#structure-semantics">Structure &amp; semantics</a></li>
+          <li><a href="#text-elements">Text elements</a></li>
+          <li><a href="#links-media">Links &amp; media</a></li>
+          <li><a href="#forms-validation">Forms &amp; validation</a></li>
+          <li><a href="#accessibility-aria">Accessibility &amp; ARIA</a></li>
+          <li><a href="#document-metadata">Document metadata</a></li>
+          <li><a href="#templates-slots">Templates &amp; slots</a></li>
+          <li><a href="#data-attributes">Data attributes</a></li>
+          <li><a href="#web-components">Web components</a></li>
+          <li><a href="#progressive-enhancement">Progressive enhancement</a></li>
+          <li><a href="#feature-detection">Feature detection in markup</a></li>
+          <li><a href="#canvas-element">The canvas element</a></li>
+          <li><a href="#contact-links">Contact links</a></li>
+          <li><a href="#structured-data-employee">Structured data for an employee</a></li>
+          <li><a href="#data-tables">Data tables</a></li>
+          <li><a href="#audio-video">Audio &amp; video</a></li>
+          <li><a href="#embedded-content">Embedding external content</a></li>
+          <li><a href="#character-references">Character references &amp; escaping</a></li>
+          <li><a href="#global-attributes">Global attributes</a></li>
+          <li><a href="#advanced-form-controls">Advanced form controls</a></li>
+          <li><a href="#dialog-popover">Modal dialogs &amp; popovers</a></li>
+          <li><a href="#inline-svg">Inline SVG</a></li>
+          <li><a href="#resource-loading">Loading scripts &amp; resources</a></li>
+          <li><a href="#drag-and-drop">Native drag &amp; drop</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main id="main" class="content">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> <span aria-hidden="true">/</span> <span aria-current="page">HTML</span>
+      </nav>
+      <h1>HTML</h1>
+      <p class="overview">HTML is the structural layer of the web: it describes what content <em>means</em>, not how it looks. This page moves concept by concept from the document skeleton and semantic elements through text, links, media, forms, and accessibility, then into the platform's more advanced building blocks — metadata, templates and slots, data attributes, custom elements, and the progressive-enhancement mindset that ties them together. Every runnable example edits live; change the code and press Run.</p>
+
+      <section id="structure-semantics" class="concept" tabindex="-1">
+        <h2>Structure &amp; semantics</h2>
+        <p>Every HTML document is a tree. The <code>&lt;!doctype html&gt;</code> declaration switches the browser into standards mode, <code>&lt;html&gt;</code> is the root, <code>&lt;head&gt;</code> holds metadata, and <code>&lt;body&gt;</code> holds rendered content. Inside the body, <em>semantic</em> elements name the role of each region: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;aside&gt;</code>, and <code>&lt;footer&gt;</code>.</p>
+        <p>Reach for the element whose meaning matches the content. <code>&lt;article&gt;</code> is a self-contained, independently distributable unit (a blog post, a comment, a product card). <code>&lt;section&gt;</code> is a thematic grouping that usually carries a heading. <code>&lt;aside&gt;</code> is tangential content, and <code>&lt;figure&gt;</code> with <code>&lt;figcaption&gt;</code> associates an illustration with its caption. A document should contain exactly one <code>&lt;main&gt;</code>, not nested inside <code>&lt;article&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;header&gt;</code>, or <code>&lt;footer&gt;</code>.</p>
+
+        <h3>Example: bare page skeleton</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;header&gt;
+  &lt;h1&gt;Acme Docs&lt;/h1&gt;
+  &lt;nav aria-label="Primary"&gt;
+    &lt;a href="#intro"&gt;Intro&lt;/a&gt; ·
+    &lt;a href="#guide"&gt;Guide&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;main&gt;
+  &lt;section id="intro"&gt;
+    &lt;h2&gt;Introduction&lt;/h2&gt;
+    &lt;p&gt;A minimal but complete page structure.&lt;/p&gt;
+  &lt;/section&gt;
+  &lt;section id="guide"&gt;
+    &lt;h2&gt;Guide&lt;/h2&gt;
+    &lt;p&gt;Each region is named by a semantic element.&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;
+  &lt;p&gt;&amp;copy; 2026 Acme&lt;/p&gt;
+&lt;/footer&gt;</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: semantic blog-article layout</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;article&gt;
+  &lt;header&gt;
+    &lt;h2&gt;Understanding Semantics&lt;/h2&gt;
+    &lt;p class="byline"&gt;By Dana Lee ·
+      &lt;time datetime="2026-06-30"&gt;June 30, 2026&lt;/time&gt;
+    &lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;figure&gt;
+    &lt;div class="chart"&gt;80% semantic&lt;/div&gt;
+    &lt;figcaption&gt;Pages using landmark elements.&lt;/figcaption&gt;
+  &lt;/figure&gt;
+
+  &lt;section&gt;
+    &lt;h3&gt;Why it matters&lt;/h3&gt;
+    &lt;p&gt;Semantic markup exposes structure to browsers,
+    assistive tech, and search engines alike.&lt;/p&gt;
+  &lt;/section&gt;
+
+  &lt;aside class="callout"&gt;
+    &lt;p&gt;Tip: one &lt;code&gt;main&lt;/code&gt; per document.&lt;/p&gt;
+  &lt;/aside&gt;
+
+  &lt;footer&gt;&lt;p&gt;Filed under: Fundamentals&lt;/p&gt;&lt;/footer&gt;
+&lt;/article&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font: 15px/1.5 system-ui, sans-serif; margin: 1rem; }
+article { max-width: 44ch; }
+.byline { color: #666; font-size: .9em; }
+figure { margin: 1rem 0; }
+.chart {
+  background: linear-gradient(90deg,#4f7cff 80%,#dbe4ff 80%);
+  color: #fff; padding: .6rem; border-radius: 6px; font-weight: 600;
+}
+figcaption { color: #888; font-size: .85em; margin-top: .3rem; }
+.callout {
+  border-left: 4px solid #4f7cff; background: #eef2ff;
+  padding: .5rem .75rem; margin: 1rem 0;
+}
+article footer { color: #888; font-size: .85em; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: Semantic elements generate ARIA landmark roles automatically — <code>&lt;nav&gt;</code> becomes a navigation landmark, <code>&lt;main&gt;</code> a main landmark — so screen-reader users can jump directly between regions. Search engines rely on the same structure to understand and rank content. A page built from <code>&lt;div&gt;</code>s alone conveys none of this.</p>
+      </section>
+
+      <section id="text-elements" class="concept" tabindex="-1">
+        <h2>Text elements</h2>
+        <p>Headings <code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code> form the document outline; do not skip levels for visual sizing (style with CSS instead). Paragraphs use <code>&lt;p&gt;</code>. Inline semantics carry meaning: <code>&lt;strong&gt;</code> for importance, <code>&lt;em&gt;</code> for stress emphasis, <code>&lt;mark&gt;</code> for relevance, <code>&lt;small&gt;</code> for side comments, <code>&lt;abbr&gt;</code> for abbreviations, <code>&lt;time&gt;</code> for machine-readable dates, and <code>&lt;code&gt;</code> for code fragments.</p>
+        <p>Lists come in three flavours: <code>&lt;ul&gt;</code> (unordered), <code>&lt;ol&gt;</code> (ordered), and <code>&lt;dl&gt;</code> (description lists, pairing <code>&lt;dt&gt;</code> terms with <code>&lt;dd&gt;</code> descriptions). Use <code>&lt;blockquote&gt;</code> for extended quotations, with an optional <code>cite</code> attribute pointing at the source.</p>
+
+        <h3>Example: three kinds of list</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;h3&gt;Unordered&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;HTML — structure&lt;/li&gt;
+  &lt;li&gt;CSS — presentation&lt;/li&gt;
+  &lt;li&gt;JavaScript — behavior&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Ordered&lt;/h3&gt;
+&lt;ol start="1"&gt;
+  &lt;li&gt;Parse the markup&lt;/li&gt;
+  &lt;li&gt;Build the DOM tree&lt;/li&gt;
+  &lt;li&gt;Paint the pixels&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Description&lt;/h3&gt;
+&lt;dl&gt;
+  &lt;dt&gt;DOM&lt;/dt&gt;
+  &lt;dd&gt;The in-memory tree of the document.&lt;/dd&gt;
+  &lt;dt&gt;CSSOM&lt;/dt&gt;
+  &lt;dd&gt;The parsed model of all style rules.&lt;/dd&gt;
+&lt;/dl&gt;</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: rich inline text</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;
+  The &lt;abbr title="World Wide Web Consortium"&gt;W3C&lt;/abbr&gt;
+  publishes specs. This point is &lt;strong&gt;critical&lt;/strong&gt;,
+  and this one deserves &lt;em&gt;emphasis&lt;/em&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+  Search matched &lt;mark&gt;semantic HTML&lt;/mark&gt; on
+  &lt;time datetime="2026-07-05"&gt;July 5, 2026&lt;/time&gt;.
+  &lt;small&gt;(cached result)&lt;/small&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Run &lt;code&gt;npm run build&lt;/code&gt; to compile.&lt;/p&gt;
+
+&lt;blockquote cite="https://example.com/spec"&gt;
+  &lt;p&gt;Content should be meaningful without styles.&lt;/p&gt;
+&lt;/blockquote&gt;</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note">Note: <code>&lt;b&gt;</code> and <code>&lt;i&gt;</code> exist but carry no semantic weight — they simply mean "stylistically offset". Prefer <code>&lt;strong&gt;</code> and <code>&lt;em&gt;</code> when the emphasis is meaningful, and reserve <code>&lt;b&gt;</code>/<code>&lt;i&gt;</code> for cases like keywords or taxonomic names where no importance is implied.</p>
+      </section>
+
+      <section id="links-media" class="concept" tabindex="-1">
+        <h2>Links &amp; media</h2>
+        <p>The anchor element <code>&lt;a&gt;</code> links to resources via <code>href</code>. Values can be relative (<code>about.html</code>), absolute (<code>https://example.com</code>), an in-page fragment (<code>#section-id</code>), or a scheme like <code>mailto:</code> or <code>tel:</code>. When opening a new tab with <code>target="_blank"</code>, add <code>rel="noopener"</code> so the new page cannot reach <code>window.opener</code> (modern browsers imply this, but stating it is explicit and safe).</p>
+        <p>Images use <code>&lt;img&gt;</code> with a required <code>alt</code> attribute. <code>loading="lazy"</code> defers off-screen images. Responsive images combine <code>srcset</code> (candidate files with width descriptors) and <code>sizes</code> (how wide the image renders) so the browser downloads the smallest sufficient source. For art direction or format fallbacks, wrap sources in <code>&lt;picture&gt;</code> and pair the image with a <code>&lt;figure&gt;</code>/<code>&lt;figcaption&gt;</code>.</p>
+
+        <h3>Example: anchors of every kind</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;&lt;a href="html.html"&gt;Relative link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://developer.mozilla.org"
+   target="_blank" rel="noopener"&gt;
+  Absolute, opens in a new tab
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="#deep"&gt;Jump to the anchor below&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;
+  &lt;a href="mailto:team@example.com"&gt;Email us&lt;/a&gt; ·
+  &lt;a href="tel:+15551234567"&gt;Call us&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;div style="height:120px"&gt;&lt;/div&gt;
+&lt;p id="deep"&gt;You reached the fragment target.&lt;/p&gt;</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: responsive picture with figure</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;figure&gt;
+  &lt;picture&gt;
+    &lt;source
+      media="(min-width: 600px)"
+      srcset="https://placehold.co/600x200?text=Wide"&gt;
+    &lt;img
+      src="https://placehold.co/300x200?text=Narrow"
+      srcset="https://placehold.co/300x200 300w,
+              https://placehold.co/600x200 600w"
+      sizes="(min-width: 600px) 600px, 100vw"
+      alt="A responsive placeholder banner"
+      loading="lazy"
+      width="600" height="200"&gt;
+  &lt;/picture&gt;
+  &lt;figcaption&gt;
+    Resize the preview: the source swaps at 600px.
+  &lt;/figcaption&gt;
+&lt;/figure&gt;</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: <code>alt</code> text should describe the image's <em>purpose</em> in context, not merely name it. Decorative images that add nothing should use empty <code>alt=""</code> so screen readers skip them. Never omit the attribute entirely — a missing <code>alt</code> makes assistive tech read the file name.</p>
+        <p class="note note-perf">Note: <code>loading="lazy"</code> avoids fetching images the user may never scroll to, and <code>srcset</code>/<code>sizes</code> prevent shipping a 2000px image to a 320px phone. Always set explicit <code>width</code> and <code>height</code> (or an aspect ratio) so the browser reserves space and avoids layout shift.</p>
+      </section>
+
+      <section id="forms-validation" class="concept" tabindex="-1">
+        <h2>Forms &amp; validation</h2>
+        <p>Forms collect input. Every control should have an associated <code>&lt;label&gt;</code> — either wrapping the control or referencing it via <code>for</code> matching the control's <code>id</code>. Input <code>type</code> selects the right keyboard, picker, and built-in validation: <code>text</code>, <code>email</code>, <code>number</code>, <code>date</code>, <code>range</code>, <code>checkbox</code>, <code>radio</code>, and <code>file</code>, among others.</p>
+        <p>Constraint-validation attributes let the browser check input before submit: <code>required</code>, <code>pattern</code> (a regular expression), <code>min</code>/<code>max</code>/<code>step</code> for numeric and date ranges, and <code>minlength</code>/<code>maxlength</code>. Group related fields with <code>&lt;fieldset&gt;</code> and name the group with <code>&lt;legend&gt;</code>. Use <code>&lt;select&gt;</code> with <code>&lt;optgroup&gt;</code> for grouped choices and <code>&lt;textarea&gt;</code> for multi-line text.</p>
+
+        <h3>Example: labelled login form with validation</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;form id="login"&gt;
+  &lt;p&gt;
+    &lt;label for="email"&gt;Email&lt;/label&gt;&lt;br&gt;
+    &lt;input id="email" name="email" type="email"
+           required placeholder="you@example.com"&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label for="pw"&gt;Password (min 8)&lt;/label&gt;&lt;br&gt;
+    &lt;input id="pw" name="password" type="password"
+           required minlength="8"&gt;
+  &lt;/p&gt;
+  &lt;button type="submit"&gt;Sign in&lt;/button&gt;
+&lt;/form&gt;
+&lt;output id="out"&gt;&lt;/output&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const form = document.getElementById('login');
+const out = document.getElementById('out');
+form.addEventListener('submit', (e) => {
+  e.preventDefault();          // stay in the preview
+  const data = new FormData(form);
+  out.textContent = 'Submitted: ' + data.get('email');
+  console.log('email:', data.get('email'));
+  console.log('password length:', data.get('password').length);
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: settings form with select and radios</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;form id="settings"&gt;
+  &lt;p&gt;
+    &lt;label for="tz"&gt;Timezone&lt;/label&gt;&lt;br&gt;
+    &lt;select id="tz" name="tz"&gt;
+      &lt;optgroup label="Americas"&gt;
+        &lt;option value="et"&gt;Eastern&lt;/option&gt;
+        &lt;option value="pt"&gt;Pacific&lt;/option&gt;
+      &lt;/optgroup&gt;
+      &lt;optgroup label="Europe"&gt;
+        &lt;option value="gmt"&gt;GMT&lt;/option&gt;
+      &lt;/optgroup&gt;
+    &lt;/select&gt;
+  &lt;/p&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Theme&lt;/legend&gt;
+    &lt;label&gt;&lt;input type="radio" name="theme" value="light" checked&gt; Light&lt;/label&gt;
+    &lt;label&gt;&lt;input type="radio" name="theme" value="dark"&gt; Dark&lt;/label&gt;
+  &lt;/fieldset&gt;
+  &lt;p&gt;
+    &lt;label for="vol"&gt;Volume&lt;/label&gt;
+    &lt;input id="vol" name="vol" type="range" min="0" max="100" step="5" value="40"&gt;
+  &lt;/p&gt;
+  &lt;button type="submit"&gt;Save&lt;/button&gt;
+&lt;/form&gt;
+&lt;output id="res"&gt;&lt;/output&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const f = document.getElementById('settings');
+const res = document.getElementById('res');
+f.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const d = new FormData(f);
+  const summary = `tz=${d.get('tz')} theme=${d.get('theme')} vol=${d.get('vol')}`;
+  res.textContent = summary;
+  console.log(summary);
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: Associate every control with a <code>&lt;label&gt;</code> so clicking the label focuses the field and screen readers announce it. When validation fails, expose the error message near the field and reference it with <code>aria-describedby</code>; do not rely on colour alone to signal an error.</p>
+      </section>
+
+      <section id="accessibility-aria" class="concept" tabindex="-1">
+        <h2>Accessibility &amp; ARIA</h2>
+        <p>ARIA (Accessible Rich Internet Applications) fills gaps that native HTML cannot express. Landmark roles (<code>banner</code>, <code>navigation</code>, <code>main</code>, <code>contentinfo</code>) come free from semantic elements. When you build custom widgets, <code>aria-label</code> and <code>aria-labelledby</code> name an element, <code>aria-describedby</code> attaches supplementary description, and <code>aria-live</code> regions announce dynamic updates without moving focus.</p>
+        <p>Structured data is a related concern: microdata attributes (<code>itemscope</code>, <code>itemtype</code>, <code>itemprop</code>) annotate content with a vocabulary such as schema.org so search engines can extract entities like a Person or Product from the page.</p>
+
+        <h3>Example: aria-live status region</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;button id="save" type="button"&gt;Save changes&lt;/button&gt;
+
+&lt;p id="status" role="status" aria-live="polite"&gt;&lt;/p&gt;
+
+&lt;label for="name"&gt;Full name&lt;/label&gt;
+&lt;input id="name" aria-describedby="hint"&gt;
+&lt;small id="hint"&gt;First and last name.&lt;/small&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const btn = document.getElementById('save');
+const status = document.getElementById('status');
+let n = 0;
+btn.addEventListener('click', () => {
+  n++;
+  // Updating an aria-live region announces it to screen readers.
+  status.textContent = `Saved ${n} time(s) at ${new Date().toLocaleTimeString()}`;
+  console.log(status.textContent);
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: schema.org microdata (Person)</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;section id="card" itemscope
+         itemtype="https://schema.org/Person"&gt;
+  &lt;h3 itemprop="name"&gt;Dana Lee&lt;/h3&gt;
+  &lt;p itemprop="jobTitle"&gt;Accessibility Engineer&lt;/p&gt;
+  &lt;p&gt;
+    &lt;a itemprop="url"
+       href="https://example.com/dana"&gt;Website&lt;/a&gt;
+  &lt;/p&gt;
+  &lt;p itemprop="worksFor" itemscope
+     itemtype="https://schema.org/Organization"&gt;
+    Works at &lt;span itemprop="name"&gt;Acme&lt;/span&gt;
+  &lt;/p&gt;
+&lt;/section&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Read the microdata back out of the DOM.
+const card = document.getElementById('card');
+const props = card.querySelectorAll('[itemprop]');
+props.forEach((el) => {
+  const value = el.getAttribute('href') || el.textContent.trim();
+  console.log(el.getAttribute('itemprop') + ' = ' + value);
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: Prefer native semantics over ARIA whenever possible — a real <code>&lt;button&gt;</code> is keyboard-operable and focusable for free, whereas <code>&lt;div role="button"&gt;</code> requires you to reimplement focus, Enter/Space handling, and disabled state. The first rule of ARIA is: don't use ARIA if a native element will do.</p>
+      </section>
+
+      <section id="document-metadata" class="concept" tabindex="-1">
+        <h2>Document metadata</h2>
+        <p>The <code>&lt;head&gt;</code> is where you configure how the document is interpreted, indexed, and shared. Essentials include <code>&lt;meta charset&gt;</code>, the responsive <code>viewport</code>, the <code>&lt;title&gt;</code>, and a <code>meta[name=description]</code> for search snippets. A <code>&lt;link rel="canonical"&gt;</code> declares the preferred URL for duplicated content, and <code>meta[name=robots]</code> controls indexing.</p>
+        <p>Social sharing relies on Open Graph (<code>og:*</code>) and Twitter Card (<code>twitter:*</code>) meta tags, which populate the rich preview when a link is pasted into a chat or social feed. A favicon is declared with <code>&lt;link rel="icon"&gt;</code>. This markup is head content, not rendered, so the first example is a static code block; the second reads metadata back with JavaScript.</p>
+
+        <h3>Example: a complete document head</h3>
+        <pre class="code-block" data-lang="html"><code>&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;Semantic HTML Guide — Acme&lt;/title&gt;
+  &lt;meta name="description" content="A concise guide to writing meaningful HTML."&gt;
+  &lt;link rel="canonical" href="https://acme.example/guides/html"&gt;
+  &lt;meta name="robots" content="index, follow"&gt;
+
+  &lt;!-- Open Graph --&gt;
+  &lt;meta property="og:type" content="article"&gt;
+  &lt;meta property="og:title" content="Semantic HTML Guide"&gt;
+  &lt;meta property="og:description" content="Write meaningful HTML."&gt;
+  &lt;meta property="og:image" content="https://acme.example/og.png"&gt;
+
+  &lt;!-- Twitter Card --&gt;
+  &lt;meta name="twitter:card" content="summary_large_image"&gt;
+  &lt;meta name="twitter:title" content="Semantic HTML Guide"&gt;
+
+  &lt;link rel="icon" href="/favicon.ico" sizes="any"&gt;
+&lt;/head&gt;</code></pre>
+        <div class="sim-output" role="status"><strong>Result:</strong> Browsers show "Semantic HTML Guide — Acme" in the tab; search engines use the description for snippets; and pasting the URL into a social app renders a large-image card titled "Semantic HTML Guide".</div>
+
+        <h3>Example: read metadata with JavaScript</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// The preview document has its own <head>. Inspect it.
+console.log('title:', document.title);
+
+const desc = document.querySelector('meta[name="description"]');
+console.log('description:', desc ? desc.content : '(none set)');
+
+const charset = document.characterSet;
+console.log('charset:', charset);
+
+const viewport = document.querySelector('meta[name="viewport"]');
+console.log('viewport:', viewport ? viewport.content : '(none)');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note">Note: The <code>&lt;title&gt;</code> and <code>meta[name=description]</code> are the two highest-leverage tags for search — the title becomes the clickable result heading and the description often becomes the snippet. Keep titles under about 60 characters and descriptions under about 155.</p>
+      </section>
+
+      <section id="templates-slots" class="concept" tabindex="-1">
+        <h2>Templates &amp; slots</h2>
+        <p>The <code>&lt;template&gt;</code> element holds inert markup that the browser parses but does not render. Its contents live in a <code>DocumentFragment</code> exposed as <code>.content</code>; you clone it with <code>cloneNode(true)</code> and insert the clone where needed. This is the idiomatic way to stamp out repeated rows or cards without building strings by hand.</p>
+        <p>A <code>&lt;slot&gt;</code> is a placeholder inside a shadow tree that projects light-DOM children into the component's rendered output. Named slots (<code>&lt;slot name="title"&gt;</code>) map to children carrying a matching <code>slot="title"</code> attribute, letting a component define structure while the consumer supplies content.</p>
+
+        <h3>Example: clone a template into a table</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;button id="add" type="button"&gt;Add row&lt;/button&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;#&lt;/th&gt;&lt;th&gt;Item&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody id="rows"&gt;&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;template id="row-tpl"&gt;
+  &lt;tr&gt;
+    &lt;td class="n"&gt;&lt;/td&gt;
+    &lt;td class="label"&gt;&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/template&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const tpl = document.getElementById('row-tpl');
+const body = document.getElementById('rows');
+let count = 0;
+
+document.getElementById('add').addEventListener('click', () => {
+  count++;
+  const clone = tpl.content.cloneNode(true); // deep clone the fragment
+  clone.querySelector('.n').textContent = count;
+  clone.querySelector('.label').textContent = 'Item ' + count;
+  body.appendChild(clone);
+  console.log('Rows now:', body.children.length);
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: template + named slots in a shadow root</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;info-card&gt;
+  &lt;span slot="title"&gt;Shadow DOM&lt;/span&gt;
+  &lt;span slot="body"&gt;Content is projected into slots.&lt;/span&gt;
+&lt;/info-card&gt;
+
+&lt;template id="card-tpl"&gt;
+  &lt;style&gt;
+    .card { border: 1px solid #c7d2fe; border-radius: 8px;
+            padding: .75rem; font-family: system-ui; }
+    .card h4 { margin: 0 0 .25rem; color: #4338ca; }
+  &lt;/style&gt;
+  &lt;div class="card"&gt;
+    &lt;h4&gt;&lt;slot name="title"&gt;Untitled&lt;/slot&gt;&lt;/h4&gt;
+    &lt;p&gt;&lt;slot name="body"&gt;No content.&lt;/slot&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">customElements.define('info-card', class extends HTMLElement {
+  connectedCallback() {
+    const tpl = document.getElementById('card-tpl');
+    const root = this.attachShadow({ mode: 'open' });
+    root.appendChild(tpl.content.cloneNode(true));
+    console.log('info-card rendered with slotted content');
+  }
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-perf">Note: Cloning a parsed <code>&lt;template&gt;</code> fragment is faster and safer than assigning <code>innerHTML</code> in a loop — the markup is parsed once, and interpolating untrusted data into <code>innerHTML</code> risks injection. Set text with <code>textContent</code> as shown above.</p>
+      </section>
+
+      <section id="data-attributes" class="concept" tabindex="-1">
+        <h2>Data attributes</h2>
+        <p>Custom <code>data-*</code> attributes attach arbitrary, valid metadata to any element without inventing non-standard attributes. They are readable in CSS via attribute selectors and in JavaScript via the <code>dataset</code> property, which camel-cases the suffix (<code>data-user-id</code> becomes <code>el.dataset.userId</code>).</p>
+        <p>Use them to drive styling states, stash identifiers for event handlers, or bridge server-rendered values into client scripts. They are not a substitute for a real data model, but they are ideal for small, element-scoped hints.</p>
+
+        <h3>Example: styling and behavior from data-*</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;ul id="tasks"&gt;
+  &lt;li data-status="done"&gt;Ship docs&lt;/li&gt;
+  &lt;li data-status="active"&gt;Write tests&lt;/li&gt;
+  &lt;li data-status="blocked"&gt;Deploy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;button id="cycle" type="button"&gt;Cycle first status&lt;/button&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">ul { font-family: system-ui; list-style: none; padding: 0; }
+li { padding: .4rem .6rem; margin: .25rem 0; border-radius: 6px; }
+li[data-status="done"]    { background: #dcfce7; }
+li[data-status="active"]  { background: #dbeafe; }
+li[data-status="blocked"] { background: #fee2e2; }
+li::after { content: " (" attr(data-status) ")"; color: #555; }</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const order = ['done', 'active', 'blocked'];
+const first = document.querySelector('#tasks li');
+document.getElementById('cycle').addEventListener('click', () => {
+  const i = order.indexOf(first.dataset.status);
+  first.dataset.status = order[(i + 1) % order.length];
+  console.log('First task status is now:', first.dataset.status);
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: reading and writing dataset</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;article id="product"
+  data-sku="A-100"
+  data-price-usd="49.99"
+  data-in-stock="true"&gt;
+  Wireless Keyboard
+&lt;/article&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const el = document.getElementById('product');
+
+// Read: hyphens become camelCase in dataset.
+console.log('sku:', el.dataset.sku);
+console.log('price:', Number(el.dataset.priceUsd));
+console.log('in stock:', el.dataset.inStock === 'true');
+
+// Write: adds a new data-discount attribute.
+el.dataset.discount = '10';
+console.log('attribute now present:',
+  el.getAttribute('data-discount'));</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note">Note: <code>dataset</code> values are always strings. Convert explicitly with <code>Number()</code> or a <code>=== 'true'</code> comparison, and remember that <code>data-userId</code> and <code>data-user-id</code> both map to <code>dataset.userId</code> — always author the hyphenated form.</p>
+      </section>
+
+      <section id="web-components" class="concept" tabindex="-1">
+        <h2>Web components</h2>
+        <p>Custom elements let you define new HTML tags backed by a class that extends <code>HTMLElement</code>. Register the tag with <code>customElements.define('my-el', MyEl)</code> — the name must contain a hyphen. Lifecycle callbacks (<code>connectedCallback</code>, <code>disconnectedCallback</code>, <code>attributeChangedCallback</code>) hook into insertion, removal, and attribute changes; the static <code>observedAttributes</code> array declares which attributes trigger the last one.</p>
+        <p>Encapsulation comes from an attached shadow root, which isolates the component's markup and styles. Combine a <code>&lt;template&gt;</code> for structure with a <code>&lt;slot&gt;</code> for consumer content to build reusable, framework-free UI.</p>
+
+        <h3>Example: a &lt;hello-badge&gt; greeting component</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;hello-badge name="Ada"&gt;&lt;/hello-badge&gt;
+&lt;hello-badge name="Grace"&gt;&lt;/hello-badge&gt;
+&lt;button id="rename" type="button"&gt;Rename first to "Alan"&lt;/button&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">class HelloBadge extends HTMLElement {
+  static get observedAttributes() { return ['name']; }
+  connectedCallback() {
+    this.attachShadow({ mode: 'open' });
+    this.render();
+  }
+  attributeChangedCallback(attr, oldV, newV) {
+    if (this.shadowRoot) this.render();
+    console.log(`${attr} changed: ${oldV} -> ${newV}`);
+  }
+  render() {
+    const name = this.getAttribute('name') || 'friend';
+    this.shadowRoot.innerHTML =
+      `<style>span{display:inline-block;padding:.3rem .6rem;
+         border-radius:999px;background:#4f7cff;color:#fff;
+         font:600 14px system-ui;margin:.2rem}</style>
+       <span>Hello, ${name}!</span>`;
+  }
+}
+customElements.define('hello-badge', HelloBadge);
+
+document.getElementById('rename').addEventListener('click', () => {
+  document.querySelector('hello-badge').setAttribute('name', 'Alan');
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: an accessible &lt;toggle-tip&gt;</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;
+  Server region
+  &lt;toggle-tip&gt;The physical datacenter serving requests.&lt;/toggle-tip&gt;
+&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">class ToggleTip extends HTMLElement {
+  connectedCallback() {
+    const text = this.textContent.trim();
+    const root = this.attachShadow({ mode: 'open' });
+    root.innerHTML = `
+      <style>
+        button{border:1px solid #888;border-radius:50%;
+          width:1.4em;height:1.4em;cursor:pointer;background:#fff}
+        [part=tip]{display:none;margin-top:.3rem;padding:.4rem .6rem;
+          background:#111;color:#fff;border-radius:6px;font:13px system-ui;
+          max-width:220px}
+        [part=tip].open{display:block}
+      </style>
+      <button type="button" aria-expanded="false"
+        aria-label="More information">?</button>
+      <span part="tip" role="status"></span>`;
+    const btn = root.querySelector('button');
+    const tip = root.querySelector('[part=tip]');
+    tip.textContent = text;
+    btn.addEventListener('click', () => {
+      const open = tip.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+      console.log('tooltip open:', open);
+    });
+  }
+}
+customElements.define('toggle-tip', ToggleTip);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-compat">Note: Custom elements, shadow DOM, and templates are supported in all current evergreen browsers. When a custom element's script fails to load or run, the browser renders it as an unknown inline element showing its light-DOM children — so put a sensible fallback (like the tooltip's plain text) inside the tag to degrade gracefully.</p>
+      </section>
+
+      <section id="progressive-enhancement" class="concept" tabindex="-1">
+        <h2>Progressive enhancement</h2>
+        <p>Progressive enhancement means building a baseline that works with HTML alone, then layering on CSS and JavaScript as capabilities allow. The payoff is resilience: the core experience survives a failed script, a flaky network, or an unusual client. Native interactive elements like <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> give you an accessible disclosure widget with zero JavaScript.</p>
+        <p>For forms, start with a real <code>action</code> and <code>method</code> so submission works server-side without scripting, then enhance with JavaScript to intercept, validate, and give instant feedback when it is available. Feature-detect before enhancing, and never make the baseline depend on the enhancement.</p>
+
+        <h3>Example: native details/summary disclosure</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;details&gt;
+  &lt;summary&gt;What is progressive enhancement?&lt;/summary&gt;
+  &lt;p&gt;A strategy of starting from a working HTML baseline
+  and layering on richer behavior where supported.&lt;/p&gt;
+&lt;/details&gt;
+
+&lt;details open&gt;
+  &lt;summary&gt;Does this need JavaScript?&lt;/summary&gt;
+  &lt;p&gt;No — open/close is built into the browser.&lt;/p&gt;
+&lt;/details&gt;</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: form that works, then enhances</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- Works without JS: it would POST to /subscribe. --&gt;
+&lt;form id="sub" action="/subscribe" method="post"&gt;
+  &lt;label for="e"&gt;Email&lt;/label&gt;
+  &lt;input id="e" name="email" type="email" required&gt;
+  &lt;button type="submit"&gt;Subscribe&lt;/button&gt;
+&lt;/form&gt;
+&lt;p id="msg"&gt;&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const form = document.getElementById('sub');
+const msg = document.getElementById('msg');
+
+// Enhancement: intercept only when JS is available.
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!form.reportValidity()) return; // native validation UI
+  msg.textContent = 'Thanks! Subscribed ' + form.email.value;
+  console.log('Enhanced submit handled; no page reload.');
+});
+console.log('JS available: form was progressively enhanced.');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: Native elements like <code>&lt;details&gt;</code>, <code>&lt;button&gt;</code>, and validated inputs come with keyboard support, focus management, and screen-reader semantics already wired up. Reimplementing them in JavaScript almost always drops one of those behaviors — start native, enhance sparingly.</p>
+
+        <h3>Further reading</h3>
+        <pre class="code-block" data-lang="html"><code>&lt;!-- Bookmark the canonical references --&gt;
+&lt;!-- HTML Living Standard: https://html.spec.whatwg.org/ --&gt;
+&lt;!-- ARIA Authoring Practices: https://www.w3.org/WAI/ARIA/apg/ --&gt;
+&lt;!-- MDN element reference:   https://developer.mozilla.org/ --&gt;</code></pre>
+        <ul>
+          <li>Study the HTML content models — which elements may nest inside which — to know when your markup is valid.</li>
+          <li>Read the ARIA Authoring Practices Guide (APG) for keyboard and role patterns before hand-rolling any widget.</li>
+          <li>Keep the HTML Living Standard bookmarked; it is the authoritative, continuously updated specification.</li>
+          <li>Validate pages with the W3C Nu HTML Checker to catch structural mistakes early.</li>
+          <li>Next, layer on CSS for presentation and JavaScript for behavior — see the CSS and JavaScript pages in this reference.</li>
+        </ul>
+      </section>
+
+      <section id="feature-detection" class="concept" tabindex="-1">
+        <h2>Feature detection in markup</h2>
+        <p>An Employee Profile Dashboard has to render on whatever the browser can do today, not what you wish it could do. Feature detection asks the runtime whether a capability exists and adapts the markup accordingly, rather than sniffing user-agent strings. The classic markup-level technique is the <code>&lt;html class="no-js"&gt;</code> pattern: the page ships assuming JavaScript is off, and an inline script in the <code>&lt;head&gt;</code> — which runs before the body paints — swaps the class to <code>js</code>. CSS then keys off <code>.no-js</code> vs <code>.js</code> to show the right baseline.</p>
+        <p>This is the difference between <strong>graceful degradation</strong> (build the rich version, then fall back) and <strong>progressive enhancement</strong> (build the working baseline, then layer capability on). Markup gives you three fallback tools: <code>&lt;noscript&gt;</code> for a scripting-off alternative, fallback content between the tags of elements like <code>&lt;canvas&gt;</code>, and capability-gated regions that only appear once a feature is confirmed. This complements the programmatic detection taught on the JavaScript page (see <a href="javascript.html#feature-detection">javascript.html#feature-detection</a>): markup sets the resilient default, and script upgrades it.</p>
+
+        <h3>Example: the no-js → js class swap</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- The document ships assuming no JS. --&gt;
+&lt;div class="no-js" id="root"&gt;
+
+  &lt;!-- Inline head-style script runs before paint
+       and upgrades the capability class. --&gt;
+  &lt;script&gt;
+    document.getElementById('root').className = 'js';
+  &lt;/script&gt;
+
+  &lt;p class="only-no-js"&gt;
+    JavaScript is off — showing the static profile.
+  &lt;/p&gt;
+  &lt;p class="only-js"&gt;
+    JavaScript is on — interactive dashboard enabled.
+  &lt;/p&gt;
+
+  &lt;noscript&gt;
+    &lt;p class="fallback"&gt;
+      &amp;lt;noscript&amp;gt; fires only when scripting is
+      truly disabled by the browser.
+    &lt;/p&gt;
+  &lt;/noscript&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font: 15px/1.5 system-ui, sans-serif; margin: 1rem; }
+p { padding: .5rem .7rem; border-radius: 6px; margin: .4rem 0; }
+
+/* CSS hooks: show/hide by capability class. */
+.no-js .only-js       { display: none; }
+.js    .only-no-js    { display: none; }
+
+.only-js  { background: #dcfce7; }
+.only-no-js { background: #fee2e2; }
+.fallback { background: #fef9c3; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: capability-gated markup with native tests</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;h3&gt;Contact Employee&lt;/h3&gt;
+&lt;div id="actions"&gt;
+  &lt;!-- Base action always present. --&gt;
+  &lt;a href="mailto:dana@example.com"&gt;Email&lt;/a&gt;
+&lt;/div&gt;
+&lt;ul id="report"&gt;&lt;/ul&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Hand-rolled detector: native tests, no library.
+const supports = {
+  canvas: !!document.createElement('canvas').getContext,
+  clipboard: 'clipboard' in navigator,
+  geolocation: 'geolocation' in navigator,
+  webSocket: 'WebSocket' in window,
+  localStorage: typeof Storage !== 'undefined',
+};
+
+const actions = document.getElementById('actions');
+const report = document.getElementById('report');
+
+// Only OFFER a feature if the platform supports it.
+if (supports.clipboard) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.textContent = 'Copy email';
+  actions.appendChild(b);
+}
+
+// Log the capability matrix like a diagnostics panel.
+for (const [name, ok] of Object.entries(supports)) {
+  const li = document.createElement('li');
+  li.textContent = `${name}: ${ok ? 'available' : 'missing'}`;
+  report.appendChild(li);
+  console.log(name, '=', ok);
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Reference: the Modernizr approach</h3>
+        <p>A library like Modernizr automates this. It runs on load, adds a class per detected feature to the <code>&lt;html&gt;</code> element, and exposes a boolean API. You cannot load it offline here, so the hand-rolled detector above is the runnable equivalent; the block below is how you would wire the real thing.</p>
+        <pre class="code-block" data-lang="html"><code>&lt;!-- 1. Ship with the pessimistic class. --&gt;
+&lt;html class="no-js"&gt;
+
+&lt;!-- 2. Modernizr swaps no-js -&gt; js and adds
+        one class per feature, e.g. class="js canvas
+        localstorage csstransitions". --&gt;
+&lt;script src="modernizr.js"&gt;&lt;/script&gt;
+
+&lt;!-- 3a. Gate CSS on the generated classes. --&gt;
+&lt;style&gt;
+  .no-canvas .chart { display: none; }
+  .canvas    .chart-fallback { display: none; }
+&lt;/style&gt;
+
+&lt;!-- 3b. Gate JS on the boolean API. --&gt;
+&lt;script&gt;
+  if (Modernizr.canvas) { /* draw the avatar */ }
+  if (Modernizr.localstorage) { /* cache the profile */ }
+  if (Modernizr.csstransitions) { /* animate panels */ }
+&lt;/script&gt;</code></pre>
+        <div class="sim-output"><strong>Result:</strong> With Modernizr loaded, <code>&lt;html&gt;</code> reads something like <code>class="js canvas localstorage no-touchevents"</code>, letting CSS and JS both branch on exactly the same detected-feature vocabulary.</div>
+
+        <p class="note note-compat">Note: User-agent sniffing is fragile — strings are spoofed, frozen, and change constantly. Feature-detect the capability you actually need instead. The inline head script must be tiny and synchronous so the class flips before first paint, avoiding a flash of the wrong (no-js) layout.</p>
+      </section>
+
+      <section id="canvas-element" class="concept" tabindex="-1">
+        <h2>The canvas element</h2>
+        <p>The <code>&lt;canvas&gt;</code> element is a bitmap drawing surface — perfect for a dashboard's generated avatars, sparklines, or badges. It has two size systems that are easy to confuse. The <code>width</code> and <code>height</code> <em>attributes</em> set the intrinsic pixel buffer (the coordinate space you draw into). CSS <code>width</code>/<code>height</code> set the displayed box. If they disagree, the browser scales the bitmap, so a 300×150 buffer stretched to 600×300 by CSS looks blurry. Set the attributes to the real pixel dimensions you intend to draw.</p>
+        <p>Content placed between <code>&lt;canvas&gt;</code> and <code>&lt;/canvas&gt;</code> is fallback content shown only when canvas is unavailable — use it for a text alternative. Reach for canvas when you need to draw many pixels imperatively (charts, image manipulation, games); prefer <code>&lt;svg&gt;</code> for resolution-independent, accessible, retained-mode vector shapes, and a plain <code>&lt;img&gt;</code> when you already have a raster asset. The 2D drawing API itself — <code>fillRect</code>, <code>arc</code>, <code>fillText</code> — is taught on the JavaScript page (see <a href="javascript.html#canvas-api">javascript.html#canvas-api</a>).</p>
+
+        <h3>Example: a circular avatar with initials</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- Attributes set the pixel buffer to match
+     the intended display size (no scaling). --&gt;
+&lt;canvas id="avatar" width="96" height="96"
+        role="img" aria-label="Avatar for Dana Lee"&gt;
+  Dana Lee
+&lt;/canvas&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const canvas = document.getElementById('avatar');
+const ctx = canvas.getContext('2d');
+const initials = 'DL';
+
+// Circular background.
+ctx.fillStyle = '#4f7cff';
+ctx.beginPath();
+ctx.arc(48, 48, 48, 0, Math.PI * 2);
+ctx.fill();
+
+// Centered initials.
+ctx.fillStyle = '#fff';
+ctx.font = '600 40px system-ui, sans-serif';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillText(initials, 48, 52);
+
+console.log('Drew avatar for initials:', initials);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: fallback text plus DPR-aware sizing</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- CSS sizes the box; JS sizes the buffer for
+     the device pixel ratio so text stays crisp. --&gt;
+&lt;canvas id="badge" style="width:220px;height:60px;
+        border:1px solid #c7d2fe"&gt;
+  Status: Active employee since 2021.
+&lt;/canvas&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const canvas = document.getElementById('badge');
+const ctx = canvas.getContext('2d');
+
+// CSS box size (logical pixels).
+const cssW = 220, cssH = 60;
+const dpr = window.devicePixelRatio || 1;
+
+// Buffer = logical size * DPR, then scale the
+// context so drawing code stays in CSS pixels.
+canvas.width = Math.round(cssW * dpr);
+canvas.height = Math.round(cssH * dpr);
+ctx.scale(dpr, dpr);
+
+ctx.fillStyle = '#eef2ff';
+ctx.fillRect(0, 0, cssW, cssH);
+ctx.fillStyle = '#4338ca';
+ctx.font = '600 15px system-ui, sans-serif';
+ctx.fillText('Active since 2021', 14, 35);
+
+console.log('devicePixelRatio:', dpr);
+console.log('buffer:', canvas.width + 'x' + canvas.height);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: A canvas is an opaque bitmap to assistive tech. Always provide a text alternative — fallback content between the tags, plus <code>role="img"</code> and <code>aria-label</code> as in the avatar example — so a screen reader announces who the avatar represents rather than silence.</p>
+        <p class="note note-perf">Note: Match the pixel buffer to the real display size. Over-sizing the buffer wastes memory and fill rate on every repaint; under-sizing it (then letting CSS upscale) produces blur. On HiDPI screens, multiply by <code>devicePixelRatio</code> and scale the context once, as shown, rather than redrawing at low resolution.</p>
+      </section>
+
+      <section id="contact-links" class="concept" tabindex="-1">
+        <h2>Contact links</h2>
+        <p>A "Contact Employee" action is just an anchor with the right URL scheme — no JavaScript required. <code>mailto:</code> opens the user's mail client and accepts query parameters: <code>subject</code>, <code>body</code>, <code>cc</code>, and <code>bcc</code>. <code>sms:</code> composes a text message and accepts <code>?&amp;body=</code> for a prefilled message. <code>tel:</code> initiates a call. <code>geo:</code> hands latitude/longitude (and optional zoom) to a maps app. The browser or OS hands these off to the registered handler.</p>
+        <p>Every parameter value must be URL-encoded so that spaces, line breaks, and reserved characters (<code>&amp;</code>, <code>?</code>, <code>#</code>) survive intact — build them with <code>encodeURIComponent</code> rather than string concatenation. Treat the target address as data: never interpolate unescaped user input into a scheme URL, and remember these links reveal an address in the DOM, so use a role account when that matters.</p>
+
+        <h3>Example: a contact card of scheme links</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;section class="contact"&gt;
+  &lt;h3&gt;Contact Dana Lee&lt;/h3&gt;
+
+  &lt;!-- mailto with subject, body, and cc --&gt;
+  &lt;a href="mailto:dana@example.com?subject=Project%20sync&amp;cc=lead@example.com&amp;body=Hi%20Dana%2C%0A%0A"&gt;
+    Email
+  &lt;/a&gt;
+
+  &lt;!-- sms with a prefilled body --&gt;
+  &lt;a href="sms:+15551234567?&amp;body=Hi%20Dana%2C%20are%20you%20free%3F"&gt;
+    Text
+  &lt;/a&gt;
+
+  &lt;!-- tel to place a call --&gt;
+  &lt;a href="tel:+15551234567"&gt;Call&lt;/a&gt;
+
+  &lt;!-- geo URI for the office location --&gt;
+  &lt;a href="geo:37.7749,-122.4194?z=15"&gt;Office map&lt;/a&gt;
+&lt;/section&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">.contact { font-family: system-ui, sans-serif; }
+.contact h3 { margin: 0 0 .6rem; }
+.contact a {
+  display: inline-block; margin: .2rem .3rem .2rem 0;
+  padding: .4rem .8rem; border-radius: 6px;
+  background: #4f7cff; color: #fff; text-decoration: none;
+  font: 600 14px system-ui;
+}
+.contact a:hover { background: #3b63d0; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: build a mailto URL from fields</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;
+  &lt;label for="to"&gt;To&lt;/label&gt;
+  &lt;input id="to" value="dana@example.com"&gt;
+&lt;/p&gt;
+&lt;p&gt;
+  &lt;label for="subj"&gt;Subject&lt;/label&gt;
+  &lt;input id="subj" value="Q3 review &amp; next steps"&gt;
+&lt;/p&gt;
+&lt;p&gt;
+  &lt;label for="msg"&gt;Message&lt;/label&gt;
+  &lt;input id="msg" value="Hi Dana, quick question?"&gt;
+&lt;/p&gt;
+&lt;button id="compose" type="button"&gt;Compose email&lt;/button&gt;
+&lt;p&gt;&lt;a id="link" href="#"&gt;(composed link appears here)&lt;/a&gt;&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const link = document.getElementById('link');
+
+function buildMailto() {
+  const to = document.getElementById('to').value;
+  const subject = document.getElementById('subj').value;
+  const body = document.getElementById('msg').value;
+
+  // Encode each param so &, ?, spaces, newlines survive.
+  const qs = 'subject=' + encodeURIComponent(subject) +
+             '&body=' + encodeURIComponent(body);
+  const url = 'mailto:' + encodeURIComponent(to) + '?' + qs;
+
+  link.href = url;
+  link.textContent = url;
+  console.log('Composed mailto URL:');
+  console.log(url);
+}
+
+document.getElementById('compose')
+  .addEventListener('click', buildMailto);
+buildMailto();</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: Make the link text describe the action ("Email Dana", "Call the office"), not the raw address — screen-reader users hear the text, and "mailto:dana@example.com?subject=..." read aloud is noise. Reserve the visible address for where it genuinely helps sighted scanning.</p>
+        <p class="note note-compat">Note: <code>mailto:</code> and <code>tel:</code> are broadly supported; <code>sms:</code> parameter syntax and <code>geo:</code> handling vary by platform (iOS, Android, and desktop differ, and some desktops have no handler at all). Provide a plain fallback — a visible phone number or address — so the contact still works when no handler is registered.</p>
+      </section>
+
+      <section id="structured-data-employee" class="concept" tabindex="-1">
+        <h2>Structured data for an employee</h2>
+        <p>Structured data annotates the profile so search engines, assistants, and rich-result cards can extract typed entities — a Person with a job title who works for an Organization — instead of guessing from prose. Microdata does this inline: <code>itemscope</code> opens an entity, <code>itemtype</code> names its vocabulary (a schema.org type URL), and <code>itemprop</code> tags each property. Nesting a second <code>itemscope</code> inside a property like <code>worksFor</code> expresses a relationship between two entities.</p>
+        <p>Microdata keeps the data attached to the visible markup, which stays in sync as the DOM changes. The modern alternative, JSON-LD, moves the same graph into a <code>&lt;script type="application/ld+json"&gt;</code> block in the head — decoupled from layout, easier to emit from a server, and the format Google recommends. The two are interchangeable in meaning; pick microdata when the data mirrors on-page content and JSON-LD when you want it centralized.</p>
+
+        <h3>Example: a Person + Organization microdata card</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;article id="employee" itemscope
+         itemtype="https://schema.org/Person"&gt;
+  &lt;img itemprop="image" width="72" height="72"
+       src="https://placehold.co/72" alt="Dana Lee"&gt;
+  &lt;h3 itemprop="name"&gt;Dana Lee&lt;/h3&gt;
+  &lt;p itemprop="jobTitle"&gt;Accessibility Engineer&lt;/p&gt;
+  &lt;p&gt;
+    &lt;a itemprop="email"
+       href="mailto:dana@example.com"&gt;dana@example.com&lt;/a&gt;
+  &lt;/p&gt;
+  &lt;p itemprop="telephone"&gt;+1-555-123-4567&lt;/p&gt;
+
+  &lt;!-- Nested entity: the employer. --&gt;
+  &lt;p itemprop="worksFor" itemscope
+     itemtype="https://schema.org/Organization"&gt;
+    Works for &lt;span itemprop="name"&gt;Acme Corp&lt;/span&gt;
+  &lt;/p&gt;
+&lt;/article&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Walk the microdata like a crawler would.
+const person = document.getElementById('employee');
+console.log('Entity type:', person.getAttribute('itemtype'));
+
+person.querySelectorAll('[itemprop]').forEach((el) => {
+  const prop = el.getAttribute('itemprop');
+  let value;
+  if (el.hasAttribute('itemscope')) {
+    value = '[nested ' + el.getAttribute('itemtype') + ']';
+  } else {
+    value = el.getAttribute('href') ||
+            el.getAttribute('src') ||
+            el.textContent.trim().split('\n')[0];
+  }
+  console.log(prop, '=', value);
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: the equivalent JSON-LD</h3>
+        <p>The same graph, expressed as JSON-LD, sits in the head decoupled from the layout. This block is head content, so it is shown as a static reference rather than run in the preview.</p>
+        <pre class="code-block" data-lang="html"><code>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Dana Lee",
+  "jobTitle": "Accessibility Engineer",
+  "email": "mailto:dana@example.com",
+  "telephone": "+1-555-123-4567",
+  "image": "https://acme.example/people/dana.jpg",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Acme Corp"
+  }
+}
+&lt;/script&gt;</code></pre>
+        <div class="sim-output"><strong>Result:</strong> A search engine extracts one Person entity — name "Dana Lee", jobTitle "Accessibility Engineer", with email and telephone — linked to an Organization named "Acme Corp", and may surface it as a knowledge-panel or rich employee-profile result. Assistive tech and scrapers read the same typed graph without parsing the surrounding prose.</div>
+
+        <p class="note note-a11y">Note: Structured data must describe what is genuinely on the page — marking up content the user cannot see is both an SEO violation and an accessibility mismatch. With microdata the annotations ride on the real, visible DOM, so they stay honest; with JSON-LD, keep the block in sync with the rendered profile whenever it changes.</p>
+      </section>
+
+      <section id="data-tables" class="concept" tabindex="-1">
+        <h2>Data tables</h2>
+        <p>A <code>&lt;table&gt;</code> is for two-dimensional data whose meaning depends on the intersection of a row and a column — never for page layout. Group rows into <code>&lt;thead&gt;</code> (column headers), <code>&lt;tbody&gt;</code> (the data), and <code>&lt;tfoot&gt;</code> (summaries such as totals). The grouping is semantic, not cosmetic: it lets user agents repeat the header when a long table breaks across printed pages and lets assistive tech distinguish headings from data.</p>
+        <p>Header cells use <code>&lt;th&gt;</code>; data cells use <code>&lt;td&gt;</code>. The <code>scope</code> attribute (<code>col</code>, <code>row</code>, <code>colgroup</code>, <code>rowgroup</code>) tells a screen reader which cells a header governs, so it can announce "Revenue, Q2: 41" when the user lands on that cell. For irregular tables, associate cells explicitly by giving each <code>&lt;th&gt;</code> an <code>id</code> and each <code>&lt;td&gt;</code> a matching <code>headers</code> list. <code>colspan</code>/<code>rowspan</code> merge cells; a <code>&lt;caption&gt;</code> supplies an accessible title; and <code>&lt;colgroup&gt;</code>/<code>&lt;col&gt;</code> style whole columns without touching every cell.</p>
+
+        <h3>Example: quarterly metrics with caption, scope, and totals</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;table&gt;
+  &lt;caption&gt;Regional revenue by quarter ($k)&lt;/caption&gt;
+  &lt;colgroup&gt;
+    &lt;col&gt;&lt;col class="q"&gt;&lt;col class="q"&gt;&lt;col class="q"&gt;
+  &lt;/colgroup&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Region&lt;/th&gt;
+      &lt;th scope="col"&gt;Q1&lt;/th&gt;
+      &lt;th scope="col"&gt;Q2&lt;/th&gt;
+      &lt;th scope="col"&gt;Q3&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;North&lt;/th&gt;
+      &lt;td&gt;38&lt;/td&gt;&lt;td&gt;41&lt;/td&gt;&lt;td&gt;45&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;South&lt;/th&gt;
+      &lt;td&gt;29&lt;/td&gt;&lt;td&gt;33&lt;/td&gt;&lt;td&gt;31&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;Total&lt;/th&gt;
+      &lt;td&gt;67&lt;/td&gt;&lt;td&gt;74&lt;/td&gt;&lt;td&gt;76&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">table { border-collapse: collapse; font: 14px system-ui; }
+caption { text-align: left; font-weight: 600; padding: .4rem 0; }
+th, td { border: 1px solid #cbd5e1; padding: .35rem .6rem; text-align: right; }
+th[scope="col"], th[scope="row"] { text-align: left; background: #eef2ff; }
+tfoot th, tfoot td { font-weight: 700; background: #f1f5f9; }
+/* colgroup styling reaches every cell in the column */
+col.q { background: #fbfdff; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: merged cells and reading a cell's header context</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;table id="grid"&gt;
+  &lt;caption&gt;Room schedule (click a slot)&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Time&lt;/th&gt;
+      &lt;th scope="col"&gt;Room A&lt;/th&gt;
+      &lt;th scope="col"&gt;Room B&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;09:00&lt;/th&gt;
+      &lt;!-- one talk fills two time slots --&gt;
+      &lt;td rowspan="2"&gt;Keynote&lt;/td&gt;
+      &lt;td&gt;Workshop&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;10:00&lt;/th&gt;
+      &lt;td&gt;Panel&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;11:00&lt;/th&gt;
+      &lt;!-- one break spans both rooms --&gt;
+      &lt;td colspan="2"&gt;Coffee break&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const table = document.getElementById('grid');
+table.addEventListener('click', (e) => {
+  const cell = e.target.closest('td');
+  if (!cell) return;
+  const row = cell.parentElement;
+  const time = row.querySelector('th[scope="row"]').textContent;
+  // Column header = the cell at the same index in thead.
+  const index = [...row.children].indexOf(cell);
+  const cols = table.tHead.rows[0].cells;
+  // Account for the row header offset when spans shift indices.
+  const colName = cols[index] ? cols[index].textContent : '(spanned)';
+  console.log(`"${cell.textContent}" is at ${time}, ${colName}`);
+  console.log('spans:', 'colspan=' + (cell.colSpan), 'rowspan=' + (cell.rowSpan));
+});
+console.log('Click a data cell to read its headers.');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a wide table that scrolls on a narrow viewport</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- The container scrolls; the table keeps its
+     natural width and stays readable. --&gt;
+&lt;div class="scroll" tabindex="0" role="region"
+     aria-label="Feature matrix, scrollable"&gt;
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th scope="col"&gt;Plan&lt;/th&gt;
+        &lt;th scope="col"&gt;Seats&lt;/th&gt;
+        &lt;th scope="col"&gt;Storage&lt;/th&gt;
+        &lt;th scope="col"&gt;SSO&lt;/th&gt;
+        &lt;th scope="col"&gt;Audit log&lt;/th&gt;
+        &lt;th scope="col"&gt;SLA&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;&lt;th scope="row"&gt;Starter&lt;/th&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;5 GB&lt;/td&gt;&lt;td&gt;No&lt;/td&gt;&lt;td&gt;No&lt;/td&gt;&lt;td&gt;—&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;th scope="row"&gt;Team&lt;/th&gt;&lt;td&gt;25&lt;/td&gt;&lt;td&gt;100 GB&lt;/td&gt;&lt;td&gt;Yes&lt;/td&gt;&lt;td&gt;Yes&lt;/td&gt;&lt;td&gt;99.9%&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll:focus-visible { outline: 2px solid #4f7cff; }
+table { border-collapse: collapse; font: 14px system-ui; white-space: nowrap; }
+th, td { border: 1px solid #cbd5e1; padding: .35rem .6rem; }
+thead th { background: #eef2ff; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: A caption gives the table an accessible name and stays visible on screen — prefer it to a preceding heading alone. When you wrap a table in a scroll container, add <code>tabindex="0"</code> and <code>role="region"</code> with an <code>aria-label</code> so keyboard users can focus and scroll it, and so its purpose is announced.</p>
+        <p class="note">Note: Never use tables for layout. If a grid of cells is purely visual with no row/column relationship, use CSS grid or flexbox instead; as a last resort <code>role="presentation"</code> on a table strips its tabular semantics, but that is a smell, not a pattern to reach for.</p>
+      </section>
+
+      <section id="audio-video" class="concept" tabindex="-1">
+        <h2>Audio &amp; video</h2>
+        <p>The <code>&lt;video&gt;</code> and <code>&lt;audio&gt;</code> elements embed media natively. Add the <code>controls</code> attribute for the browser's built-in transport UI. Provide multiple <code>&lt;source&gt;</code> children in preference order — the browser picks the first one whose <code>type</code> it can play (for example WebM before MP4, or Ogg before MP3), so you cover every engine without scripting. Text between the tags is fallback content for browsers that support neither element.</p>
+        <p>Captions and subtitles come from <code>&lt;track&gt;</code> elements pointing at WebVTT files: <code>kind="captions"</code> for the deaf and hard of hearing, <code>subtitles</code> for translation, and <code>chapters</code>/<code>descriptions</code> for navigation and audio description. Tune loading with <code>poster</code> (a placeholder frame), <code>preload</code> (<code>none</code>/<code>metadata</code>/<code>auto</code>), and playback with <code>autoplay</code>, <code>muted</code>, <code>loop</code>, and <code>playsinline</code>. Browsers block autoplay with sound; a video must be <code>muted</code> to autoplay. The JavaScript media API (<code>play()</code>, <code>pause()</code>, <code>currentTime</code>, and events like <code>timeupdate</code>) drives custom players.</p>
+
+        <h3>Example: a video with sources, a track, and fallback</h3>
+        <pre class="code-block" data-lang="html"><code>&lt;video controls width="480" height="270"
+       poster="/media/cover.jpg" preload="metadata"&gt;
+  &lt;!-- The browser plays the first type it understands. --&gt;
+  &lt;source src="/media/talk.webm" type="video/webm"&gt;
+  &lt;source src="/media/talk.mp4"  type="video/mp4"&gt;
+  &lt;!-- Captions for accessibility (WebVTT). --&gt;
+  &lt;track kind="captions" srclang="en" label="English"
+         src="/media/talk.en.vtt" default&gt;
+  &lt;track kind="chapters" srclang="en"
+         src="/media/talk.chapters.vtt"&gt;
+  &lt;!-- Shown only if &lt;video&gt; is unsupported. --&gt;
+  &lt;p&gt;Your browser cannot play video.
+     &lt;a href="/media/talk.mp4"&gt;Download the MP4&lt;/a&gt;.&lt;/p&gt;
+&lt;/video&gt;</code></pre>
+        <div class="sim-output"><strong>Result:</strong> A Chromium or Firefox build with WebM support loads <code>talk.webm</code>; a browser without it falls through to <code>talk.mp4</code>. The poster image shows until playback, only metadata is fetched up front, and the English captions track is selected by default. A browser that supports neither codec shows the download link.</div>
+
+        <h3>Example: audio with a custom play button and progress readout</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- A short generated tone stands in for a real file;
+     the media API is identical for any source. --&gt;
+&lt;audio id="clip" preload="metadata"
+  src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="&gt;
+&lt;/audio&gt;
+&lt;button id="toggle" type="button"&gt;Play&lt;/button&gt;
+&lt;output id="time"&gt;0.00s&lt;/output&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const audio = document.getElementById('clip');
+const btn = document.getElementById('toggle');
+const time = document.getElementById('time');
+
+btn.addEventListener('click', () => {
+  if (audio.paused) {
+    // play() returns a promise that can reject (autoplay policy).
+    audio.play().then(() => {
+      btn.textContent = 'Pause';
+      console.log('playing');
+    }).catch((err) => console.error('blocked:', err.message));
+  } else {
+    audio.pause();
+    btn.textContent = 'Play';
+    console.log('paused at', audio.currentTime.toFixed(2));
+  }
+});
+
+// timeupdate fires as playback position advances.
+audio.addEventListener('timeupdate', () => {
+  time.textContent = audio.currentTime.toFixed(2) + 's';
+});
+audio.addEventListener('ended', () => {
+  btn.textContent = 'Play';
+  console.log('ended');
+});
+console.log('ready; duration =', audio.duration);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a muted, autoplaying background video</h3>
+        <pre class="code-block" data-lang="html"><code>&lt;!-- muted is REQUIRED for autoplay to be allowed. --&gt;
+&lt;video autoplay muted loop playsinline
+       preload="auto" aria-hidden="true"
+       class="bg-video"&gt;
+  &lt;source src="/media/loop.webm" type="video/webm"&gt;
+  &lt;source src="/media/loop.mp4"  type="video/mp4"&gt;
+&lt;/video&gt;
+
+&lt;style&gt;
+  /* Respect users who ask for less motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .bg-video { display: none; }
+  }
+&lt;/style&gt;</code></pre>
+        <div class="sim-output"><strong>Result:</strong> The clip starts on its own, silent and looping, with <code>playsinline</code> keeping it inline on iOS rather than going fullscreen. Because it is decorative it carries <code>aria-hidden="true"</code>, and the reduced-motion media query hides it entirely for users who have requested minimal animation.</div>
+
+        <p class="note note-a11y">Note: Captions are not optional for meaningful video — <code>kind="captions"</code> serves users who are deaf or hard of hearing, and <code>kind="descriptions"</code> narrates on-screen action for blind users. Never rely on autoplaying audio; it is disorienting and browsers block it by default.</p>
+        <p class="note note-perf">Note: <code>preload="metadata"</code> fetches just enough to show duration and dimensions without downloading the whole file, and a <code>poster</code> gives an instant visual while bytes stream. Use <code>preload="none"</code> for below-the-fold media the user may never play.</p>
+      </section>
+
+      <section id="embedded-content" class="concept" tabindex="-1">
+        <h2>Embedding external content</h2>
+        <p>An <code>&lt;iframe&gt;</code> embeds another browsing context. Always give it a <code>title</code> — screen readers announce the frame by it — plus explicit <code>width</code>/<code>height</code> (or CSS sizing) to avoid layout shift. The <code>sandbox</code> attribute is the security lever: with an empty value the frame runs with every restriction on, and you re-grant capabilities token by token (<code>allow-scripts</code>, <code>allow-forms</code>, <code>allow-popups</code>, <code>allow-same-origin</code>). Crucially, omitting <code>allow-same-origin</code> forces the frame into a unique opaque origin, so it cannot read your cookies, storage, or DOM even when it comes from your own server.</p>
+        <p>Use <code>srcdoc</code> to supply an inline document instead of a URL, <code>loading="lazy"</code> to defer off-screen frames, and <code>referrerpolicy</code> to control the <code>Referer</code> header. The <code>allow</code> attribute applies a Permissions Policy (<code>camera</code>, <code>microphone</code>, <code>fullscreen</code>, <code>geolocation</code>). For documents like PDFs, <code>&lt;object&gt;</code> renders inline with fallback content between its tags; <code>&lt;embed&gt;</code> is the older, fallback-less equivalent. When in doubt, a plain link is often the most robust and accessible choice. On the receiving side, protect your own pages from being framed with <code>X-Frame-Options</code> or a CSP <code>frame-ancestors</code> directive to prevent clickjacking.</p>
+
+        <h3>Example: a sandboxed iframe with srcdoc — scripts blocked until allowed</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;No allow-scripts: the frame's script never runs.&lt;/p&gt;
+&lt;iframe title="Sandboxed, scripts off" sandbox
+  srcdoc="&lt;p&gt;Static content.&lt;/p&gt;
+    &lt;script&gt;document.body.append('SCRIPT RAN');&lt;/script&gt;"&gt;
+&lt;/iframe&gt;
+
+&lt;p&gt;With allow-scripts: the same markup executes.&lt;/p&gt;
+&lt;iframe title="Sandboxed, scripts on" sandbox="allow-scripts"
+  srcdoc="&lt;p&gt;Static content.&lt;/p&gt;
+    &lt;script&gt;document.body.append('SCRIPT RAN');&lt;/script&gt;"&gt;
+&lt;/iframe&gt;</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: cross-origin isolation from allow-same-origin</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;iframe id="same" title="Same origin allowed"
+  sandbox="allow-same-origin"
+  srcdoc="&lt;p id='x'&gt;secret&lt;/p&gt;"&gt;&lt;/iframe&gt;
+
+&lt;iframe id="opaque" title="Opaque origin"
+  sandbox=""
+  srcdoc="&lt;p id='x'&gt;secret&lt;/p&gt;"&gt;&lt;/iframe&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">function peek(id) {
+  const frame = document.getElementById(id);
+  try {
+    // Reaching into contentDocument only works when the
+    // frame shares this document's origin.
+    const text = frame.contentDocument.getElementById('x').textContent;
+    console.log(id, 'DOM readable:', text);
+  } catch (err) {
+    console.log(id, 'blocked ->', err.name);
+  }
+}
+// Wait a tick so the frames have parsed their srcdoc.
+window.addEventListener('load', () => {
+  peek('same');    // allow-same-origin: readable
+  peek('opaque');  // sandbox="" opaque origin: SecurityError
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: an object embedding a PDF with a fallback link</h3>
+        <pre class="code-block" data-lang="html"><code>&lt;object data="/docs/report.pdf" type="application/pdf"
+        width="100%" height="480"&gt;
+  &lt;!-- Rendered only if the browser can't display the PDF. --&gt;
+  &lt;p&gt;This browser can't show the PDF inline.
+     &lt;a href="/docs/report.pdf"&gt;Download report.pdf&lt;/a&gt;.&lt;/p&gt;
+&lt;/object&gt;</code></pre>
+        <div class="sim-output"><strong>Result:</strong> Browsers with a built-in PDF viewer render the report inline in a 480px-tall box; those without one (many mobile browsers) fall back to the download link inside the element. Unlike <code>&lt;embed&gt;</code>, <code>&lt;object&gt;</code> supports this graceful fallback content.</div>
+
+        <p class="note note-compat">Note: A frame with <code>sandbox=""</code> and no <code>allow-same-origin</code> runs in a unique opaque origin, so <code>contentDocument</code> access throws a <code>SecurityError</code>. Never combine <code>allow-scripts</code> and <code>allow-same-origin</code> for content you do not fully trust — together they let the frame remove its own sandbox.</p>
+        <p class="note note-perf">Note: <code>loading="lazy"</code> on an iframe defers loading third-party embeds (maps, videos, widgets) until they are near the viewport, which can save hundreds of kilobytes and multiple connections on initial load.</p>
+      </section>
+
+      <section id="character-references" class="concept" tabindex="-1">
+        <h2>Character references &amp; escaping</h2>
+        <p>Certain characters are structural in HTML, so writing them literally as data is ambiguous. The parser treats <code>&lt;</code> as the start of a tag and <code>&amp;</code> as the start of an entity; inside a double-quoted attribute, <code>"</code> ends the value. To show these as text you escape them with character references. There are five predefined named entities: <code>&amp;lt;</code> (&lt;), <code>&amp;gt;</code> (&gt;), <code>&amp;amp;</code> (&amp;), <code>&amp;quot;</code> (&quot;), and <code>&amp;apos;</code> (&apos;). In practice you always need <code>&amp;</code> and <code>&lt;</code>; the rest are situational.</p>
+        <p>References come in three forms: named (<code>&amp;copy;</code>), decimal numeric (<code>&amp;#169;</code>), and hexadecimal numeric (<code>&amp;#xA9;</code>) — all three render <span aria-hidden="true">&copy;</span>. HTML collapses runs of whitespace to a single space; use <code>&amp;nbsp;</code> to force a non-breaking space, <code>&amp;shy;</code> for an invisible soft hyphen that only appears at a line break, <code>&amp;thinsp;</code> for a thin space, and <code>&lt;pre&gt;</code> to preserve whitespace verbatim. This connects directly to security: when you inject user data into HTML you must escape it, or a value like <code>&lt;script&gt;</code> becomes executable markup. Setting <code>textContent</code> escapes automatically; concatenating into <code>innerHTML</code> does not.</p>
+
+        <h3>Example: raw vs escaped markup, side by side</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;h3&gt;Escaped — shows as literal text&lt;/h3&gt;
+&lt;p&gt;Type &amp;lt;b&amp;gt;bold&amp;lt;/b&amp;gt; to make text bold.&lt;/p&gt;
+&lt;p&gt;5 &amp;lt; 10 &amp;amp;&amp;amp; 10 &amp;gt; 5 is true.&lt;/p&gt;
+
+&lt;h3&gt;Unescaped — the browser parses it&lt;/h3&gt;
+&lt;p&gt;Type &lt;b&gt;bold&lt;/b&gt; to make text bold.&lt;/p&gt;
+
+&lt;h3&gt;Same glyph, three references&lt;/h3&gt;
+&lt;p&gt;named &amp;copy; · decimal &amp;#169; · hex &amp;#xA9;&lt;/p&gt;</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: whitespace collapsing, &lt;pre&gt;, and spacing entities</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;h3&gt;A paragraph collapses whitespace&lt;/h3&gt;
+&lt;p&gt;These      many     spaces
+and
+line breaks    all collapse to one.&lt;/p&gt;
+
+&lt;h3&gt;A non-breaking space keeps words together&lt;/h3&gt;
+&lt;p style="width:6ch"&gt;10&amp;nbsp;kg wraps as a unit.&lt;/p&gt;
+
+&lt;h3&gt;&amp;lt;pre&amp;gt; preserves it verbatim&lt;/h3&gt;
+&lt;pre&gt;col1    col2    col3
+a       b       c&lt;/pre&gt;</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: escaping user input — textContent vs innerHTML</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div id="safe"&gt;&lt;/div&gt;
+&lt;div id="unsafe"&gt;&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Hostile input pretending to be a username.
+const evil = '&lt;img src=x onerror="alert(1)"&gt;Bobby';
+
+// SAFE: textContent treats the string as data. The
+// browser escapes it; no element is created.
+const safe = document.getElementById('safe');
+safe.textContent = evil;
+console.log('textContent innerHTML =', safe.innerHTML);
+console.log('img elements created:', safe.querySelectorAll('img').length);
+
+// UNSAFE: innerHTML parses the string as markup, so the
+// &lt;img&gt; is built and its onerror would fire (XSS).
+const unsafe = document.getElementById('unsafe');
+unsafe.innerHTML = evil;
+console.log('innerHTML img elements created:',
+  unsafe.querySelectorAll('img').length);
+
+// To display code AS TEXT you double-escape: the source
+// contains &amp;amp;lt; which renders as the literal &amp;lt;.
+console.log('double-escaped source shows: &amp;lt;');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note">Note: To display a code sample as text, escape every <code>&amp;</code>, <code>&lt;</code>, and <code>&gt;</code>. To display the escaped source <em>itself</em> (teaching the reader what to type), double-escape: write <code>&amp;amp;lt;</code> so the page renders the literal string <code>&amp;lt;</code>. Every static code block on this site uses single-escaping so the code shows as intended.</p>
+        <p class="note note-a11y">Note: Prefer real characters (<code>é</code>, <code>—</code>, <code>©</code>) saved in a UTF-8 file over numeric references when you can type them — they are far more readable in source. Reserve references for the structural characters (<code>&amp;amp;</code>, <code>&amp;lt;</code>) and invisible ones (<code>&amp;nbsp;</code>, <code>&amp;shy;</code>) that you cannot see or type reliably.</p>
+      </section>
+
+      <section id="global-attributes" class="concept" tabindex="-1">
+        <h2>Global attributes</h2>
+        <p>Global attributes apply to every element. <code>id</code> (unique per document) and <code>class</code> (reusable) are the primary hooks for CSS and the DOM. <code>title</code> supplies an advisory tooltip, but it is unreliable for accessibility — it does not appear on touch, is hard to reach by keyboard, and is not consistently announced, so never put essential information only in a <code>title</code>. <code>lang</code> and <code>dir</code> drive internationalization: <code>lang</code> tells screen readers which pronunciation rules and hyphenation to use, and <code>dir="rtl"</code> flips text direction for scripts like Arabic and Hebrew.</p>
+        <p>Several globals control interactivity. <code>hidden</code> removes an element from rendering (like <code>display:none</code>); <code>inert</code> goes further, taking an entire subtree out of the tab order, pointer interaction, and the accessibility tree while leaving it visible — ideal for content behind a modal. <code>tabindex="0"</code> adds a non-interactive element to the natural tab order, <code>tabindex="-1"</code> makes it focusable only programmatically (for roving-tabindex widgets and focus management), and positive values are an anti-pattern that scrambles tab order. <code>contenteditable</code> makes a region editable, <code>spellcheck</code> toggles the checker, and hint attributes like <code>enterkeyhint</code> and <code>inputmode</code> tune the on-screen keyboard.</p>
+
+        <h3>Example: inert traps focus behind a panel</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div id="background"&gt;
+  &lt;h3&gt;Page content&lt;/h3&gt;
+  &lt;button type="button"&gt;Background button A&lt;/button&gt;
+  &lt;a href="#"&gt;Background link&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div id="panel"&gt;
+  &lt;p&gt;Modal-like panel&lt;/p&gt;
+  &lt;button id="open" type="button"&gt;Make background inert&lt;/button&gt;
+  &lt;button id="close" type="button"&gt;Release&lt;/button&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const bg = document.getElementById('background');
+
+document.getElementById('open').addEventListener('click', () => {
+  bg.inert = true;   // subtree leaves tab order + a11y tree
+  console.log('background inert:', bg.inert);
+  // Focus can no longer land inside the inert subtree.
+  bg.querySelector('button').focus();
+  console.log('focus went to:',
+    document.activeElement.textContent || '(not the bg button)');
+});
+
+document.getElementById('close').addEventListener('click', () => {
+  bg.inert = false;
+  bg.querySelector('button').focus();
+  console.log('after release, focus:', document.activeElement.textContent);
+});
+console.log('Click "Make background inert", then try Tab.');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: contenteditable with lang-aware spellcheck</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;
+  &lt;label&gt;Dictionary:
+    &lt;select id="lang"&gt;
+      &lt;option value="en"&gt;English&lt;/option&gt;
+      &lt;option value="fr"&gt;French&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/label&gt;
+&lt;/p&gt;
+&lt;div id="editor" contenteditable="true" spellcheck="true"
+     lang="en" role="textbox" aria-multiline="true"
+     style="border:1px solid #94a3b8;padding:.5rem;border-radius:6px"&gt;
+  Edit me. Try a typpo.
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const editor = document.getElementById('editor');
+const lang = document.getElementById('lang');
+
+// Switching lang changes which dictionary spellcheck uses.
+lang.addEventListener('change', () => {
+  editor.lang = lang.value;
+  console.log('editor lang is now:', editor.lang);
+});
+
+// input events fire on every edit of the region.
+editor.addEventListener('input', () => {
+  console.log('text length:', editor.textContent.trim().length);
+});
+console.log('editable:', editor.isContentEditable);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: tabindex and a roving-tabindex toolbar</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- A plain div made focusable with tabindex=0. --&gt;
+&lt;div id="widget" tabindex="0" role="button"
+     style="border:1px solid #888;padding:.4rem;border-radius:6px"&gt;
+  Custom focusable widget (Tab to me, press Enter)
+&lt;/div&gt;
+
+&lt;!-- Roving tabindex: only one item is tabbable. --&gt;
+&lt;div id="bar" role="toolbar" aria-label="Format"&gt;
+  &lt;button type="button" tabindex="0"&gt;Bold&lt;/button&gt;
+  &lt;button type="button" tabindex="-1"&gt;Italic&lt;/button&gt;
+  &lt;button type="button" tabindex="-1"&gt;Underline&lt;/button&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const widget = document.getElementById('widget');
+widget.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    console.log('widget activated via keyboard');
+  }
+});
+
+// Roving tabindex: arrow keys move focus; only the
+// focused button has tabindex 0, the rest -1.
+const bar = document.getElementById('bar');
+const items = [...bar.querySelectorAll('button')];
+bar.addEventListener('keydown', (e) => {
+  const i = items.indexOf(document.activeElement);
+  if (i === -1) return;
+  let next = i;
+  if (e.key === 'ArrowRight') next = (i + 1) % items.length;
+  else if (e.key === 'ArrowLeft') next = (i - 1 + items.length) % items.length;
+  else return;
+  e.preventDefault();
+  items[i].tabIndex = -1;
+  items[next].tabIndex = 0;
+  items[next].focus();
+  console.log('focus moved to:', items[next].textContent);
+});
+console.log('Tab into the toolbar, then use Arrow keys.');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: <code>inert</code> is the correct tool for the background of a modal — unlike manually removing <code>tabindex</code>, it also hides the subtree from the accessibility tree so a screen reader cannot navigate into it. Avoid positive <code>tabindex</code> values: they override the natural DOM order and almost always create a confusing, unpredictable focus sequence.</p>
+      </section>
+
+      <section id="advanced-form-controls" class="concept" tabindex="-1">
+        <h2>Advanced form controls &amp; JS validation</h2>
+        <p>Beyond the basic inputs, HTML offers specialized controls. <code>&lt;datalist&gt;</code> bound via a control's <code>list</code> attribute supplies autocomplete suggestions while still allowing free text. <code>&lt;output&gt;</code> displays a calculated result, <code>&lt;progress&gt;</code> shows determinate or indeterminate task completion, and <code>&lt;meter&gt;</code> shows a scalar value within a known range (disk usage, a score) with optional <code>low</code>/<code>high</code>/<code>optimum</code> thresholds. A control can even sit outside its <code>&lt;form&gt;</code> and still belong to it via the <code>form</code> attribute.</p>
+        <p>The Constraint Validation API exposes validity in JavaScript. Every control has a <code>validity</code> object (with flags like <code>valueMissing</code>, <code>typeMismatch</code>, <code>patternMismatch</code>), a <code>setCustomValidity(msg)</code> method to force an error with your own message, and two check methods: <code>checkValidity()</code> returns a boolean silently, while <code>reportValidity()</code> also shows the browser's error bubble. The <code>:valid</code>/<code>:invalid</code> pseudo-classes style state in CSS. Pair this with <code>autocomplete</code> tokens (<code>email</code>, <code>one-time-code</code>) and <code>inputmode</code> for better mobile keyboards, and build an accessible error summary with <code>aria-describedby</code>.</p>
+
+        <h3>Example: datalist, output, meter, and progress together</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;form id="budget"&gt;
+  &lt;p&gt;
+    &lt;label for="spend"&gt;Monthly spend&lt;/label&gt;
+    &lt;input id="spend" type="range" min="0" max="1000"
+           step="10" value="300"&gt;
+    &lt;output id="amount" for="spend"&gt;$300&lt;/output&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    Budget used:
+    &lt;meter id="gauge" min="0" max="1000"
+           low="500" high="800" optimum="200"
+           value="300"&gt;30%&lt;/meter&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    Upload: &lt;progress id="up" max="100" value="0"&gt;&lt;/progress&gt;
+    &lt;button type="button" id="go"&gt;Simulate upload&lt;/button&gt;
+  &lt;/p&gt;
+&lt;/form&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const spend = document.getElementById('spend');
+const amount = document.getElementById('amount');
+const gauge = document.getElementById('gauge');
+
+function sync() {
+  amount.value = '$' + spend.value;
+  gauge.value = spend.value;   // meter colors shift past thresholds
+  console.log('spend =', spend.value, 'meter =', gauge.value);
+}
+spend.addEventListener('input', sync);
+sync();
+
+const up = document.getElementById('up');
+document.getElementById('go').addEventListener('click', () => {
+  up.value = 0;
+  const t = setInterval(() => {
+    up.value = Math.min(100, up.value + 20);
+    console.log('upload progress:', up.value + '%');
+    if (up.value >= 100) clearInterval(t);
+  }, 200);
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: custom validity for a matching-password rule</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;form id="signup"&gt;
+  &lt;p&gt;
+    &lt;label for="pw1"&gt;Password&lt;/label&gt;
+    &lt;input id="pw1" type="password" required minlength="8"
+           autocomplete="new-password"&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label for="pw2"&gt;Confirm&lt;/label&gt;
+    &lt;input id="pw2" type="password" required
+           autocomplete="new-password"&gt;
+  &lt;/p&gt;
+  &lt;button type="submit"&gt;Create account&lt;/button&gt;
+&lt;/form&gt;
+&lt;output id="state"&gt;&lt;/output&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const form = document.getElementById('signup');
+const pw1 = document.getElementById('pw1');
+const pw2 = document.getElementById('pw2');
+const state = document.getElementById('state');
+
+function check() {
+  // A non-empty custom message makes the control :invalid.
+  if (pw2.value && pw2.value !== pw1.value) {
+    pw2.setCustomValidity('Passwords do not match');
+  } else {
+    pw2.setCustomValidity('');   // clears the custom error
+  }
+}
+pw1.addEventListener('input', check);
+pw2.addEventListener('input', check);
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  check();
+  // reportValidity() shows the browser's error bubble.
+  if (form.reportValidity()) {
+    state.textContent = 'Valid — account created.';
+    console.log('valid submission');
+  } else {
+    console.log('blocked. validity.customError =',
+      pw2.validity.customError);
+  }
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: datalist autocomplete plus a multi-file input</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;
+  &lt;label for="city"&gt;City&lt;/label&gt;
+  &lt;input id="city" name="city" list="cities"
+         inputmode="text" enterkeyhint="search"
+         placeholder="Start typing…"&gt;
+  &lt;datalist id="cities"&gt;
+    &lt;option value="Amsterdam"&gt;
+    &lt;option value="Austin"&gt;
+    &lt;option value="Berlin"&gt;
+    &lt;option value="Boston"&gt;
+  &lt;/datalist&gt;
+&lt;/p&gt;
+&lt;p&gt;
+  &lt;label for="photos"&gt;Photos&lt;/label&gt;
+  &lt;input id="photos" type="file"
+         accept="image/*" multiple&gt;
+&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const city = document.getElementById('city');
+city.addEventListener('change', () => {
+  // Free text is allowed; datalist only suggests.
+  const known = [...document.querySelectorAll('#cities option')]
+    .some((o) => o.value === city.value);
+  console.log('chose:', city.value, '(suggested:', known + ')');
+});
+
+const photos = document.getElementById('photos');
+photos.addEventListener('change', () => {
+  // files is a FileList of the selected images.
+  console.log('selected', photos.files.length, 'file(s)');
+  for (const f of photos.files) {
+    console.log('-', f.name, f.type, f.size + ' bytes');
+  }
+});
+console.log('accept restricts the picker to images.');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: A red border alone does not communicate an error to screen-reader or colorblind users. Put the message in text, link it to the field with <code>aria-describedby</code>, and for multi-field forms build a focusable error summary at the top listing each problem as a link to the offending control.</p>
+        <p class="note note-compat">Note: <code>setCustomValidity('')</code> with an empty string <em>clears</em> the error — a non-empty message keeps the control permanently invalid, so always reset it once the value becomes acceptable. <code>&lt;meter&gt;</code> is for a measurement within a range; use <code>&lt;progress&gt;</code> for task completion, and do not confuse the two.</p>
+      </section>
+
+      <section id="dialog-popover" class="concept" tabindex="-1">
+        <h2>Modal dialogs &amp; popovers</h2>
+        <p>The <code>&lt;dialog&gt;</code> element is a native modal or non-modal window. Call <code>showModal()</code> to open it as a true modal: the browser renders it in the top layer above all other content, paints a <code>::backdrop</code> pseudo-element behind it, traps focus inside, and makes the rest of the page inert. <code>show()</code> opens it non-modally without a backdrop or focus trap. Close it with <code>close()</code>, the Escape key (modal only), or — most elegantly — a form with <code>method="dialog"</code>, whose submit button's value becomes the dialog's <code>returnValue</code>.</p>
+        <p>The Popover API is lighter weight and needs no JavaScript. Any element with the <code>popover</code> attribute (<code>auto</code> or <code>manual</code>) starts hidden in the top layer; a button with <code>popovertarget</code> pointing at its <code>id</code> toggles it. An <code>auto</code> popover supports light dismiss — click outside or press Escape and it closes — and is non-modal with no backdrop, unlike a dialog. Reach for <code>&lt;dialog&gt;</code> when you need a modal that blocks the page, a popover for menus and transient overlays, and <code>&lt;details&gt;</code> for inline disclosure. For accessibility, give a dialog an accessible name with <code>aria-labelledby</code>, and note the browser restores focus to the opener on close.</p>
+
+        <h3>Example: a confirmation dialog with returnValue</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;button id="open" type="button"&gt;Delete account&lt;/button&gt;
+&lt;p id="result"&gt;&lt;/p&gt;
+
+&lt;dialog id="confirm" aria-labelledby="title"&gt;
+  &lt;form method="dialog"&gt;
+    &lt;h3 id="title"&gt;Delete account?&lt;/h3&gt;
+    &lt;p&gt;This cannot be undone.&lt;/p&gt;
+    &lt;!-- Each button's value becomes returnValue. --&gt;
+    &lt;button value="cancel"&gt;Cancel&lt;/button&gt;
+    &lt;button value="delete"&gt;Delete&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const dlg = document.getElementById('confirm');
+const result = document.getElementById('result');
+
+document.getElementById('open').addEventListener('click', () => {
+  dlg.showModal();   // modal: top layer + backdrop + focus trap
+  console.log('dialog open:', dlg.open);
+});
+
+// 'close' fires after the method=dialog form submits.
+dlg.addEventListener('close', () => {
+  console.log('returnValue:', dlg.returnValue);
+  result.textContent = dlg.returnValue === 'delete'
+    ? 'Account deleted.'
+    : 'Cancelled.';
+});
+console.log('Press Escape or a button to close.');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a declarative popover menu — zero JavaScript</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- popovertarget wires the button to the popover
+     with no script at all. --&gt;
+&lt;button popovertarget="menu"&gt;Actions ▾&lt;/button&gt;
+
+&lt;div id="menu" popover="auto"&gt;
+  &lt;button&gt;Rename&lt;/button&gt;
+  &lt;button&gt;Duplicate&lt;/button&gt;
+  &lt;button&gt;Delete&lt;/button&gt;
+&lt;/div&gt;
+&lt;p&gt;Click the button, then click outside to dismiss.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">[popover] {
+  border: 1px solid #cbd5e1; border-radius: 8px;
+  padding: .4rem; box-shadow: 0 8px 24px rgba(0,0,0,.15);
+}
+[popover] button {
+  display: block; width: 100%; text-align: left;
+  border: 0; background: none; padding: .4rem .8rem;
+  border-radius: 4px; cursor: pointer; font: 14px system-ui;
+}
+[popover] button:hover { background: #eef2ff; }
+/* The top-layer backdrop of an open popover. */
+[popover]::backdrop { background: rgba(0,0,0,.05); }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: focus trapping and restore in a modal dialog</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;button id="opener" type="button"&gt;Open form dialog&lt;/button&gt;
+
+&lt;dialog id="form-dialog" aria-labelledby="h"&gt;
+  &lt;h3 id="h"&gt;Quick note&lt;/h3&gt;
+  &lt;p&gt;Tab cycles only within this dialog.&lt;/p&gt;
+  &lt;input id="first" placeholder="First field"&gt;
+  &lt;input placeholder="Second field"&gt;
+  &lt;menu&gt;
+    &lt;button id="cancel" type="button"&gt;Close&lt;/button&gt;
+  &lt;/menu&gt;
+&lt;/dialog&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const dlg = document.getElementById('form-dialog');
+const opener = document.getElementById('opener');
+
+opener.addEventListener('click', () => {
+  dlg.showModal();
+  // showModal auto-focuses the first focusable control.
+  console.log('focused on open:', document.activeElement.id || document.activeElement.tagName);
+  console.log('Tab stays inside; Escape closes.');
+});
+
+document.getElementById('cancel')
+  .addEventListener('click', () => dlg.close());
+
+dlg.addEventListener('close', () => {
+  // The browser restores focus to the opener automatically.
+  console.log('closed; focus restored to:', document.activeElement.id);
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: <code>showModal()</code> gives you focus trapping, Escape-to-close, backdrop inerting, and focus restoration for free — reimplementing a modal with a bare <code>&lt;div&gt;</code> means rebuilding all four correctly. Always give the dialog an accessible name via <code>aria-labelledby</code> (or <code>aria-label</code>) so its purpose is announced when it opens.</p>
+        <p class="note note-compat">Note: <code>&lt;dialog&gt;</code>, the Popover API, and top-layer rendering are supported across current evergreen browsers. Prefer <code>method="dialog"</code> forms and declarative <code>popovertarget</code> wiring over hand-written open/close scripts — less code, and the accessible behavior is guaranteed by the platform.</p>
+      </section>
+
+      <section id="inline-svg" class="concept" tabindex="-1">
+        <h2>Inline SVG</h2>
+        <p>Inline <code>&lt;svg&gt;</code> is real DOM: each shape is an element you can style with CSS and script with JavaScript, unlike an opaque <code>&lt;canvas&gt;</code> bitmap or an external <code>&lt;img src=".svg"&gt;</code>. The <code>viewBox="minX minY width height"</code> defines an internal coordinate system that scales to whatever size the SVG is rendered at, so a single drawing stays crisp at any resolution; <code>preserveAspectRatio</code> controls how it fits when the aspect ratios differ. Basic shapes — <code>&lt;rect&gt;</code>, <code>&lt;circle&gt;</code>, <code>&lt;line&gt;</code>, <code>&lt;path&gt;</code>, <code>&lt;text&gt;</code> — take <code>fill</code> and <code>stroke</code>.</p>
+        <p>For icon systems, define a shape once inside a <code>&lt;symbol&gt;</code> and stamp it anywhere with <code>&lt;use href="#id"&gt;</code> — the classic sprite pattern that avoids duplicating path data. Because inline SVG inherits CSS, using <code>fill="currentColor"</code> lets an icon take the surrounding text color automatically. Make meaningful SVG accessible with a <code>&lt;title&gt;</code> child plus <code>role="img"</code> and an <code>aria-label</code>; mark purely decorative SVG <code>aria-hidden="true"</code>. Choose inline SVG for styleable, scriptable, scalable vector UI; <code>&lt;img&gt;</code> for a static asset you do not need to style; canvas for pixel-heavy imperative drawing; and a font icon only for legacy constraints. For equations, MathML (<code>&lt;math&gt;</code>) is the semantic vector option.</p>
+
+        <h3>Example: an icon sprite with symbol, use, and currentColor</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- Define each icon once, hidden. --&gt;
+&lt;svg width="0" height="0" style="position:absolute"&gt;
+  &lt;symbol id="i-star" viewBox="0 0 24 24"&gt;
+    &lt;path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"
+          fill="currentColor"/&gt;
+  &lt;/symbol&gt;
+  &lt;symbol id="i-check" viewBox="0 0 24 24"&gt;
+    &lt;path d="M20 6L9 17l-5-5" fill="none"
+          stroke="currentColor" stroke-width="3"/&gt;
+  &lt;/symbol&gt;
+&lt;/svg&gt;
+
+&lt;!-- Stamp them, recolored by text color. --&gt;
+&lt;p class="gold"&gt;&lt;svg class="ic"&gt;&lt;use href="#i-star"/&gt;&lt;/svg&gt; Favorite&lt;/p&gt;
+&lt;p class="green"&gt;&lt;svg class="ic"&gt;&lt;use href="#i-check"/&gt;&lt;/svg&gt; Done&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font: 16px system-ui; }
+.ic { width: 1.2em; height: 1.2em; vertical-align: -.2em; }
+/* currentColor means the icon follows the text color. */
+.gold  { color: #d97706; }
+.green { color: #16a34a; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a data-driven bar chart from &lt;rect&gt; elements</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- viewBox gives a fixed 200x100 coordinate space
+     that scales to the rendered size. --&gt;
+&lt;svg id="chart" viewBox="0 0 200 100" width="300"
+     role="img" aria-label="Quarterly bar chart"
+     style="border:1px solid #cbd5e1"&gt;
+&lt;/svg&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const data = [40, 75, 55, 90];
+const svg = document.getElementById('chart');
+const NS = 'http://www.w3.org/2000/svg';
+const barW = 40, gap = 10;
+
+data.forEach((v, i) => {
+  // SVG y grows downward; height = value, y = 100 - value.
+  const rect = document.createElementNS(NS, 'rect');
+  rect.setAttribute('x', i * (barW + gap) + gap);
+  rect.setAttribute('y', 100 - v);
+  rect.setAttribute('width', barW);
+  rect.setAttribute('height', v);
+  rect.setAttribute('fill', '#4f7cff');
+  svg.appendChild(rect);
+  console.log(`bar ${i}: value=${v}, height=${v}`);
+});
+console.log('Unlike canvas, each bar is a live DOM node.');
+console.log('rect count:', svg.querySelectorAll('rect').length);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: an accessible logo, plus a MathML fraction</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;!-- title + role=img + aria-label name the graphic. --&gt;
+&lt;svg viewBox="0 0 120 40" width="120" role="img"
+     aria-labelledby="logo-t"&gt;
+  &lt;title id="logo-t"&gt;Acme, Inc. logo&lt;/title&gt;
+  &lt;circle cx="20" cy="20" r="16" fill="#4f7cff"/&gt;
+  &lt;text x="44" y="26" font-family="system-ui"
+        font-size="18" font-weight="700"&gt;Acme&lt;/text&gt;
+&lt;/svg&gt;
+
+&lt;!-- MathML expresses equations semantically. --&gt;
+&lt;p&gt;The slope is
+  &lt;math&gt;
+    &lt;mfrac&gt;
+      &lt;mrow&gt;&lt;mi&gt;y&lt;/mi&gt;&lt;mo&gt;−&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;&lt;/mrow&gt;
+      &lt;mi&gt;x&lt;/mi&gt;
+    &lt;/mfrac&gt;
+  &lt;/math&gt;.
+&lt;/p&gt;</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: An SVG with no accessible name is announced inconsistently or skipped. For meaningful graphics add a <code>&lt;title&gt;</code> and <code>role="img"</code> with <code>aria-label</code>/<code>aria-labelledby</code>; for decorative ones set <code>aria-hidden="true"</code> so assistive tech ignores them. A <code>&lt;title&gt;</code> child (not a <code>title</code> attribute) is the SVG-native tooltip and name source.</p>
+        <p class="note note-perf">Note: The <code>&lt;symbol&gt;</code>/<code>&lt;use&gt;</code> sprite pattern defines each icon's path data once and references it many times, keeping the DOM small even with hundreds of icon instances. Inline SVG also avoids an extra network request per icon, unlike separate <code>&lt;img&gt;</code> files.</p>
+      </section>
+
+      <section id="resource-loading" class="concept" tabindex="-1">
+        <h2>Loading scripts &amp; resources</h2>
+        <p>Where and how a <code>&lt;script&gt;</code> loads decides whether it blocks rendering. A classic script in the <code>&lt;head&gt;</code> with no attributes pauses the parser while it downloads and executes. Add <code>defer</code> and it downloads in parallel, then runs after the document is parsed, in document order — the right default for scripts that touch the DOM. Add <code>async</code> and it downloads in parallel and runs as soon as it arrives, in no guaranteed order — suited to independent third-party scripts. A <code>type="module"</code> script is deferred by default, runs in strict mode, and supports <code>import</code>; pair it with a <code>nomodule</code> fallback so legacy browsers load a transpiled bundle instead.</p>
+        <p>Resource hints in the <code>&lt;head&gt;</code> shape loading priority. <code>rel="preload"</code> with a matching <code>as</code> fetches a critical resource early; <code>modulepreload</code> does the same for ES modules; <code>prefetch</code> grabs something likely needed on the next navigation; <code>preconnect</code> and <code>dns-prefetch</code> warm up a connection to a third-party origin before you need it. <code>loading="lazy"</code> defers off-screen images and iframes, <code>decoding="async"</code> keeps image decoding off the main thread, and <code>fetchpriority</code> nudges the browser's priority. The <code>&lt;base&gt;</code> element sets a default URL and target for all relative links — powerful but easy to misuse, since it affects every relative reference on the page.</p>
+
+        <h3>Example: classic vs defer vs async execution order</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// This preview runs one inline module of code, so we
+// SIMULATE how the three loading strategies would order
+// three separate external scripts on a real page.
+const log = (s) => console.log(s);
+
+log('--- parser reaches <head> ---');
+// Classic head script: blocks the parser, runs immediately.
+log('[1] classic head script runs (parser paused)');
+
+log('--- parser builds the body ---');
+
+// defer: parallel download, runs AFTER parsing, in order.
+const deferred = ['[3] defer-a', '[4] defer-b'];
+
+// async: runs whenever it arrives — order not guaranteed.
+// Here async-x happens to land during parsing.
+log('[2] async-x runs the moment it downloads');
+
+log('--- parsing complete (DOMContentLoaded pending) ---');
+deferred.forEach(log);   // deferred scripts, document order
+log('[5] DOMContentLoaded fires');
+
+console.log('Rule: defer preserves order and waits; ' +
+  'async does neither; classic blocks.');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a head reference block of resource hints</h3>
+        <pre class="code-block" data-lang="html"><code>&lt;head&gt;
+  &lt;!-- Warm up the connection to a font host early. --&gt;
+  &lt;link rel="preconnect" href="https://fonts.example"
+        crossorigin&gt;
+  &lt;link rel="dns-prefetch" href="https://cdn.example"&gt;
+
+  &lt;!-- Fetch the LCP hero image at high priority. --&gt;
+  &lt;link rel="preload" as="image" href="/img/hero.avif"
+        fetchpriority="high"&gt;
+
+  &lt;!-- Preload a font (as=font always needs crossorigin). --&gt;
+  &lt;link rel="preload" as="font" type="font/woff2"
+        href="/fonts/inter.woff2" crossorigin&gt;
+
+  &lt;!-- Preload an ES module the entry script imports. --&gt;
+  &lt;link rel="modulepreload" href="/js/app.js"&gt;
+
+  &lt;!-- Likely-next-page resource, low priority. --&gt;
+  &lt;link rel="prefetch" href="/data/next-page.json"&gt;
+
+  &lt;script type="module" src="/js/app.js"&gt;&lt;/script&gt;
+&lt;/head&gt;</code></pre>
+        <div class="sim-output"><strong>Result:</strong> The browser opens the TLS connection to the font host before it parses any tag that needs it, fetches the hero image ahead of lower-priority requests, and downloads <code>app.js</code> and its module graph in parallel with parsing — so by the time the module executes, its imports are already in the cache. The <code>prefetch</code> sits at idle priority for a probable next navigation.</div>
+
+        <h3>Example: the module / nomodule fallback pair</h3>
+        <pre class="code-block" data-lang="html"><code>&lt;!-- Modern browsers run this and IGNORE nomodule. --&gt;
+&lt;script type="module" src="/js/app.modern.js"&gt;&lt;/script&gt;
+
+&lt;!-- Legacy browsers run this and IGNORE type=module. --&gt;
+&lt;script nomodule src="/js/app.legacy.js"&gt;&lt;/script&gt;</code></pre>
+        <div class="sim-output"><strong>Result:</strong> A browser that understands ES modules executes <code>app.modern.js</code> and skips any <code>nomodule</code> script; an older browser does the opposite. Each engine runs exactly one of the two, so you ship untranspiled modern code to capable browsers and a transpiled bundle only where it is actually needed.</div>
+
+        <p class="note note-perf">Note: Prefer <code>defer</code> (or <code>type="module"</code>, which defers by default) over placing scripts at the end of <code>&lt;body&gt;</code> — you get parallel download with in-order, after-parse execution. Reserve <code>async</code> for scripts with no DOM or ordering dependency, such as analytics beacons.</p>
+        <p class="note note-compat">Note: A <code>preload</code> without a matching <code>as</code> is fetched at the wrong priority or downloaded twice, and an unused preload wastes bandwidth and triggers a console warning. Use <code>&lt;base&gt;</code> sparingly: because it rewrites every relative URL and default link target on the page, one <code>&lt;base&gt;</code> tag can silently break in-page fragment links and relative assets.</p>
+      </section>
+
+      <section id="drag-and-drop" class="concept" tabindex="-1">
+        <h2>Native drag &amp; drop</h2>
+        <p>The HTML Drag and Drop API moves data with the pointer. Links and images are draggable by default; any other element becomes draggable with the <code>draggable="true"</code> attribute. A drag fires a sequence of events on the source and target: <code>dragstart</code> (set the payload), <code>dragenter</code>/<code>dragover</code> on a potential target, <code>dragleave</code> when leaving it, <code>drop</code> when released, and <code>dragend</code> to clean up. The counter-intuitive but essential rule is that an element is <em>not</em> a valid drop target until you call <code>preventDefault()</code> in its <code>dragover</code> handler — the default action is to reject the drop.</p>
+        <p>Data travels on the <code>dataTransfer</code> object: <code>setData(type, value)</code> in <code>dragstart</code> and <code>getData(type)</code> in <code>drop</code>, with <code>effectAllowed</code> and <code>dropEffect</code> hinting whether this is a copy or move. Files dragged from the desktop arrive in <code>dataTransfer.files</code> (a pointer into the File API). The major limitation is accessibility: native drag and drop is not keyboard-operable, and screen readers expose it poorly, so you must always provide an equivalent that works without a mouse — move buttons, a cut/paste command, or a form control.</p>
+
+        <h3>Example: a reorderable list</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;ul id="list"&gt;
+  &lt;li draggable="true"&gt;Draft&lt;/li&gt;
+  &lt;li draggable="true"&gt;Review&lt;/li&gt;
+  &lt;li draggable="true"&gt;Publish&lt;/li&gt;
+&lt;/ul&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">#list { list-style: none; padding: 0; width: 180px; font: 15px system-ui; }
+#list li {
+  padding: .5rem .7rem; margin: .3rem 0; border-radius: 6px;
+  background: #eef2ff; cursor: grab; border: 1px solid #c7d2fe;
+}
+#list li.dragging { opacity: .4; }</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const list = document.getElementById('list');
+let dragged = null;
+
+list.addEventListener('dragstart', (e) => {
+  dragged = e.target;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', e.target.textContent);
+  console.log('dragstart:', e.target.textContent);
+});
+
+list.addEventListener('dragover', (e) => {
+  e.preventDefault();            // REQUIRED to allow a drop
+  const over = e.target.closest('li');
+  if (!over || over === dragged) return;
+  const rect = over.getBoundingClientRect();
+  const after = (e.clientY - rect.top) / rect.height > 0.5;
+  list.insertBefore(dragged, after ? over.nextSibling : over);
+});
+
+list.addEventListener('drop', (e) => {
+  e.preventDefault();
+  console.log('dropped payload:', e.dataTransfer.getData('text/plain'));
+  console.log('new order:',
+    [...list.children].map((li) => li.textContent).join(' → '));
+});
+
+list.addEventListener('dragend', (e) => {
+  e.target.classList.remove('dragging');
+});</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a drop zone for desktop files</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div id="zone"&gt;Drag files here from your desktop&lt;/div&gt;
+&lt;p&gt;
+  &lt;!-- Keyboard-accessible alternative. --&gt;
+  &lt;label for="picker"&gt;…or choose files:&lt;/label&gt;
+  &lt;input id="picker" type="file" multiple&gt;
+&lt;/p&gt;
+&lt;ul id="names"&gt;&lt;/ul&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">#zone {
+  border: 2px dashed #94a3b8; border-radius: 10px;
+  padding: 1.4rem; text-align: center; color: #475569;
+  font: 15px system-ui;
+}
+#zone.hover { border-color: #4f7cff; background: #eef2ff; }
+#names { font: 13px ui-monospace, monospace; }</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const zone = document.getElementById('zone');
+const names = document.getElementById('names');
+
+function show(files) {
+  names.innerHTML = '';
+  for (const f of files) {
+    const li = document.createElement('li');
+    li.textContent = `${f.name} (${f.size} bytes)`;
+    names.appendChild(li);
+    console.log('file:', f.name, f.type || '(unknown type)');
+  }
+}
+
+zone.addEventListener('dragover', (e) => {
+  e.preventDefault();            // allow the drop
+  zone.classList.add('hover');
+});
+zone.addEventListener('dragleave', () => zone.classList.remove('hover'));
+zone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  zone.classList.remove('hover');
+  // Dropped desktop files land in dataTransfer.files.
+  console.log('dropped', e.dataTransfer.files.length, 'file(s)');
+  show(e.dataTransfer.files);
+});
+
+// The accessible alternative feeds the same handler.
+document.getElementById('picker')
+  .addEventListener('change', (e) => show(e.target.files));
+console.log('Drop files, or use the file picker.');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a two-column board with a keyboard alternative</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="board"&gt;
+  &lt;div class="col" data-col="todo"&gt;
+    &lt;h3&gt;To do&lt;/h3&gt;
+    &lt;div class="card" draggable="true" tabindex="0"&gt;
+      Card A
+      &lt;button type="button" class="mv"&gt;Move ▸&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="col" data-col="done"&gt;
+    &lt;h3&gt;Done&lt;/h3&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">.board { display: flex; gap: 1rem; font: 14px system-ui; }
+.col { flex: 1; background: #f1f5f9; border-radius: 8px; padding: .5rem; min-height: 120px; }
+.col.over { outline: 2px dashed #4f7cff; }
+.col h3 { margin: 0 0 .5rem; font-size: 13px; color: #475569; }
+.card { background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: .5rem; cursor: grab; }
+.mv { font: 12px system-ui; margin-left: .4rem; }</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const board = document.querySelector('.board');
+const cols = [...board.querySelectorAll('.col')];
+let dragged = null;
+
+board.addEventListener('dragstart', (e) => {
+  if (!e.target.classList.contains('card')) return;
+  dragged = e.target;
+  e.dataTransfer.setData('text/plain', e.target.firstChild.textContent.trim());
+});
+
+cols.forEach((col) => {
+  col.addEventListener('dragover', (e) => { e.preventDefault(); col.classList.add('over'); });
+  col.addEventListener('dragleave', () => col.classList.remove('over'));
+  col.addEventListener('drop', (e) => {
+    e.preventDefault();
+    col.classList.remove('over');
+    col.appendChild(dragged);
+    console.log('moved card to column:', col.dataset.col);
+  });
+});
+
+// Keyboard-accessible equivalent: the Move button.
+board.addEventListener('click', (e) => {
+  if (!e.target.classList.contains('mv')) return;
+  const card = e.target.closest('.card');
+  const target = cols.find((c) => c !== card.closest('.col'));
+  target.appendChild(card);
+  card.focus();
+  console.log('moved via button to:', target.dataset.col);
+});
+console.log('Drag a card, or use its Move button.');</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <p class="note note-a11y">Note: Native drag and drop is mouse- and touch-only — it exposes no keyboard interaction and is announced poorly by screen readers. Always ship an equivalent path (Move buttons, a menu, or a form control, as in the board and drop-zone examples) so the feature is usable without a pointer.</p>
+        <p class="note note-compat">Note: The single most common bug is a drop that never fires: a target only accepts a drop if its <code>dragover</code> handler calls <code>e.preventDefault()</code>. Set <code>dataTransfer.effectAllowed</code> on the source and read <code>dataTransfer.files</code> for desktop files; both are essential to a working implementation.</p>
+      </section>
+    </main>
+  </div>
+  <footer class="site-footer"><p>DevDocs — static, self-contained learning reference.</p></footer>
+</body>
+</html>

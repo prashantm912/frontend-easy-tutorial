@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home — DevDocs</title>
+  <meta name="description" content="A fully offline, self-contained learning reference for HTML, CSS, JavaScript, and TypeScript with live editable examples.">
+  <link rel="stylesheet" href="styles/site.css">
+  <script src="scripts/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html">DevDocs</a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="html.html">HTML</a>
+      <a href="css.html">CSS</a>
+      <a href="javascript.html">JavaScript</a>
+      <a href="typescript.html">TypeScript</a>
+    </nav>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme</button>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="toc" aria-label="On this page">
+        <label class="toc-search-label" for="toc-search">Filter topics</label>
+        <input type="search" id="toc-search" class="toc-search" placeholder="Type to filter…" autocomplete="off">
+        <ul class="toc-list">
+          <li><a href="#how-to-use">How to use</a></li>
+          <li><a href="#html">HTML</a></li>
+          <li><a href="#css">CSS</a></li>
+          <li><a href="#javascript">JavaScript</a></li>
+          <li><a href="#typescript">TypeScript</a></li>
+          <li><a href="#notes">Notes</a></li>
+          <li><a href="#use-case-employee-dashboard">Use case: Employee Dashboard</a></li>
+          <li><a href="#use-case-typed-employee">Use case: Typed Employee Model</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main id="main" class="content">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> <span aria-hidden="true">/</span> <span aria-current="page">Overview</span>
+      </nav>
+      <h1>DevDocs</h1>
+      <p class="overview">DevDocs is a hands-on learning reference for front-end web development, covering HTML, CSS, JavaScript, and TypeScript from first principles through advanced patterns. Almost every concept ships with a live, editable example you can run and modify in place, so you learn by doing rather than only by reading. The entire site is static and self-contained: no build step, no network requests, and no external dependencies. Download it once and it works completely offline — just open the files in any modern browser.</p>
+
+      <section id="how-to-use" class="concept" tabindex="-1">
+        <h2>How to use</h2>
+        <p>Each guide is a single page split into short, focused sections. The sidebar on the left lists every section on the current page; the search box above it filters that list live as you type, so you can jump to a topic without scrolling. The breadcrumb trail at the top of the content shows where you are and links back to Home.</p>
+        <p>Runnable examples put an editor on the left and a live preview on the right. Edit any code, press <strong>Run</strong> to re-render the preview, or press <strong>Reset</strong> to restore the original snippet. JavaScript examples render their output through an in-preview console panel, so remember to <code>console.log(...)</code> anything you want to inspect. Try the mini playground below — it is a full HTML + CSS + JS sandbox seeded with a working example.</p>
+        <h3>Example: the mini playground</h3>
+        <div class="example playground">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;main class="app"&gt;
+  &lt;h2&gt;Hello, DevDocs&lt;/h2&gt;
+  &lt;p id="status"&gt;Press the button to change this text.&lt;/p&gt;
+  &lt;button id="greet" type="button"&gt;Greet me&lt;/button&gt;
+&lt;/main&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">.app {
+  font-family: system-ui, sans-serif;
+  padding: 1rem;
+  text-align: center;
+}
+button {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  background: #2b6cb0;
+  color: white;
+}
+button:hover { background: #2c5282; }</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const button = document.getElementById("greet");
+const status = document.getElementById("status");
+let count = 0;
+
+button.addEventListener("click", () => {
+  count += 1;
+  status.textContent = `You clicked ${count} time${count === 1 ? "" : "s"}.`;
+  console.log("Greeting rendered, click count:", count);
+});
+
+console.log("Playground ready. Edit the code, then press Run.");</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: every interactive control is keyboard reachable. Use the "Skip to content" link at the very top to bypass the header, and Tab through editors, tabs, and buttons in a logical order.</p>
+      </section>
+
+      <section id="html" class="concept" tabindex="-1">
+        <h2>HTML</h2>
+        <p>HTML is the structural foundation of every page. The HTML guide starts with semantic document structure and text-level markup, then moves through links and embedded media, native form controls and constraint validation, and accessibility with ARIA.</p>
+        <p>From there it covers document metadata, reusable templates and slots, custom data attributes, authoring your own web components, and layering behavior on top of solid markup through progressive enhancement.</p>
+        <p><a class="card-link" href="html.html">Open the HTML guide →</a></p>
+        <ul>
+          <li>Structure &amp; semantics</li>
+          <li>Text elements</li>
+          <li>Links &amp; media</li>
+          <li>Forms &amp; validation</li>
+          <li>Accessibility &amp; ARIA</li>
+          <li>Document metadata</li>
+          <li>Templates &amp; slots</li>
+          <li>Data attributes</li>
+          <li>Web components</li>
+          <li>Progressive enhancement</li>
+          <li><a href="html.html#feature-detection">Feature detection</a></li>
+          <li><a href="html.html#canvas-element">Canvas element</a></li>
+          <li><a href="html.html#contact-links">Contact links</a></li>
+          <li><a href="html.html#structured-data-employee">Structured data</a></li>
+          <li><a href="html.html#data-tables">Tables</a></li>
+          <li><a href="html.html#audio-video">Audio &amp; video</a></li>
+          <li><a href="html.html#embedded-content">Embedded content (iframes)</a></li>
+          <li><a href="html.html#character-references">Character references</a></li>
+          <li><a href="html.html#global-attributes">Global attributes</a></li>
+          <li><a href="html.html#advanced-form-controls">Advanced form controls</a></li>
+          <li><a href="html.html#dialog-popover">Dialog &amp; popover</a></li>
+          <li><a href="html.html#inline-svg">Inline SVG</a></li>
+          <li><a href="html.html#resource-loading">Resource loading</a></li>
+          <li><a href="html.html#drag-and-drop">Drag and drop</a></li>
+        </ul>
+        <p class="note">Note: semantic HTML is the cheapest accessibility win available — the right element gives you keyboard behavior and screen-reader semantics for free.</p>
+      </section>
+
+      <section id="css" class="concept" tabindex="-1">
+        <h2>CSS</h2>
+        <p>CSS controls presentation and layout. The CSS guide begins with selectors and the box model, then works through normal flow, Flexbox, and Grid so you can reason about any layout you meet in the wild.</p>
+        <p>Advanced sections cover responsive design, custom properties and <code>calc()</code>, transforms and animations, container queries, the specificity and cascade rules that decide which declaration wins, logical properties for internationalization, and scalable CSS architecture.</p>
+        <p><a class="card-link" href="css.html">Open the CSS guide →</a></p>
+        <ul>
+          <li>Selectors</li>
+          <li>Box model</li>
+          <li>Flow layout</li>
+          <li>Flexbox</li>
+          <li>Grid</li>
+          <li>Responsive design</li>
+          <li>Variables &amp; calc</li>
+          <li>Transforms &amp; animations</li>
+          <li>Container queries</li>
+          <li>Specificity &amp; cascade</li>
+          <li>Logical properties</li>
+          <li>Architecture</li>
+          <li><a href="css.html#dashboard-patterns">Dashboard patterns</a></li>
+          <li><a href="css.html#card-interactions">Card interactions</a></li>
+          <li><a href="css.html#collapsible-sections">Collapsible sections</a></li>
+          <li><a href="css.html#values-and-units">Values &amp; units</a></li>
+          <li><a href="css.html#typography">Typography</a></li>
+          <li><a href="css.html#colors-and-gradients">Colors &amp; gradients</a></li>
+          <li><a href="css.html#sizing-object-fit">Sizing &amp; object-fit</a></li>
+          <li><a href="css.html#backgrounds-borders-shadows">Backgrounds, borders &amp; shadows</a></li>
+          <li><a href="css.html#overflow-and-scroll">Overflow &amp; scroll</a></li>
+          <li><a href="css.html#advanced-selectors-pseudos">Advanced selectors &amp; pseudos</a></li>
+          <li><a href="css.html#css-nesting-scope">Nesting &amp; scope</a></li>
+          <li><a href="css.html#feature-and-advanced-media-queries">Feature &amp; media queries</a></li>
+          <li><a href="css.html#filters-blend-clip-mask">Filters, blend, clip &amp; mask</a></li>
+          <li><a href="css.html#more-topics">More topics</a></li>
+        </ul>
+        <p class="note note-perf">Note: prefer animating <code>transform</code> and <code>opacity</code> — they can run on the compositor and avoid expensive layout and paint work.</p>
+      </section>
+
+      <section id="javascript" class="concept" tabindex="-1">
+        <h2>JavaScript</h2>
+        <p>JavaScript makes pages interactive. The JavaScript guide covers language fundamentals, operators and control flow, functions and closures, and working with objects and arrays before touching the DOM.</p>
+        <p>It then explores DOM manipulation, event handling and delegation, asynchronous code with promises, the event loop, rate-limiting with debounce and throttle, ES modules, common design patterns, testing, performance and memory, and both web workers and service workers.</p>
+        <p><a class="card-link" href="javascript.html">Open the JavaScript guide →</a></p>
+        <ul>
+          <li>Fundamentals</li>
+          <li>Operators &amp; control flow</li>
+          <li>Functions &amp; closures</li>
+          <li>Objects &amp; arrays</li>
+          <li>DOM manipulation</li>
+          <li>Events &amp; delegation</li>
+          <li>Async &amp; promises</li>
+          <li>Event loop</li>
+          <li>Debounce &amp; throttle</li>
+          <li>Modules</li>
+          <li>Patterns</li>
+          <li>Testing</li>
+          <li>Performance &amp; memory</li>
+          <li>Web workers</li>
+          <li>Service workers</li>
+          <li><a href="javascript.html#feature-detection">Feature detection</a></li>
+          <li><a href="javascript.html#web-storage">Web storage</a></li>
+          <li><a href="javascript.html#canvas-api">Canvas API</a></li>
+          <li><a href="javascript.html#geolocation">Geolocation</a></li>
+          <li><a href="javascript.html#websockets">WebSockets</a></li>
+          <li><a href="javascript.html#this-and-binding">this &amp; binding</a></li>
+          <li><a href="javascript.html#prototypes-and-classes">Prototypes &amp; classes</a></li>
+          <li><a href="javascript.html#error-handling">Error handling</a></li>
+          <li><a href="javascript.html#iterators-and-generators">Iterators &amp; generators</a></li>
+          <li><a href="javascript.html#regular-expressions">Regular expressions</a></li>
+          <li><a href="javascript.html#object-model-immutability">Object model &amp; immutability</a></li>
+          <li><a href="javascript.html#more-topics">More topics</a></li>
+        </ul>
+        <p class="note">Note: understanding the event loop is the key to reasoning about why asynchronous code runs in the order it does.</p>
+      </section>
+
+      <section id="typescript" class="concept" tabindex="-1">
+        <h2>TypeScript</h2>
+        <p>TypeScript adds a static type system on top of JavaScript. The TypeScript guide starts with setup and tooling, basic types, structural typing, and the difference between interfaces and type aliases.</p>
+        <p>Advanced sections cover typing functions, generics, mapped and utility types, conditional types, discriminated unions, type guards, declaration files, compiler options, migrating a JavaScript codebase, and day-to-day best practices.</p>
+        <p><a class="card-link" href="typescript.html">Open the TypeScript guide →</a></p>
+        <ul>
+          <li>Setup &amp; tooling</li>
+          <li>Basic types</li>
+          <li>Structural typing</li>
+          <li>Interfaces &amp; aliases</li>
+          <li>Functions typing</li>
+          <li>Generics</li>
+          <li>Mapped &amp; utility types</li>
+          <li>Conditional types</li>
+          <li>Discriminated unions</li>
+          <li>Type guards</li>
+          <li>Declaration files</li>
+          <li>Compiler options</li>
+          <li>Migration</li>
+          <li>Best practices</li>
+          <li><a href="typescript.html#dom-lib-types">DOM lib types</a></li>
+          <li><a href="typescript.html#modeling-employee">Modeling an employee</a></li>
+          <li><a href="typescript.html#typed-storage-generics">Typed storage generics</a></li>
+          <li><a href="typescript.html#typed-async-apis">Typed async APIs</a></li>
+          <li><a href="typescript.html#generic-api-response">Generic ApiResponse&lt;T&gt;</a></li>
+          <li><a href="typescript.html#role-unions-and-updates">Role unions &amp; updates</a></li>
+          <li><a href="typescript.html#typed-forms">Typed forms</a></li>
+          <li><a href="typescript.html#validation-types">Validation types</a></li>
+          <li><a href="typescript.html#decorators">Decorators</a></li>
+          <li><a href="typescript.html#classes-advanced">Classes (advanced)</a></li>
+          <li><a href="typescript.html#type-assertions-and-casting">Type assertions &amp; casting</a></li>
+          <li><a href="typescript.html#utility-types-catalog">Utility types catalog</a></li>
+          <li><a href="typescript.html#enums-deep">Enums (deep)</a></li>
+          <li><a href="typescript.html#tuples-and-variadic">Tuples &amp; variadic</a></li>
+          <li><a href="typescript.html#satisfies-and-const-context">satisfies &amp; const context</a></li>
+          <li><a href="typescript.html#modules-and-import-type">Modules &amp; import type</a></li>
+          <li><a href="typescript.html#template-literal-types">Template literal types</a></li>
+          <li><a href="typescript.html#type-level-programming">Type-level programming</a></li>
+          <li><a href="typescript.html#variance-and-advanced-generics">Variance &amp; advanced generics</a></li>
+          <li><a href="typescript.html#control-flow-narrowing">Control-flow narrowing</a></li>
+          <li><a href="typescript.html#more-topics">More topics</a></li>
+        </ul>
+        <p class="note note-compat">Note: TypeScript types are erased at compile time — they add zero runtime cost and the emitted JavaScript runs anywhere.</p>
+      </section>
+
+      <section id="notes" class="concept" tabindex="-1">
+        <h2>Notes</h2>
+        <p>Each technology lives on its own page: <a href="html.html">html.html</a>, <a href="css.html">css.html</a>, <a href="javascript.html">javascript.html</a>, and <a href="typescript.html">typescript.html</a>. All pages are fully static — there is no server, no bundler, and no external network dependency. You can open any page by double-clicking the file in your file manager, and every runnable example works directly from the local filesystem.</p>
+        <p>Because the site is fully offline and no compiler is bundled, TypeScript examples are presented as annotated source in static code blocks alongside a simulated <code>tsc</code> or runtime result, rather than compiled and executed in the browser. The HTML, CSS, and JavaScript examples are genuinely runnable and render live in a sandboxed preview.</p>
+        <p class="note">Note: this page is itself interactive — the mini playground in "How to use" runs the same code path as every other example on the site.</p>
+      </section>
+
+      <section id="use-case-employee-dashboard" class="concept" tabindex="-1">
+        <h2>Use case: Employee Dashboard</h2>
+        <p>The newly added sections across the four guides are not isolated tricks — taken together they teach everything needed to build an offline-capable, capability-aware <strong>Employee Profile Dashboard</strong>: a page that renders each employee as a responsive card, draws an avatar on a <code>&lt;canvas&gt;</code> with an initials fallback, keeps working without a network by persisting to <code>localStorage</code>, detects and gracefully degrades optional browser features, streams live status over a WebSocket, and exposes machine-readable profile data through microdata.</p>
+        <p>The map below links each dashboard requirement to the exact section that teaches it. Follow the links in roughly this order and you will have covered every capability the dashboard depends on, from structural markup to typed data models.</p>
+        <h3>Requirement → topic map</h3>
+        <ul>
+          <li><strong>Feature detection / Modernizr-style guards</strong> — detect optional APIs before use: <a href="html.html#feature-detection">HTML: Feature detection</a> and <a href="javascript.html#feature-detection">JavaScript: Feature detection</a>.</li>
+          <li><strong>Canvas avatar with initials fallback</strong> — draw the avatar and fall back to rendered initials: <a href="html.html#canvas-element">HTML: Canvas element</a> and <a href="javascript.html#canvas-api">JavaScript: Canvas API</a>.</li>
+          <li><strong>LocalStorage offline UI</strong> — persist and rehydrate profile state with no network: <a href="javascript.html#web-storage">JavaScript: Web storage</a>.</li>
+          <li><strong>Geolocation</strong> — show an employee's approximate location on demand: <a href="javascript.html#geolocation">JavaScript: Geolocation</a>.</li>
+          <li><strong>WebSockets real-time updates</strong> — push live presence and status changes: <a href="javascript.html#websockets">JavaScript: WebSockets</a>.</li>
+          <li><strong>Microdata / structured data</strong> — mark up each profile as a machine-readable entity: <a href="html.html#structured-data-employee">HTML: Structured data</a>.</li>
+          <li><strong>mailto / sms contact links</strong> — wire up native contact actions: <a href="html.html#contact-links">HTML: Contact links</a>.</li>
+          <li><strong>Responsive card grid</strong> — lay out profile cards that reflow across viewports: <a href="css.html#dashboard-patterns">CSS: Dashboard patterns</a>.</li>
+          <li><strong>Hover animations</strong> — add compositor-friendly hover feedback to cards: <a href="css.html#card-interactions">CSS: Card interactions</a>.</li>
+          <li><strong>Collapsible sections</strong> — progressively disclose detail within a card: <a href="css.html#collapsible-sections">CSS: Collapsible sections</a>.</li>
+          <li><strong>Typed data model (TypeScript)</strong> — model the employee, storage, and network layers with types: <a href="typescript.html#dom-lib-types">DOM lib types</a>, <a href="typescript.html#modeling-employee">Modeling an employee</a>, <a href="typescript.html#typed-storage-generics">Typed storage generics</a>, and <a href="typescript.html#typed-async-apis">Typed async APIs</a>.</li>
+        </ul>
+        <p class="note">Note: this is a learning map, not an implementation. It points at the sections that teach each capability so you can assemble the dashboard yourself — the site ships no Employee Dashboard build.</p>
+      </section>
+
+      <section id="use-case-typed-employee" class="concept" tabindex="-1">
+        <h2>Use case: Typed Employee Model</h2>
+        <p>The advanced TypeScript sections are not standalone syntax lessons — read together they produce a bug-resistant, strongly-typed employee data flow, the same shape you reuse in an Angular application: a modeled <code>Employee</code> entity, a generic <code>ApiResponse&lt;T&gt;</code> envelope, role unions and partial-update mapped types, typed DOM events and form elements, typed <code>async/await</code> guarded by type predicates, and decorators that log methods and validate properties. Because the type system enforces the contract at compile time, whole classes of shape-mismatch and null-handling bugs never reach the browser.</p>
+        <p>The map below links each artifact and requirement of a <strong>Strongly-Typed Employee Model + Form Handling</strong> use case to the exact page anchor that teaches it. Follow the links in roughly this order and you will have covered every type-level technique the flow depends on, from the entity model through decorators.</p>
+        <h3>Artifact → topic map</h3>
+        <ul>
+          <li><strong><code>employee.model.ts</code></strong> — the entity, its role field, and how updates are typed: <a href="typescript.html#role-unions-and-updates">Role unions &amp; updates</a> and <a href="typescript.html#modeling-employee">Modeling an employee</a>.</li>
+          <li><strong><code>form-handler.ts</code></strong> — typed form elements, typed events, and method/property decorators: <a href="typescript.html#typed-forms">Typed forms</a> and <a href="typescript.html#decorators">Decorators</a>.</li>
+          <li><strong><code>validation.types.ts</code></strong> — the types that describe and enforce field validation: <a href="typescript.html#validation-types">Validation types</a>.</li>
+          <li><strong>Generics / <code>ApiResponse&lt;T&gt;</code></strong> — a reusable, type-parameterized response envelope: <a href="typescript.html#generic-api-response">Generic ApiResponse&lt;T&gt;</a> and <a href="typescript.html#generics">Generics</a>.</li>
+          <li><strong>Advanced types (role unions, partial-update mapped type)</strong> — model exact role sets and safe partial updates: <a href="typescript.html#role-unions-and-updates">Role unions &amp; updates</a> and <a href="typescript.html#mapped-utility-types">Mapped &amp; utility types</a>.</li>
+          <li><strong>DOM typing (typed events + form elements)</strong> — reach form fields and events without <code>any</code>: <a href="typescript.html#typed-forms">Typed forms</a> and <a href="typescript.html#dom-lib-types">DOM lib types</a>.</li>
+          <li><strong>Typed <code>async/await</code> + type guards</strong> — await typed responses and narrow them safely: <a href="typescript.html#typed-async-apis">Typed async APIs</a>, <a href="typescript.html#generic-api-response">Generic ApiResponse&lt;T&gt;</a>, and <a href="typescript.html#type-guards">Type guards</a>.</li>
+          <li><strong>Decorators (log method + validate property)</strong> — cross-cutting logging and validation via decorators: <a href="typescript.html#decorators">Decorators</a>.</li>
+        </ul>
+        <p class="note">Note: this is a learning map, not an implementation. It points at the sections that teach each type-level technique so you can assemble the typed employee flow yourself — the site ships no Employee Model build.</p>
+      </section>
+    </main>
+  </div>
+  <footer class="site-footer"><p>DevDocs — static, self-contained learning reference.</p></footer>
+</body>
+</html>

@@ -1,0 +1,2803 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSS — DevDocs</title>
+  <meta name="description" content="A concept-by-concept CSS reference from selectors to architecture, with runnable, editable examples.">
+  <link rel="stylesheet" href="styles/site.css">
+  <script src="scripts/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html">DevDocs</a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="html.html">HTML</a>
+      <a href="css.html">CSS</a>
+      <a href="javascript.html">JavaScript</a>
+      <a href="typescript.html">TypeScript</a>
+    </nav>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme</button>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="toc" aria-label="On this page">
+        <label class="toc-search-label" for="toc-search">Filter topics</label>
+        <input type="search" id="toc-search" class="toc-search" placeholder="Type to filter…" autocomplete="off">
+        <ul class="toc-list">
+          <li><a href="#selectors">Selectors</a></li>
+          <li><a href="#box-model">Box model</a></li>
+          <li><a href="#flow-layout">Flow &amp; positioning</a></li>
+          <li><a href="#flexbox">Flexbox</a></li>
+          <li><a href="#grid">Grid</a></li>
+          <li><a href="#responsive">Responsive design</a></li>
+          <li><a href="#variables-calc">Variables &amp; calc()</a></li>
+          <li><a href="#transforms-animations">Transforms &amp; animations</a></li>
+          <li><a href="#container-queries">Container queries</a></li>
+          <li><a href="#specificity-cascade">Specificity &amp; cascade</a></li>
+          <li><a href="#logical-properties">Logical properties</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+          <li><a href="#dashboard-patterns">Dashboard patterns</a></li>
+          <li><a href="#card-interactions">Card interactions</a></li>
+          <li><a href="#collapsible-sections">Collapsible sections</a></li>
+          <li><a href="#values-and-units">Values &amp; units</a></li>
+          <li><a href="#typography">Typography &amp; text</a></li>
+          <li><a href="#colors-and-gradients">Colors &amp; gradients</a></li>
+          <li><a href="#sizing-object-fit">Sizing &amp; object-fit</a></li>
+          <li><a href="#backgrounds-borders-shadows">Backgrounds, borders &amp; shadows</a></li>
+          <li><a href="#overflow-and-scroll">Overflow &amp; scrolling</a></li>
+          <li><a href="#advanced-selectors-pseudos">Advanced selectors &amp; pseudo-elements</a></li>
+          <li><a href="#css-nesting-scope">Native nesting &amp; @scope</a></li>
+          <li><a href="#feature-and-advanced-media-queries">Feature &amp; advanced media queries</a></li>
+          <li><a href="#filters-blend-clip-mask">Filters, blending, clipping &amp; masking</a></li>
+          <li><a href="#more-topics">More topics</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main id="main" class="content">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> <span aria-hidden="true">/</span> <span aria-current="page">CSS</span>
+      </nav>
+      <h1>CSS</h1>
+      <p class="overview">CSS describes how HTML is presented: which elements a rule targets, how boxes are sized and spaced, how they flow and stack, and how they respond to the viewport, their container, and user preferences. This page builds up concept by concept — from selectors and the box model through flexbox, grid, responsive and container queries, custom properties, animation, the cascade, logical properties, and finally practical architecture. Each runnable example has an editable HTML pane and an editable CSS pane; press <em>Run</em> to apply your changes in the live preview, or <em>Reset</em> to restore the original.</p>
+
+      <section id="selectors" class="concept" tabindex="-1">
+        <h2>Selectors</h2>
+        <p>A selector chooses which elements a declaration block applies to. The core building blocks are the <strong>type</strong> selector (<code>p</code>), the <strong>class</strong> selector (<code>.card</code>), the <strong>id</strong> selector (<code>#hero</code>), and the <strong>attribute</strong> selector (<code>[type="email"]</code>). These combine with <strong>pseudo-classes</strong> that match state or position (<code>:hover</code>, <code>:focus-within</code>, <code>:nth-child()</code>), <strong>pseudo-elements</strong> that target generated or sub-parts of an element (<code>::before</code>, <code>::after</code>), and <strong>combinators</strong> that express relationships between elements.</p>
+        <p>The four combinators are descendant (a space), child (<code>&gt;</code>), adjacent sibling (<code>+</code>), and general sibling (<code>~</code>). The forgiving <code>:is()</code> and <code>:where()</code> functions group selector lists so several patterns share one rule; they differ only in specificity, which the cascade section covers.</p>
+
+        <h3>Example: type, class, id, attribute, combinators</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;section id="panel"&gt;
+  &lt;h2&gt;Contact&lt;/h2&gt;
+  &lt;p class="lead"&gt;Pick a channel below.&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="#a" data-kind="email"&gt;Email&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#b" data-kind="chat"&gt;Chat&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#c" data-kind="phone"&gt;Phone&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/section&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+h2 { color: #2563eb; margin: 0 0 .25rem; }          /* type */
+#panel { border: 1px solid #cbd5e1; padding: 1rem;   /* id */
+  border-radius: 8px; max-width: 320px; }
+.lead { color: #475569; font-style: italic; }        /* class */
+ul &gt; li { list-style: none; margin: .35rem 0; }       /* child */
+a[data-kind="email"] { font-weight: 700; }            /* attr = */
+a[href^="#"] { color: #0f766e; text-decoration: none; } /* attr ^= */
+#panel a:hover { text-decoration: underline; }        /* descendant + state */</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: attribute selectors support operators beyond exact match — <code>^=</code> (starts with), <code>$=</code> (ends with), <code>*=</code> (contains), and <code>~=</code> (space-separated word). Add <code>i</code> before the closing bracket, e.g. <code>[href$=".PDF" i]</code>, for case-insensitive matching.</p>
+
+        <h3>Example: pseudo-classes, pseudo-elements, sibling combinators</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;form&gt;
+  &lt;label&gt;Name &lt;input required&gt;&lt;/label&gt;
+  &lt;p class="hint"&gt;We never share it.&lt;/p&gt;
+&lt;/form&gt;
+&lt;ol class="steps"&gt;
+  &lt;li&gt;Plan&lt;/li&gt;
+  &lt;li&gt;Build&lt;/li&gt;
+  &lt;li&gt;Ship&lt;/li&gt;
+  &lt;li&gt;Measure&lt;/li&gt;
+&lt;/ol&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+form { padding: .75rem; border: 2px solid #e2e8f0;
+  border-radius: 8px; transition: border-color .2s; }
+/* :focus-within highlights the form while a child is focused */
+form:focus-within { border-color: #6366f1; }
+input { padding: .35rem .5rem; }
+/* adjacent sibling: hint right after the label */
+label + .hint { color: #64748b; font-size: .85rem; }
+/* :nth-child stripes every even step */
+.steps li:nth-child(even) { background: #f1f5f9; }
+.steps li { padding: .25rem .5rem; list-style: none; }
+/* pseudo-element: numbered badge before each step */
+.steps li::before {
+  content: "Step " counter(list-item) ": ";
+  font-weight: 700; color: #0ea5e9;
+}
+/* :is() groups first and last for one rule */
+.steps li:is(:first-child, :last-child) { font-style: italic; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: <code>::before</code> and <code>::after</code> content is exposed to some assistive technologies but not reliably — never place meaning-critical text there. Decorative <code>content: ""</code> is announced by nothing, which is exactly what you want for pure decoration.</p>
+      </section>
+
+      <section id="box-model" class="concept" tabindex="-1">
+        <h2>Box model</h2>
+        <p>Every element is a rectangular box with four concentric layers: the <strong>content</strong> area, then <strong>padding</strong> inside the border, then the <strong>border</strong> itself, then <strong>margin</strong> outside it. Padding and border are part of what the element paints; margin is transparent space that separates boxes and, for adjacent vertical block margins, collapses.</p>
+        <p>The <code>box-sizing</code> property decides what <code>width</code> and <code>height</code> measure. With the default <code>content-box</code>, width sets only the content area, so padding and border are added on top and the rendered box is wider than the declared width. With <code>border-box</code>, width includes padding and border, so the rendered box matches the number you wrote — which is why most codebases set <code>box-sizing: border-box</code> globally.</p>
+
+        <h3>Example: a visual demo of every layer</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="margin"&gt;
+  &lt;div class="border"&gt;
+    &lt;div class="padding"&gt;
+      &lt;div class="content"&gt;content&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 8px; }
+/* Nested boxes make each layer a visible band. */
+.margin  { background: #fde68a; padding: 18px; } /* stands in for margin space */
+.border  { background: #f59e0b; padding: 14px; } /* the border band */
+.padding { background: #bbf7d0; padding: 20px; } /* the padding band */
+.content { background: #38bdf8; color: #04263b;
+  text-align: center; padding: 14px; font-weight: 700; }
+/* labels */
+div::before { display: block; font-size: .7rem;
+  text-transform: uppercase; letter-spacing: .05em; }
+.margin::before  { content: "margin"; }
+.border::before  { content: "border"; }
+.padding::before { content: "padding"; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: adjacent vertical margins between block boxes <em>collapse</em> to the larger of the two rather than adding. Padding never collapses, so if you need guaranteed space, padding is more predictable than margin.</p>
+
+        <h3>Example: content-box vs border-box side by side</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="row"&gt;
+  &lt;div class="box cb"&gt;content-box&lt;/div&gt;
+  &lt;div class="box bb"&gt;border-box&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Both declare width: 160px. The dashed guide is exactly 160px wide.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+.row { display: flex; gap: 1rem; padding: 8px;
+  /* 160px reference guide behind the boxes */
+  background: repeating-linear-gradient(90deg,
+    transparent 0 159px, #ef4444 159px 160px); }
+.box {
+  width: 160px;              /* same declared width */
+  padding: 12px;
+  border: 6px solid #1e293b;
+  background: #a5b4fc; color: #1e1b4b;
+  font-weight: 700;
+}
+/* content-box: 160 + 12*2 padding + 6*2 border = 196px rendered */
+.cb { box-sizing: content-box; }
+/* border-box: padding and border fit INSIDE 160px rendered */
+.bb { box-sizing: border-box; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: the near-universal reset <code>*, *::before, *::after { box-sizing: border-box; }</code> makes width math predictable and is safe to apply globally. Set it once at the top of your stylesheet.</p>
+      </section>
+
+      <section id="flow-layout" class="concept" tabindex="-1">
+        <h2>Flow &amp; positioning</h2>
+        <p>In normal flow, block boxes stack vertically and inline boxes sit within lines of text. The <code>display</code> property changes participation: <code>block</code> takes the full width and forces line breaks, <code>inline</code> flows with text and ignores width/height, and <code>inline-block</code> flows inline while honoring width, height, and vertical padding. <code>float</code> pulls a box to one side and lets inline content wrap around it; <code>clear</code> pushes a later box below any floats.</p>
+        <p>The <code>position</code> property controls how a box is placed and whether it participates in flow. <code>static</code> is the default. <code>relative</code> keeps the box in flow but offsets it and establishes a containing block for descendants. <code>absolute</code> removes the box from flow and positions it against the nearest positioned ancestor. <code>fixed</code> positions against the viewport. <code>sticky</code> behaves as relative until a scroll threshold, then sticks. <code>z-index</code> orders overlapping positioned boxes within a stacking context.</p>
+
+        <h3>Example: float layout with clear</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;article&gt;
+  &lt;img class="thumb" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Crect width='90' height='90' fill='%236366f1'/%3E%3C/svg%3E"&gt;
+  &lt;p&gt;Floated media pulls to the left and the paragraph text
+  wraps neatly around it. This is the classic magazine-style
+  runaround that float was designed for.&lt;/p&gt;
+  &lt;p class="footer-line"&gt;This line clears the float and starts fresh below.&lt;/p&gt;
+&lt;/article&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+article { max-width: 380px; border: 1px solid #e2e8f0;
+  padding: 12px; border-radius: 8px; }
+.thumb {
+  float: left;            /* text wraps around it */
+  margin: 0 12px 8px 0;
+  border-radius: 6px;
+}
+.footer-line {
+  clear: left;            /* drop below the float */
+  border-top: 1px solid #e2e8f0;
+  padding-top: 8px; color: #64748b;
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: float is now reserved for text runarounds. For page and component layout, prefer flexbox or grid — they align and distribute space without the clearfix hacks that float once required.</p>
+
+        <h3>Example: positioned badge and a sticky bar</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="bar"&gt;Sticky bar — scroll the preview&lt;/div&gt;
+&lt;div class="card"&gt;
+  &lt;span class="badge"&gt;New&lt;/span&gt;
+  &lt;h3&gt;Product&lt;/h3&gt;
+  &lt;p&gt;The badge is absolutely positioned to the card corner.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p style="height:600px"&gt;Tall filler so the bar has room to stick while scrolling.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; margin: 0; }
+.bar {
+  position: sticky; top: 0; z-index: 10;
+  background: #1e293b; color: #fff;
+  padding: .6rem 1rem; font-weight: 700;
+}
+.card {
+  position: relative;      /* containing block for the badge */
+  margin: 1rem; padding: 1rem;
+  border: 1px solid #e2e8f0; border-radius: 8px;
+}
+.badge {
+  position: absolute; top: -10px; right: -10px;
+  background: #ef4444; color: #fff;
+  font-size: .75rem; font-weight: 700;
+  padding: .2rem .5rem; border-radius: 999px;
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: <code>position: sticky</code> is relative to the nearest scrolling ancestor and needs at least one inset (<code>top</code>, <code>bottom</code>, etc.) to know where to stick. A parent with <code>overflow: hidden</code> can silently break it.</p>
+      </section>
+
+      <section id="flexbox" class="concept" tabindex="-1">
+        <h2>Flexbox</h2>
+        <p>Flexbox lays out items along a single axis. <code>flex-direction</code> sets the <strong>main axis</strong> — <code>row</code> (horizontal) or <code>column</code> (vertical) — and the <strong>cross axis</strong> is perpendicular to it. <code>justify-content</code> distributes items along the main axis; <code>align-items</code> aligns them on the cross axis. <code>flex-wrap</code> lets items flow onto new lines, and <code>gap</code> adds consistent spacing between them without margins.</p>
+        <p>Each item's flexibility comes from the <code>flex</code> shorthand: <code>flex-grow</code> (share of leftover space), <code>flex-shrink</code> (how it gives up space when cramped), and <code>flex-basis</code> (its starting size before growing or shrinking). <code>flex: 1</code> is the common shorthand for "grow to fill equally".</p>
+
+        <h3>Example: a nav bar (row, space-between)</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;nav class="bar"&gt;
+  &lt;span class="logo"&gt;Acme&lt;/span&gt;
+  &lt;ul class="links"&gt;
+    &lt;li&gt;Home&lt;/li&gt;
+    &lt;li&gt;Docs&lt;/li&gt;
+    &lt;li&gt;Pricing&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;button class="cta"&gt;Sign in&lt;/button&gt;
+&lt;/nav&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+.bar {
+  display: flex;
+  align-items: center;            /* cross-axis: vertically centered */
+  justify-content: space-between; /* logo | links | cta pushed apart */
+  gap: 1rem;
+  padding: .6rem 1rem;
+  background: #0f172a; color: #fff; border-radius: 8px;
+}
+.logo { font-weight: 800; }
+.links {
+  display: flex; gap: 1rem;       /* nested flex row */
+  list-style: none; margin: 0; padding: 0;
+}
+.cta {
+  border: 0; border-radius: 6px; padding: .4rem .8rem;
+  background: #38bdf8; color: #04263b; font-weight: 700;
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: <code>margin-inline-start: auto</code> on a single flex item is a clean way to push just that item to the far end while leaving the rest grouped — handy for a lone "Sign in" button.</p>
+
+        <h3>Example: a card column with grow and alignment</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="card"&gt;
+  &lt;h3&gt;Starter&lt;/h3&gt;
+  &lt;p&gt;Everything a small project needs to get going quickly.&lt;/p&gt;
+  &lt;p class="price"&gt;$0&lt;/p&gt;
+  &lt;button&gt;Choose&lt;/button&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+.card {
+  display: flex;
+  flex-direction: column;   /* main axis now vertical */
+  align-items: stretch;     /* cross axis: full width */
+  gap: .5rem;
+  height: 220px;            /* fixed height to show grow */
+  width: 220px;
+  padding: 1rem;
+  border: 1px solid #e2e8f0; border-radius: 10px;
+}
+.card h3 { margin: 0; }
+.card p { margin: 0; color: #475569; }
+/* grow pushes the price + button to the bottom */
+.card p:first-of-type { flex-grow: 1; }
+.price { font-size: 1.6rem; font-weight: 800; color: #0f172a; }
+.card button {
+  align-self: flex-start;   /* override stretch for this one item */
+  border: 0; border-radius: 6px; padding: .45rem 1rem;
+  background: #6366f1; color: #fff; font-weight: 700;
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: <code>align-items</code> sets cross-axis alignment for every item; <code>align-self</code> overrides it for one. A single grow item is the standard trick to pin a card's footer to the bottom regardless of body length.</p>
+      </section>
+
+      <section id="grid" class="concept" tabindex="-1">
+        <h2>Grid</h2>
+        <p>Grid lays out content in two dimensions at once. <code>grid-template-columns</code> and <code>grid-template-rows</code> define the tracks. The <code>fr</code> unit distributes leftover space, <code>repeat()</code> shortens repetitive definitions, and <code>minmax()</code> sets a floor and ceiling for a track. <code>gap</code> spaces tracks apart.</p>
+        <p><code>grid-template-areas</code> lets you name regions and paint the layout as ASCII art, which is exceptionally readable for page shells. When items land outside the explicit grid, <code>grid-auto-rows</code> and <code>grid-auto-flow</code> govern the size and direction of the implicit tracks that get created for them.</p>
+
+        <h3>Example: named-areas page layout</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="page"&gt;
+  &lt;header&gt;Header&lt;/header&gt;
+  &lt;nav&gt;Nav&lt;/nav&gt;
+  &lt;main&gt;Main content&lt;/main&gt;
+  &lt;aside&gt;Aside&lt;/aside&gt;
+  &lt;footer&gt;Footer&lt;/footer&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+.page {
+  display: grid;
+  grid-template-columns: 120px 1fr 120px;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header header header"
+    "nav    main   aside"
+    "footer footer footer";
+  gap: 8px; height: 260px;
+}
+.page &gt; * { padding: 8px; border-radius: 6px;
+  color: #fff; font-weight: 700; }
+header { grid-area: header; background: #0f172a; }
+nav    { grid-area: nav;    background: #6366f1; }
+main   { grid-area: main;   background: #38bdf8; color: #04263b; }
+aside  { grid-area: aside;  background: #6366f1; }
+footer { grid-area: footer; background: #1e293b; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: the strings in <code>grid-template-areas</code> must form a complete rectangle — every row needs the same number of cells, and each named area must be contiguous. A single dot <code>.</code> marks an empty cell.</p>
+
+        <h3>Example: auto-fill responsive card grid with implicit rows</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="grid"&gt;
+  &lt;div&gt;One&lt;/div&gt;&lt;div&gt;Two&lt;/div&gt;&lt;div&gt;Three&lt;/div&gt;
+  &lt;div&gt;Four&lt;/div&gt;&lt;div&gt;Five&lt;/div&gt;&lt;div&gt;Six&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Drag the preview edge — cards reflow with no media queries.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+.grid {
+  display: grid;
+  /* as many 120px+ columns as fit, each flexing to fill */
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-auto-rows: 70px;      /* implicit rows all 70px tall */
+  gap: 10px;
+}
+.grid &gt; div {
+  display: grid; place-items: center;
+  background: #a5b4fc; color: #1e1b4b;
+  border-radius: 8px; font-weight: 700;
+}
+/* one card spans two implicit rows to show auto-flow packing */
+.grid &gt; div:nth-child(1) { grid-row: span 2; background: #fbbf24; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: <code>auto-fill</code> keeps empty columns when content runs out; <code>auto-fit</code> collapses them so existing items stretch to fill the row. Swap one for the other to see the difference on a wide preview.</p>
+      </section>
+
+      <section id="responsive" class="concept" tabindex="-1">
+        <h2>Responsive design</h2>
+        <p>Mobile-first design writes the base styles for small screens, then layers enhancements with <code>min-width</code> media queries as more space becomes available. This keeps the default lightweight and progressively adds columns and spacing. A fluid image simply uses <code>max-width: 100%; height: auto</code> so it never overflows its container.</p>
+        <p>Media queries also read user preferences, not just dimensions. <code>prefers-reduced-motion</code> lets you strip animation for users who ask for it, and <code>prefers-color-scheme</code> adapts to the system light or dark setting. Designing against preferences is as important as designing against breakpoints.</p>
+
+        <h3>Example: mobile-first reflow and a fluid image</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="media"&gt;
+  &lt;img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='120'%3E%3Crect width='300' height='120' fill='%2338bdf8'/%3E%3C/svg%3E"&gt;
+  &lt;div class="body"&gt;
+    &lt;h3&gt;Fluid media object&lt;/h3&gt;
+    &lt;p&gt;Stacked on narrow screens, side by side once the preview is wide enough.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+/* base = mobile: stacked column */
+.media { display: flex; flex-direction: column; gap: .75rem;
+  border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; }
+.media img { max-width: 100%; height: auto;  /* fluid image */
+  border-radius: 8px; display: block; }
+.body h3 { margin: 0 0 .25rem; }
+.body p  { margin: 0; color: #475569; }
+/* enhancement at 480px and up: horizontal */
+@media (min-width: 480px) {
+  .media { flex-direction: row; align-items: center; }
+  .media img { width: 300px; flex: none; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: media queries only respond to real viewport width if the document sets <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code>. Without it, mobile browsers report a wide virtual viewport and your breakpoints never fire.</p>
+
+        <h3>Example: honoring user preferences</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="panel"&gt;
+  &lt;div class="spinner"&gt;&lt;/div&gt;
+  &lt;p&gt;This panel adapts to your system color scheme, and the
+  spinner stops animating if you prefer reduced motion.&lt;/p&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+.panel { padding: 1rem; border-radius: 10px;
+  background: #f8fafc; color: #0f172a;
+  border: 1px solid #e2e8f0; }
+.spinner { width: 34px; height: 34px; border-radius: 50%;
+  border: 4px solid #cbd5e1; border-top-color: #6366f1;
+  animation: spin 1s linear infinite; margin-bottom: .5rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+/* dark systems get a dark panel */
+@media (prefers-color-scheme: dark) {
+  .panel { background: #0f172a; color: #e2e8f0;
+    border-color: #334155; }
+}
+/* reduced-motion users get a still spinner */
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: toggle your operating system's dark mode and reduce-motion settings to see both queries respond. Preference queries make the interface respect choices users have already expressed system-wide.</p>
+      </section>
+
+      <section id="variables-calc" class="concept" tabindex="-1">
+        <h2>Variables &amp; calc()</h2>
+        <p>Custom properties (CSS variables) are declared with a <code>--name</code> syntax and read with <code>var(--name)</code>. They cascade and inherit like normal properties, so a value set on <code>:root</code> is available everywhere, while a value set on a component scopes to that subtree. <code>var()</code> accepts a fallback as its second argument — <code>var(--gap, 1rem)</code> uses <code>1rem</code> if <code>--gap</code> is not defined.</p>
+        <p>Math functions compute values at used-value time. <code>calc()</code> mixes units (<code>calc(100% - 2rem)</code>); <code>min()</code> and <code>max()</code> pick the smaller or larger of several values; and <code>clamp(min, preferred, max)</code> bounds a fluid value between a floor and a ceiling. Combined with custom properties, these express responsive spacing and typography without media queries.</p>
+
+        <h3>Example: a themeable component that toggles a variable</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="card"&gt;
+  &lt;h3&gt;Default theme&lt;/h3&gt;
+  &lt;p&gt;Reads --accent from :root.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="card brand"&gt;
+  &lt;h3&gt;Brand theme&lt;/h3&gt;
+  &lt;p&gt;Overrides --accent locally.&lt;/p&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">:root {
+  --accent: #6366f1;         /* theme token */
+  --card-pad: 1rem;
+}
+body { font-family: system-ui, sans-serif; }
+.card {
+  border-left: 6px solid var(--accent);
+  /* fallback used only if --card-pad were missing */
+  padding: var(--card-pad, .75rem);
+  border-radius: 8px; background: #f8fafc;
+  margin-bottom: .75rem;
+}
+.card h3 { margin: 0 0 .25rem; color: var(--accent); }
+.card p { margin: 0; color: #475569; }
+/* scoped override: only this subtree sees the new value */
+.brand { --accent: #db2777; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: custom properties inherit, so overriding <code>--accent</code> on <code>.brand</code> re-themes everything inside it in one line. This is the foundation of runtime theming — a single JavaScript <code>element.style.setProperty('--accent', color)</code> repaints the whole subtree.</p>
+
+        <h3>Example: fluid spacing and type with clamp() and calc()</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;section class="hero"&gt;
+  &lt;h2&gt;Fluid heading&lt;/h2&gt;
+  &lt;p&gt;Resize the preview: padding and font size scale smoothly
+  between sensible limits, with no breakpoints.&lt;/p&gt;
+&lt;/section&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+.hero {
+  /* padding grows with viewport, floored at 1rem, capped at 3rem */
+  padding: clamp(1rem, 4vw, 3rem);
+  /* never wider than the viewport minus a 2rem gutter */
+  max-width: min(640px, calc(100% - 2rem));
+  margin-inline: auto;
+  background: linear-gradient(135deg, #6366f1, #38bdf8);
+  color: #fff; border-radius: 12px;
+}
+.hero h2 {
+  margin: 0 0 .5rem;
+  /* fluid type between 1.5rem and 2.75rem */
+  font-size: clamp(1.5rem, 1rem + 3vw, 2.75rem);
+}
+.hero p { margin: 0; max-width: 40ch; line-height: 1.5; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: <code>calc()</code>, <code>min()</code>, <code>max()</code>, <code>clamp()</code>, and custom properties are supported in every current browser. The one gotcha: you cannot concatenate a bare number with a unit inside <code>var()</code> — write <code>calc(var(--n) * 1px)</code>, not <code>var(--n)px</code>.</p>
+      </section>
+
+      <section id="transforms-animations" class="concept" tabindex="-1">
+        <h2>Transforms &amp; animations</h2>
+        <p>The <code>transform</code> property moves, scales, rotates, and skews an element without disturbing surrounding layout: <code>translate()</code>, <code>scale()</code>, <code>rotate()</code>, and <code>skew()</code>. <code>transform-origin</code> sets the pivot point — the default is the element's center. Because transforms are applied on the compositor, they are among the cheapest properties to animate.</p>
+        <p><code>transition</code> interpolates a property between its old and new value over a duration whenever that value changes, which is ideal for hover and focus states. <code>@keyframes</code> plus the <code>animation</code> shorthand define multi-step, self-running motion. <code>will-change</code> hints that a property is about to animate so the browser can promote the element to its own layer — use it sparingly, as over-promoting wastes memory.</p>
+
+        <h3>Example: a hover transition button</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;button class="lift"&gt;Hover me&lt;/button&gt;
+&lt;button class="grow"&gt;And me&lt;/button&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; display: flex;
+  gap: 1rem; padding: 1.5rem; }
+button {
+  border: 0; border-radius: 8px; padding: .6rem 1.2rem;
+  font-weight: 700; color: #fff; background: #6366f1;
+  cursor: pointer;
+  /* animate only compositor-friendly properties */
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(99,102,241,.35);
+}
+.grow:hover {
+  transform: scale(1.08) rotate(-2deg);
+  transform-origin: bottom left;
+}
+button:active { transform: translateY(0) scale(.98); }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: animate <code>transform</code> and <code>opacity</code> whenever possible — they run on the compositor and skip layout and paint. Animating <code>width</code>, <code>top</code>, or <code>margin</code> forces reflow on every frame and drops frames on weaker devices.</p>
+
+        <h3>Example: a keyframes loading pulse</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="loader"&gt;
+  &lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { display: grid; place-items: center;
+  min-height: 160px; }
+.loader { display: flex; gap: 10px; }
+.loader span {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #6366f1;
+  animation: pulse 1s ease-in-out infinite;
+}
+/* stagger each dot so the pulse travels */
+.loader span:nth-child(2) { animation-delay: .15s; }
+.loader span:nth-child(3) { animation-delay: .3s; }
+@keyframes pulse {
+  0%, 100% { transform: scale(.6); opacity: .4; }
+  50%      { transform: scale(1);  opacity: 1; }
+}
+/* respect reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .loader span { animation: none; opacity: 1; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: any looping or attention-grabbing animation should be silenced under <code>prefers-reduced-motion: reduce</code>. Continuous motion can trigger nausea or migraines for some users, so treat the still state as a first-class variant, not an afterthought.</p>
+      </section>
+
+      <section id="container-queries" class="concept" tabindex="-1">
+        <h2>Container queries</h2>
+        <p>Media queries respond to the viewport, but a component often cares about the space <em>it</em> was given, not the whole page. Container queries fix that. Declare an element a query container with <code>container-type: inline-size</code> (optionally naming it via <code>container-name</code>), then write <code>@container</code> rules that respond to that container's width. The same component can render compact in a sidebar and expanded in a main column with no knowledge of the page layout.</p>
+        <p><code>@container</code> conditions use logical size features like <code>min-width</code> and <code>max-width</code>, mirroring media query syntax. Because queries target the nearest ancestor container, components become genuinely portable: drop them anywhere and they adapt to their slot.</p>
+
+        <h3>Example: a card that reflows by container width</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;Resize the preview — the card switches to a row when its
+container is wide enough, independent of the window.&lt;/p&gt;
+&lt;div class="slot"&gt;
+  &lt;article class="media"&gt;
+    &lt;div class="thumb"&gt;IMG&lt;/div&gt;
+    &lt;div class="body"&gt;
+      &lt;h3&gt;Container-aware card&lt;/h3&gt;
+      &lt;p&gt;Layout follows the container, not the viewport.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/article&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+/* the slot is the query container */
+.slot { container-type: inline-size; container-name: card;
+  border: 1px dashed #cbd5e1; padding: 8px; border-radius: 8px; }
+.media { display: flex; flex-direction: column; gap: .5rem;
+  border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; }
+.thumb { display: grid; place-items: center; height: 70px;
+  background: #38bdf8; color: #04263b; font-weight: 700;
+  border-radius: 8px; }
+.body h3 { margin: 0; } .body p { margin: 0; color: #475569; }
+/* when the CONTAINER is >= 380px, switch to a row */
+@container card (min-width: 380px) {
+  .media { flex-direction: row; align-items: center; }
+  .thumb { width: 90px; height: 90px; flex: none; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: container queries are Baseline across current Chrome, Edge, Firefox, and Safari. For older engines, the base (column) styles are the natural fallback — write the compact layout as the default and treat the row layout as the enhancement, exactly as above.</p>
+
+        <h3>Example: the same component in two different slots</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="layout"&gt;
+  &lt;div class="narrow slot"&gt;
+    &lt;div class="stat"&gt;&lt;b&gt;1.2k&lt;/b&gt;&lt;span&gt;Users&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="wide slot"&gt;
+    &lt;div class="stat"&gt;&lt;b&gt;1.2k&lt;/b&gt;&lt;span&gt;Users&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+.layout { display: flex; gap: 1rem; align-items: start; }
+.narrow { width: 120px; } .wide { flex: 1; }
+.slot { container-type: inline-size;
+  border: 1px dashed #cbd5e1; padding: 8px; border-radius: 8px; }
+/* identical markup, styled by its own container size */
+.stat { display: grid; place-items: center; gap: .1rem;
+  background: #eef2ff; border-radius: 8px; padding: .75rem; }
+.stat b { font-size: 1.4rem; color: #4338ca; }
+.stat span { color: #64748b; font-size: .8rem; }
+@container (min-width: 240px) {
+  .stat { grid-auto-flow: column; justify-content: center;
+    gap: .6rem; align-items: baseline; }
+  .stat b { font-size: 2rem; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: the two <code>.stat</code> blocks share identical markup and CSS, yet render differently because each lives in a container of a different width. That portability is the whole point of container queries.</p>
+      </section>
+
+      <section id="specificity-cascade" class="concept" tabindex="-1">
+        <h2>Specificity &amp; cascade</h2>
+        <p>When several rules target the same element, the cascade decides which declaration wins. Origin and importance come first, then <strong>specificity</strong>, then source order. Specificity is a three-part count: id selectors, then class/attribute/pseudo-class selectors, then type/pseudo-element selectors. A higher-weight column always beats a lower one regardless of how many lower-weight selectors pile up — one id (<code>1,0,0</code>) outranks ten classes (<code>0,10,0</code>).</p>
+        <p><code>!important</code> jumps a declaration above normal ones but creates escalation wars, so it is a last resort. Better tools: <code>:where()</code> contributes <strong>zero</strong> specificity, so you can group selectors without raising weight, and <code>@layer</code> establishes explicit precedence between named layers so later layers win no matter the selector strength inside them.</p>
+
+        <h3>Example: a specificity conflict, solved without !important</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;The button below should be red (danger), but an id rule
+was fighting it. Read the CSS to see the fix.&lt;/p&gt;
+&lt;button id="save" class="btn btn--danger"&gt;Delete&lt;/button&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.btn { border: 0; border-radius: 8px; padding: .55rem 1.1rem;
+  font-weight: 700; color: #fff; cursor: pointer; }
+
+/* THE CONFLICT: this id rule (1,0,0) paints it blue and
+   would beat a plain .btn--danger (0,1,0). */
+#save { background: #2563eb; }
+
+/* THE FIX: raise the danger rule's weight to also use the id,
+   so it becomes (1,1,0) and wins on specificity — no !important. */
+#save.btn--danger { background: #dc2626; }
+
+/* Equally valid alternative (commented): an attribute selector
+   scoped to the id keeps intent readable.
+   #save[class~="btn--danger"] { background: #dc2626; } */</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: the real lesson is upstream — avoid styling by <code>id</code> in the first place. If the base rule were <code>.btn</code> and the modifier <code>.btn--danger</code>, source order alone would resolve it and there would be no conflict to solve.</p>
+
+        <h3>Example: :where() zero-specificity and @layer ordering</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;a class="link" href="#"&gt;:where() base — easily overridden&lt;/a&gt;
+&lt;p class="box"&gt;@layer: the components layer wins over base
+even though base is written later.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+/* :where() adds ZERO specificity, so this is trivial to override */
+:where(.link) { color: #2563eb; }
+/* a plain class (0,1,0) beats the zero-specificity rule above */
+.link { color: #0f766e; text-decoration: underline; }
+
+/* declare layer order once: later layers win regardless of
+   selector strength inside them */
+@layer base, components;
+@layer components {
+  .box { background: #dcfce7; border: 1px solid #86efac;
+    padding: .6rem; border-radius: 8px; }
+}
+@layer base {
+  /* written after components, but a lower layer, so it loses */
+  .box { background: #fee2e2; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: <code>@layer</code> is supported across all current browsers and is the modern replacement for specificity hacks. Unlayered styles always outrank layered ones, so keep third-party resets in a low layer and your own components above them.</p>
+      </section>
+
+      <section id="logical-properties" class="concept" tabindex="-1">
+        <h2>Logical properties</h2>
+        <p>Physical properties like <code>margin-left</code> and <code>top</code> are tied to screen directions. Logical properties instead reference the flow-relative axes: the <strong>inline</strong> axis runs along the text direction, and the <strong>block</strong> axis runs across lines. <code>margin-inline</code> sets both inline sides, <code>padding-block</code> sets both block sides, and <code>inset-inline-start</code> means "the leading edge" whatever the writing direction.</p>
+        <p>Because these follow <code>direction</code> and <code>writing-mode</code>, a layout authored with logical properties mirrors automatically for right-to-left languages and rotates for vertical scripts — no separate RTL stylesheet. Sizing has logical forms too: <code>inline-size</code> and <code>block-size</code> replace <code>width</code> and <code>height</code> relative to flow.</p>
+
+        <h3>Example: logical spacing and borders</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;blockquote class="quote"&gt;
+  Logical properties describe start and end, not left and right,
+  so this accent border sits on the leading edge.
+&lt;/blockquote&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+.quote {
+  /* block = top/bottom, inline = start/end */
+  margin-block: 1rem;
+  margin-inline: 0;
+  padding-block: .75rem;
+  padding-inline-start: 1rem;         /* leading padding */
+  border-inline-start: 4px solid #6366f1; /* leading border */
+  background: #f8fafc; border-radius: 6px;
+  inline-size: min(100%, 420px);      /* logical width */
+  color: #334155; font-style: italic;
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: reach for logical properties by default. Even in a purely LTR project they cost nothing extra, and they leave the door open to internationalization without a rewrite.</p>
+
+        <h3>Example: the same card in LTR and RTL</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="card" dir="ltr"&gt;
+  &lt;span class="tag"&gt;LTR&lt;/span&gt;
+  &lt;p&gt;Tag and border sit on the left leading edge.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="card" dir="rtl"&gt;
+  &lt;span class="tag"&gt;RTL&lt;/span&gt;
+  &lt;p&gt;نفس التصميم ينعكس تلقائيًا إلى الجهة اليمنى.&lt;/p&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; }
+.card {
+  display: flex; gap: .6rem; align-items: center;
+  margin-block: .6rem;
+  padding-inline: .8rem; padding-block: .6rem;
+  /* leading-edge accent flips with direction */
+  border-inline-start: 5px solid #db2777;
+  background: #fdf2f8; border-radius: 8px;
+}
+.tag {
+  background: #db2777; color: #fff; font-weight: 700;
+  font-size: .75rem; padding: .15rem .5rem; border-radius: 999px;
+  /* logical margin: trails the tag whatever the direction */
+  margin-inline-end: .3rem;
+}
+.card p { margin: 0; color: #831843; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: setting <code>dir="rtl"</code> is all it takes — the accent border, tag spacing, and text alignment all mirror because the CSS never mentions left or right. This is the internationalization payoff of authoring against logical axes.</p>
+      </section>
+
+      <section id="architecture" class="concept" tabindex="-1">
+        <h2>Architecture</h2>
+        <p>CSS scales badly by accident and well by convention. Two conventions dominate. <strong>BEM</strong> (Block, Element, Modifier) is a naming scheme that keeps selectors flat and self-documenting: a block is a component (<code>.card</code>), an element is a part of it (<code>.card__title</code>), and a modifier is a variant (<code>.card--featured</code>). Flat, single-class selectors mean low, uniform specificity and no cascade surprises.</p>
+        <p><strong>ITCSS</strong> (Inverted Triangle CSS) organizes the stylesheet from most generic to most specific: settings and tools first, then generic resets, then elements, objects, components, and finally utilities. Ordering by increasing specificity means later rules naturally win without <code>!important</code>. Cascade layers (<code>@layer</code>) formalize this order in the language itself.</p>
+
+        <h3>BEM naming (illustrative)</h3>
+        <pre class="code-block" data-lang="css"><code>/* Block: the component root */
+.card { }
+
+/* Element: a part, double underscore */
+.card__media { }
+.card__title { }
+.card__actions { }
+
+/* Modifier: a variant, double hyphen */
+.card--featured { }
+.card__title--muted { }
+
+/* Usage in markup:
+   &lt;article class="card card--featured"&gt;
+     &lt;h3 class="card__title"&gt;Featured&lt;/h3&gt;
+   &lt;/article&gt; */</code></pre>
+        <div class="sim-output" role="status"><strong>Result:</strong> every selector is a single class with specificity 0,1,0. Nothing needs to override anything by weight, so styles are predictable and safe to delete.</div>
+
+        <h3>ITCSS layering (illustrative)</h3>
+        <pre class="code-block" data-lang="css"><code>/* Order low-to-high specificity. With cascade layers: */
+@layer settings, tools, generic, elements, objects, components, utilities;
+
+@layer settings  { :root { --brand: #6366f1; } }   /* variables */
+@layer generic   { *, *::before, *::after { box-sizing: border-box; } }
+@layer elements  { a { color: var(--brand); } }     /* bare tags */
+@layer objects   { .stack &gt; * + * { margin-block-start: 1rem; } }
+@layer components{ .card { border-radius: 12px; } } /* BEM blocks */
+@layer utilities { .u-hidden { display: none; } }   /* single-purpose */</code></pre>
+        <div class="sim-output" role="status"><strong>Result:</strong> utilities always win over components, components over objects, and so on — enforced by layer order, not selector specificity.</div>
+
+        <h3>Utility classes vs component classes</h3>
+        <p>Utility-first (e.g. <code>.p-4 .flex .gap-2</code>) composes styling in markup: fast to build, no naming, but verbose HTML and styling logic that lives in templates. Component classes (BEM) centralize a component's look behind one name: cleaner markup and a single place to change, but you must invent and maintain names. Most mature codebases blend the two — components for recurring, meaningful UI; utilities for one-off spacing and layout tweaks.</p>
+
+        <h3>Example: a runnable BEM component with a modifier</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;article class="card"&gt;
+  &lt;h3 class="card__title"&gt;Standard&lt;/h3&gt;
+  &lt;p class="card__body"&gt;A plain card block.&lt;/p&gt;
+&lt;/article&gt;
+&lt;article class="card card--featured"&gt;
+  &lt;h3 class="card__title"&gt;Featured&lt;/h3&gt;
+  &lt;p class="card__body"&gt;Same block, one modifier class.&lt;/p&gt;
+&lt;/article&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif;
+  display: grid; gap: 1rem; padding: 1rem; }
+/* Block */
+.card {
+  padding: 1rem; border-radius: 12px;
+  border: 1px solid #e2e8f0; background: #fff;
+}
+/* Elements */
+.card__title { margin: 0 0 .25rem; font-size: 1.1rem; }
+.card__body  { margin: 0; color: #475569; }
+/* Modifier: flat, single-class, specificity 0,1,0 */
+.card--featured {
+  border-color: #6366f1;
+  background: linear-gradient(180deg, #eef2ff, #fff);
+  box-shadow: 0 8px 24px rgba(99,102,241,.18);
+}
+.card--featured .card__title { color: #4338ca; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: both cards share the same <code>.card</code> block; the featured variant adds exactly one modifier class. Because every selector stays at 0,1,0, you can reorder, extend, or remove variants without ever fighting the cascade.</p>
+
+        <h3>Further reading</h3>
+        <pre class="code-block" data-lang="css"><code>/* Modern features worth adopting next */
+@layer reset, base, components, utilities;   /* cascade layers */
+
+.form:has(input:invalid) .submit {           /* :has() parent selector */
+  opacity: .5; pointer-events: none;
+}
+
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); }
+.gallery__row { display: grid; grid-template-columns: subgrid; }  /* subgrid */
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {                                  /* scroll-driven animation */
+    animation: fade-in linear both;
+    animation-timeline: view();
+  }
+}</code></pre>
+        <div class="sim-output" role="status"><strong>Result:</strong> layers keep precedence explicit, <code>:has()</code> styles a parent from its children, subgrid aligns nested tracks to the outer grid, and scroll-driven animations run off scroll position with no JavaScript.</div>
+
+        <p>Next steps to deepen your CSS from here:</p>
+        <ul>
+          <li><strong>Cascade layers (<code>@layer</code>)</strong> — architect large stylesheets so precedence is intentional rather than accidental.</li>
+          <li><strong>The <code>:has()</code> relational selector</strong> — style an element based on what it contains, enabling patterns that once required JavaScript.</li>
+          <li><strong>Subgrid</strong> — let nested grids inherit their parent's track lines so cards and rows align perfectly.</li>
+          <li><strong>Scroll-driven animations</strong> — drive keyframes from scroll or element visibility with <code>animation-timeline</code>, no scroll listeners.</li>
+        </ul>
+      </section>
+
+      <section id="dashboard-patterns" class="concept" tabindex="-1">
+        <h2>Dashboard patterns</h2>
+        <p>An Employee Dashboard is mostly a responsive shell wrapped around a grid of cards. The reliable base is a single-column, mobile-first layout: write the small-screen styles with no media query, then add <code>min-width</code> queries that progressively introduce columns and a sidebar as space allows. The card grid itself can reflow without any breakpoint using <code>grid-template-columns: repeat(auto-fit, minmax(MIN, 1fr))</code> — the browser fits as many <code>MIN</code>-wide columns as the container allows and stretches them to share the row.</p>
+        <p>Two forces set the column count. <code>auto-fit</code> collapses empty tracks so present cards fill the width; the <code>minmax()</code> floor decides when a new column can appear. Layer explicit <code>min-width</code> breakpoints on top only where you need a deliberate structural change — for example flipping a stacked header-plus-sidebar shell into a two-track layout with the sidebar beside the content instead of above it.</p>
+
+        <h3>Example: an auto-fit employee-card grid</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;header class="dash-head"&gt;
+  &lt;h2&gt;Team&lt;/h2&gt;
+  &lt;span class="count"&gt;6 people&lt;/span&gt;
+&lt;/header&gt;
+&lt;div class="team"&gt;
+  &lt;article class="emp"&gt;&lt;span class="avatar"&gt;AK&lt;/span&gt;&lt;b&gt;Ana K.&lt;/b&gt;&lt;small&gt;Design&lt;/small&gt;&lt;/article&gt;
+  &lt;article class="emp"&gt;&lt;span class="avatar"&gt;BM&lt;/span&gt;&lt;b&gt;Ben M.&lt;/b&gt;&lt;small&gt;Backend&lt;/small&gt;&lt;/article&gt;
+  &lt;article class="emp"&gt;&lt;span class="avatar"&gt;CR&lt;/span&gt;&lt;b&gt;Cai R.&lt;/b&gt;&lt;small&gt;Data&lt;/small&gt;&lt;/article&gt;
+  &lt;article class="emp"&gt;&lt;span class="avatar"&gt;DP&lt;/span&gt;&lt;b&gt;Dev P.&lt;/b&gt;&lt;small&gt;Mobile&lt;/small&gt;&lt;/article&gt;
+  &lt;article class="emp"&gt;&lt;span class="avatar"&gt;EL&lt;/span&gt;&lt;b&gt;Eli L.&lt;/b&gt;&lt;small&gt;QA&lt;/small&gt;&lt;/article&gt;
+  &lt;article class="emp"&gt;&lt;span class="avatar"&gt;FN&lt;/span&gt;&lt;b&gt;Fay N.&lt;/b&gt;&lt;small&gt;Ops&lt;/small&gt;&lt;/article&gt;
+&lt;/div&gt;
+&lt;p&gt;Drag the preview edge — columns reflow with no media queries.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; margin: 0; padding: 12px;
+  background: #f1f5f9; }
+/* header + content shell */
+.dash-head { display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: .75rem; }
+.dash-head h2 { margin: 0; }
+.count { color: #64748b; font-size: .85rem; }
+/* the whole grid is one declaration — no breakpoints needed */
+.team {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.emp {
+  display: grid; gap: .15rem; justify-items: center;
+  padding: 1rem; background: #fff; border: 1px solid #e2e8f0;
+  border-radius: 12px; text-align: center;
+}
+.avatar {
+  display: grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #6366f1; color: #fff; font-weight: 700;
+  margin-bottom: .35rem;
+}
+.emp b { color: #0f172a; }
+.emp small { color: #64748b; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: with <code>auto-fit</code> the column count is derived from available width, so one rule spans phone to widescreen. Raise the <code>minmax()</code> floor (say <code>220px</code>) to force fewer, wider cards; lower it for a denser wall. No JavaScript and no resize listeners are involved.</p>
+
+        <h3>Example: breakpoint-driven shell with a reflowing sidebar</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="shell"&gt;
+  &lt;header class="bar"&gt;Employee Dashboard&lt;/header&gt;
+  &lt;nav class="side"&gt;
+    &lt;a&gt;Overview&lt;/a&gt;&lt;a&gt;People&lt;/a&gt;&lt;a&gt;Payroll&lt;/a&gt;&lt;a&gt;Settings&lt;/a&gt;
+  &lt;/nav&gt;
+  &lt;main class="main"&gt;
+    &lt;div class="tiles"&gt;
+      &lt;div class="tile"&gt;Headcount&lt;b&gt;128&lt;/b&gt;&lt;/div&gt;
+      &lt;div class="tile"&gt;Open roles&lt;b&gt;7&lt;/b&gt;&lt;/div&gt;
+      &lt;div class="tile"&gt;On leave&lt;b&gt;4&lt;/b&gt;&lt;/div&gt;
+      &lt;div class="tile"&gt;Reviews due&lt;b&gt;19&lt;/b&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+&lt;/div&gt;
+&lt;p&gt;Widen the preview: the sidebar moves from stacked-on-top to beside the content,
+and the tiles go 1 → 2 → 4 columns.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; margin: 0; padding: 10px; }
+/* BASE = mobile: everything stacks in one column */
+.shell {
+  display: grid;
+  grid-template-columns: 1fr;         /* single column */
+  grid-template-areas: "bar" "side" "main";
+  gap: 10px;
+}
+.bar  { grid-area: bar;  background: #0f172a; color: #fff;
+  padding: .7rem 1rem; border-radius: 10px; font-weight: 700; }
+.side { grid-area: side; display: flex; flex-wrap: wrap; gap: .4rem;
+  background: #eef2ff; padding: .6rem; border-radius: 10px; }
+.side a { padding: .35rem .7rem; background: #fff; border-radius: 8px;
+  color: #4338ca; font-size: .85rem; }
+.main { grid-area: main; }
+.tiles { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.tile { display: grid; gap: .2rem; padding: 1rem; background: #fff;
+  border: 1px solid #e2e8f0; border-radius: 12px; color: #64748b; }
+.tile b { font-size: 1.6rem; color: #0f172a; }
+
+/* 2 tile columns once there is room */
+@media (min-width: 520px) {
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+}
+/* wide: sidebar moves BESIDE the content, tiles go to 4 columns */
+@media (min-width: 780px) {
+  .shell {
+    grid-template-columns: 180px 1fr;
+    grid-template-areas:
+      "bar  bar"
+      "side main";
+  }
+  .side { flex-direction: column; }
+  .tiles { grid-template-columns: repeat(4, 1fr); }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: these queries read the viewport, but a dashboard card dropped into a narrow widget really wants to respond to <em>its own</em> box. When the trigger should be the component's slot rather than the window, reach for container queries instead — see <a href="css.html#container-queries">Container queries</a>.</p>
+      </section>
+
+      <section id="card-interactions" class="concept" tabindex="-1">
+        <h2>Card interactions</h2>
+        <p>Dashboard cards feel responsive when they lift on interaction. The pattern is a resting <code>box-shadow</code> plus a <code>transform</code> that raises the card on <code>:hover</code> and <code>:focus-within</code>, wired through a short <code>transition</code>. Pairing hover with <code>:focus-within</code> matters: keyboard users who tab into a card get the same affordance mouse users get on hover, so the feedback is not mouse-only.</p>
+        <p>Keep the motion cheap and considerate. Animate only <code>transform</code> and <code>box-shadow</code> (or <code>opacity</code>) so the work stays on the compositor, hint the browser with <code>will-change</code> where a heavier effect warrants it, and silence non-essential motion under <code>prefers-reduced-motion: reduce</code>. A flip or reveal built from <code>transform</code> is really the same idea taken one step further — two faces rotated in 3D space.</p>
+
+        <h3>Example: an elevation hover/focus card</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="row"&gt;
+  &lt;article class="card"&gt;
+    &lt;h3&gt;Ana Kaur&lt;/h3&gt;
+    &lt;p&gt;Design Lead&lt;/p&gt;
+    &lt;a class="link" href="#"&gt;View profile&lt;/a&gt;
+  &lt;/article&gt;
+  &lt;article class="card"&gt;
+    &lt;h3&gt;Ben Marsh&lt;/h3&gt;
+    &lt;p&gt;Backend Engineer&lt;/p&gt;
+    &lt;a class="link" href="#"&gt;View profile&lt;/a&gt;
+  &lt;/article&gt;
+&lt;/div&gt;
+&lt;p&gt;Hover a card, or press Tab to focus the link inside it.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; background: #f1f5f9;
+  padding: 1.25rem; }
+.row { display: flex; gap: 1rem; flex-wrap: wrap; }
+.card {
+  flex: 1 1 180px;
+  padding: 1rem; background: #fff; border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15,23,42,.08);   /* resting elevation */
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.card h3 { margin: 0 0 .15rem; }
+.card p  { margin: 0 0 .6rem; color: #64748b; }
+.link { color: #4338ca; font-weight: 600; text-decoration: none; }
+.link:focus-visible { outline: 2px solid #4338ca; outline-offset: 3px; }
+/* raise on hover AND when a child is focused (keyboard parity) */
+.card:hover,
+.card:focus-within {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 14px 30px rgba(15,23,42,.16);
+}
+/* honor users who ask for less motion: drop the movement, keep the shadow */
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: box-shadow .2s ease; }
+  .card:hover, .card:focus-within { transform: none; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: pairing <code>:hover</code> with <code>:focus-within</code> gives keyboard users the same cue as mouse users, and <code>:focus-visible</code> keeps a clear ring without flashing it on every mouse click. Always provide a reduced-motion path — here the elevation stays but the travel is removed.</p>
+
+        <h3>Example: a hover flip / reveal card</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="flip" tabindex="0"&gt;
+  &lt;div class="inner"&gt;
+    &lt;div class="face front"&gt;
+      &lt;span class="avatar"&gt;CR&lt;/span&gt;
+      &lt;b&gt;Cai Ruiz&lt;/b&gt;
+    &lt;/div&gt;
+    &lt;div class="face back"&gt;
+      &lt;p&gt;Data Scientist&lt;/p&gt;
+      &lt;p&gt;cai@corp.example&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Hover the card, or Tab to focus it, to flip and reveal contact details.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1.5rem;
+  background: #f1f5f9; }
+.flip { width: 200px; height: 130px; perspective: 800px; border-radius: 14px; }
+.flip:focus-visible { outline: 2px solid #4338ca; outline-offset: 4px; }
+.inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .5s ease;    /* only transform animates */
+}
+.flip:hover .inner,
+.flip:focus-within .inner,
+.flip:focus .inner { transform: rotateY(180deg); }
+.face {
+  position: absolute; inset: 0;
+  display: grid; place-content: center; gap: .25rem; text-align: center;
+  backface-visibility: hidden;       /* hide the reversed side */
+  border-radius: 14px; padding: 1rem;
+}
+.front { background: #fff; border: 1px solid #e2e8f0; }
+.back  { background: #4338ca; color: #fff; transform: rotateY(180deg); }
+.avatar { justify-self: center; display: grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: #6366f1; color: #fff; font-weight: 700; }
+.back p { margin: 0; font-size: .9rem; }
+/* reduced motion: cross-fade instead of a 3D spin */
+@media (prefers-reduced-motion: reduce) {
+  .inner { transition: none; }
+  .back { transform: rotateY(180deg); transition: opacity .2s ease; opacity: 0; }
+  .flip:hover .back, .flip:focus-within .back, .flip:focus .back { opacity: 1; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: the flip animates only <code>transform</code>, so it composites without triggering layout or paint. Add <code>will-change: transform</code> to <code>.inner</code> only if you measure jank — over-promoting many cards wastes GPU memory. The reduced-motion branch swaps the spin for a plain opacity cross-fade.</p>
+      </section>
+
+      <section id="collapsible-sections" class="concept" tabindex="-1">
+        <h2>Collapsible sections</h2>
+        <p>Profile details, notes, and settings groups all want to expand and collapse. The classic trick animated <code>max-height</code> between <code>0</code> and a guessed large value, but that guess is fragile — too small clips content, too large makes the easing time wrong because the transition covers empty space. The modern technique animates <code>grid-template-rows</code> from <code>0fr</code> to <code>1fr</code>: the row track resolves to the content's real height, so the reveal is smooth at any content length with no magic number.</p>
+        <p>The native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> element gives you an accessible disclosure for free — keyboard operable and announced by screen readers as expandable — and you can style the summary and animate its chevron. Below, one example builds the grid-rows collapse with a CSS-only checkbox toggle, and the other styles a native <code>&lt;details&gt;</code> with an animated marker.</p>
+
+        <h3>Example: grid-rows 0fr → 1fr collapse (CSS-only)</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="panel"&gt;
+  &lt;input type="checkbox" id="more" class="toggle"&gt;
+  &lt;label for="more" class="summary"&gt;
+    Employment details &lt;span class="chevron"&gt;&#9662;&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;div class="collapsible"&gt;
+    &lt;div class="inner"&gt;
+      &lt;p&gt;&lt;b&gt;Title:&lt;/b&gt; Senior Analyst&lt;/p&gt;
+      &lt;p&gt;&lt;b&gt;Team:&lt;/b&gt; Revenue Intelligence&lt;/p&gt;
+      &lt;p&gt;&lt;b&gt;Start date:&lt;/b&gt; 2021-03-15&lt;/p&gt;
+      &lt;p&gt;&lt;b&gt;Manager:&lt;/b&gt; Dana Osei&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Click the row to expand — the panel grows to the content's real height.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; background: #f8fafc; }
+.panel { max-width: 340px; background: #fff; border: 1px solid #e2e8f0;
+  border-radius: 12px; overflow: hidden; }
+.toggle { position: absolute; opacity: 0; pointer-events: none; }  /* visually hidden */
+.summary { display: flex; justify-content: space-between; align-items: center;
+  padding: .8rem 1rem; cursor: pointer; font-weight: 700; color: #0f172a;
+  user-select: none; }
+.summary:focus-within { outline: 2px solid #4338ca; }
+.chevron { transition: transform .25s ease; color: #6366f1; }
+/* the collapsing track: 0fr closed, 1fr open */
+.collapsible {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .3s ease;
+}
+.inner { overflow: hidden; }   /* required so content clips while the row is 0fr */
+.inner p { margin: .3rem 1rem; color: #475569; }
+.inner p:first-child { margin-top: 0; }
+.inner p:last-child { margin-bottom: .8rem; }
+/* checked state expands the row and rotates the chevron */
+.toggle:checked ~ .collapsible { grid-template-rows: 1fr; }
+.toggle:checked ~ .summary .chevron { transform: rotate(180deg); }
+/* keyboard focus ring on the real (hidden) checkbox, surfaced on the label */
+.toggle:focus-visible ~ .summary { outline: 2px solid #4338ca; outline-offset: 2px; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: the <code>0fr → 1fr</code> track transition needs an <code>overflow: hidden</code> child so content clips while collapsed — that inner wrapper is not optional. The older <code>max-height</code> approach still works but forces you to guess a ceiling and eases across empty space. For real UI prefer a native <code>&lt;details&gt;</code> or a scripted <code>button</code> with <code>aria-expanded</code>; a bare checkbox toggle is not announced as a disclosure to assistive tech.</p>
+
+        <h3>Example: styled &lt;details&gt; with an animated marker</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;details class="acc" open&gt;
+  &lt;summary&gt;Contact&lt;/summary&gt;
+  &lt;div class="body"&gt;
+    &lt;p&gt;Email: ana.kaur@corp.example&lt;/p&gt;
+    &lt;p&gt;Phone: +1 555 0142&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/details&gt;
+&lt;details class="acc"&gt;
+  &lt;summary&gt;Emergency contact&lt;/summary&gt;
+  &lt;div class="body"&gt;
+    &lt;p&gt;Rai Kaur — sibling&lt;/p&gt;
+    &lt;p&gt;+1 555 0199&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/details&gt;
+&lt;p&gt;Native disclosure: keyboard-operable and screen-reader friendly out of the box.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; background: #f8fafc; }
+.acc { max-width: 340px; margin-bottom: .6rem; background: #fff;
+  border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+.acc summary {
+  list-style: none;                 /* drop the default triangle... */
+  display: flex; align-items: center; gap: .5rem;
+  padding: .75rem 1rem; cursor: pointer; font-weight: 700; color: #0f172a;
+}
+.acc summary::-webkit-details-marker { display: none; }  /* ...in WebKit too */
+.acc summary:focus-visible { outline: 2px solid #4338ca; outline-offset: -2px; }
+/* our own chevron, rotated when the details is open */
+.acc summary::before {
+  content: "\25B8";                 /* ▸ */
+  color: #6366f1; font-size: .9rem;
+  transition: transform .25s ease;
+}
+.acc[open] summary::before { transform: rotate(90deg); }
+.body { padding: 0 1rem 1rem; }
+.body p { margin: .25rem 0; color: #475569; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: <code>&lt;details&gt;</code> is the accessible default — it toggles on Enter/Space and reports its expanded state without ARIA. You can restyle the marker freely (hide <code>list-style</code> and the WebKit pseudo-element, then draw your own), but the open/close jump is instant; browsers are only now gaining native <code>&lt;details&gt;</code> content animation, so treat the smooth grid-rows reveal above as the progressive enhancement when you need motion.</p>
+      </section>
+
+      <section id="values-and-units" class="concept" tabindex="-1">
+        <h2>Values &amp; units</h2>
+        <p>Every length in CSS resolves to pixels eventually, but <em>how</em> it resolves is what matters. Absolute units like <code>px</code> are fixed; relative units resolve against something else. <code>em</code> resolves against the element's own <code>font-size</code> (and compounds through nesting), while <code>rem</code> resolves against the root <code>font-size</code> — so <code>rem</code> stays stable no matter how deep the element sits. Percentages resolve against a property-specific reference: <code>width: 50%</code> against the containing block, <code>line-height: 150%</code> against the font size.</p>
+        <p>Font-relative units include <code>ch</code> (the advance of a "0" glyph, ideal for measure), <code>ex</code> and <code>cap</code> (x-height and cap-height). Viewport units <code>vw</code>/<code>vh</code>/<code>vmin</code>/<code>vmax</code> track the window; the newer <code>dvh</code>/<code>svh</code>/<code>lvh</code> handle the collapsing mobile toolbar (dynamic, small, and large viewport heights). The grid-only <code>fr</code> unit distributes leftover space after fixed tracks are laid out. Transforms and transitions add <code>deg</code>/<code>turn</code> angles and <code>s</code>/<code>ms</code> times.</p>
+
+        <h3>Example: px vs em vs rem vs % when the parent font-size changes</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="parent"&gt;
+  parent font-size: 24px
+  &lt;div class="bar px"&gt;width: 160px&lt;/div&gt;
+  &lt;div class="bar em"&gt;width: 8em&lt;/div&gt;
+  &lt;div class="bar rem"&gt;width: 10rem&lt;/div&gt;
+  &lt;div class="bar pct"&gt;width: 60%&lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">html { font-size: 16px; }              /* rem anchor */
+body { font-family: system-ui, sans-serif; }
+/* Bump the parent font-size to 24px: em bars track it,
+   rem and px do not, % tracks the parent's WIDTH. */
+.parent { font-size: 24px; width: 320px;
+  border: 2px solid #cbd5e1; padding: 8px; border-radius: 8px; }
+.bar { color: #fff; font-weight: 700; padding: 4px 8px;
+  margin: 6px 0; border-radius: 6px; font-size: .8rem; }
+.px  { width: 160px; background: #6366f1; }  /* fixed */
+.em  { width: 8em;   background: #0ea5e9; }  /* 8 * 24px = 192px */
+.rem { width: 10rem; background: #10b981; }  /* 10 * 16px = 160px */
+.pct { width: 60%;   background: #f59e0b; }  /* 60% of 320px box */</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: change <code>.parent { font-size }</code> to <code>32px</code> and press Run — only the <code>em</code> bar grows, because it alone resolves against the element's font size. This is exactly why <code>rem</code> is the safer default for component sizing: it does not compound.</p>
+
+        <h3>Example: 100dvh vs 100vh and the mobile toolbar gap</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;section class="hero vh"&gt;height: 100vh&lt;/section&gt;
+&lt;section class="hero dvh"&gt;height: 100dvh&lt;/section&gt;
+&lt;p&gt;On mobile, the address bar eats into 100vh but not 100dvh.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; margin: 0; }
+.hero { display: grid; place-items: center; color: #fff;
+  font-weight: 800; font-size: 1.1rem; }
+/* Static viewport height: on phones this can sit under the
+   collapsing toolbar and get partially hidden. */
+.vh  { height: 100vh;  background: #ef4444; }
+/* Dynamic viewport height: shrinks/grows as the toolbar
+   shows/hides, so the whole panel always fits. */
+.dvh { height: 100dvh; background: #10b981; }
+/* svh = smallest (toolbar shown), lvh = largest (toolbar hidden) */</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: <code>dvh</code>/<code>svh</code>/<code>lvh</code> are Baseline in current browsers. A robust pattern is <code>min-height: 100vh; min-height: 100dvh;</code> — older engines take the <code>vh</code> line and modern ones override it with <code>dvh</code>.</p>
+
+        <h3>Example: a ch-based measure column and unitless line-height</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;article class="prose"&gt;
+  &lt;h3&gt;Readable measure&lt;/h3&gt;
+  &lt;p&gt;Capping the text column at 60ch keeps line length in the
+  comfortable 45–75 character range regardless of font size, so
+  the eye finds the next line without effort. The unitless
+  line-height inherits as a multiplier, not a fixed pixel value.&lt;/p&gt;
+&lt;/article&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: Georgia, serif; padding: 1rem;
+  background: #f8fafc; }
+.prose {
+  max-width: 60ch;       /* measure follows the font, not px */
+  line-height: 1.6;      /* unitless: children multiply their OWN size */
+  margin-inline: auto;
+  background: #fff; padding: 1.25rem; border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+.prose h3 { margin: 0 0 .5rem;
+  /* line-height 1.6 inherited here means 1.6 * this heading's size,
+     which is correct — a fixed 1.6rem would be too tight for a big heading */
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: a unitless <code>line-height</code> inherits as a ratio, so each descendant computes its leading from its own font size. A length like <code>line-height: 24px</code> inherits the <em>computed</em> 24px, which crushes larger headings into overlapping lines.</p>
+
+        <h3>Example: a safe-area footer with env() and a fallback</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="app"&gt;
+  &lt;div class="screen"&gt;App content&lt;/div&gt;
+  &lt;nav class="tabbar"&gt;Home · Search · Profile&lt;/nav&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; margin: 0; }
+.app { display: flex; flex-direction: column; height: 220px;
+  border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+.screen { flex: 1; display: grid; place-items: center;
+  background: #eef2ff; color: #4338ca; font-weight: 700; }
+.tabbar {
+  background: #0f172a; color: #fff; text-align: center;
+  /* base padding, PLUS the device safe-area inset on notched phones.
+     env() falls back to 0px where there is no inset. */
+  padding-block: .75rem;
+  padding-bottom: calc(.75rem + env(safe-area-inset-bottom, 0px));
+  font-weight: 700;
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: <code>env()</code> insets are non-zero only when the document opts in with <code>&lt;meta name="viewport" content="viewport-fit=cover"&gt;</code> on a notched device. The second argument to <code>env()</code> is a fallback, so the rule is safe everywhere else.</p>
+      </section>
+
+      <section id="typography" class="concept" tabindex="-1">
+        <h2>Typography &amp; text</h2>
+        <p>The <code>font</code> shorthand packs several properties into one declaration, but the order is strict: optional style/variant/weight/stretch, then the mandatory <code>font-size</code> (with an optional <code>/line-height</code>), then the mandatory <code>font-family</code> last. Omit size or family and the whole declaration is invalid. Self-hosted fonts arrive via <code>@font-face</code>; pairing it with <code>font-display: swap</code> shows fallback text immediately and swaps in the web font when it loads, avoiding invisible text.</p>
+        <p>Fine control comes from <code>letter-spacing</code>, <code>word-spacing</code>, <code>text-transform</code>, and <code>text-decoration</code> (now with <code>text-decoration-thickness</code> and <code>text-underline-offset</code>). <code>white-space</code> governs wrapping and collapsing; <code>overflow-wrap</code> and <code>word-break</code> break long strings. Truncate one line with <code>text-overflow: ellipsis</code> or several with <code>-webkit-line-clamp</code>. Variable fonts expose weight and other axes through <code>font-variation-settings</code>, and <code>font-feature-settings</code>/<code>font-variant</code> toggle ligatures and numeric figures.</p>
+
+        <h3>Example: single-line ellipsis and multi-line clamp</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;article class="card"&gt;
+  &lt;h3 class="title"&gt;A very long headline that will not fit on one line at all&lt;/h3&gt;
+  &lt;p class="excerpt"&gt;This body copy is clamped to three lines. Any text beyond
+  the third line is hidden and an ellipsis marks the cut so cards stay a
+  uniform height in a grid. Resize the preview to watch it re-clamp live.&lt;/p&gt;
+&lt;/article&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.card { max-width: 260px; border: 1px solid #e2e8f0;
+  border-radius: 10px; padding: 1rem; }
+/* one line, cut with an ellipsis */
+.title {
+  margin: 0 0 .5rem; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+/* N lines, cut with an ellipsis (the -webkit- props are the standard here) */
+.excerpt {
+  margin: 0; color: #475569;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: single-line truncation needs the trio <code>white-space: nowrap; overflow: hidden; text-overflow: ellipsis</code> — drop <code>nowrap</code> and the text wraps instead of clipping. The <code>-webkit-line-clamp</code> stack is interoperable despite the prefix and is the only reliable way to clamp multiple lines.</p>
+
+        <h3>Example: text-wrap: balance vs the default</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;h2 class="default"&gt;Default wrapping leaves a lonely last word orphaned&lt;/h2&gt;
+&lt;h2 class="balanced"&gt;Balanced wrapping evens the lines for a tidier heading&lt;/h2&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: Georgia, serif; padding: 1rem; }
+h2 { max-width: 22ch; font-size: 1.5rem; margin: 0 0 1rem;
+  border-left: 4px solid #6366f1; padding-left: .6rem; }
+/* greedy line breaking: last line can be a single short word */
+.default { text-wrap: wrap; }
+/* balance evens line lengths across the block (best for headings) */
+.balanced { text-wrap: balance; }
+/* text-wrap: pretty is the sibling for body copy — it avoids
+   orphans without fully re-balancing every line. */</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: <code>text-wrap: balance</code> is capped by the engine (typically to a handful of lines) because balancing is layout-expensive — it is meant for headings and short blurbs, not long articles. For body copy reach for <code>text-wrap: pretty</code> instead.</p>
+
+        <h3>Example: @font-face with font-display and a variable-weight slider</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;label&gt;Weight
+  &lt;input id="w" type="range" min="100" max="900" step="10" value="400"&gt;
+&lt;/label&gt;
+&lt;p id="sample" class="sample"&gt;Variable fonts morph weight on one axis.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">/* @font-face declares a self-hosted family; font-display: swap
+   paints fallback text first, then swaps when the file loads.
+   (Illustrative — no file is fetched in this offline demo.) */
+@font-face {
+  font-family: "Brand Sans";
+  src: url("/fonts/brand.woff2") format("woff2");
+  font-weight: 100 900;      /* one variable file covers the range */
+  font-display: swap;
+}
+body { font-family: "Brand Sans", system-ui, sans-serif; padding: 1rem; }
+.sample { font-size: 1.8rem; margin: 1rem 0 0;
+  /* the slider writes this custom property */
+  font-variation-settings: "wght" var(--wght, 400); }</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const slider = document.getElementById('w');
+const sample = document.getElementById('sample');
+function apply() {
+  sample.style.setProperty('--wght', slider.value);
+  console.log('font-weight axis =', slider.value);
+}
+slider.addEventListener('input', apply);
+apply();</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: because the demo runs offline, the "Brand Sans" file never loads and the browser uses the <code>system-ui</code> fallback — but the <code>font-variation-settings</code> plumbing is exactly what you would use with a real variable font. Prefer the high-level <code>font-weight: 550</code> when a single axis is all you need; reserve <code>font-variation-settings</code> for custom axes.</p>
+
+        <h3>Example: a pull-quote with tracking, small-caps and tabular figures</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;blockquote class="pull"&gt;
+  &lt;p&gt;Design is intelligence made visible&lt;/p&gt;
+  &lt;cite&gt;— Alina Wheeler&lt;/cite&gt;
+&lt;/blockquote&gt;
+&lt;table class="ledger"&gt;
+  &lt;tr&gt;&lt;td&gt;Alpha&lt;/td&gt;&lt;td class="num"&gt;1,204.50&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;Beta&lt;/td&gt;&lt;td class="num"&gt;98.00&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;Gamma&lt;/td&gt;&lt;td class="num"&gt;11,777.25&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: Georgia, serif; padding: 1rem; }
+.pull { margin: 0 0 1rem; border-left: 4px solid #6366f1;
+  padding-left: 1rem; }
+.pull p { margin: 0; font-size: 1.4rem; font-style: italic; }
+.pull cite {
+  display: block; margin-top: .5rem;
+  font-style: normal; font-size: .8rem;
+  letter-spacing: .12em;              /* tracking */
+  text-transform: uppercase;          /* small-caps look */
+  color: #64748b;
+}
+.ledger { font-family: system-ui, sans-serif; border-collapse: collapse; }
+.ledger td { padding: .3rem .8rem; border-bottom: 1px solid #e2e8f0; }
+/* tabular figures line the digits up into columns */
+.num { text-align: right; font-variant-numeric: tabular-nums; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: <code>font-variant-numeric: tabular-nums</code> forces every digit to the same advance width so numbers align vertically in tables — proportional figures (the default) look better in prose but never line up in columns.</p>
+      </section>
+
+      <section id="colors-and-gradients" class="concept" tabindex="-1">
+        <h2>Colors &amp; gradients</h2>
+        <p>A color can be named, hex (including the 8-digit <code>#rrggbbaa</code> form with alpha), or a function: <code>rgb()</code>, <code>hsl()</code>, and <code>hwb()</code> all accept the modern space-separated syntax with an optional <code>/ alpha</code>. Perceptual spaces <code>oklch()</code> and <code>oklab()</code> describe color the way the eye reads it, so equal steps in lightness look equally spaced — invaluable for generating tint/shade ramps that do not muddy in the middle.</p>
+        <p><code>color-mix()</code> blends two colors in a chosen space, which lets one design token spawn hover and active variants. <code>currentColor</code> refers to the element's own <code>color</code>, so borders and SVG fills track the text. Note the difference between <code>opacity</code> (fades the whole element and its children) and an alpha channel (fades one specific color). Gradients come in <code>linear</code>, <code>radial</code>, and <code>conic</code> flavors, each with a <code>repeating-</code> variant, and accept multiple stops with explicit positions to make hard-edged bands.</p>
+
+        <h3>Example: one swatch in four syntaxes, plus an oklch lightness ramp</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;Same purple, four notations:&lt;/p&gt;
+&lt;div class="row"&gt;
+  &lt;span class="sw hex"&gt;hex&lt;/span&gt;
+  &lt;span class="sw rgb"&gt;rgb&lt;/span&gt;
+  &lt;span class="sw hsl"&gt;hsl&lt;/span&gt;
+  &lt;span class="sw okl"&gt;oklch&lt;/span&gt;
+&lt;/div&gt;
+&lt;p&gt;Even lightness steps in oklch:&lt;/p&gt;
+&lt;div class="ramp"&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.row { display: flex; gap: .5rem; margin-bottom: 1rem; }
+.sw { display: grid; place-items: center; width: 64px; height: 48px;
+  border-radius: 8px; color: #fff; font-size: .75rem; font-weight: 700; }
+.hex { background: #7c3aed; }
+.rgb { background: rgb(124 58 237); }        /* modern space syntax */
+.hsl { background: hsl(262 83% 58%); }
+.okl { background: oklch(0.53 0.24 291); }   /* ≈ the same purple */
+/* equal L steps in oklch read as an even ramp; equal HSL steps do not */
+.ramp { display: flex; border-radius: 8px; overflow: hidden; }
+.ramp i { flex: 1; height: 40px; }
+.ramp i:nth-child(1){ background: oklch(0.95 0.05 291); }
+.ramp i:nth-child(2){ background: oklch(0.80 0.11 291); }
+.ramp i:nth-child(3){ background: oklch(0.65 0.17 291); }
+.ramp i:nth-child(4){ background: oklch(0.50 0.22 291); }
+.ramp i:nth-child(5){ background: oklch(0.35 0.16 291); }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: <code>oklch()</code>, <code>oklab()</code>, and the space-separated <code>rgb()/hsl()</code> forms are Baseline in current browsers. When you need to support older engines, keep a hex or legacy-comma value as a preceding fallback declaration.</p>
+
+        <h3>Example: hover and active states derived from one token with color-mix()</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;button class="btn"&gt;Hover then press me&lt;/button&gt;
+&lt;p&gt;Every state comes from a single --accent value.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1.5rem; }
+.btn {
+  --accent: #6366f1;             /* the ONE source of truth */
+  background: var(--accent);
+  color: #fff; border: 0; border-radius: 8px;
+  padding: .6rem 1.2rem; font-weight: 700; cursor: pointer;
+  transition: background .15s;
+}
+/* darken the token by mixing in 15% black — no second color to maintain */
+.btn:hover  { background: color-mix(in oklch, var(--accent), black 15%); }
+.btn:active { background: color-mix(in oklch, var(--accent), black 30%); }
+/* a subtle focus ring tinted from the same token */
+.btn:focus-visible {
+  outline: 3px solid color-mix(in oklch, var(--accent), white 40%);
+  outline-offset: 2px;
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: mixing in <code>oklch</code> keeps the hue stable while only lightness changes, so a darkened button stays the same color family — a nicer result than the muddy midpoint you often get mixing in <code>srgb</code>.</p>
+
+        <h3>Example: a gallery of linear, radial, conic and repeating gradients</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="grid"&gt;
+  &lt;div class="g linear"&gt;linear&lt;/div&gt;
+  &lt;div class="g radial"&gt;radial&lt;/div&gt;
+  &lt;div class="g pie"&gt;conic pie&lt;/div&gt;
+  &lt;div class="g stripes"&gt;repeating&lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.g { height: 90px; border-radius: 10px; display: grid;
+  place-items: center; color: #fff; font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,.4); }
+/* angled two-stop blend */
+.linear { background: linear-gradient(135deg, #6366f1, #ec4899); }
+/* off-center radial with an explicit position */
+.radial { background: radial-gradient(circle at 30% 30%, #38bdf8, #1e3a8a); }
+/* conic with hard stops = a pie chart */
+.pie { background: conic-gradient(
+  #ef4444 0 40%, #f59e0b 40% 65%, #10b981 65% 100%); }
+/* repeating stripes via hard color bands */
+.stripes { background: repeating-linear-gradient(45deg,
+  #334155 0 12px, #475569 12px 24px); }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: giving two adjacent stops the <em>same</em> position (<code>#ef4444 0 40%, #f59e0b 40%</code>) creates a hard edge with no blend — that is how conic pie slices and striped patterns are built out of ordinary gradients.</p>
+
+        <h3>Example: an icon that recolors via currentColor</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p class="chip ok"&gt;
+  &lt;svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"&gt;
+    &lt;path fill="currentColor" d="M6.5 11 3 7.5 4.1 6.4 6.5 8.8 11.9 3.4 13 4.5z"/&gt;
+  &lt;/svg&gt; Saved&lt;/p&gt;
+&lt;p class="chip warn"&gt;
+  &lt;svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"&gt;
+    &lt;path fill="currentColor" d="M8 1 15 14H1z M7 6h2v4H7z M7 11h2v2H7z"/&gt;
+  &lt;/svg&gt; Attention&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.chip { display: inline-flex; align-items: center; gap: .4rem;
+  padding: .35rem .7rem; border-radius: 999px; font-weight: 700;
+  border: 1px solid currentColor; }   /* border tracks color too */
+/* Set color once; both the text AND the SVG fill follow it,
+   because the path uses fill: currentColor. */
+.ok   { color: #059669; }
+.warn { color: #d97706; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: <code>currentColor</code> is the cheapest way to keep an inline icon in sync with its label — change one <code>color</code> and the glyph, text, and border all update, which also guarantees the icon meets the same contrast as the text beside it.</p>
+      </section>
+
+      <section id="sizing-object-fit" class="concept" tabindex="-1">
+        <h2>Sizing &amp; object-fit</h2>
+        <p>A computed size can be clamped from both ends: <code>min-width</code>/<code>min-height</code> set a floor the box can never drop below, and <code>max-width</code>/<code>max-height</code> set a ceiling. The intrinsic keywords let content decide the size — <code>min-content</code> shrinks to the widest unbreakable word, <code>max-content</code> grows to fit everything on one line, and <code>fit-content()</code> behaves like <code>max-content</code> but caps at a limit you supply. <code>aspect-ratio</code> locks a width-to-height proportion without the old padding-top hack.</p>
+        <p>Replaced elements — images, video, <code>&lt;canvas&gt;</code> — size differently from normal blocks: they have intrinsic dimensions. When you force one to fill a box, <code>object-fit</code> decides how the pixels map onto that box: <code>cover</code> fills and crops, <code>contain</code> fits and letterboxes, <code>fill</code> stretches, <code>none</code> keeps native size. <code>object-position</code> then nudges which part stays visible.</p>
+
+        <h3>Example: object-fit cover vs contain on the same image box</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="pair"&gt;
+  &lt;figure&gt;&lt;img class="cover" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120'%3E%3Crect width='200' height='120' fill='%236366f1'/%3E%3Ccircle cx='100' cy='60' r='40' fill='%23fbbf24'/%3E%3C/svg%3E"&gt;&lt;figcaption&gt;cover&lt;/figcaption&gt;&lt;/figure&gt;
+  &lt;figure&gt;&lt;img class="contain" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120'%3E%3Crect width='200' height='120' fill='%236366f1'/%3E%3Ccircle cx='100' cy='60' r='40' fill='%23fbbf24'/%3E%3C/svg%3E"&gt;&lt;figcaption&gt;contain&lt;/figcaption&gt;&lt;/figure&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.pair { display: flex; gap: 1rem; }
+figure { margin: 0; }
+figcaption { text-align: center; font-size: .8rem; color: #64748b; }
+img { width: 130px; height: 130px; display: block; border-radius: 10px;
+  background: #e2e8f0; }        /* the box is a square; the art is 200x120 */
+/* fill the square, cropping the overflow */
+.cover   { object-fit: cover; object-position: center; }
+/* fit the whole art inside, letterboxing the rest */
+.contain { object-fit: contain; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: <code>object-fit</code> only affects replaced elements whose box has been forced away from their intrinsic size. It does nothing on a plain <code>&lt;div&gt;</code> — for those use <code>background-size: cover/contain</code> instead.</p>
+
+        <h3>Example: aspect-ratio thumbnail that stays 16/9 as it resizes</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;Resize the preview — the placeholder keeps 16:9 with no fixed height.&lt;/p&gt;
+&lt;div class="thumb"&gt;
+  &lt;span class="play"&gt;&#9654;&lt;/span&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.thumb {
+  width: 100%; max-width: 360px;
+  aspect-ratio: 16 / 9;          /* height derives from width */
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #1e293b, #475569);
+  border-radius: 12px;
+}
+.play { width: 46px; height: 46px; display: grid; place-items: center;
+  border-radius: 50%; background: rgba(255,255,255,.9); color: #0f172a; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: setting <code>aspect-ratio</code> (or width/height attributes on an <code>&lt;img&gt;</code>) reserves the box before the image loads, which prevents the layout shift that hurts Cumulative Layout Shift scores.</p>
+
+        <h3>Example: clamp-sized card, fit-content button, max-content chips</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="card"&gt;
+  &lt;h3&gt;Intrinsic sizing&lt;/h3&gt;
+  &lt;div class="chips"&gt;
+    &lt;span&gt;design&lt;/span&gt;&lt;span&gt;front end&lt;/span&gt;&lt;span&gt;accessibility&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;button&gt;Hugs its label&lt;/button&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.card {
+  /* never below 220px, never above 420px, ideally 60% of the parent */
+  width: clamp(220px, 60%, 420px);
+  border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem;
+}
+.card h3 { margin: 0 0 .6rem; }
+.chips { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: .8rem; }
+/* each chip is exactly as wide as its own text — never wraps mid-word */
+.chips span { width: max-content; background: #eef2ff; color: #4338ca;
+  padding: .25rem .6rem; border-radius: 999px; font-size: .8rem; }
+/* the button shrinks to its content instead of filling the card */
+.card button { width: fit-content; border: 0; border-radius: 8px;
+  padding: .5rem 1rem; background: #6366f1; color: #fff; font-weight: 700; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: <code>width: fit-content</code> is the modern replacement for the old <code>display: inline-block</code> shrink-to-fit trick and keeps the element a block for margin purposes. <code>fit-content(200px)</code> adds an upper bound to the shrink-wrapping.</p>
+      </section>
+
+      <section id="backgrounds-borders-shadows" class="concept" tabindex="-1">
+        <h2>Backgrounds, borders &amp; shadows</h2>
+        <p>A single element can paint several background layers at once: give <code>background-image</code> a comma-separated list and match it with per-layer <code>background-size</code>, <code>-position</code>, <code>-repeat</code>, and <code>-attachment</code>. The first layer sits on top. <code>background-clip</code> decides how far a background extends — <code>border-box</code>, <code>padding-box</code>, <code>content-box</code>, or the special <code>text</code> value that paints the background only through the glyph shapes for gradient text.</p>
+        <p>Borders offer per-side control, elliptical <code>border-radius</code> (the <code>/</code> separates horizontal and vertical radii), and <code>border-image</code> for sliced graphics. <code>box-shadow</code> accepts a comma list too, stacking multiple shadows and <code>inset</code> shadows for depth and inner highlights. <code>outline</code> draws outside the border and — crucially — takes no space in layout, which is exactly why it is the right tool for focus rings.</p>
+
+        <h3>Example: two stacked backgrounds with independent size and position</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="hero"&gt;
+  &lt;h3&gt;Layered background&lt;/h3&gt;
+  &lt;p&gt;A translucent gradient over a repeating dot pattern.&lt;/p&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.hero {
+  color: #fff; padding: 2rem; border-radius: 12px;
+  /* TWO layers: first (top) = gradient, second = dotted pattern */
+  background-image:
+    linear-gradient(135deg, rgba(99,102,241,.85), rgba(236,72,153,.85)),
+    radial-gradient(circle, #94a3b8 1.5px, transparent 1.6px);
+  background-size:
+    cover,            /* gradient fills the box */
+    16px 16px;        /* pattern tiles every 16px */
+  background-position:
+    center,
+    0 0;
+  background-repeat:
+    no-repeat,
+    repeat;
+}
+.hero h3 { margin: 0 0 .3rem; } .hero p { margin: 0; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: background layers read top-to-bottom in source order — the first image in the list paints in front. Each comma-separated value in <code>background-size</code>/<code>-position</code>/<code>-repeat</code> lines up with the image at the same index.</p>
+
+        <h3>Example: gradient-clipped text and an elliptical radius</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;h2 class="grad"&gt;Gradient text&lt;/h2&gt;
+&lt;div class="blob"&gt;elliptical radius&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+/* paint a gradient, then clip it to the glyph shapes */
+.grad {
+  font-size: 2.4rem; font-weight: 900;
+  background: linear-gradient(90deg, #6366f1, #ec4899, #f59e0b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;      /* let the clipped background show through */
+}
+/* the slash syntax: horizontal radii / vertical radii */
+.blob {
+  margin-top: 1rem; width: 220px; height: 90px;
+  display: grid; place-items: center; color: #fff; font-weight: 700;
+  background: #0ea5e9;
+  border-radius: 60px 20px 40px 30px / 30px 40px 20px 60px;
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: gradient text sets <code>color: transparent</code>, so it is invisible if the background image fails to load and can be low-contrast. Keep it for large display type, never for body copy, and ensure the underlying gradient meets contrast against the page.</p>
+
+        <h3>Example: single vs layered vs inset shadow, and outline vs border</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="row"&gt;
+  &lt;div class="box one"&gt;single&lt;/div&gt;
+  &lt;div class="box many"&gt;layered&lt;/div&gt;
+  &lt;div class="box in"&gt;inset&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="row"&gt;
+  &lt;button class="ol"&gt;outline (no shift)&lt;/button&gt;
+  &lt;button class="bd"&gt;border (shifts)&lt;/button&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1.5rem; }
+.row { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
+.box { width: 90px; height: 60px; display: grid; place-items: center;
+  background: #fff; border-radius: 10px; font-size: .8rem; }
+.one  { box-shadow: 0 4px 10px rgba(2,6,23,.18); }
+/* several shadows stack for a softer, more realistic depth */
+.many { box-shadow: 0 1px 2px rgba(2,6,23,.10),
+                    0 6px 12px rgba(2,6,23,.12),
+                    0 14px 28px rgba(2,6,23,.10); }
+/* inset paints the shadow inside the box, like a pressed well */
+.in   { box-shadow: inset 0 3px 8px rgba(2,6,23,.30); background: #e2e8f0; }
+button { padding: .5rem 1rem; border-radius: 8px; background: #6366f1;
+  color: #fff; font-weight: 700; border: 0; }
+/* outline draws OUTSIDE and reserves no space — no reflow on focus */
+.ol:hover { outline: 3px solid #f59e0b; outline-offset: 3px; }
+/* border is part of the box — adding it here nudges neighbours */
+.bd { border: 0 solid #f59e0b; }
+.bd:hover { border-width: 3px; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: hover the two buttons — the outline button stays put while the border button jumps, because <code>outline</code> is painted outside layout and <code>border</code> occupies real space. Always build focus rings from <code>outline</code> (plus <code>outline-offset</code>) so keyboard focus never reflows the page.</p>
+      </section>
+
+      <section id="overflow-and-scroll" class="concept" tabindex="-1">
+        <h2>Overflow &amp; scrolling</h2>
+        <p>When content is larger than its box, <code>overflow</code> decides what happens: <code>visible</code> (the default) lets it spill, <code>hidden</code> clips it, <code>scroll</code> always shows scrollbars, <code>auto</code> shows them only when needed, and <code>clip</code> clips without creating a scroll container. Any value other than <code>visible</code> also establishes a block formatting context, which contains floats and stops margin collapse. <code>overflow-x</code> and <code>overflow-y</code> set the two axes independently.</p>
+        <p>Scroll behavior is tunable in CSS alone. <code>scroll-behavior: smooth</code> animates jumps to in-page anchors. Scroll snapping pins children to positions: set <code>scroll-snap-type</code> on the scroll container and <code>scroll-snap-align</code> on each child. <code>overscroll-behavior</code> stops scroll from chaining to the page behind a modal, and <code>scrollbar-gutter: stable</code> reserves the scrollbar's space so content does not shift when it appears.</p>
+
+        <h3>Example: a snapping horizontal carousel</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;Scroll sideways — each slide snaps to center.&lt;/p&gt;
+&lt;div class="carousel"&gt;
+  &lt;div class="slide"&gt;1&lt;/div&gt;&lt;div class="slide"&gt;2&lt;/div&gt;
+  &lt;div class="slide"&gt;3&lt;/div&gt;&lt;div class="slide"&gt;4&lt;/div&gt;
+  &lt;div class="slide"&gt;5&lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.carousel {
+  display: flex; gap: 1rem; overflow-x: auto;
+  scroll-snap-type: x mandatory;   /* snapping is required, not proximity */
+  padding-bottom: .5rem;
+  scroll-behavior: smooth;
+}
+.slide {
+  flex: 0 0 70%;                   /* each slide is 70% of the viewport */
+  scroll-snap-align: center;       /* snap point at the slide centre */
+  height: 110px; display: grid; place-items: center;
+  border-radius: 12px; font-size: 2rem; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, #6366f1, #38bdf8);
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: <code>mandatory</code> always lands on a snap point; <code>proximity</code> only snaps when the scroll ends near one, leaving free scrolling elsewhere. Use <code>proximity</code> for long lists where forcing a snap would feel sticky.</p>
+
+        <h3>Example: a modal body that traps its scroll with overscroll-behavior</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="page"&gt;Page behind (try to scroll it through the modal)&lt;/div&gt;
+&lt;div class="modal"&gt;
+  &lt;div class="body"&gt;
+    &lt;p&gt;Scroll inside me to the bottom, then keep scrolling.&lt;/p&gt;
+    &lt;p&gt;Line&lt;/p&gt;&lt;p&gt;after&lt;/p&gt;&lt;p&gt;line&lt;/p&gt;&lt;p&gt;of&lt;/p&gt;&lt;p&gt;content&lt;/p&gt;
+    &lt;p&gt;to&lt;/p&gt;&lt;p&gt;fill&lt;/p&gt;&lt;p&gt;the&lt;/p&gt;&lt;p&gt;scroll&lt;/p&gt;&lt;p&gt;area&lt;/p&gt;
+    &lt;p class="last"&gt;End — the page behind does NOT scroll.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; margin: 0; }
+.page { height: 400px; padding: 1rem; background: repeating-linear-gradient(
+  0deg, #f1f5f9 0 24px, #e2e8f0 24px 48px); }
+.modal { position: fixed; inset: 20px; background: #fff;
+  border: 1px solid #cbd5e1; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 20px 50px rgba(2,6,23,.3); }
+.body {
+  height: 100%; overflow-y: auto; padding: 1rem;
+  overscroll-behavior: contain;   /* scroll stops here, no chaining */
+}
+.body p { margin: .35rem 0; }
+.last { color: #059669; font-weight: 700; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: <code>overscroll-behavior: contain</code> is the CSS answer to "scroll chaining" — reaching the end of a scrollable panel no longer bleeds into scrolling the page behind it. It is essential for modals, drawers, and chat panes.</p>
+
+        <h3>Example: a wide table that scrolls inside its own box</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;p&gt;The table is wider than the page but scrolls in its wrapper.&lt;/p&gt;
+&lt;div class="scroll-x"&gt;
+  &lt;table&gt;
+    &lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Region&lt;/th&gt;&lt;th&gt;Signups&lt;/th&gt;&lt;th&gt;Revenue&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;001&lt;/td&gt;&lt;td&gt;Northwind&lt;/td&gt;&lt;td&gt;EMEA&lt;/td&gt;&lt;td&gt;4,201&lt;/td&gt;&lt;td&gt;$88,400&lt;/td&gt;&lt;td&gt;Active&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;002&lt;/td&gt;&lt;td&gt;Contoso&lt;/td&gt;&lt;td&gt;APAC&lt;/td&gt;&lt;td&gt;2,980&lt;/td&gt;&lt;td&gt;$51,120&lt;/td&gt;&lt;td&gt;Trial&lt;/td&gt;&lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+/* the wrapper — not the table — is the scroll container */
+.scroll-x { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
+table { border-collapse: collapse; min-width: 640px; }  /* forces overflow */
+th, td { padding: .5rem .9rem; white-space: nowrap;
+  border-bottom: 1px solid #e2e8f0; text-align: left; }
+th { background: #f1f5f9; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: wrapping a wide table in an <code>overflow-x: auto</code> box keeps the page body from scrolling horizontally on small screens. Pair it with <code>scrollbar-gutter: stable</code> on scroll containers whose content grows, so the layout does not jump when the scrollbar appears.</p>
+      </section>
+
+      <section id="advanced-selectors-pseudos" class="concept" tabindex="-1">
+        <h2>Advanced selectors &amp; pseudo-elements</h2>
+        <p>The intro selectors section covered type, class, and simple pseudo-classes. This one adds the relational and structural power tools. <code>:has()</code> selects an element based on what it <em>contains</em> or what follows it — the long-awaited "parent selector" — enabling whole interactions with zero JavaScript. <code>:not()</code> negates, and the <code>An+B</code> microsyntax inside <code>:nth-child()</code>/<code>:nth-last-child()</code> targets arithmetic patterns like every third item.</p>
+        <p>State pseudo-classes react to the page and to forms: <code>:target</code> matches the element whose id is in the URL hash, <code>:checked</code> reflects a control's state, and <code>:valid</code>/<code>:invalid</code>/<code>:required</code>/<code>:disabled</code> style form fields by validity. Highlight and structural pseudo-<em>elements</em> — <code>::selection</code>, <code>::first-line</code>, <code>::first-letter</code>, and <code>::backdrop</code> for a top-layer <code>&lt;dialog&gt;</code> — style parts of an element that no markup can reach.</p>
+
+        <h3>Example: a form that disables submit via :has(:invalid), no JS</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;form&gt;
+  &lt;label&gt;Email &lt;input type="email" required placeholder="you@site.com"&gt;&lt;/label&gt;
+  &lt;label&gt;Age &lt;input type="number" min="18" required&gt;&lt;/label&gt;
+  &lt;button class="submit"&gt;Create account&lt;/button&gt;
+  &lt;p class="hint"&gt;Fill both fields validly to enable the button.&lt;/p&gt;
+&lt;/form&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+form { display: grid; gap: .6rem; max-width: 300px; }
+label { display: grid; gap: .2rem; font-weight: 600; }
+input { padding: .4rem .5rem; border: 1px solid #cbd5e1; border-radius: 6px; }
+.submit { padding: .5rem 1rem; border: 0; border-radius: 8px;
+  background: #6366f1; color: #fff; font-weight: 700; }
+/* the parent selector: while the form CONTAINS an invalid field,
+   dim and disable the styled submit button */
+form:has(:invalid) .submit {
+  opacity: .5; pointer-events: none;
+}
+.hint { margin: 0; font-size: .8rem; color: #64748b; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: <code>:has()</code> is Baseline in current browsers and is the single most powerful recent selector — it can style a card that <em>contains</em> an image, a label that <em>precedes</em> a checked box (<code>label:has(+ input:checked)</code>), and much more, all without scripting.</p>
+
+        <h3>Example: a CSS-only accordion driven by :checked</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="acc"&gt;
+  &lt;input type="radio" name="p" id="p1" checked&gt;
+  &lt;label for="p1"&gt;Shipping&lt;/label&gt;
+  &lt;div class="panel"&gt;Ships in 2–4 business days worldwide.&lt;/div&gt;
+
+  &lt;input type="radio" name="p" id="p2"&gt;
+  &lt;label for="p2"&gt;Returns&lt;/label&gt;
+  &lt;div class="panel"&gt;30-day no-questions returns policy.&lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.acc { max-width: 320px; border: 1px solid #e2e8f0; border-radius: 10px;
+  overflow: hidden; }
+.acc input { position: absolute; opacity: 0; }   /* hide the radios */
+.acc label { display: block; padding: .7rem 1rem; cursor: pointer;
+  font-weight: 700; background: #f8fafc; border-top: 1px solid #e2e8f0; }
+.acc label:first-of-type { border-top: 0; }
+.panel { max-height: 0; overflow: hidden; padding: 0 1rem;
+  color: #475569; transition: max-height .25s, padding .25s; }
+/* the checked radio reveals the panel that follows its label */
+.acc input:checked + label { background: #eef2ff; color: #4338ca; }
+.acc input:checked + label + .panel { max-height: 100px; padding: .7rem 1rem; }
+.acc input:focus-visible + label { outline: 2px solid #4338ca; outline-offset: -2px; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: the checkbox/radio hack works and is keyboard-operable, but it is not announced as a disclosure widget. For production, prefer <code>&lt;details&gt;</code> or a scripted button with <code>aria-expanded</code> — reserve the pure-CSS pattern for progressive enhancement or constrained environments.</p>
+
+        <h3>Example: drop cap, custom selection, and An+B zebra striping</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;article class="prose"&gt;
+  &lt;p&gt;Select some of this text to see a custom highlight color. The first
+  letter is enlarged into a drop cap by ::first-letter.&lt;/p&gt;
+&lt;/article&gt;
+&lt;ul class="rows"&gt;
+  &lt;li&gt;Row one&lt;/li&gt;&lt;li&gt;Row two&lt;/li&gt;&lt;li&gt;Row three&lt;/li&gt;
+  &lt;li&gt;Row four&lt;/li&gt;&lt;li&gt;Row five&lt;/li&gt;
+&lt;/ul&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: Georgia, serif; padding: 1rem; }
+.prose p::first-letter {
+  float: left; font-size: 3rem; line-height: .8;
+  padding: .1rem .4rem 0 0; color: #6366f1; font-weight: 700;
+}
+/* custom highlight — only color and background are honored here */
+.prose ::selection { background: #fde68a; color: #7c2d12; }
+.rows { list-style: none; margin: 1rem 0 0; padding: 0;
+  font-family: system-ui, sans-serif; max-width: 260px; }
+.rows li { padding: .4rem .7rem; }
+/* An+B: stripe every odd row, and a divider on all but the last */
+.rows li:nth-child(odd) { background: #f1f5f9; }
+.rows li:not(:last-child) { border-bottom: 1px solid #e2e8f0; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: <code>::selection</code> only accepts a small set of properties (<code>color</code>, <code>background-color</code>, <code>text-decoration</code>, and a few more) — layout properties are ignored by design. <code>:nth-child(3n+1)</code>, <code>:nth-last-child(2)</code>, and friends open up arithmetic patterns well beyond odd/even.</p>
+      </section>
+
+      <section id="css-nesting-scope" class="concept" tabindex="-1">
+        <h2>Native nesting &amp; @scope</h2>
+        <p>CSS now nests rules natively, no preprocessor required. Inside a rule you write child rules that reference the parent with <code>&amp;</code>, and you can nest <code>@media</code>/<code>@container</code> blocks too. A nested selector that starts with a combinator or <code>&amp;</code> is unambiguous; a nested <em>type</em> selector must be written with an explicit <code>&amp;</code> (e.g. <code>&amp; span</code>) because a bare <code>span</code> would be misread. Under the hood, nesting relates to <code>:is()</code>, which affects specificity: a nested selector takes the specificity of the most specific selector in its parent list.</p>
+        <p><code>@scope</code> limits where rules apply using a scope root and an optional lower bound — the "donut" pattern <code>@scope (.card) to (.content)</code> styles the card chrome but stops at nested content. Both features complement the BEM naming and <code>@layer</code> cascade layers covered in the architecture section: nesting improves authoring readability, scope constrains reach, and layers order precedence.</p>
+
+        <h3>Example: a component rewritten with native nesting</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;article class="card"&gt;
+  &lt;h3 class="title"&gt;Nested styles&lt;/h3&gt;
+  &lt;p&gt;Hover me, and resize the preview.&lt;/p&gt;
+  &lt;a href="#" class="more"&gt;Read more&lt;/a&gt;
+&lt;/article&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.card {
+  border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem;
+  max-width: 320px; transition: box-shadow .2s;
+
+  /* nested state — & is the parent (.card) */
+  &:hover { box-shadow: 0 8px 20px rgba(2,6,23,.12); }
+
+  /* nested descendant — explicit & required for a bare type/class child */
+  & .title { margin: 0 0 .4rem; color: #4338ca; }
+  & p { margin: 0 0 .6rem; color: #475569; }
+
+  & .more { color: #6366f1; font-weight: 700; text-decoration: none;
+    &:hover { text-decoration: underline; }   /* nesting can go deeper */
+  }
+
+  /* a media query nested INSIDE the component rule */
+  @media (min-width: 420px) { padding: 1.5rem; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: native nesting is Baseline in current browsers. Keep nesting shallow — two or three levels — because deep nesting produces long, brittle selectors and quietly raises specificity, the same problems it caused in Sass.</p>
+
+        <h3>Example: the specificity gotcha of nesting under a type selector</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;article class="box"&gt;
+  &lt;p class="note"&gt;Which color wins?&lt;/p&gt;
+&lt;/article&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.box { border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem; }
+
+/* Nesting compiles to :is(). The nested rule below becomes
+   :is(article.box) .note — specificity of :is() is its MOST
+   specific argument, so this weighs (0,2,0). */
+article.box {
+  & .note { color: #ef4444; }   /* red, specificity 0,2,0 */
+}
+
+/* A plain single class is only (0,1,0) and loses, even though
+   it appears LATER in the source. */
+.note { color: #10b981; }        /* green, specificity 0,1,0 — loses */</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: the text is red because nesting wraps the parent in <code>:is()</code>, which takes the specificity of its most specific selector — here <code>article.box</code> at <code>0,2,0</code> beats a lone <code>.note</code> at <code>0,1,0</code> despite coming first. Nest under classes, not type selectors, to keep weights low and predictable.</p>
+
+        <h3>Example: donut scope with @scope … to (…)</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="widget"&gt;
+  &lt;h3&gt;Widget chrome (scoped)&lt;/h3&gt;
+  &lt;div class="content"&gt;
+    &lt;h3&gt;Inner content (NOT scoped)&lt;/h3&gt;
+    &lt;p&gt;The scope stops at .content, so this heading is untouched.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.widget { border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem; }
+.content { margin-top: .8rem; padding: .8rem; border-radius: 8px;
+  background: #f8fafc; }
+
+/* Style headings from .widget DOWN TO (but not into) .content.
+   This is the donut: the hole is everything at/below .content. */
+@scope (.widget) to (.content) {
+  h3 { color: #4338ca; margin: 0 0 .4rem; }
+  :scope { box-shadow: inset 0 0 0 2px #c7d2fe; }  /* :scope = the root */
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: only the outer "Widget chrome" heading turns indigo — the inner one inside <code>.content</code> falls in the donut hole and is skipped. <code>@scope</code> is newer than nesting; where it is unavailable, fall back to a scoping class prefix on your selectors.</p>
+      </section>
+
+      <section id="feature-and-advanced-media-queries" class="concept" tabindex="-1">
+        <h2>Feature &amp; advanced media queries</h2>
+        <p><code>@supports</code> tests whether the browser understands a declaration or selector before you use it, so you can ship a fallback and layer an enhancement on top. It composes with <code>not</code>, <code>and</code>, <code>or</code>, and <code>selector()</code> to gate on selector support (e.g. <code>@supports selector(:has(*))</code>). This is feature detection in CSS, the counterpart to progressive enhancement.</p>
+        <p>Media queries read far more than width. Interaction features — <code>hover</code>, <code>any-hover</code>, <code>pointer</code>, <code>any-pointer</code> — distinguish a fine mouse from a coarse touch screen so you can size tap targets appropriately. Preference features like <code>prefers-contrast</code>, <code>forced-colors</code>, and <code>inverted-colors</code> adapt to accessibility settings, while <code>orientation</code> and the modern <em>range syntax</em> (<code>@media (width &gt;= 600px)</code> and <code>(400px &lt;= width &lt;= 900px)</code>) replace the verbose <code>min-/max-</code> pairs.</p>
+
+        <h3>Example: @supports gating grid and :has() enhancements</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="deck"&gt;
+  &lt;div&gt;A&lt;/div&gt;&lt;div&gt;B&lt;/div&gt;&lt;div&gt;C&lt;/div&gt;&lt;div&gt;D&lt;/div&gt;
+&lt;/div&gt;
+&lt;p id="flag"&gt;&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+/* fallback: flex wrap works everywhere */
+.deck { display: flex; flex-wrap: wrap; gap: 10px; }
+.deck > div { flex: 1 1 80px; height: 60px; display: grid;
+  place-items: center; background: #a5b4fc; color: #1e1b4b;
+  border-radius: 8px; font-weight: 700; }
+/* enhancement: use grid only where it is supported */
+@supports (display: grid) {
+  .deck { display: grid; grid-template-columns: repeat(4, 1fr); }
+}
+/* gate a rule on SELECTOR support, not just a property */
+@supports selector(:has(*)) {
+  #flag::after { content: ":has() is supported here"; color: #059669;
+    font-weight: 700; }
+}
+@supports not selector(:has(*)) {
+  #flag::after { content: ":has() not supported — fallback active";
+    color: #d97706; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: write the fallback as the plain rule and the modern version inside <code>@supports</code>, never the reverse — engines that do not understand the tested feature also skip the block, so your baseline must live outside it.</p>
+
+        <h3>Example: a bigger tap target on coarse pointers</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;button class="tap"&gt;Tap / click me&lt;/button&gt;
+&lt;p&gt;On a touch device this button grows to a 44px+ target.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.tap { border: 0; border-radius: 8px; background: #6366f1; color: #fff;
+  font-weight: 700; padding: .4rem .9rem; cursor: pointer; }
+/* coarse = finger; give it a comfortable minimum hit area */
+@media (pointer: coarse) {
+  .tap { min-height: 44px; padding: .8rem 1.4rem; font-size: 1.05rem; }
+}
+/* only add hover affordances where hover truly exists (not touch) */
+@media (hover: hover) {
+  .tap:hover { background: #4f46e5; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: gate hover effects behind <code>@media (hover: hover)</code> so touch users — who cannot hover — do not get stuck with a state that only clears on tap. Pair it with <code>pointer: coarse</code> sizing to hit the 44px minimum target guidance.</p>
+
+        <h3>Example: classic min-width vs modern range syntax, and prefers-contrast</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="card"&gt;
+  &lt;h3&gt;Adaptive card&lt;/h3&gt;
+  &lt;p&gt;Wide preview → indigo bar. High-contrast mode → bolder border.&lt;/p&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem;
+  border-left: 6px solid #cbd5e1; }
+/* classic form */
+@media (min-width: 480px) { .card { background: #f8fafc; } }
+/* equivalent range form — reads like an inequality */
+@media (width >= 480px) { .card { border-left-color: #6366f1; } }
+/* bounded range: only between 300 and 900px */
+@media (300px <= width <= 900px) { .card h3 { color: #4338ca; } }
+/* users who ask the OS for more contrast get a stronger border */
+@media (prefers-contrast: more) {
+  .card { border-width: 2px; border-left-width: 8px;
+    border-color: #0f172a; }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: the range syntax (<code>width &gt;= 480px</code>) is Baseline and avoids the classic off-by-one between <code>max-width: 479px</code> and <code>min-width: 480px</code>. Both forms coexist, so migrate incrementally.</p>
+      </section>
+
+      <section id="filters-blend-clip-mask" class="concept" tabindex="-1">
+        <h2>Filters, blending, clipping &amp; masking</h2>
+        <p>The <code>filter</code> property runs graphics operations on an element: <code>blur()</code>, <code>brightness()</code>, <code>contrast()</code>, <code>grayscale()</code>, <code>drop-shadow()</code>, and more, chained left-to-right in one declaration. <code>backdrop-filter</code> applies the same functions to whatever sits <em>behind</em> a semi-transparent element, which is how frosted-glass panels are made — it needs a translucent background and a backdrop to sample.</p>
+        <p><code>mix-blend-mode</code> composites an element with the layers below it, and <code>background-blend-mode</code> blends an element's own stacked backgrounds. <code>clip-path</code> hides everything outside a shape — <code>circle()</code>, <code>inset()</code>, or an arbitrary <code>polygon()</code> — while <code>mask</code>/<code>mask-image</code> use an image or gradient's alpha to reveal and hide parts of a box, perfect for edge fades and cut-outs.</p>
+
+        <h3>Example: a frosted-glass header over scrolling content</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="frame"&gt;
+  &lt;div class="bar"&gt;Frosted header&lt;/div&gt;
+  &lt;div class="scroll"&gt;
+    &lt;div class="tile"&gt;1&lt;/div&gt;&lt;div class="tile"&gt;2&lt;/div&gt;
+    &lt;div class="tile"&gt;3&lt;/div&gt;&lt;div class="tile"&gt;4&lt;/div&gt;
+    &lt;div class="tile"&gt;5&lt;/div&gt;&lt;div class="tile"&gt;6&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.frame { position: relative; height: 200px; overflow: hidden;
+  border-radius: 12px; border: 1px solid #e2e8f0; }
+.bar {
+  position: absolute; inset: 0 0 auto 0; z-index: 2;
+  padding: .8rem 1rem; font-weight: 800; color: #0f172a;
+  background: rgba(255,255,255,.55);   /* must be translucent */
+  backdrop-filter: blur(8px);          /* blurs the tiles behind */
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,.4);
+}
+.scroll { height: 100%; overflow-y: auto; padding-top: 3rem; }
+.tile { height: 60px; margin: .5rem 1rem; border-radius: 8px;
+  display: grid; place-items: center; color: #fff; font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #ec4899); }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: <code>backdrop-filter</code> is GPU-intensive and requires a translucent background to have anything to sample. Keep frosted regions small and avoid animating the blur radius, which forces the backdrop to re-render every frame.</p>
+
+        <h3>Example: grayscale gallery that clears and clips on hover</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div class="gallery"&gt;
+  &lt;div class="shot a"&gt;&lt;/div&gt;
+  &lt;div class="shot b"&gt;&lt;/div&gt;
+  &lt;div class="hex"&gt;avatar&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Hover the first two; the third is clipped to a hexagon.&lt;/p&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.gallery { display: flex; gap: 1rem; align-items: center; }
+.shot { width: 90px; height: 90px; border-radius: 10px;
+  /* chained filters: desaturate AND dim at rest */
+  filter: grayscale(1) brightness(.85);
+  transition: filter .25s; }
+.shot:hover { filter: grayscale(0) brightness(1); }  /* full color */
+.a { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+.b { background: linear-gradient(135deg, #10b981, #0ea5e9); }
+/* clip an arbitrary polygon — here a hexagon */
+.hex { width: 90px; height: 90px; display: grid; place-items: center;
+  color: #fff; font-weight: 700; font-size: .8rem;
+  background: #6366f1;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: filters chain in order — <code>grayscale(1) brightness(.85)</code> desaturates first, then dims. <code>filter: drop-shadow()</code> differs from <code>box-shadow</code>: it follows the alpha shape of the content (and of a <code>clip-path</code>), so it shadows the hexagon's actual silhouette, not its bounding box.</p>
+
+        <h3>Example: a list that fades out at the bottom with a mask</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="css" aria-selected="false">CSS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;ul class="feed"&gt;
+  &lt;li&gt;Deploy shipped to production&lt;/li&gt;
+  &lt;li&gt;Nightly backup completed&lt;/li&gt;
+  &lt;li&gt;New teammate invited&lt;/li&gt;
+  &lt;li&gt;Cache warmed&lt;/li&gt;
+  &lt;li&gt;Report generated&lt;/li&gt;
+  &lt;li&gt;This last row fades under the mask&lt;/li&gt;
+&lt;/ul&gt;</textarea>
+            <textarea class="code" data-lang="css" spellcheck="false" aria-label="CSS source">body { font-family: system-ui, sans-serif; padding: 1rem; }
+.feed {
+  list-style: none; margin: 0; padding: 0; max-width: 260px;
+  height: 130px; overflow: hidden;
+  /* the gradient's alpha becomes the visibility map:
+     opaque at top, transparent at the bottom edge */
+  mask-image: linear-gradient(to bottom, #000 65%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, #000 65%, transparent);
+}
+.feed li { padding: .5rem .7rem; border-bottom: 1px solid #e2e8f0;
+  color: #334155; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: a gradient <code>mask-image</code> is the clean way to fade an edge — the mask's alpha channel maps directly to opacity. Include the <code>-webkit-</code> prefix for the widest reach; the unprefixed property is Baseline in current browsers.</p>
+      </section>
+
+      <section id="more-topics" class="concept" tabindex="-1">
+        <h2>More topics</h2>
+        <p>The concepts below round out the page. Each is a confirmed gap deferred here to keep the document within its size budget; the one-line summary and the related section give you an anchor to explore each one, and every item is Baseline in current browsers unless noted.</p>
+        <ul>
+          <li><strong>@property &amp; typed custom properties</strong> — Register a custom property with <code>@property</code>, declaring its <code>syntax</code> (e.g. <code>&lt;angle&gt;</code>, <code>&lt;color&gt;</code>, <code>&lt;number&gt;</code>, <code>&lt;length&gt;</code>, <code>&lt;percentage&gt;</code>), <code>inherits</code> flag, and <code>initial-value</code>. Registration is what makes a variable <em>animatable</em>: a plain <code>--var</code> jumps between values, but a registered <code>&lt;angle&gt;</code> or <code>&lt;color&gt;</code> interpolates smoothly, letting you transition conic-gradient angles, gradient color stops, and number counters that raw custom properties cannot. Invalid values fall back to the declared initial. Relates to <a href="#variables-calc">Variables &amp; calc()</a> (extends untyped custom properties) and <a href="#transforms-animations">Transforms &amp; animations</a> (unlocks interpolation).</li>
+          <li><strong>Forms &amp; UI styling</strong> — <code>accent-color</code> themes native checkboxes, radios, ranges, and progress bars in one declaration; <code>caret-color</code> tints the text cursor. <code>appearance: none</code> strips native chrome so you can rebuild a checkbox with a <code>:checked ::before</code> checkmark or restyle a <code>&lt;select&gt;</code> with a custom chevron. Validation styling should prefer <code>:user-valid</code>/<code>:user-invalid</code> over <code>:valid</code>/<code>:invalid</code> so errors appear only after interaction, not on first paint; also style <code>::placeholder</code> and disabled/read-only states while keeping an accessible focus indicator. Relates to <a href="#advanced-selectors-pseudos">Advanced selectors &amp; pseudo-elements</a> (validity pseudo-classes) and <a href="#colors-and-gradients">Colors &amp; gradients</a> (theming tokens).</li>
+          <li><strong>Lists, counters &amp; generated content</strong> — Style markers with <code>list-style-type</code>/<code>-position</code>/<code>-image</code> and the <code>::marker</code> pseudo-element. Build custom numbering with <code>counter-reset</code> and <code>counter-increment</code>, rendering it through <code>content: counter(name)</code>; the <code>counters()</code> function joins nested counters for outline numbering like <code>1.1</code>, <code>1.2</code>. <code>attr()</code> pulls an attribute value into generated content (e.g. a <code>data-*</code> prefix). Remember that generated content is decorative and not reliably exposed to assistive tech, so never put essential meaning there. Relates to <a href="#selectors">Selectors</a> (the <code>::before</code>/<code>::after</code> and <code>counter()</code> intro) and <a href="#advanced-selectors-pseudos">Advanced selectors &amp; pseudo-elements</a> (structural pseudo-elements).</li>
+          <li><strong>Print &amp; paged media</strong> — An <code>@media print</code> block hides navigation and interactive chrome and switches to ink-friendly black-on-white. The <code>@page</code> rule sets page <code>margin</code>/<code>size</code> and supports named selectors like <code>:first</code> and <code>:left</code>/<code>:right</code>. Fragmentation control — <code>break-inside: avoid</code>, <code>break-before</code>/<code>break-after</code>, plus <code>widows</code> and <code>orphans</code> — keeps cards, table rows, and paragraphs from splitting awkwardly across pages. You can even expand link targets for print with <code>a::after { content: " (" attr(href) ")" }</code>. Relates to <a href="#responsive">Responsive design</a> (media queries as the delivery mechanism) and <a href="#overflow-and-scroll">Overflow &amp; scrolling</a> (fragmentation is the paged analogue of overflow).</li>
+        </ul>
+        <p class="note note-a11y">Note: these four are documented as summaries only to respect the page's length budget; the sections above are the fully worked, runnable material. When you extend the page later, promote any of these into its own <code>&lt;section&gt;</code> following the same runnable-example shape used throughout.</p>
+      </section>
+
+    </main>
+  </div>
+  <footer class="site-footer"><p>DevDocs — static, self-contained learning reference.</p></footer>
+</body>
+</html>

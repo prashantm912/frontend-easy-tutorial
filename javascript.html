@@ -1,0 +1,2710 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JavaScript — DevDocs</title>
+  <meta name="description" content="JavaScript from primitives and control flow to closures, async, the event loop, workers, and service-worker caching.">
+  <link rel="stylesheet" href="styles/site.css">
+  <script src="scripts/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html">DevDocs</a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="html.html">HTML</a>
+      <a href="css.html">CSS</a>
+      <a href="javascript.html">JavaScript</a>
+      <a href="typescript.html">TypeScript</a>
+    </nav>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme</button>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="toc" aria-label="On this page">
+        <label class="toc-search-label" for="toc-search">Filter topics</label>
+        <input type="search" id="toc-search" class="toc-search" placeholder="Type to filter…" autocomplete="off">
+        <ul class="toc-list">
+          <li><a href="#fundamentals">Fundamentals</a></li>
+          <li><a href="#operators-controlflow">Operators &amp; control flow</a></li>
+          <li><a href="#functions-closures">Functions &amp; closures</a></li>
+          <li><a href="#objects-arrays">Objects &amp; arrays</a></li>
+          <li><a href="#dom-manipulation">DOM manipulation</a></li>
+          <li><a href="#events-delegation">Events &amp; delegation</a></li>
+          <li><a href="#async-promises">Async &amp; promises</a></li>
+          <li><a href="#event-loop">The event loop</a></li>
+          <li><a href="#debounce-throttle">Debounce &amp; throttle</a></li>
+          <li><a href="#modules">Modules</a></li>
+          <li><a href="#patterns">Patterns</a></li>
+          <li><a href="#testing">Testing</a></li>
+          <li><a href="#performance-memory">Performance &amp; memory</a></li>
+          <li><a href="#web-workers">Web Workers</a></li>
+          <li><a href="#service-workers">Service Workers</a></li>
+          <li><a href="#feature-detection">Feature detection</a></li>
+          <li><a href="#web-storage">Web Storage API</a></li>
+          <li><a href="#canvas-api">Canvas 2D API</a></li>
+          <li><a href="#geolocation">Geolocation API</a></li>
+          <li><a href="#websockets">WebSocket API</a></li>
+          <li><a href="#this-and-binding">this &amp; function binding</a></li>
+          <li><a href="#prototypes-and-classes">Prototypes &amp; classes</a></li>
+          <li><a href="#error-handling">Error handling</a></li>
+          <li><a href="#iterators-and-generators">Iterators &amp; generators</a></li>
+          <li><a href="#regular-expressions">Regular expressions</a></li>
+          <li><a href="#object-model-immutability">Object model &amp; immutability</a></li>
+          <li><a href="#more-topics">More topics</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main id="main" class="content">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> <span aria-hidden="true">/</span> <span aria-current="page">JavaScript</span>
+      </nav>
+      <h1>JavaScript</h1>
+      <p class="overview">JavaScript is the language of the web platform: a dynamically typed, single-threaded, event-driven runtime with first-class functions and prototypal objects. This page moves from the fundamentals — types, operators, control flow — through closures, objects, the DOM, and event handling, and then into the runtime concurrency model: promises, the event loop, workers, and service-worker caching. Every runnable example executes in a sandboxed iframe; JavaScript-only examples print their results through <code>console.log</code>, which the preview captures into a console panel below the code.</p>
+
+      <!-- ============================================================ -->
+      <!-- 1. FUNDAMENTALS -->
+      <!-- ============================================================ -->
+      <section id="fundamentals" class="concept" tabindex="-1">
+        <h2>Fundamentals</h2>
+        <p>JavaScript has seven primitive types — <code>string</code>, <code>number</code>, <code>boolean</code>, <code>null</code>, <code>undefined</code>, <code>bigint</code>, and <code>symbol</code> — plus the <code>object</code> type for everything else (arrays, functions, plain objects). Primitives are immutable and compared by value; objects are compared by reference. The <code>typeof</code> operator reports a value's type as a string, with the historical quirk that <code>typeof null</code> returns <code>"object"</code>.</p>
+        <p>Declare bindings with <code>const</code> by default and <code>let</code> when you must reassign; both are block-scoped and live in the temporal dead zone until initialized. Avoid <code>var</code>, which is function-scoped and hoisted in ways that surprise. Template literals (backticks) support interpolation and multi-line strings.</p>
+        <p>Distinguish <em>coercion</em> (implicit type changes the engine performs, e.g. during <code>==</code> or <code>+</code>) from <em>conversion</em> (explicit calls like <code>Number(x)</code> or <code>String(x)</code>). Prefer strict equality <code>===</code>, which never coerces, over loose <code>==</code>, whose coercion rules are a frequent source of bugs.</p>
+
+        <h3>Example: typeof and template literals</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const name = "Ada";
+const year = 1843;
+const active = true;
+const nothing = null;
+let notSet;                 // undefined
+const big = 9007199254740993n;
+const id = Symbol("id");
+
+// typeof reports the primitive type as a string
+console.log(typeof name);    // "string"
+console.log(typeof year);    // "number"
+console.log(typeof active);  // "boolean"
+console.log(typeof notSet);  // "undefined"
+console.log(typeof big);     // "bigint"
+console.log(typeof id);      // "symbol"
+console.log(typeof nothing); // "object"  (historical quirk!)
+
+// Template literals: interpolation + multi-line
+console.log(`${name} published a program in ${year}.`);
+console.log(`Line one
+Line two`);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: coercion vs conversion, == vs ===</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Implicit coercion (the engine changes types for you)
+console.log(1 + "2");     // "12"  number coerced to string
+console.log("5" * 2);     // 10    string coerced to number
+console.log(true + 1);    // 2     boolean coerced to number
+
+// Explicit conversion (you ask for it)
+console.log(Number("42"));   // 42
+console.log(String(42));     // "42"
+console.log(Boolean(""));    // false
+console.log(parseInt("10px", 10)); // 10
+
+// Loose == coerces before comparing; strict === does not
+console.log(0 == "");        // true  (both coerce toward 0)
+console.log(0 == "0");       // true
+console.log(0 === "0");      // false (different types)
+console.log(null == undefined);  // true
+console.log(null === undefined); // false
+console.log(Number.isNaN(NaN));  // true — the reliable NaN test</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: Prefer <code>const</code> and <code>===</code> as defaults. The one broadly accepted use of <code>==</code> is <code>x == null</code>, which is <code>true</code> for exactly <code>null</code> and <code>undefined</code>.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 2. OPERATORS & CONTROL FLOW -->
+      <!-- ============================================================ -->
+      <section id="operators-controlflow" class="concept" tabindex="-1">
+        <h2>Operators &amp; control flow</h2>
+        <p>Beyond the arithmetic (<code>+ - * / % **</code>) and comparison operators, modern JavaScript offers the nullish coalescing operator <code>??</code> (falls back only for <code>null</code>/<code>undefined</code>, unlike <code>||</code> which falls back for any falsy value) and optional chaining <code>?.</code> (short-circuits to <code>undefined</code> if a reference is nullish instead of throwing).</p>
+        <p>Logical operators short-circuit: <code>a &amp;&amp; b</code> evaluates <code>b</code> only when <code>a</code> is truthy, and <code>a || b</code> evaluates <code>b</code> only when <code>a</code> is falsy — both return the value that decided the result, not a boolean. Control flow uses <code>if/else</code>, the <code>switch</code> statement, the ternary <code>?:</code> expression, and the loop family <code>for</code>, <code>for…of</code> (iterables/values), <code>for…in</code> (enumerable keys), and <code>while</code>.</p>
+
+        <h3>Example: nullish coalescing, optional chaining, short-circuit</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const config = { volume: 0, label: "", nested: { theme: "dark" } };
+
+// || treats 0 and "" as "missing"; ?? only null/undefined
+console.log(config.volume || 11); // 11  (0 is falsy — probably a bug)
+console.log(config.volume ?? 11); // 0   (0 is a valid value)
+console.log(config.label ?? "n/a"); // ""
+
+// Optional chaining avoids "cannot read property of undefined"
+console.log(config.nested?.theme);        // "dark"
+console.log(config.missing?.theme);       // undefined
+console.log(config.missing?.deep?.value); // undefined
+
+// Short-circuit returns the deciding operand, not a boolean
+const user = { name: "Grace" };
+console.log(user && user.name);     // "Grace"
+console.log(user.age || "unknown"); // "unknown"
+
+// Optional call: only invokes if the function exists
+const api = { save: () => "saved" };
+console.log(api.save?.());   // "saved"
+console.log(api.load?.());   // undefined (no throw)</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: switch, ternary, and the loop family</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">function describe(day) {
+  switch (day) {
+    case "Sat":
+    case "Sun":
+      return "weekend";     // fall-through groups cases
+    default:
+      return "weekday";
+  }
+}
+console.log(describe("Sun")); // "weekend"
+console.log(describe("Wed")); // "weekday"
+
+// Ternary as an expression
+const n = 7;
+console.log(n % 2 === 0 ? "even" : "odd"); // "odd"
+
+// for: classic index loop
+let sum = 0;
+for (let i = 1; i <= 5; i++) sum += i;
+console.log("sum 1..5 =", sum); // 15
+
+// for...of iterates VALUES of an iterable
+for (const ch of "abc") console.log("of:", ch);
+
+// for...in iterates KEYS (property names)
+const point = { x: 1, y: 2 };
+for (const key in point) console.log("in:", key, point[key]);
+
+// while
+let countdown = 3;
+while (countdown > 0) { console.log("t-minus", countdown); countdown--; }</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: Use <code>for…of</code> for arrays and other iterables; use <code>for…in</code> only for plain-object keys, since it also walks inherited enumerable properties. To iterate an array's index/value pairs cleanly, use <code>for (const [i, v] of arr.entries())</code>.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 3. FUNCTIONS & CLOSURES -->
+      <!-- ============================================================ -->
+      <section id="functions-closures" class="concept" tabindex="-1">
+        <h2>Functions &amp; closures</h2>
+        <p>Functions come in three flavors: declarations (<code>function f() {}</code>, hoisted), expressions (<code>const f = function () {}</code>, not hoisted), and arrow functions (<code>const f = () =&gt; {}</code>). Arrows have no <code>this</code>, <code>arguments</code>, or <code>prototype</code> of their own — they capture <code>this</code> lexically from the enclosing scope, which makes them ideal for callbacks but unsuitable as methods or constructors.</p>
+        <p>A <em>closure</em> is a function together with the lexical environment it was created in. Because inner functions retain access to their outer variables even after the outer function returns, closures let you build factories with private, encapsulated state. Default parameters supply fallbacks, and rest parameters (<code>...args</code>) collect remaining arguments into a real array.</p>
+
+        <h3>Example: function forms, default/rest params, this binding</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Declaration (hoisted) vs expression vs arrow
+function declared(a, b = 10) { return a + b; }
+const expressed = function (a, b = 10) { return a * b; };
+const arrow = (a, b = 10) => a - b;
+
+console.log(declared(5));     // 15 (default b)
+console.log(expressed(5, 3)); // 15
+console.log(arrow(5, 2));     // 3
+
+// Rest parameters collect the tail into an array
+function sum(...nums) { return nums.reduce((t, n) => t + n, 0); }
+console.log(sum(1, 2, 3, 4)); // 10
+
+// 'this' binding: method vs arrow inside a method
+const counter = {
+  count: 41,
+  bump() {
+    // a regular inner function's `this` would be undefined here;
+    // the arrow captures `this` from bump()
+    const inc = () => { this.count++; };
+    inc();
+    return this.count;
+  }
+};
+console.log(counter.bump()); // 42</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: closure-based private state (counter factory + IIFE)</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// A factory: each call captures its OWN private `count`
+function makeCounter(start = 0) {
+  let count = start;          // private — unreachable from outside
+  return {
+    increment() { return ++count; },
+    decrement() { return --count; },
+    value()     { return count; }
+  };
+}
+
+const a = makeCounter();
+const b = makeCounter(100);
+console.log(a.increment()); // 1
+console.log(a.increment()); // 2
+console.log(b.decrement()); // 99
+console.log(a.value(), b.value()); // 2 99  (independent state)
+
+// There is no way to read `count` except through the methods
+console.log(a.count);        // undefined
+
+// IIFE: run-once scope that leaks only what it returns
+const settings = (function () {
+  const secret = "hidden";
+  return { publicKey: "abc123", reveal: () => secret };
+})();
+console.log(settings.publicKey); // "abc123"
+console.log(settings.reveal());  // "hidden"
+console.log(settings.secret);    // undefined</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: A classic pitfall is capturing a loop variable declared with <code>var</code> in a closure — every closure shares one binding. Using <code>let</code> gives each iteration a fresh binding, which is almost always what you want.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 4. OBJECTS & ARRAYS -->
+      <!-- ============================================================ -->
+      <section id="objects-arrays" class="concept" tabindex="-1">
+        <h2>Objects &amp; arrays</h2>
+        <p>Object and array literals are the workhorses of JavaScript data. Destructuring pulls values out by shape (<code>const {a, b} = obj</code>, <code>const [x, y] = arr</code>), the spread operator copies or merges (<code>{...a, ...b}</code>, <code>[...arr]</code>), and rest gathers the remainder. The array methods <code>map</code>, <code>filter</code>, and <code>reduce</code> express transformations declaratively without mutating the source.</p>
+        <p>For keyed collections beyond plain objects, use <code>Map</code> (any key type, ordered, size-aware) and <code>Set</code> (unique values). <code>JSON.stringify</code>/<code>JSON.parse</code> serialize and revive plain data. Favor immutable updates — produce new objects/arrays rather than mutating — which makes state changes predictable and easy to reason about.</p>
+
+        <h3>Example: destructuring, spread/rest, Map/Set</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const user = { id: 1, name: "Lin", role: "admin", city: "Oslo" };
+
+// Object destructuring with rename + rest
+const { name, role, ...meta } = user;
+console.log(name, role);   // Lin admin
+console.log(meta);         // { id: 1, city: "Oslo" }
+
+// Array destructuring with default + skip
+const [first, , third = "?"] = ["a", "b"];
+console.log(first, third); // a ?
+
+// Spread: merge objects (later wins) and concat arrays
+const patched = { ...user, role: "editor" };
+console.log(patched.role); // "editor"
+console.log([...[1, 2], ...[3, 4]]); // [1,2,3,4]
+
+// Map: any key type, preserves insertion order
+const seen = new Map([["a", 1]]);
+seen.set("b", 2).set("a", 9);
+console.log(seen.get("a"), seen.size); // 9 2
+
+// Set: unique values
+const nums = new Set([1, 1, 2, 3, 3]);
+console.log([...nums]);    // [1, 2, 3]</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: map/filter/reduce, JSON, immutable update</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const orders = [
+  { item: "pen", qty: 3, price: 2 },
+  { item: "pad", qty: 1, price: 5 },
+  { item: "ink", qty: 2, price: 4 }
+];
+
+// map -> filter -> reduce pipeline (source untouched)
+const totals = orders.map(o => ({ item: o.item, total: o.qty * o.price }));
+console.log(totals);
+
+const bigTotal = totals
+  .filter(t => t.total >= 6)
+  .reduce((sum, t) => sum + t.total, 0);
+console.log("sum of totals >= 6:", bigTotal); // 6 + 8 = 14
+
+// JSON round-trip (deep copy of plain data)
+const snapshot = JSON.parse(JSON.stringify(orders));
+snapshot[0].qty = 99;
+console.log(orders[0].qty, snapshot[0].qty); // 3 99  (independent)
+
+// Immutable update: new array + new object, no mutation
+const updated = orders.map((o, i) =>
+  i === 1 ? { ...o, qty: o.qty + 10 } : o
+);
+console.log(orders[1].qty, updated[1].qty); // 1 11</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: <code>JSON.stringify</code> drops <code>undefined</code>, functions, and symbols, turns <code>Date</code> into a string, and throws on circular references. For a true deep clone of structured data (including <code>Map</code>, <code>Set</code>, typed arrays, cycles), prefer the built-in <code>structuredClone(value)</code>.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 5. DOM MANIPULATION -->
+      <!-- ============================================================ -->
+      <section id="dom-manipulation" class="concept" tabindex="-1">
+        <h2>DOM manipulation</h2>
+        <p>The DOM API lets scripts read and mutate the page. <code>document.querySelector</code> returns the first match for a CSS selector; <code>querySelectorAll</code> returns a static <code>NodeList</code> of all matches. Build nodes with <code>document.createElement</code>, set their text with <code>textContent</code>, and attach them with <code>append</code>/<code>appendChild</code>.</p>
+        <p>Prefer <code>textContent</code> over <code>innerHTML</code> when inserting user-supplied data: <code>innerHTML</code> parses its input as markup, so untrusted strings can inject scripts (an XSS vector). Manage classes with the <code>classList</code> API, read/write <code>data-*</code> attributes through the <code>dataset</code> object, and use <code>getAttribute</code>/<code>setAttribute</code> for arbitrary attributes.</p>
+
+        <h3>Example: create, query, and mutate nodes</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;section id="app"&gt;
+  &lt;h2&gt;Fruit&lt;/h2&gt;
+  &lt;ul id="list"&gt;&lt;/ul&gt;
+&lt;/section&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const list = document.querySelector("#list");
+const fruits = ["Apple", "Mango", "Pear"];
+
+// Build list items with createElement + textContent
+for (const fruit of fruits) {
+  const li = document.createElement("li");
+  li.textContent = fruit;            // safe: text, not markup
+  li.dataset.length = fruit.length;  // sets data-length="..."
+  list.append(li);
+}
+
+// Query all and report
+const items = document.querySelectorAll("#list li");
+console.log("item count:", items.length); // 3
+console.log("first:", items[0].textContent, "len:", items[0].dataset.length);
+
+// Mutate: flag items longer than 4 chars via classList
+items.forEach(li => {
+  if (Number(li.dataset.length) > 4) li.classList.add("long");
+});
+const longOnes = document.querySelectorAll("#list li.long");
+console.log("long names:", [...longOnes].map(li => li.textContent));</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: textContent vs innerHTML (XSS safety)</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div id="safe"&gt;&lt;/div&gt;
+&lt;div id="unsafe"&gt;&lt;/div&gt;
+&lt;div id="attr"&gt;&lt;/div&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Imagine this string arrived from a URL param or a comment field
+const userInput = '&lt;img src=x onerror="console.log(\'XSS fired!\')"&gt;Hi';
+
+// SAFE: textContent renders the string literally, no parsing
+const safe = document.querySelector("#safe");
+safe.textContent = userInput;
+console.log("safe textContent length:", safe.textContent.length);
+
+// UNSAFE: innerHTML parses markup — the onerror handler is now live.
+// The sandbox may block the image load, but never do this with untrusted data.
+const unsafe = document.querySelector("#unsafe");
+unsafe.innerHTML = userInput;
+console.log("unsafe innerHTML set — this is how XSS gets in");
+
+// Attribute + dataset APIs
+const box = document.querySelector("#attr");
+box.setAttribute("role", "note");
+box.dataset.state = "ready";
+console.log("role:", box.getAttribute("role"));       // "note"
+console.log("data-state:", box.dataset.state);        // "ready"
+console.log("has class 'x'?", box.classList.contains("x")); // false</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-a11y">Note: When you build interactive DOM, keep it accessible — use semantic elements, set <code>textContent</code> for labels, and add ARIA only where native semantics fall short. Screen readers announce well-structured markup for free.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 6. EVENTS & DELEGATION -->
+      <!-- ============================================================ -->
+      <section id="events-delegation" class="concept" tabindex="-1">
+        <h2>Events &amp; delegation</h2>
+        <p>Attach handlers with <code>element.addEventListener(type, handler, options)</code>. The handler receives an <code>Event</code> object exposing <code>target</code> (where it originated), <code>currentTarget</code> (where the listener is attached), and methods like <code>preventDefault()</code> (cancel default behavior) and <code>stopPropagation()</code> (halt further travel). Events flow in three phases: capturing (root → target), the target itself, then bubbling (target → root).</p>
+        <p><em>Event delegation</em> exploits bubbling: instead of binding a listener to every child, bind one listener to a shared ancestor and inspect <code>event.target.closest(selector)</code> to find which child was acted on. This uses less memory, requires no rebinding when children are added or removed, and keeps handler logic in one place.</p>
+
+        <h3>Example: a direct handler with the event object</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;form id="f"&gt;
+  &lt;input id="name" placeholder="type here"&gt;
+  &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const form = document.querySelector("#f");
+const input = document.querySelector("#name");
+
+// Direct listeners bound to specific elements
+input.addEventListener("input", (event) => {
+  console.log("typed:", event.target.value);
+});
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault(); // stop the page from reloading
+  console.log("submit prevented; value was:", input.value);
+  console.log("target === currentTarget?", event.target === event.currentTarget);
+});
+
+// Simulate user interaction so the console shows output
+input.value = "Ada";
+input.dispatchEvent(new Event("input"));
+form.dispatchEvent(new Event("submit", { cancelable: true }));</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: event delegation on a list container</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;ul id="todos"&gt;
+  &lt;li&gt;&lt;span&gt;Write docs&lt;/span&gt;
+    &lt;button data-action="done"&gt;done&lt;/button&gt;
+    &lt;button data-action="remove"&gt;x&lt;/button&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;span&gt;Ship build&lt;/span&gt;
+    &lt;button data-action="done"&gt;done&lt;/button&gt;
+    &lt;button data-action="remove"&gt;x&lt;/button&gt;&lt;/li&gt;
+&lt;/ul&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const todos = document.querySelector("#todos");
+
+// ONE listener on the parent handles every current & future button
+todos.addEventListener("click", (event) => {
+  const btn = event.target.closest("button[data-action]");
+  if (!btn) return;                 // clicked whitespace — ignore
+  const li = btn.closest("li");
+  const label = li.querySelector("span").textContent;
+
+  if (btn.dataset.action === "done") {
+    li.classList.toggle("done");
+    console.log("toggled done:", label);
+  } else if (btn.dataset.action === "remove") {
+    li.remove();
+    console.log("removed:", label);
+  }
+});
+
+// Add a new item later — no rebinding needed, delegation covers it
+const li = document.createElement("li");
+li.innerHTML = '<span>New task</span> <button data-action="remove">x</button>';
+todos.append(li);
+
+// Simulate clicks
+todos.querySelector('button[data-action="done"]').click();   // done: Write docs
+todos.querySelectorAll('button[data-action="remove"]')[2].click(); // removed: New task
+console.log("remaining items:", todos.querySelectorAll("li").length);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: Delegation scales far better than per-child listeners. A list of 10,000 rows needs one listener, not 10,000; and dynamically added rows work immediately with no extra bookkeeping. Match with <code>closest()</code> so clicks on nested elements still resolve to the right row.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 7. ASYNC & PROMISES -->
+      <!-- ============================================================ -->
+      <section id="async-promises" class="concept" tabindex="-1">
+        <h2>Async &amp; promises</h2>
+        <p>A <code>Promise</code> represents a value that will be available later. It settles once — either fulfilled (via <code>resolve</code>) or rejected (via <code>reject</code>) — and you react with <code>.then</code>, <code>.catch</code>, and <code>.finally</code>. The combinators <code>Promise.all</code> (wait for all, reject on first failure), <code>Promise.allSettled</code> (wait for all, never rejects), and <code>Promise.race</code> (settle as soon as the first does) coordinate multiple async operations.</p>
+        <p>The <code>async/await</code> syntax is sugar over promises: an <code>async</code> function returns a promise, and <code>await</code> pauses it until the awaited promise settles, letting you write sequential-looking code with ordinary <code>try/catch</code> error handling. Below, because this site runs offline, a <code>mockFetch</code> resolves fake JSON via <code>setTimeout</code>; the real <code>fetch()</code> call is shown in a comment and works identically.</p>
+
+        <h3>Example: mock fetch in callback form and async/await form</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Offline stand-in for fetch(): resolves fake JSON after a delay.
+// Real code: const res = await fetch("/api/user/7"); const data = await res.json();
+function mockFetch(url) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (url.includes("user")) {
+        resolve({ ok: true, json: () => ({ id: 7, name: "Kai" }) });
+      } else {
+        reject(new Error("404: " + url));
+      }
+    }, 120);
+  });
+}
+
+// (1) Callback / .then chain form
+mockFetch("/api/user/7")
+  .then(res => res.json())
+  .then(data => console.log("then-form:", data.name))
+  .catch(err => console.log("then-error:", err.message))
+  .finally(() => console.log("then-form done"));
+
+// (2) async/await form — same operation, linear control flow
+async function loadUser(id) {
+  try {
+    const res = await mockFetch("/api/user/" + id);
+    const data = await res.json();
+    console.log("await-form:", data.name);
+    return data;
+  } catch (err) {
+    console.log("await-error:", err.message);
+  } finally {
+    console.log("await-form done");
+  }
+}
+loadUser(7);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: Promise.all / race / allSettled</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const after = (ms, value, fail = false) =>
+  new Promise((res, rej) =>
+    setTimeout(() => (fail ? rej(new Error(value)) : res(value)), ms));
+
+async function demo() {
+  // all: resolves with an array once every promise fulfills
+  const trio = await Promise.all([after(60, "a"), after(30, "b"), after(90, "c")]);
+  console.log("all:", trio); // ["a","b","c"] in input order
+
+  // race: settles with the FIRST promise to settle
+  const winner = await Promise.race([after(50, "slow"), after(10, "fast")]);
+  console.log("race:", winner); // "fast"
+
+  // all rejects on the first failure
+  try {
+    await Promise.all([after(20, "ok"), after(10, "boom", true)]);
+  } catch (err) {
+    console.log("all rejected:", err.message); // "boom"
+  }
+
+  // allSettled never rejects — you inspect each outcome
+  const results = await Promise.allSettled([after(10, "yes"), after(10, "no", true)]);
+  console.log("allSettled:", results.map(r => r.status)); // ["fulfilled","rejected"]
+}
+demo();</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: <code>await</code> in a loop runs requests sequentially. To run independent requests concurrently, start them all first and then <code>await Promise.all([...])</code> — this often turns seconds of waiting into milliseconds.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 8. THE EVENT LOOP -->
+      <!-- ============================================================ -->
+      <section id="event-loop" class="concept" tabindex="-1">
+        <h2>The event loop</h2>
+        <p>JavaScript runs on a single thread with an event loop. Synchronous code runs to completion on the call stack. When the stack empties, the loop drains the <em>microtask</em> queue (promise callbacks, <code>queueMicrotask</code>) completely, then takes exactly one <em>macrotask</em> (a <code>setTimeout</code> callback, an I/O event) and repeats. Microtasks therefore always run before the next macrotask, even a <code>setTimeout(fn, 0)</code>.</p>
+        <p>This ordering explains a common interview puzzle: synchronous logs print first, then any queued promise callbacks, and only then timer callbacks. Understanding it prevents subtle bugs where you assume a timer fires before promise resolution completes.</p>
+
+        <h3>Example: predict the output — sync, microtask, macrotask</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Predict the order, then Run to see the real sequence.
+console.log("1: sync start");
+
+setTimeout(() => console.log("2: setTimeout(0) — macrotask"), 0);
+
+Promise.resolve().then(() => console.log("3: promise.then — microtask"));
+
+queueMicrotask(() => console.log("4: queueMicrotask — microtask"));
+
+console.log("5: sync end");
+
+// Actual order:
+// 1: sync start
+// 5: sync end
+// 3: promise.then — microtask
+// 4: queueMicrotask — microtask
+// 2: setTimeout(0) — macrotask
+// Sync runs first; ALL microtasks drain before the timer macrotask.</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: microtasks chained between macrotasks</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">console.log("A");
+
+setTimeout(() => {
+  console.log("timeout 1");
+  Promise.resolve().then(() => console.log("micro inside timeout 1"));
+}, 0);
+
+setTimeout(() => console.log("timeout 2"), 0);
+
+Promise.resolve()
+  .then(() => console.log("micro 1"))
+  .then(() => console.log("micro 2"));
+
+console.log("B");
+
+// Actual order:
+// A
+// B
+// micro 1
+// micro 2
+// timeout 1
+// micro inside timeout 1   <- microtask queue drains before timeout 2
+// timeout 2
+// Each macrotask is followed by a FULL microtask drain before the next macrotask.</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: Long synchronous work blocks the single thread — rendering, input, and timers all stall. Break heavy loops into chunks (e.g. via <code>setTimeout</code>, <code>requestIdleCallback</code>, or a Web Worker) so the loop can service other tasks.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 9. DEBOUNCE & THROTTLE -->
+      <!-- ============================================================ -->
+      <section id="debounce-throttle" class="concept" tabindex="-1">
+        <h2>Debounce &amp; throttle</h2>
+        <p><em>Debounce</em> delays invoking a function until a quiet period has elapsed since the last call — ideal for reacting to the <em>end</em> of a burst (search-as-you-type, resize, autosave). <em>Throttle</em> caps invocation to at most once per interval regardless of how often it is called — ideal for steady sampling during a burst (scroll position, pointer move, analytics pings).</p>
+        <p>Both are built with closures over a timer. Debounce resets its timer on every call; throttle ignores calls until its cooldown expires. The examples below simulate a rapid stream of events and log how many times the raw handler would fire versus the wrapped one.</p>
+
+        <h3>Example: debounce — only the last call in a burst runs</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">function debounce(fn, wait) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), wait);
+  };
+}
+
+let rawCalls = 0, debouncedCalls = 0;
+const onSearch = debounce((q) => {
+  debouncedCalls++;
+  console.log("search fired for:", q);
+}, 100);
+
+// Simulate a user typing "hello" quickly (one char every 20ms)
+const query = ["h", "he", "hel", "hell", "hello"];
+query.forEach((q, i) => {
+  setTimeout(() => { rawCalls++; onSearch(q); }, i * 20);
+});
+
+// After the burst settles, report the counts
+setTimeout(() => {
+  console.log("raw input events:", rawCalls);        // 5
+  console.log("debounced handler runs:", debouncedCalls); // 1
+}, 300);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: throttle — at most once per interval</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">function throttle(fn, interval) {
+  let last = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - last >= interval) {
+      last = now;
+      fn.apply(this, args);
+    }
+  };
+}
+
+let scrollEvents = 0, throttledRuns = 0;
+const onScroll = throttle((y) => {
+  throttledRuns++;
+  console.log("handle scroll at y =", y);
+}, 100);
+
+// Simulate 10 scroll events over ~200ms (one every 20ms)
+for (let i = 0; i < 10; i++) {
+  setTimeout(() => { scrollEvents++; onScroll(i * 50); }, i * 20);
+}
+
+setTimeout(() => {
+  console.log("scroll events:", scrollEvents);   // 10
+  console.log("throttled runs:", throttledRuns); // ~2-3, not 10
+}, 260);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: Debounce and throttle protect expensive handlers (network calls, layout, re-renders) from firing on every high-frequency event. Reach for debounce when only the settled state matters, and throttle when you need periodic updates during the activity.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 10. MODULES -->
+      <!-- ============================================================ -->
+      <section id="modules" class="concept" tabindex="-1">
+        <h2>Modules</h2>
+        <p>ES modules give each file its own scope with explicit <code>export</code> and <code>import</code>. You can have any number of <em>named</em> exports and at most one <em>default</em> export. Imports are statically analyzable, which lets bundlers perform <em>tree-shaking</em> (dropping unused exports) and <em>code-splitting</em> (loading chunks on demand). The <code>import()</code> expression loads a module dynamically at runtime and returns a promise for its namespace.</p>
+        <p>A sandboxed <code>srcdoc</code> cannot fetch external files, but it can construct a module from a <code>Blob</code> URL and <code>import()</code> it — a faithful, runnable demonstration of module loading. The static source form is shown first as a reference code block.</p>
+
+        <h3>Example: the static ESM source (reference)</h3>
+        <pre class="code-block" data-lang="js"><code>// math.js — a module with named + default exports
+export const PI = 3.14159;
+export function square(x) { return x * x; }
+export default function add(a, b) { return a + b; }
+
+// app.js — importing from it
+import add, { PI, square } from "./math.js";
+console.log(add(2, 3));   // 5
+console.log(square(4));   // 16
+console.log(PI);          // 3.14159
+
+// Dynamic import: load on demand, returns a Promise&lt;namespace&gt;
+const mod = await import("./math.js");
+console.log(mod.default(10, 20)); // 30</code></pre>
+        <div class="sim-output" role="status"><strong>Result:</strong> logs <code>5</code>, <code>16</code>, <code>3.14159</code>, then <code>30</code> once the dynamic import resolves. A bundler would tree-shake <code>square</code> out of the final bundle if nothing imported it.</div>
+
+        <h3>Example: runnable inline module via a Blob URL</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Build a real ES module at runtime from source text.
+const source = `
+  export const PI = 3.14159;
+  export function square(x) { return x * x; }
+  export default function add(a, b) { return a + b; }
+`;
+const blob = new Blob([source], { type: "text/javascript" });
+const url = URL.createObjectURL(blob);
+
+// Dynamic import() works on the Blob URL just like a real file
+import(url)
+  .then((mod) => {
+    console.log("default add(2,3):", mod.default(2, 3)); // 5
+    console.log("named square(5):", mod.square(5));       // 25
+    console.log("named PI:", mod.PI);                     // 3.14159
+  })
+  .catch((err) => console.log("import failed:", err.message))
+  .finally(() => URL.revokeObjectURL(url)); // free the blob</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: dynamic import for lazy loading</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Simulate a heavy feature loaded only when needed (code-splitting).
+function makeFeatureModule() {
+  const src = `export function report() { return "heavy feature ready"; }`;
+  return URL.createObjectURL(new Blob([src], { type: "text/javascript" }));
+}
+
+let loaded = false;
+async function useFeatureOnce() {
+  console.log("feature loaded yet?", loaded); // false on first call
+  const url = makeFeatureModule();
+  const { report } = await import(url);
+  loaded = true;
+  console.log(report());              // "heavy feature ready"
+  console.log("feature loaded yet?", loaded); // true
+  URL.revokeObjectURL(url);
+}
+useFeatureOnce();</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: Native ESM works in every modern browser via <code>&lt;script type="module"&gt;</code>. Bundlers (Vite, esbuild, Rollup, webpack) still add value: tree-shaking, code-splitting, minification, and consolidating many small requests into optimized chunks.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 11. PATTERNS -->
+      <!-- ============================================================ -->
+      <section id="patterns" class="concept" tabindex="-1">
+        <h2>Patterns</h2>
+        <p>Design patterns package recurring solutions. The <em>revealing module pattern</em> uses a closure (often an IIFE) to keep state private and return only the public API. The <em>observer</em> pattern lets a subject notify a list of dependents when it changes. <em>Pub/sub</em> (an event emitter) decouples publishers from subscribers through named topics, so neither side references the other directly.</p>
+        <p>These patterns underpin much of the ecosystem: reactive state libraries are observers, event buses are pub/sub, and encapsulated singletons are revealing modules. The runnable examples below implement a small event emitter and a subject/observer pair from scratch.</p>
+
+        <h3>Example: pub/sub event emitter (subscribe/emit)</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">function createEmitter() {
+  const topics = new Map(); // topic -> Set of handlers
+  return {
+    on(topic, fn) {
+      if (!topics.has(topic)) topics.set(topic, new Set());
+      topics.get(topic).add(fn);
+      return () => topics.get(topic).delete(fn); // unsubscribe
+    },
+    emit(topic, payload) {
+      (topics.get(topic) || []).forEach((fn) => fn(payload));
+    }
+  };
+}
+
+const bus = createEmitter();
+const off = bus.on("login", (u) => console.log("A saw login:", u.name));
+bus.on("login", (u) => console.log("B saw login:", u.name));
+
+bus.emit("login", { name: "Nia" }); // both A and B fire
+off();                               // A unsubscribes
+bus.emit("login", { name: "Omar" }); // only B fires
+bus.emit("logout", {});              // no subscribers — no error</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: observer + revealing module</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Observable value: notifies observers whenever it changes.
+function observable(initial) {
+  let value = initial;
+  const observers = new Set();
+  return {                         // revealing module: only these are public
+    subscribe(fn) { observers.add(fn); return () => observers.delete(fn); },
+    get() { return value; },
+    set(next) {
+      if (next === value) return;  // skip no-op updates
+      value = next;
+      observers.forEach((fn) => fn(value));
+    }
+  };
+}
+
+const temperature = observable(20);
+temperature.subscribe((t) => console.log("display:", t + "°C"));
+temperature.subscribe((t) => console.log("alarm:", t > 25 ? "HOT" : "ok"));
+
+temperature.set(22); // both observers notified
+temperature.set(30); // alarm -> HOT
+temperature.set(30); // no change -> no notifications
+console.log("current:", temperature.get()); // 30</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: Always provide an unsubscribe path (these return a disposer function). Forgetting to unsubscribe observers or emitter handlers is a common source of memory leaks — see the performance section.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 12. TESTING -->
+      <!-- ============================================================ -->
+      <section id="testing" class="concept" tabindex="-1">
+        <h2>Testing</h2>
+        <p>A test harness is not magic — at its core it runs functions and compares actual to expected values, tracking pass/fail counts. Building a tiny one clarifies what tools like Jest and Vitest do under the hood: a <code>describe</code> groups tests, a <code>test</code>/<code>it</code> defines a case, and an <code>expect</code> returns matchers such as <code>toBe</code> and <code>toEqual</code>.</p>
+        <p>The examples implement a minimal harness that logs each assertion and a final summary, then exercise it against a sample function. In real projects you would use a framework for richer matchers, mocking, async support, watch mode, and coverage — but the mental model is exactly this.</p>
+
+        <h3>Example: a minimal expect/test/describe harness</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">let passed = 0, failed = 0;
+
+function expect(actual) {
+  return {
+    toBe(expected) {
+      if (Object.is(actual, expected)) { passed++; console.log("  ok:", actual, "===", expected); }
+      else { failed++; console.log("  FAIL: expected", expected, "got", actual); }
+    },
+    toEqual(expected) {
+      const same = JSON.stringify(actual) === JSON.stringify(expected);
+      if (same) { passed++; console.log("  ok (deep):", JSON.stringify(actual)); }
+      else { failed++; console.log("  FAIL (deep): expected", JSON.stringify(expected), "got", JSON.stringify(actual)); }
+    }
+  };
+}
+function test(name, fn) { console.log("test:", name); fn(); }
+function describe(suite, fn) { console.log("describe:", suite); fn(); }
+
+// Function under test
+const sum = (...xs) => xs.reduce((t, x) => t + x, 0);
+
+describe("sum()", () => {
+  test("adds two numbers", () => expect(sum(2, 3)).toBe(5));
+  test("handles no args", () => expect(sum()).toBe(0));
+  test("adds many", () => expect(sum(1, 2, 3, 4)).toBe(10));
+});
+
+console.log(`summary: ${passed} passed, ${failed} failed`);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: testing a stateful unit (a counter)</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">let passed = 0, failed = 0;
+function assert(name, cond) {
+  if (cond) { passed++; console.log("ok  -", name); }
+  else { failed++; console.log("FAIL-", name); }
+}
+
+// Unit under test: a counter factory with private state
+function makeCounter(start = 0) {
+  let n = start;
+  return { inc: () => ++n, dec: () => --n, get: () => n };
+}
+
+// A "test file": independent cases, fresh instance each time
+assert("starts at given value", makeCounter(5).get() === 5);
+assert("inc increments", (() => { const c = makeCounter(); c.inc(); return c.get() === 1; })());
+assert("dec decrements", (() => { const c = makeCounter(2); c.dec(); return c.get() === 1; })());
+assert("instances are isolated", (() => {
+  const a = makeCounter(), b = makeCounter();
+  a.inc(); a.inc();
+  return a.get() === 2 && b.get() === 0;
+})());
+
+console.log(`\nresult: ${passed}/${passed + failed} passed` +
+  (failed === 0 ? " — all green" : ` — ${failed} failing`));</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: In production use <a href="https://jestjs.io">Jest</a> or <a href="https://vitest.dev">Vitest</a>. They add real matchers, spies/mocks, snapshot testing, async utilities, parallel runs, watch mode, and coverage reports — but the pass/fail loop you built here is the same idea scaled up.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 13. PERFORMANCE & MEMORY -->
+      <!-- ============================================================ -->
+      <section id="performance-memory" class="concept" tabindex="-1">
+        <h2>Performance &amp; memory</h2>
+        <p>JavaScript is garbage-collected, but memory still leaks when references keep objects reachable longer than intended. Common culprits: intervals and event listeners that are never removed, growing global caches, and closures that retain detached DOM nodes. A leak shows up as memory that climbs and never comes back down.</p>
+        <p>The fixes are disciplined cleanup: <code>clearInterval</code>/<code>clearTimeout</code>, <code>removeEventListener</code>, bounding or clearing caches, and using <code>WeakMap</code>/<code>WeakSet</code> so entries vanish once their keys are otherwise unreachable. The first example demonstrates a leak; the second applies the fixes and shows the retained state shrinking.</p>
+
+        <h3>Example: the leak — unbounded cache + uncleared interval</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// LEAK: a module-level cache that only ever grows, plus an
+// interval that keeps running (and keeps the closure alive) forever.
+const cache = [];                 // never pruned
+let ticks = 0;
+
+const handle = setInterval(() => {
+  ticks++;
+  cache.push(new Array(1000).fill(ticks)); // grows every tick
+}, 10);
+
+// Sample the growth, but note: nothing ever stops it or frees memory.
+setTimeout(() => {
+  console.log("after a while — ticks:", ticks);
+  console.log("cache entries retained:", cache.length, "(and climbing)");
+  console.log("interval still running? yes — this is the leak");
+  clearInterval(handle); // (added only so this demo eventually stops)
+}, 120);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: the fix — cleanup + WeakMap + removeEventListener</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// FIX 1: stop the interval when done, and BOUND the cache.
+const cache = [];
+const MAX = 5;
+let ticks = 0;
+
+const handle = setInterval(() => {
+  ticks++;
+  cache.push(ticks);
+  if (cache.length > MAX) cache.shift(); // bounded ring
+  if (ticks === 10) {
+    clearInterval(handle);               // explicit teardown
+    console.log("interval cleared at tick", ticks);
+    console.log("cache stays bounded at", cache.length, "->", cache);
+  }
+}, 8);
+
+// FIX 2: WeakMap lets metadata be GC'd once the key object is gone.
+let node = { id: "widget" };
+const meta = new WeakMap();
+meta.set(node, { renders: 3 });
+console.log("meta while node alive:", meta.get(node)); // { renders: 3 }
+node = null; // drop the only strong ref -> entry becomes collectable
+
+// FIX 3: always pair addEventListener with removeEventListener.
+const target = new EventTarget();
+const onPing = () => console.log("ping handled");
+target.addEventListener("ping", onPing);
+target.dispatchEvent(new Event("ping"));   // handled
+target.removeEventListener("ping", onPing);
+target.dispatchEvent(new Event("ping"));   // silent — listener gone
+console.log("listener removed — no further handling");</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: Profile with the browser's Memory and Performance panels. Take a heap snapshot, exercise the feature, take another, and compare retained size — steadily growing detached nodes or listener counts across snapshots point straight at a leak.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 14. WEB WORKERS -->
+      <!-- ============================================================ -->
+      <section id="web-workers" class="concept" tabindex="-1">
+        <h2>Web Workers</h2>
+        <p>Web Workers run JavaScript on a separate thread, keeping the main thread free for rendering and input. They communicate only by message passing: <code>worker.postMessage(data)</code> sends, and each side listens via <code>onmessage</code>. Because there is no shared mutable state, workers are ideal for CPU-heavy tasks — parsing, image processing, cryptography — that would otherwise freeze the UI.</p>
+        <p>A worker is normally its own file, but you can create one from an inline <code>Blob</code> URL, which runs correctly inside the sandbox here. The first example offloads a compute-heavy sum; the second is a ping/pong round-trip that echoes a transformed message.</p>
+
+        <h3>Example: offload a CPU task to a worker</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Worker source: sums 0..n on another thread so the UI stays responsive.
+const workerSrc = `
+  self.onmessage = (e) => {
+    const n = e.data;
+    let total = 0;
+    for (let i = 0; i <= n; i++) total += i;
+    self.postMessage({ n, total });
+  };
+`;
+const url = URL.createObjectURL(new Blob([workerSrc], { type: "text/javascript" }));
+const worker = new Worker(url);
+
+worker.onmessage = (e) => {
+  console.log("worker computed sum 0.." + e.data.n + " =", e.data.total);
+  worker.terminate();          // free the thread
+  URL.revokeObjectURL(url);    // free the blob
+  console.log("worker terminated");
+};
+worker.onerror = (e) => console.log("worker error:", e.message);
+
+console.log("main thread: posting work, staying responsive...");
+worker.postMessage(2_000_000); // heavy loop runs OFF the main thread</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: ping/pong message round-trip</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// The worker replies to each message, transforming the payload.
+const src = `
+  self.onmessage = (e) => {
+    const { seq, text } = e.data;
+    self.postMessage({ seq, reply: "pong:" + text.toUpperCase() });
+  };
+`;
+const url = URL.createObjectURL(new Blob([src], { type: "text/javascript" }));
+const worker = new Worker(url);
+
+let received = 0;
+const TOTAL = 3;
+worker.onmessage = (e) => {
+  received++;
+  console.log("main got:", e.data.seq, e.data.reply);
+  if (received === TOTAL) {
+    worker.terminate();
+    URL.revokeObjectURL(url);
+    console.log("all pongs received; worker done");
+  }
+};
+
+// Fire several pings; replies arrive asynchronously
+["ping", "hello", "worker"].forEach((text, i) =>
+  worker.postMessage({ seq: i, text })
+);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-compat">Note: Workers are supported in all modern browsers. They have no DOM access and communicate by structured-clone message passing; large buffers can be moved (not copied) with transferables (<code>postMessage(buf, [buf])</code>) for zero-copy handoff.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 15. SERVICE WORKERS -->
+      <!-- ============================================================ -->
+      <section id="service-workers" class="concept" tabindex="-1">
+        <h2>Service Workers</h2>
+        <p>A service worker is a background script that sits between the page and the network, acting as a programmable proxy. It powers offline support and fine-grained caching for Progressive Web Apps. Its lifecycle has three key events: <code>install</code> (pre-cache the app shell), <code>activate</code> (clean up old caches), and <code>fetch</code> (intercept requests and decide cache-vs-network).</p>
+        <p>Unlike everything else on this page, a service worker cannot run inside a sandboxed file preview — registration requires a secure context (HTTPS or <code>localhost</code>) and a real origin. The code below is therefore presented as reference, with a simulated result describing its behavior.</p>
+
+        <h3>Example: registration (in the page)</h3>
+        <pre class="code-block" data-lang="js"><code>// In your page script — register once the page has loaded.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () =&gt; {
+    try {
+      const reg = await navigator.serviceWorker.register("/sw.js");
+      console.log("SW registered, scope:", reg.scope);
+    } catch (err) {
+      console.error("SW registration failed:", err);
+    }
+  });
+}</code></pre>
+        <div class="sim-output" role="status"><strong>Result:</strong> on a secure origin the browser installs <code>/sw.js</code> and logs its scope. On <code>file://</code> or inside this sandbox, <code>navigator.serviceWorker</code> is unavailable, so the guard skips registration — this is reference code, not runnable here.</div>
+
+        <h3>Example: the service worker (sw.js) — cache-first shell</h3>
+        <pre class="code-block" data-lang="js"><code>// sw.js — a cache-first app-shell strategy with old-cache pruning.
+const CACHE = "app-shell-v2";
+const SHELL = ["/", "/index.html", "/styles/site.css", "/scripts/site.js"];
+
+// install: pre-cache the shell, then activate immediately
+self.addEventListener("install", (event) =&gt; {
+  event.waitUntil(
+    caches.open(CACHE).then((cache) =&gt; cache.addAll(SHELL))
+  );
+  self.skipWaiting();
+});
+
+// activate: delete caches from previous versions
+self.addEventListener("activate", (event) =&gt; {
+  event.waitUntil(
+    caches.keys().then((keys) =&gt;
+      Promise.all(keys.filter((k) =&gt; k !== CACHE).map((k) =&gt; caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+// fetch: serve from cache, fall back to network (and cache the result)
+self.addEventListener("fetch", (event) =&gt; {
+  event.respondWith(
+    caches.match(event.request).then((cached) =&gt; {
+      if (cached) return cached;                 // cache hit
+      return fetch(event.request).then((res) =&gt; {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) =&gt; c.put(event.request, copy));
+        return res;                              // network fallback
+      }).catch(() =&gt; caches.match("/index.html")); // offline fallback
+    })
+  );
+});</code></pre>
+        <div class="sim-output" role="status"><strong>Result:</strong> after activation, repeat visits load the shell instantly from the cache and work offline. Bumping <code>CACHE</code> to a new version (e.g. <code>app-shell-v3</code>) triggers a fresh install and prunes the old cache on activate.</div>
+
+        <p class="note note-compat">Note: Service workers require HTTPS (or <code>localhost</code>), run in their own worker scope with no DOM access, and update in the background — a new worker takes control on the next navigation unless you call <code>skipWaiting()</code> plus <code>clients.claim()</code>. Always version your cache names.</p>
+
+        <h3>Example: further reading</h3>
+        <pre class="code-block" data-lang="js"><code>// Runtime APIs worth exploring next:
+// - Web Streams:          for await (const chunk of response.body) { ... }
+// - IndexedDB:            const db = await indexedDB.open("app", 1);
+// - Intl:                 new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+// - structuredClone:      const deep = structuredClone(value); // cycles, Map, Set, typed arrays
+// - requestIdleCallback:  requestIdleCallback(() =&gt; doLowPriorityWork());</code></pre>
+        <p>Recommended next steps, in rough order of impact:</p>
+        <ul>
+          <li><strong>Web Streams</strong> — process responses incrementally instead of buffering the whole body.</li>
+          <li><strong>IndexedDB</strong> — a transactional client-side database for structured, larger-than-<code>localStorage</code> data.</li>
+          <li><strong>Intl</strong> — locale-aware number, date, currency, and list formatting without external libraries.</li>
+          <li><strong>structuredClone</strong> — built-in deep cloning that handles cycles and complex types <code>JSON</code> cannot.</li>
+          <li><strong>requestIdleCallback</strong> — schedule non-urgent work during the browser's idle periods.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 16. FEATURE DETECTION -->
+      <!-- ============================================================ -->
+      <section id="feature-detection" class="concept" tabindex="-1">
+        <h2>Feature detection</h2>
+        <p>An Employee Dashboard runs across a spread of browsers, so it must ask the runtime what it can do rather than sniff a user-agent string. <em>Feature detection</em> tests for the capability itself: <code>canvas.getContext("2d")</code> returns a context or <code>null</code>, <code>typeof localStorage</code> and a write/read probe confirm working storage, <code>"geolocation" in navigator</code> checks a property, <code>!!window.WebSocket</code> checks a constructor, and <code>CSS.supports("transition", "all")</code> checks a CSS feature. This mirrors the HTML page's <a href="html.html#feature-detection">feature-detection and progressive-enhancement</a> guidance from the markup side.</p>
+        <p>Collect these probes once into a reusable <code>supports</code> capability object, then branch on its booleans. Libraries like Modernizr automate exactly this, adding <code>class</code> hooks to the <code>&lt;html&gt;</code> element (e.g. <code>canvas</code> / <code>no-canvas</code>) so CSS can react too — but the underlying tests are the native ones below. We hand-roll the detector so it runs offline; the Modernizr equivalent follows as reference.</p>
+
+        <h3>Example: a reusable capability object</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Each probe is a small, self-contained native test. Wrap the ones
+// that can throw (storage) so detection never crashes the page.
+function hasCanvas() {
+  const el = document.createElement("canvas");
+  return !!(el.getContext && el.getContext("2d"));
+}
+function hasLocalStorage() {
+  try {
+    if (typeof localStorage === "undefined") return false;
+    const k = "__probe__";
+    localStorage.setItem(k, "1");
+    localStorage.removeItem(k);
+    return true;
+  } catch (err) {
+    return false; // SecurityError in sandboxed / private contexts
+  }
+}
+function hasCssTransitions() {
+  if (typeof CSS !== "undefined" && CSS.supports) {
+    return CSS.supports("transition", "all");
+  }
+  // Fallback: probe the style object for the property
+  return "transition" in document.documentElement.style;
+}
+
+const supports = {
+  canvas: hasCanvas(),
+  localStorage: hasLocalStorage(),
+  geolocation: "geolocation" in navigator,
+  webSocket: !!window.WebSocket,
+  cssTransitions: hasCssTransitions()
+};
+
+console.log("capability object:", supports);
+console.log("canvas?", supports.canvas);
+console.log("localStorage?", supports.localStorage, "(false here: sandbox has no same-origin storage)");
+console.log("geolocation?", supports.geolocation);
+console.log("WebSocket?", supports.webSocket);
+console.log("CSS transitions?", supports.cssTransitions);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a graceful-enhancement helper</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Reuse the capability object to run code ONLY when a feature exists,
+// with an optional fallback branch — the core of progressive enhancement.
+const supports = {
+  canvas: !!document.createElement("canvas").getContext,
+  webSocket: !!window.WebSocket,
+  geolocation: "geolocation" in navigator,
+  clipboard: !!(navigator.clipboard && navigator.clipboard.writeText)
+};
+
+function enhance(feature, whenPresent, whenAbsent) {
+  if (supports[feature]) {
+    console.log(`[${feature}] available — enhancing`);
+    return whenPresent();
+  }
+  console.log(`[${feature}] missing — using fallback`);
+  return whenAbsent ? whenAbsent() : undefined;
+}
+
+// Draw an avatar with canvas, else fall back to text initials
+const avatar = enhance("canvas",
+  () => "rendered <canvas> avatar",
+  () => "plain-text initials");
+console.log("avatar strategy:", avatar);
+
+// Use live updates if WebSocket exists, else poll
+const updates = enhance("webSocket",
+  () => "subscribe to live socket",
+  () => "poll every 30s");
+console.log("update strategy:", updates);
+
+// clipboard is typically absent in this sandbox -> fallback path
+enhance("clipboard",
+  () => navigator.clipboard.writeText("copied!"),
+  () => console.log("show a manual 'select and copy' hint"));</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: the Modernizr equivalent (reference)</h3>
+        <pre class="code-block" data-lang="html"><code>&lt;!-- 1. Start with a no-js class; the script swaps it to js on load. --&gt;
+&lt;html class="no-js"&gt;
+  &lt;head&gt;
+    &lt;!-- 2. Load Modernizr early (build only the detects you need). --&gt;
+    &lt;script src="modernizr.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+&lt;/html&gt;
+
+&lt;!-- Modernizr replaces &lt;html class="no-js"&gt; with class="js canvas
+     localstorage geolocation websockets csstransitions ..." (or the
+     "no-" prefixed variant when a feature is missing), so CSS can react:
+       .no-canvas .avatar { background: url(fallback.png); }
+--&gt;</code></pre>
+        <pre class="code-block" data-lang="js"><code>// The JS API returns the same booleans as our hand-rolled object:
+if (Modernizr.canvas)         { /* draw avatars on a &lt;canvas&gt; */ }
+if (Modernizr.localstorage)   { /* persist the dashboard layout */ }
+if (Modernizr.geolocation)    { /* offer "employees near me" */ }
+if (Modernizr.websockets)     { /* open a live update channel */ }
+if (Modernizr.csstransitions) { /* animate panels; else jump instantly */ }</code></pre>
+        <div class="sim-output" role="status"><strong>Result:</strong> Modernizr sets one <code>class</code> per feature on <code>&lt;html&gt;</code> and exposes matching booleans such as <code>Modernizr.canvas</code>. Our runnable <code>supports</code> object reproduces those booleans with native probes — no library or network required.</div>
+        <p class="note note-compat">Note: Test for the capability, never the browser name. User-agent strings are spoofed, shared across engines, and change constantly, whereas a direct probe (<code>"geolocation" in navigator</code>) is always accurate for the runtime executing it. Detect once at startup and cache the result.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 17. WEB STORAGE API -->
+      <!-- ============================================================ -->
+      <section id="web-storage" class="concept" tabindex="-1">
+        <h2>Web Storage API</h2>
+        <p>Web Storage gives each origin a synchronous, string-keyed key/value store. <code>localStorage</code> persists until explicitly cleared; <code>sessionStorage</code> lives only for the tab's session. Both share the API — <code>setItem</code>, <code>getItem</code>, <code>removeItem</code>, <code>clear</code>, <code>key(i)</code>, and <code>length</code> — and store only strings, so structured data (an employee record) round-trips through <code>JSON.stringify</code>/<code>JSON.parse</code>. A <code>storage</code> event fires in <em>other</em> tabs of the same origin whenever a value changes, which is how a dashboard keeps multiple open tabs in sync.</p>
+        <p>The preview iframe here has <code>allow-scripts</code> but not <code>allow-same-origin</code>, so touching <code>localStorage</code> throws a <code>SecurityError</code>. That is exactly the condition to design for: feature-detect, wrap access in <code>try/catch</code>, and fall back to an in-memory shim so the app degrades instead of crashing. On a real same-origin HTTPS page the same code writes to disk-backed storage directly.</p>
+
+        <h3>Example: save/load an employee record with a safe fallback</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Pick real localStorage if it works; otherwise an in-memory Map shim
+// with the same surface. On a live https page, the real store is used.
+function getStore() {
+  try {
+    const k = "__probe__";
+    localStorage.setItem(k, "1");
+    localStorage.removeItem(k);
+    console.log("using real localStorage");
+    return localStorage;
+  } catch (err) {
+    console.log("localStorage blocked (" + err.name + ") — using in-memory shim");
+    const m = new Map();
+    return {
+      getItem: (key) => (m.has(key) ? m.get(key) : null),
+      setItem: (key, val) => void m.set(key, String(val)),
+      removeItem: (key) => void m.delete(key),
+      clear: () => m.clear()
+    };
+  }
+}
+
+const store = getStore();
+
+// Structured data must be serialized to a string
+const employee = { id: 42, name: "Priya Rao", role: "Engineer", active: true };
+store.setItem("employee:42", JSON.stringify(employee));
+
+// ...later, read it back and revive it
+const raw = store.getItem("employee:42");
+const loaded = JSON.parse(raw);
+console.log("loaded object:", loaded);
+console.log("name:", loaded.name, "| role:", loaded.role);
+
+// removeItem clears one key
+store.removeItem("employee:42");
+console.log("after removeItem:", store.getItem("employee:42")); // null</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a namespaced, JSON-aware storage wrapper</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// A small wrapper: prefixes keys, (de)serializes JSON, and survives
+// SecurityError by degrading to an in-memory backend automatically.
+function createStorage(prefix) {
+  let backend;
+  try {
+    const k = "__probe__";
+    localStorage.setItem(k, "1");
+    localStorage.removeItem(k);
+    backend = localStorage;
+  } catch (err) {
+    const m = new Map();
+    backend = {
+      getItem: (key) => (m.has(key) ? m.get(key) : null),
+      setItem: (key, val) => m.set(key, val),
+      removeItem: (key) => m.delete(key)
+    };
+  }
+  const full = (key) => prefix + ":" + key;
+  return {
+    set(key, value) {
+      try { backend.setItem(full(key), JSON.stringify(value)); }
+      catch (err) { console.log("set failed:", err.name); } // e.g. QuotaExceededError
+    },
+    get(key, fallback = null) {
+      const raw = backend.getItem(full(key));
+      if (raw === null) return fallback;
+      try { return JSON.parse(raw); } catch (err) { return fallback; }
+    },
+    remove(key) { backend.removeItem(full(key)); }
+  };
+}
+
+const prefs = createStorage("dashboard");
+prefs.set("layout", { columns: 3, density: "compact" });
+prefs.set("filters", ["active", "engineering"]);
+
+console.log("layout:", prefs.get("layout"));
+console.log("filters:", prefs.get("filters"));
+console.log("missing key with default:", prefs.get("theme", "system"));
+
+prefs.remove("filters");
+console.log("after remove:", prefs.get("filters", "[none]"));</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: cross-tab sync via the storage event (reference)</h3>
+        <pre class="code-block" data-lang="js"><code>// The storage event fires in OTHER tabs of the same origin, never the
+// tab that made the change. Use it to keep dashboard tabs in sync.
+window.addEventListener("storage", (e) =&gt; {
+  if (e.key === "dashboard:employee:42") {
+    console.log("another tab changed the record");
+    console.log("old:", e.oldValue, "new:", e.newValue);
+    rerenderEmployeeCard(JSON.parse(e.newValue));
+  }
+});
+
+// Quota / availability is not guaranteed — always guard writes:
+try {
+  localStorage.setItem("big", hugeString);
+} catch (err) {
+  if (err.name === "QuotaExceededError") { /* evict or warn */ }
+}</code></pre>
+        <div class="sim-output" role="status"><strong>Result:</strong> open the same origin in two tabs; writing <code>dashboard:employee:42</code> in one tab fires a <code>storage</code> event in the other with <code>oldValue</code>/<code>newValue</code>, so both cards re-render. The event does not fire in the tab that wrote it — that tab already knows.</div>
+        <p class="note note-perf">Note: Web Storage is <strong>synchronous</strong> — every read and write blocks the main thread. Keep values small, batch related fields into a single JSON blob rather than many keys, and move large or structured datasets to <code>IndexedDB</code>, which is asynchronous and far higher-capacity.</p>
+        <p class="note note-compat">Note: Storage is partitioned per origin and typically capped around 5&nbsp;MB. In private-browsing or sandboxed contexts access can throw or silently reset, so the feature-detect-plus-fallback pattern above is mandatory, not optional.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 18. CANVAS 2D API -->
+      <!-- ============================================================ -->
+      <section id="canvas-api" class="concept" tabindex="-1">
+        <h2>Canvas 2D API</h2>
+        <p>The <code>&lt;canvas&gt;</code> element — introduced on the HTML side under <a href="html.html#canvas-element">the canvas element</a> — is a bitmap surface you draw on imperatively through a context from <code>canvas.getContext("2d")</code>. The context exposes state (<code>fillStyle</code>, <code>strokeStyle</code>, <code>font</code>, <code>textAlign</code>, <code>textBaseline</code>) and drawing calls (<code>fillRect</code>, <code>strokeRect</code>, <code>beginPath</code>+<code>arc</code>, <code>fill</code>, <code>stroke</code>, <code>fillText</code>). Paths are built then painted, and <code>clip()</code> constrains subsequent drawing to the current path.</p>
+        <p>A dashboard's most common canvas job is the generated avatar: when an employee has no photo, draw a colored circle with their initials, deriving a stable background color by hashing the name. Both examples below are fully runnable — an HTML editor supplies the <code>&lt;canvas&gt;</code> and a JS editor draws into it.</p>
+
+        <h3>Example: initials avatar on a hashed background color</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;canvas id="avatar" width="96" height="96"
+        style="border-radius:8px"&gt;&lt;/canvas&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const canvas = document.getElementById("avatar");
+const ctx = canvas.getContext("2d");
+
+// Stable color from a name: hash chars, map to an HSL hue.
+function colorFromName(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash << 5) - hash + name.charCodeAt(i);
+    hash |= 0; // force 32-bit int
+  }
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 60%, 45%)`;
+}
+
+function initials(name) {
+  return name.trim().split(/\s+/).slice(0, 2)
+    .map(w => w[0].toUpperCase()).join("");
+}
+
+function drawAvatar(name) {
+  const { width: w, height: h } = canvas;
+  ctx.clearRect(0, 0, w, h);
+
+  // Filled background rectangle in the hashed color
+  ctx.fillStyle = colorFromName(name);
+  ctx.fillRect(0, 0, w, h);
+
+  // Centered white initials
+  ctx.fillStyle = "#fff";
+  ctx.font = "600 40px system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(initials(name), w / 2, h / 2 + 2);
+}
+
+drawAvatar("Priya Rao");
+console.log("drew avatar for 'Priya Rao'");
+console.log("initials:", initials("Priya Rao"));       // "PR"
+console.log("bg color:", colorFromName("Priya Rao"));
+console.log("different name -> different color:", colorFromName("Sam Lee"));</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: circular clip with a gradient fill</h3>
+        <div class="example">
+          <div class="example-editor">
+            <div class="editor-tabs" role="tablist" aria-label="Editors">
+              <button type="button" class="editor-tab" role="tab" data-lang="html" aria-selected="true">HTML</button>
+              <button type="button" class="editor-tab" role="tab" data-lang="js" aria-selected="false">JS</button>
+            </div>
+            <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;canvas id="badge" width="120" height="120"&gt;&lt;/canvas&gt;</textarea>
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const canvas = document.getElementById("badge");
+const ctx = canvas.getContext("2d");
+const size = canvas.width;
+const r = size / 2;
+
+// 1. Define a circular path and CLIP to it: everything drawn after
+//    this is masked to the circle (a round avatar/badge).
+ctx.beginPath();
+ctx.arc(r, r, r, 0, Math.PI * 2);
+ctx.clip();
+
+// 2. Fill the clipped region with a diagonal gradient.
+const grad = ctx.createLinearGradient(0, 0, size, size);
+grad.addColorStop(0, "#4f46e5");
+grad.addColorStop(1, "#06b6d4");
+ctx.fillStyle = grad;
+ctx.fillRect(0, 0, size, size); // square fill, but clipped to the circle
+
+// 3. Draw a status glyph on top (still inside the clip).
+ctx.fillStyle = "rgba(255,255,255,0.95)";
+ctx.font = "600 44px system-ui, sans-serif";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+ctx.fillText("★", r, r + 2);
+
+console.log("clipped circle radius:", r);
+console.log("gradient stops: #4f46e5 -> #06b6d4");
+console.log("drawing outside the circle is now masked away");
+
+// devicePixelRatio-aware sizing (reference): on HiDPI screens, back the
+// canvas with dpr*CSS pixels and scale the context so text stays crisp.
+const dpr = window.devicePixelRatio || 1;
+console.log("devicePixelRatio here:", dpr,
+  "-> for crisp output set canvas.width = cssWidth * dpr and ctx.scale(dpr, dpr)");</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: Canvas is immediate-mode — it forgets what you drew, so you repaint every frame yourself. For HiDPI crispness set the backing store to <code>cssPixels × devicePixelRatio</code> and call <code>ctx.scale(dpr, dpr)</code>. Batch draws, avoid per-frame allocations, and reach for <code>OffscreenCanvas</code> in a worker for heavy rendering.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 19. GEOLOCATION API -->
+      <!-- ============================================================ -->
+      <section id="geolocation" class="concept" tabindex="-1">
+        <h2>Geolocation API</h2>
+        <p><code>navigator.geolocation.getCurrentPosition(success, error, options)</code> asks the device for a one-shot fix. The <code>success</code> callback receives a <code>GeolocationPosition</code> with <code>coords</code> (<code>latitude</code>, <code>longitude</code>, <code>accuracy</code>, and sometimes <code>altitude</code>/<code>heading</code>/<code>speed</code>) and a <code>timestamp</code>; the <code>error</code> callback receives a <code>GeolocationPositionError</code> whose <code>code</code> is <code>PERMISSION_DENIED</code> (1), <code>POSITION_UNAVAILABLE</code> (2), or <code>TIMEOUT</code> (3). The <code>options</code> object accepts <code>enableHighAccuracy</code>, <code>timeout</code>, and <code>maximumAge</code>. For live tracking, <code>watchPosition</code> returns an id you later pass to <code>clearWatch</code>.</p>
+        <p>Geolocation requires a secure context and explicit user permission, and the sandboxed preview cannot grant it — the call errors out. So each example feature-detects, supplies an error handler, and falls back to a mock position, guaranteeing visible output. On a real HTTPS page the same code prompts the user and returns their true coordinates.</p>
+
+        <h3>Example: callback form with error handling and mock fallback</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// A mock position shaped like a real GeolocationPosition.
+const MOCK_POSITION = {
+  coords: { latitude: 37.7749, longitude: -122.4194, accuracy: 25 },
+  timestamp: Date.now()
+};
+
+function showPosition(pos, source) {
+  const { latitude, longitude, accuracy } = pos.coords;
+  console.log(`[${source}] lat ${latitude}, lng ${longitude} (±${accuracy}m)`);
+}
+
+function locate() {
+  if (!("geolocation" in navigator)) {
+    console.log("geolocation unsupported — using mock");
+    return showPosition(MOCK_POSITION, "mock");
+  }
+  navigator.geolocation.getCurrentPosition(
+    (pos) => showPosition(pos, "real"),
+    (err) => {
+      // err is a GeolocationPositionError: code + message
+      const reason = { 1: "PERMISSION_DENIED", 2: "POSITION_UNAVAILABLE", 3: "TIMEOUT" };
+      console.log("geolocation error:", reason[err.code] || err.code, "-", err.message);
+      console.log("falling back to mock position");
+      showPosition(MOCK_POSITION, "mock");
+    },
+    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+  );
+}
+
+locate(); // in the sandbox this hits the error/fallback path</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: Promise-wrapped getCurrentPosition with async/await</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Wrap the callback API in a Promise so it composes with async/await.
+function getPosition(options) {
+  return new Promise((resolve, reject) => {
+    if (!("geolocation" in navigator)) {
+      return reject(new Error("geolocation unsupported"));
+    }
+    navigator.geolocation.getCurrentPosition(resolve, reject, options);
+  });
+}
+
+const MOCK_POSITION = {
+  coords: { latitude: 51.5074, longitude: -0.1278, accuracy: 40 },
+  timestamp: Date.now()
+};
+
+async function whereAmI() {
+  try {
+    const pos = await getPosition({ timeout: 5000, maximumAge: 60000 });
+    console.log("real fix:", pos.coords.latitude, pos.coords.longitude);
+    return pos;
+  } catch (err) {
+    // Covers unsupported, denied, unavailable, and timeout uniformly
+    console.log("could not get real position:", err.message);
+    console.log("using mock:", MOCK_POSITION.coords.latitude, MOCK_POSITION.coords.longitude);
+    return MOCK_POSITION;
+  }
+}
+
+whereAmI().then((pos) =>
+  console.log("resolved coords accuracy: ±" + pos.coords.accuracy + "m"));
+
+// watchPosition / clearWatch (reference): continuous tracking
+// const id = navigator.geolocation.watchPosition(onMove, onErr, opts);
+// later: navigator.geolocation.clearWatch(id);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: Geolocation only works in a secure context (HTTPS or <code>localhost</code>) and always requires explicit user permission — the browser prompts on first use and the request can be denied at any time. Never block core functionality on it; treat a location as an optional enhancement with a sensible fallback, exactly as above.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 20. WEBSOCKET API -->
+      <!-- ============================================================ -->
+      <section id="websockets" class="concept" tabindex="-1">
+        <h2>WebSocket API</h2>
+        <p>A <code>WebSocket</code> opens a persistent, full-duplex channel over a single TCP connection — ideal for a dashboard's real-time feed of events like "New employee added…". You construct one with <code>new WebSocket("wss://host/path")</code> and react to four events: <code>open</code>, <code>message</code> (its <code>data</code> is usually a JSON string you <code>JSON.parse</code>), <code>close</code>, and <code>error</code>. You push data with <code>send()</code>, inspect the connection through <code>readyState</code> (<code>CONNECTING</code> 0, <code>OPEN</code> 1, <code>CLOSING</code> 2, <code>CLOSED</code> 3), and shut down with <code>close()</code>.</p>
+        <p>A sandbox cannot open a real socket, so these examples use a <code>MockSocket</code> that mirrors the interface — <code>addEventListener</code>, <code>send</code>, <code>close</code>, <code>readyState</code> — and emits fake messages via <code>setTimeout</code>. The real <code>new WebSocket("wss://…")</code> usage is shown as reference; swapping the mock for it changes one line.</p>
+
+        <h3>Example: subscribe to mock messages</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// MockSocket mirrors the real WebSocket surface but emits canned
+// messages offline. Real usage: const ws = new WebSocket("wss://api.example.com/live");
+class MockSocket {
+  constructor(url) {
+    this.url = url;
+    this.readyState = 0; // CONNECTING
+    this._listeners = {};
+    // "Connect" then stream a few fake events.
+    setTimeout(() => {
+      this.readyState = 1; // OPEN
+      this._emit("open", {});
+      const events = [
+        { type: "employee_added", name: "Priya Rao" },
+        { type: "employee_added", name: "Sam Lee" },
+        { type: "status_changed", name: "Jo Kim", status: "on leave" }
+      ];
+      events.forEach((payload, i) =>
+        setTimeout(() => this._emit("message", { data: JSON.stringify(payload) }), (i + 1) * 60)
+      );
+    }, 40);
+  }
+  addEventListener(type, fn) { (this._listeners[type] ||= []).push(fn); }
+  send(data) { console.log("client -> server:", data); }
+  close() { this.readyState = 3; this._emit("close", { code: 1000 }); }
+  _emit(type, ev) { (this._listeners[type] || []).forEach((fn) => fn(ev)); }
+}
+
+const ws = new MockSocket("wss://api.example.com/live");
+
+ws.addEventListener("open", () => {
+  console.log("socket open, readyState =", ws.readyState); // 1
+  ws.send(JSON.stringify({ subscribe: "employees" }));
+});
+ws.addEventListener("message", (ev) => {
+  const msg = JSON.parse(ev.data);
+  if (msg.type === "employee_added") console.log("New employee added:", msg.name);
+  else console.log("update:", msg.name, "->", msg.status);
+});
+ws.addEventListener("close", (ev) => console.log("socket closed, code", ev.code));
+
+// Close after the burst has been delivered
+setTimeout(() => ws.close(), 300);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a reconnecting wrapper with exponential backoff</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// A mock whose first two connection attempts fail (immediate close, no
+// open), then the third succeeds and STAYS open — the classic shape that
+// exercises reconnect-with-backoff and then stops.
+let globalTry = 0;
+class FlakySocket {
+  constructor(url) {
+    this.readyState = 0; // CONNECTING
+    this._listeners = {};
+    const willSucceed = ++globalTry >= 3;
+    setTimeout(() => {
+      if (willSucceed) {
+        this.readyState = 1; // OPEN — and it stays open
+        this._emit("open", {});
+        this._emit("message", { data: JSON.stringify({ type: "employee_added", name: "Ada L." }) });
+      } else {
+        this.readyState = 3; // CLOSED before ever opening
+        this._emit("close", { code: 1006 }); // abnormal closure
+      }
+    }, 20);
+  }
+  addEventListener(type, fn) { (this._listeners[type] ||= []).push(fn); }
+  close() { this.readyState = 3; }
+  _emit(type, ev) { (this._listeners[type] || []).forEach((fn) => fn(ev)); }
+}
+
+function connectWithBackoff(url, { maxRetries = 5, baseDelay = 50, maxDelay = 800 } = {}) {
+  let attempt = 0;
+  const open = () => {
+    console.log("connecting… attempt", attempt + 1);
+    const ws = new FlakySocket(url); // real code: new WebSocket(url)
+    ws.addEventListener("open", () => {
+      attempt = 0;               // reset backoff once actually connected
+      console.log("connected — backoff reset");
+    });
+    ws.addEventListener("message", (ev) =>
+      console.log("New employee added:", JSON.parse(ev.data).name));
+    ws.addEventListener("close", () => {
+      if (attempt >= maxRetries) { console.log("giving up after", attempt, "retries"); return; }
+      const delay = Math.min(baseDelay * 2 ** attempt, maxDelay); // exponential, capped
+      attempt++;
+      console.log(`closed — reconnecting in ${delay}ms (retry ${attempt})`);
+      setTimeout(open, delay);
+    });
+  };
+  open();
+}
+
+// Expected: attempt 1 fails, wait 50ms; attempt 2 fails, wait 100ms;
+// attempt 3 connects and delivers the message — no further retries.
+connectWithBackoff("wss://api.example.com/live");</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: the real WebSocket (reference)</h3>
+        <pre class="code-block" data-lang="js"><code>const ws = new WebSocket("wss://api.example.com/live");
+
+ws.addEventListener("open", () =&gt; ws.send(JSON.stringify({ subscribe: "employees" })));
+ws.addEventListener("message", (ev) =&gt; {
+  const msg = JSON.parse(ev.data);
+  if (msg.type === "employee_added") renderNewEmployee(msg);
+});
+ws.addEventListener("close", (ev) =&gt; console.log("closed", ev.code, ev.reason));
+ws.addEventListener("error", () =&gt; console.log("socket error"));
+
+// Heartbeat: ping periodically so proxies don't drop an idle connection.
+setInterval(() =&gt; { if (ws.readyState === WebSocket.OPEN) ws.send("ping"); }, 30000);</code></pre>
+        <div class="sim-output" role="status"><strong>Result:</strong> against a live server this streams events as they happen with near-zero latency and no polling. Swapping <code>MockSocket</code>/<code>FlakySocket</code> for <code>new WebSocket(url)</code> is the only change — the event wiring is identical.</div>
+        <p class="note note-compat">Note: Always use the secure <code>wss://</code> scheme in production (plain <code>ws://</code> is blocked from HTTPS pages). Servers and proxies drop idle sockets, so send periodic heartbeat pings, and pair every socket with reconnect-and-backoff logic — networks and load balancers close connections routinely.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 21. THIS & FUNCTION BINDING -->
+      <!-- ============================================================ -->
+      <section id="this-and-binding" class="concept" tabindex="-1">
+        <h2>this &amp; function binding</h2>
+        <p>The value of <code>this</code> is determined by <em>how a function is called</em>, not where it is defined. Four rules resolve it, in ascending precedence: <strong>default</strong> (a standalone call — <code>undefined</code> in strict mode, the global object in sloppy mode), <strong>implicit</strong> (<code>obj.method()</code> binds <code>this</code> to <code>obj</code>), <strong>explicit</strong> (<code>fn.call</code>/<code>apply</code>/<code>bind</code> set it directly), and <strong>new</strong> (constructing binds <code>this</code> to the fresh instance).</p>
+        <p>Arrow functions ignore all four rules: they have no <code>this</code> of their own and close over the <code>this</code> of the enclosing lexical scope, so they cannot be rebound by <code>call</code>/<code>apply</code>/<code>bind</code>. The most common bug is the <em>lost <code>this</code></em>: extracting a method (<code>const f = obj.method</code>) detaches it from its receiver, so calling <code>f()</code> loses <code>obj</code>. Fix it with <code>.bind(obj)</code>, an arrow wrapper, or a class-field arrow.</p>
+
+        <h3>Example: the four binding rules side by side</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">"use strict";
+function whoAmI() {
+  return this === undefined ? "undefined (default/strict)"
+       : this === globalThis ? "globalThis"
+       : this.tag || "some object";
+}
+
+// 1. DEFAULT: standalone call -> undefined in strict mode
+console.log("default :", whoAmI());
+
+// 2. IMPLICIT: called as a method -> the receiver object
+const obj = { tag: "obj", whoAmI };
+console.log("implicit:", obj.whoAmI());
+
+// 3. EXPLICIT: call/apply/bind set `this` directly
+console.log("explicit:", whoAmI.call({ tag: "explicit" }));
+
+// 4. NEW: constructing binds `this` to the fresh instance
+function Widget() { this.tag = "new-instance"; this.report = whoAmI; }
+console.log("new     :", new Widget().report());
+
+// Precedence: new/explicit beat implicit beat default.</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: the lost-this bug, fixed three ways</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">class Timer {
+  constructor(label) {
+    this.label = label;
+    // FIX 3: a class field arrow captures `this` at construction time
+    this.tickArrow = () => console.log("arrow field  :", this.label);
+  }
+  tick() { console.log("plain method :", this.label); }
+}
+
+const t = new Timer("BOUND");
+
+// THE BUG: extracting the method drops its receiver.
+const broken = t.tick;
+try { broken(); } catch (e) { console.log("bug          :", e.constructor.name, "- lost this"); }
+
+// FIX 1: .bind pins the receiver permanently
+setTimeout(t.tick.bind(t), 0);
+
+// FIX 2: an arrow wrapper preserves the call site `obj.method()`
+setTimeout(() => t.tick(), 0);
+
+// FIX 3: the class-field arrow is already bound
+setTimeout(t.tickArrow, 0);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: call vs apply, method borrowing, and partial application</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// call passes args one by one; apply passes them as an array.
+function greet(greeting, punctuation) {
+  return `${greeting}, ${this.name}${punctuation}`;
+}
+const person = { name: "Ada" };
+console.log(greet.call(person, "Hi", "!"));        // args spread
+console.log(greet.apply(person, ["Hello", "."]));  // args as array
+
+// Method borrowing: use Array.prototype on an array-like object
+function collect() {
+  // `arguments` is array-like, not a real array
+  const asArray = Array.prototype.slice.call(arguments);
+  return asArray.map((x) => x * 2);
+}
+console.log("borrowed slice:", collect(1, 2, 3)); // [2, 4, 6]
+
+// Partial application: bind pre-fills leading arguments
+function log(level, message) { return `[${level}] ${message}`; }
+const warn = log.bind(null, "WARN");   // `this` unused, level fixed
+const error = log.bind(null, "ERROR");
+console.log(warn("disk almost full"));
+console.log(error("connection refused"));</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: In DOM event handlers a non-arrow listener sees <code>this === event.currentTarget</code>, while an arrow closes over the surrounding <code>this</code>. In a <code>setTimeout</code> callback a plain function's <code>this</code> defaults to <code>undefined</code>/global — reach for an arrow or <code>bind</code> to keep your intended receiver.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 22. PROTOTYPES & CLASSES -->
+      <!-- ============================================================ -->
+      <section id="prototypes-and-classes" class="concept" tabindex="-1">
+        <h2>Prototypes &amp; classes</h2>
+        <p>Every object has an internal link to a <em>prototype</em> object; property lookups that miss on the object itself walk up this <em>prototype chain</em> until they hit a match or reach <code>null</code>. <code>Object.getPrototypeOf(obj)</code> reads the link and <code>Object.create(proto)</code> makes a new object with a chosen prototype. This delegation is the whole object model — <code>class</code> syntax is sugar over it.</p>
+        <p>A <code>class</code> body holds a <code>constructor</code>, prototype methods (shared by all instances), <code>get</code>/<code>set</code> accessors, <code>static</code> members and <code>static</code> blocks, and <code>#private</code> fields/methods that enforce <em>hard</em> privacy the runtime guarantees (unlike closure privacy). <code>extends</code> sets up the prototype chain between subclass and superclass, and <code>super</code> calls the parent constructor or method. <code>instanceof</code> asks whether a constructor's <code>prototype</code> appears anywhere on an object's chain.</p>
+
+        <h3>Example: a class with getters, statics, private fields, and a subclass</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">class Animal {
+  #energy = 100;                       // truly private hard field
+  static #count = 0;                   // private static
+  static { Animal.#count = 0; }        // static initialization block
+  constructor(name) { this.name = name; Animal.#count++; }
+  get energy() { return this.#energy; }        // read-only accessor
+  set energy(v) { this.#energy = Math.max(0, v); }
+  speak() { return `${this.name} makes a sound`; }
+  static popularName() { return "Rex"; }       // static factory-ish helper
+  static get created() { return Animal.#count; }
+}
+
+class Dog extends Animal {
+  constructor(name) { super(name); }           // must call super first
+  speak() { return `${super.speak()} — woof!`; } // override + super call
+}
+
+const d = new Dog("Fido");
+console.log(d.speak());                 // overridden, calls super
+d.energy = -50;                         // setter clamps
+console.log("energy:", d.energy);       // 0
+console.log("instanceof Dog:", d instanceof Dog);       // true
+console.log("instanceof Animal:", d instanceof Animal); // true (chain)
+console.log("created:", Animal.created, "| default:", Animal.popularName());</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: closure factory vs class — privacy and shared methods</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// A: closure factory — privacy via scope, methods per-instance
+function makePoint(x, y) {
+  return { dist() { return Math.hypot(x, y); } }; // new fn each call
+}
+const p1 = makePoint(3, 4), p2 = makePoint(6, 8);
+console.log("factory dist:", p1.dist(), p2.dist()); // 5 10
+console.log("methods shared?", p1.dist === p2.dist); // false — separate
+
+// B: class — privacy via #fields, ONE method on the prototype
+class Point {
+  #x; #y;
+  constructor(x, y) { this.#x = x; this.#y = y; }
+  dist() { return Math.hypot(this.#x, this.#y); }
+}
+const q1 = new Point(3, 4), q2 = new Point(6, 8);
+console.log("class dist:", q1.dist(), q2.dist()); // 5 10
+console.log("methods shared?", q1.dist === q2.dist); // true — prototype
+console.log("q1 instanceof Point:", q1 instanceof Point); // true
+console.log("#x leaked?", Object.keys(q1)); // [] — nothing enumerable</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: the raw prototype chain with Object.create, plus mixins</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Delegation by hand: base <- derived, lookup walks up the chain.
+const base = { kind: "shape", describe() { return `a ${this.kind}`; } };
+const circle = Object.create(base);       // circle's prototype IS base
+circle.kind = "circle";
+circle.radius = 4;
+
+console.log(circle.describe());           // "a circle" — method from base
+console.log("own describe?", circle.hasOwnProperty("describe")); // false
+console.log("proto is base?", Object.getPrototypeOf(circle) === base); // true
+console.log("own radius?", circle.hasOwnProperty("radius"));     // true
+
+// Mixins: compose behavior without inheritance via Object.assign
+const serializable = { toJSON() { return JSON.stringify({ ...this }); } };
+const comparable = { equals(o) { return this.id === o.id; } };
+class Record { constructor(id) { this.id = id; } }
+Object.assign(Record.prototype, serializable, comparable);
+
+const a = new Record(1), b = new Record(1);
+console.log("equals:", a.equals(b));      // true (from comparable mixin)
+console.log("json  :", a.toJSON());       // from serializable mixin</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: Prototype methods are shared by reference — thousands of instances hold one copy, which is why classes are more memory-efficient than closure factories that mint a fresh function per instance. Use <code>#private</code> fields for invariants the runtime must enforce; use closures when you need privacy without a class.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 23. ERROR HANDLING -->
+      <!-- ============================================================ -->
+      <section id="error-handling" class="concept" tabindex="-1">
+        <h2>Error handling</h2>
+        <p><code>throw</code> raises any value, but you should throw <code>Error</code> objects so callers get a <code>.name</code>, <code>.message</code>, and a <code>.stack</code>. <code>try</code> runs guarded code, <code>catch</code> handles a throw, and <code>finally</code> <em>always</em> runs — even when <code>try</code> or <code>catch</code> executes a <code>return</code>. The built-in hierarchy (<code>TypeError</code>, <code>RangeError</code>, <code>SyntaxError</code>, …) all extend <code>Error</code>, so <code>instanceof Error</code> catches them all while <code>instanceof TypeError</code> narrows.</p>
+        <p>Define domain errors as subclasses (<code>class ValidationError extends Error</code>), set <code>this.name</code>, and chain root causes with the <code>{ cause }</code> option. Async code propagates failures as rejected promises: <code>try/catch</code> around <code>await</code> and a trailing <code>.catch()</code> are equivalent. Unhandled rejections surface on the global <code>unhandledrejection</code> event; <code>Promise.any</code> aggregates all rejections into an <code>AggregateError</code>.</p>
+
+        <h3>Example: a custom ValidationError with a field and cause</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">class ValidationError extends Error {
+  constructor(message, field, options) {
+    super(message, options);      // forwards { cause } to Error
+    this.name = "ValidationError";
+    this.field = field;
+  }
+}
+
+function validateAge(input) {
+  const n = Number(input);
+  if (Number.isNaN(n)) {
+    // wrap the low-level cause while adding domain context
+    throw new ValidationError("age must be numeric", "age",
+      { cause: new TypeError(`got ${typeof input}: ${input}`) });
+  }
+  if (n < 0) throw new ValidationError("age cannot be negative", "age");
+  return n;
+}
+
+for (const input of ["abc", -3, 42]) {
+  try {
+    console.log("valid:", validateAge(input));
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      console.log(`invalid [${err.field}]: ${err.message}`);
+      if (err.cause) console.log("   caused by:", err.cause.message);
+    } else {
+      throw err;                  // rethrow unexpected errors
+    }
+  }
+}</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: finally on return, and async errors as rejections</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// finally runs even when try AND catch return.
+function withCleanup(fail) {
+  try {
+    if (fail) throw new Error("boom");
+    return "try-return";
+  } catch (e) {
+    return "catch-return";
+  } finally {
+    console.log("finally ran (cleanup always happens)");
+  }
+}
+console.log("result:", withCleanup(false)); // finally logs, then "try-return"
+console.log("result:", withCleanup(true));  // finally logs, then "catch-return"
+
+// A throw inside an async function becomes a rejected promise.
+async function loadThatFails() {
+  throw new RangeError("out of bounds");
+}
+// .catch and try/catch-around-await are equivalent ways to handle it:
+loadThatFails().catch((e) => console.log(".catch saw:", e.name, e.message));
+(async () => {
+  try { await loadThatFails(); }
+  catch (e) { console.log("await try/catch saw:", e.name); }
+})();</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: Promise.any and AggregateError</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const reject = (ms, msg) =>
+  new Promise((_, rej) => setTimeout(() => rej(new Error(msg)), ms));
+
+async function demo() {
+  // Promise.any resolves with the FIRST fulfillment; if ALL reject,
+  // it throws an AggregateError collecting every reason.
+  try {
+    await Promise.any([
+      reject(20, "mirror-1 down"),
+      reject(10, "mirror-2 down"),
+      reject(30, "mirror-3 down")
+    ]);
+  } catch (err) {
+    console.log("is AggregateError:", err instanceof AggregateError);
+    console.log("collected reasons:", err.errors.map((e) => e.message));
+  }
+
+  // With one success, Promise.any resolves and ignores the failures.
+  const ok = await Promise.any([
+    reject(10, "down"),
+    Promise.resolve("mirror-4 OK")
+  ]);
+  console.log("first success:", ok);
+}
+demo();</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: Distinguish <em>expected</em> errors (invalid input, a missing file — handle and recover) from <em>programmer</em> errors (a <code>TypeError</code> from a bug — let it crash loudly in development). Catch narrowly with <code>instanceof</code>, rethrow what you cannot handle, and wrap low-level failures with <code>{ cause }</code> so the original stack is not lost.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 24. ITERATORS & GENERATORS -->
+      <!-- ============================================================ -->
+      <section id="iterators-and-generators" class="concept" tabindex="-1">
+        <h2>Iterators &amp; generators</h2>
+        <p>An object is <em>iterable</em> if it has a <code>[Symbol.iterator]()</code> method returning an <em>iterator</em> — an object with a <code>next()</code> that yields <code>{ value, done }</code>. Implementing this protocol makes your type work with <code>for…of</code>, spread <code>[...x]</code>, array destructuring, <code>Array.from</code>, and the <code>Map</code>/<code>Set</code> constructors. These built-ins never special-case arrays; they simply consume the iterator protocol.</p>
+        <p>Generator functions (<code>function*</code>) build iterators for you: each <code>yield</code> produces a value and suspends until the next <code>next()</code>, enabling lazy and even infinite sequences. <code>yield*</code> delegates to another iterable and can capture its return value. <em>Async</em> generators pair <code>yield</code> with <code>await</code> and are consumed by <code>for await…of</code>, the natural fit for paginated or streamed data.</p>
+
+        <h3>Example: range as a hand-written iterator and as a generator</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// (A) Hand-written iterator object implementing the protocol.
+function rangeIter(start, end, step = 1) {
+  let current = start;
+  return {
+    [Symbol.iterator]() { return this; }, // make it iterable too
+    next() {
+      if (current < end) { const value = current; current += step; return { value, done: false }; }
+      return { value: undefined, done: true };
+    }
+  };
+}
+
+// (B) The same thing as a generator — far less boilerplate.
+function* rangeGen(start, end, step = 1) {
+  for (let i = start; i < end; i += step) yield i;
+}
+
+console.log("iterator for..of:", [...(function () {
+  const out = []; for (const n of rangeIter(0, 10, 2)) out.push(n); return out;
+})()]);                                    // [0, 2, 4, 6, 8]
+console.log("generator spread:", [...rangeGen(0, 10, 2)]); // [0, 2, 4, 6, 8]
+console.log("Array.from:", Array.from(rangeGen(1, 4)));    // [1, 2, 3]</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: an infinite generator consumed lazily, plus yield*</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Infinite sequence — values computed only on demand.
+function* fibonacci() {
+  let [a, b] = [0, 1];
+  while (true) { yield a; [a, b] = [b, a + b]; }
+}
+
+// take(n) pulls the first n values without running forever.
+function take(iterable, n) {
+  const out = [];
+  for (const value of iterable) {
+    out.push(value);
+    if (out.length === n) break; // stop -> generator suspends, never completes
+  }
+  return out;
+}
+console.log("first 10 fib:", take(fibonacci(), 10));
+
+// yield* delegates to another iterable and can return a final value.
+function* chain() {
+  yield* [1, 2];        // delegate to an array
+  const last = yield* count();
+  console.log("inner returned:", last);
+}
+function* count() { yield 3; yield 4; return "done-counting"; }
+console.log("chained:", [...chain()]); // [1, 2, 3, 4]  (+ logs the return)</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: a custom iterable class and an async generator</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Make a LinkedList iterable so it spreads and works with for..of.
+class LinkedList {
+  #head = null; #tail = null;
+  push(value) {
+    const node = { value, next: null };
+    if (this.#tail) this.#tail.next = node; else this.#head = node;
+    this.#tail = node;
+    return this;
+  }
+  *[Symbol.iterator]() {           // generator method = the iterator
+    for (let n = this.#head; n; n = n.next) yield n.value;
+  }
+}
+const list = new LinkedList().push("a").push("b").push("c");
+console.log("spread list:", [...list]);           // ["a", "b", "c"]
+const [first, ...rest] = list;                    // destructuring works too
+console.log("destructured:", first, rest);
+
+// Async generator: yields "pages" over time; consumed with for-await-of.
+async function* pages(total) {
+  for (let p = 1; p <= total; p++) {
+    await new Promise((r) => setTimeout(r, 30));   // simulate a fetch
+    yield { page: p, items: [`item-${p}a`, `item-${p}b`] };
+  }
+}
+(async () => {
+  for await (const { page, items } of pages(3)) {
+    console.log(`page ${page}:`, items.join(", "));
+  }
+  console.log("all pages streamed");
+})();</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: Generators are lazy — an infinite sequence costs nothing until you pull values, and stopping a <code>for…of</code> early suspends the generator instead of running it to completion. This makes them ideal for streaming pipelines where materializing the whole dataset would be wasteful or impossible.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 25. REGULAR EXPRESSIONS -->
+      <!-- ============================================================ -->
+      <section id="regular-expressions" class="concept" tabindex="-1">
+        <h2>Regular expressions</h2>
+        <p>A regex is written as a literal (<code>/pattern/flags</code>) or built dynamically with <code>new RegExp(string, flags)</code> — use the constructor when the pattern comes from data. Flags tune behavior: <code>g</code> (all matches), <code>i</code> (case-insensitive), <code>m</code> (<code>^</code>/<code>$</code> match per line), <code>s</code> (<code>.</code> matches newlines), <code>u</code> (Unicode), and <code>y</code> (sticky, anchored at <code>lastIndex</code>).</p>
+        <p>Patterns combine character classes (<code>\d</code>, <code>[a-z]</code>), quantifiers (<code>*</code>, <code>+</code>, <code>{2,4}</code>), anchors (<code>^</code>, <code>$</code>, <code>\b</code>), and alternation (<code>a|b</code>). Groups capture (<code>(…)</code>), name captures (<code>(?&lt;year&gt;…)</code>), and backreference (<code>\1</code>). Lookaround asserts without consuming: lookahead <code>(?=…)</code>/<code>(?!…)</code> and lookbehind <code>(?&lt;=…)</code>/<code>(?&lt;!…)</code>. Extract with <code>test</code>, <code>exec</code>, <code>match</code>, and <code>matchAll</code>; transform with <code>replace</code>/<code>replaceAll</code>.</p>
+
+        <h3>Example: named groups for parsing a date</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Named capture groups make the result self-documenting.
+const dateRe = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})$/;
+
+const m = "2026-07-05".match(dateRe);
+console.log("matched:", m !== null);
+console.log("groups:", m.groups);          // { year, month, day }
+const { year, month, day } = m.groups;
+console.log(`Y=${year} M=${month} D=${day}`);
+
+// test() just returns a boolean; anchors ^…$ force a full match.
+console.log("valid full:", dateRe.test("2026-07-05")); // true
+console.log("has junk  :", dateRe.test("x 2026-07-05")); // false
+
+// A backreference: match a doubled word like "the the".
+const dupe = /\b(\w+)\s+\1\b/i;
+console.log("dup found:", dupe.test("the the cat")); // true (\1 = group 1)</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: matchAll for every hashtag, and a replace callback</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const post = "Loving #JavaScript and #WebDev — more #JavaScript soon!";
+
+// matchAll (needs the g flag) yields each match with its index & groups.
+const tagRe = /#(?<tag>\w+)/g;
+for (const m of post.matchAll(tagRe)) {
+  console.log(`${m[0]} (tag="${m.groups.tag}") at index ${m.index}`);
+}
+
+// Mask emails: keep first letter of the local part and the whole domain.
+const emailRe = /([a-z])[a-z0-9._%+-]*(@[a-z0-9.-]+)/gi;
+const masked = "reach me at ada@site.io or grace@lab.dev".replace(
+  emailRe,
+  (whole, first, domain) => `${first}***${domain}`
+);
+console.log("masked:", masked);
+
+// replaceAll with a literal string (no regex needed for plain swaps).
+console.log("path:", "a/b/c".replaceAll("/", " › "));</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: lookahead password rules and escaping dynamic input</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Each (?=...) is a lookahead: an assertion that consumes nothing.
+//   (?=.*\d)     -> somewhere ahead there is a digit
+//   (?=.*[A-Z])  -> somewhere ahead there is an uppercase letter
+//   .{8,}        -> and the whole string is at least 8 chars
+const strong = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
+for (const pw of ["short1A", "alllowercase9", "GoodPass9"]) {
+  console.log(`${pw.padEnd(14)} -> ${strong.test(pw)}`);
+}
+
+// Building a regex from user input: escape regex metacharacters first,
+// or "a.b" would match "aXb". This makes literal, safe dynamic patterns.
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+function containsLiteral(haystack, needle) {
+  return new RegExp(escapeRegex(needle), "i").test(haystack);
+}
+console.log('literal "a.b" in "a.b":', containsLiteral("x a.b y", "a.b")); // true
+console.log('literal "a.b" in "aXb":', containsLiteral("aXb", "a.b"));     // false</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note note-perf">Note: A stateful <code>g</code>/<code>y</code> regex carries a mutable <code>lastIndex</code>, so reusing the same literal across calls to <code>test</code>/<code>exec</code> can skip matches — prefer <code>matchAll</code> or create a fresh regex per scan. Beware catastrophic backtracking: nested quantifiers like <code>(a+)+</code> on non-matching input can hang; keep patterns unambiguous.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 26. OBJECT MODEL & IMMUTABILITY -->
+      <!-- ============================================================ -->
+      <section id="object-model-immutability" class="concept" tabindex="-1">
+        <h2>The object model &amp; immutability</h2>
+        <p>Every property has a <em>descriptor</em>. Data properties carry <code>value</code>, <code>writable</code>, <code>enumerable</code>, and <code>configurable</code>; accessor properties replace <code>value</code>/<code>writable</code> with <code>get</code>/<code>set</code>. <code>Object.defineProperty</code> creates them with full control (defaults are all <code>false</code>), and <code>Object.getOwnPropertyDescriptor(s)</code> reads them back. Enumerability governs whether a key shows up in <code>for…in</code>, spread, <code>Object.keys</code>, and <code>JSON.stringify</code>.</p>
+        <p>Three levels of lockdown exist: <code>Object.preventExtensions</code> (no new props), <code>Object.seal</code> (also no delete/reconfigure), and <code>Object.freeze</code> (also no writes). All three are <em>shallow</em> — nested objects remain mutable, so deep immutability needs a recursive helper. For value-level transformations, pair <code>Object.entries</code>/<code>fromEntries</code> with array methods to rebuild objects immutably, and use <code>Object.getOwnPropertyDescriptors</code> for a faithful clone that preserves accessors.</p>
+
+        <h3>Example: a non-enumerable read-only property</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const config = { name: "widget" };
+
+// defineProperty defaults every flag to false unless you set it.
+Object.defineProperty(config, "secret", {
+  value: "42",
+  writable: false,      // cannot be reassigned
+  enumerable: false,    // hidden from keys/spread/JSON
+  configurable: false   // cannot be deleted or redefined
+});
+
+console.log("readable:", config.secret);                 // "42" — still readable
+console.log("keys:", Object.keys(config));               // ["name"] — secret hidden
+console.log("JSON:", JSON.stringify(config));            // {"name":"widget"}
+console.log("spread:", { ...config });                   // { name: "widget" }
+
+const d = Object.getOwnPropertyDescriptor(config, "secret");
+console.log("descriptor:", d);   // { value:"42", writable:false, ... }
+
+config.secret = "hacked";        // silently ignored (throws in strict mode)
+console.log("after write attempt:", config.secret); // still "42"</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: freeze is shallow — and a deep-freeze helper</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">const state = { level: 1, nested: { hp: 100 } };
+Object.freeze(state);
+
+state.level = 99;            // top level: blocked
+state.nested.hp = 0;        // nested: STILL MUTABLE — freeze is shallow!
+console.log("shallow freeze:", state.level, state.nested.hp); // 1 0
+
+// Deep freeze: recurse over nested objects.
+function deepFreeze(obj) {
+  for (const key of Object.keys(obj)) {
+    const v = obj[key];
+    if (v && typeof v === "object") deepFreeze(v);
+  }
+  return Object.freeze(obj);
+}
+const locked = deepFreeze({ level: 1, nested: { hp: 100 } });
+locked.nested.hp = 0;       // now blocked too
+console.log("deep freeze:", locked.nested.hp);            // 100
+console.log("isFrozen nested:", Object.isFrozen(locked.nested)); // true</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+
+        <h3>Example: immutable key transform and a computed accessor</h3>
+        <div class="example">
+          <div class="example-editor">
+            <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// entries -> map -> fromEntries: rebuild an object with renamed keys,
+// never mutating the source.
+const raw = { first_name: "Ada", last_name: "Lovelace", born: 1815 };
+const camel = Object.fromEntries(
+  Object.entries(raw).map(([k, v]) => [
+    k.replace(/_([a-z])/g, (_, c) => c.toUpperCase()), v
+  ])
+);
+console.log("renamed:", camel);   // { firstName, lastName, born }
+console.log("source untouched:", Object.keys(raw)[0]); // "first_name"
+
+// A computed accessor defined via a descriptor reads like a plain field.
+const user = { first: "Grace", last: "Hopper" };
+Object.defineProperty(user, "fullName", {
+  get() { return `${this.first} ${this.last}`; },
+  enumerable: true
+});
+console.log("fullName:", user.fullName); // "Grace Hopper" — no parentheses
+user.first = "Rear Admiral Grace";
+console.log("recomputed:", user.fullName);</textarea>
+            <div class="example-actions">
+              <button type="button" class="run-btn">Run</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </div>
+          <div class="example-preview">
+            <iframe class="preview" title="Live preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+          </div>
+        </div>
+        <p class="note">Note: A plain spread <code>{ ...obj }</code> or <code>Object.assign</code> copies only enumerable data properties and <em>invokes</em> getters, flattening them to values. To clone an object faithfully — accessors, non-enumerable props, and all flags intact — use <code>Object.create(Object.getPrototypeOf(obj), Object.getOwnPropertyDescriptors(obj))</code>.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 27. MORE TOPICS (deferred gaps — line-budget overflow) -->
+      <!-- ============================================================ -->
+      <section id="more-topics" class="concept" tabindex="-1">
+        <h2>More topics</h2>
+        <p>The concepts below are confirmed gaps that could not be expanded into full runnable sections without exceeding this page's size budget. Each entry gives the topic, a one-line summary of what to learn, and the existing section it builds on. They are ordered by priority so the highest-value follow-ups come first.</p>
+        <ul>
+          <li><strong>Symbols &amp; well-known symbols</strong> — Unique, non-colliding property keys (<code>Symbol()</code>, the <code>Symbol.for</code> global registry) that are skipped by <code>for…in</code>/<code>Object.keys</code>/<code>JSON</code> but found via <code>Object.getOwnPropertySymbols</code>; well-known symbols (<code>Symbol.iterator</code>, <code>Symbol.asyncIterator</code>, <code>Symbol.toPrimitive</code>, <code>Symbol.toStringTag</code>, <code>Symbol.hasInstance</code>) hook into language operators. <em>Builds on</em> <a href="#iterators-and-generators">Iterators &amp; generators</a> (which already uses <code>Symbol.iterator</code>) and <a href="#object-model-immutability">the object model</a>.</li>
+          <li><strong>Proxy &amp; Reflect</strong> — <code>new Proxy(target, handler)</code> intercepts operations via traps (<code>get</code>, <code>set</code>, <code>has</code>, <code>deleteProperty</code>, <code>ownKeys</code>, <code>apply</code>, <code>construct</code>); <code>Reflect</code> performs the default operation inside a trap. Underpins validation objects, reactive stores (re-render on <code>set</code>), logging wrappers, and memoization. <em>Builds on</em> <a href="#patterns">Patterns</a> (the observer/reactive core) and <a href="#object-model-immutability">the object model</a>.</li>
+          <li><strong>fetch &amp; the HTTP APIs</strong> — <code>fetch(url, options)</code> returns a promise for a <code>Response</code>; it rejects only on network failure, so you must check <code>res.ok</code>/<code>res.status</code> yourself, then call <code>res.json()</code>/<code>text()</code>/<code>blob()</code>. Covers <code>Request</code>/<code>Response</code>/<code>Headers</code>, JSON/<code>FormData</code>/<code>URLSearchParams</code> bodies, and <code>AbortController</code> timeouts. Demoable offline via <code>new Response(JSON.stringify(x))</code>. <em>Builds on</em> <a href="#async-promises">Async &amp; promises</a> (which already mocks fetch).</li>
+          <li><strong>JSON &amp; structured cloning</strong> — <code>JSON.stringify</code> with a replacer/allowlist and <code>space</code> pretty-printing, a custom <code>toJSON()</code>, and <code>JSON.parse</code> with a reviver to revive <code>Date</code>s; JSON silently drops <code>undefined</code>/functions/symbols and throws on cycles, whereas <code>structuredClone</code> deep-copies <code>Map</code>/<code>Set</code>/typed arrays and cycles. <em>Builds on</em> <a href="#objects-arrays">Objects &amp; arrays</a> (whose note already contrasts JSON round-trip with <code>structuredClone</code>).</li>
+          <li><strong>Dates &amp; internationalization</strong> — Timestamps and the epoch (<code>Date.now</code>, <code>getTime</code>), UTC vs local, and the classic traps (0-indexed months, unreliable string parsing, mutable <code>Date</code>s); <code>Intl.DateTimeFormat</code>/<code>NumberFormat</code>/<code>RelativeTimeFormat</code>/<code>Collator</code>/<code>ListFormat</code> for locale-aware output, with the <code>Temporal</code> proposal as Date's successor. <em>Builds on</em> the <code>Intl</code> pointer in <a href="#service-workers">Service Workers</a> "further reading".</li>
+          <li><strong>URL, URLSearchParams &amp; History</strong> — The <code>URL</code> object (<code>protocol</code>/<code>host</code>/<code>pathname</code>/<code>search</code>/<code>hash</code>/<code>origin</code>) and <code>URLSearchParams</code> (<code>get</code>/<code>getAll</code>/<code>set</code>/<code>append</code>, iteration, re-serialization) for safe query strings; the History API (<code>pushState</code>/<code>replaceState</code>, <code>popstate</code>) for client-side routing (History navigation is limited in the sandbox — reference only). <em>Builds on</em> <a href="#events-delegation">Events &amp; delegation</a>.</li>
+          <li><strong>Custom events &amp; EventTarget</strong> — <code>CustomEvent</code> with a <code>detail</code> payload dispatched on any <code>EventTarget</code>; subclassing <code>EventTarget</code> for standards-based emitters; <code>addEventListener</code> options (<code>once</code>, <code>passive</code>, <code>capture</code>, <code>signal</code>) and bulk removal via an <code>AbortController</code>; cancelable events and <code>preventDefault</code>. <em>Builds on</em> the pub/sub emitter in <a href="#patterns">Patterns</a> and <a href="#events-delegation">Events &amp; delegation</a>.</li>
+          <li><strong>Observer APIs</strong> — <code>IntersectionObserver</code> (visibility for lazy-load/infinite scroll), <code>MutationObserver</code> (DOM changes), and <code>ResizeObserver</code> (element size) share an <code>entries</code> callback plus <code>observe</code>/<code>unobserve</code>/<code>disconnect</code>; batched and cheaper than scroll/resize polling, with <code>PerformanceObserver</code> for metrics. <em>Builds on</em> <a href="#debounce-throttle">Debounce &amp; throttle</a> (the cheaper alternative to throttled scroll handlers) and <a href="#performance-memory">Performance &amp; memory</a>.</li>
+          <li><strong>Timers &amp; animation scheduling</strong> — <code>setTimeout</code>/<code>setInterval</code> are not real-time (clamping, drift); build a self-correcting timer from actual elapsed time; <code>requestAnimationFrame</code> gives a cancellable loop synced to the refresh rate with a timestamp arg; <code>requestIdleCallback</code> schedules low-priority work. Choose rAF for visuals, timers for logic, idle for background. <em>Builds on</em> <a href="#event-loop">The event loop</a> (macrotask timing).</li>
+          <li><strong>Files, Blobs &amp; binary data</strong> — <code>Blob</code> construction/slicing and <code>blob.text()</code>/<code>arrayBuffer()</code>; <code>File</code> (a Blob subtype from <code>&lt;input type=file&gt;</code>); the older callback-based <code>FileReader</code>; <code>URL.createObjectURL</code>/<code>revokeObjectURL</code> for previews and <code>&lt;a download&gt;</code>; <code>ArrayBuffer</code>, typed arrays (<code>Uint8Array</code>), and <code>DataView</code> as the binary substrate. <em>Builds on</em> the <code>Blob</code> URLs already used in <a href="#modules">Modules</a> and <a href="#web-workers">Web Workers</a>.</li>
+        </ul>
+        <p class="note">Note: Every deferred topic here is fully runnable in the sandboxed preview except History navigation and true network <code>fetch</code>, which require a real origin — those follow the same feature-detect-and-fallback pattern used throughout the <a href="#web-storage">Web Storage</a> and <a href="#geolocation">Geolocation</a> sections. Prefer the offline-safe substitutes (<code>new Response(...)</code>, <code>URL</code>/<code>URLSearchParams</code>, <code>Blob</code>, the observer APIs) when demonstrating them live.</p>
+      </section>
+    </main>
+  </div>
+  <footer class="site-footer"><p>DevDocs — static, self-contained learning reference.</p></footer>
+</body>
+</html>
