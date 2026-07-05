@@ -481,6 +481,99 @@ kbd {
   display: none;
 }
 
+/* ---- Syntax-highlight overlay ------------------------------------------- */
+/* A colored <pre> sits behind a transparent <textarea>. Both layers MUST
+   share identical typography, padding and border so the caret aligns with
+   the painted text. */
+.code-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.code-wrap > .code,
+.code-wrap > .code-hl {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  tab-size: 2;
+  -moz-tab-size: 2;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Painted layer, behind and non-interactive. */
+.code-wrap > .code-hl {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--code-bg);
+  color: var(--code-text);
+}
+
+.code-wrap > .code-hl code {
+  font: inherit;
+  color: inherit;
+}
+
+/* Editable layer on top: transparent text, visible caret. */
+.code-wrap > .code {
+  position: relative;
+  z-index: 1;
+  display: block;
+  min-height: 180px;
+  background: transparent;
+  color: transparent;
+  border-color: transparent;   /* the <pre> draws the visible border */
+  caret-color: var(--code-text);
+  resize: vertical;
+  overflow: hidden;            /* auto-grow replaces the inner scrollbar */
+}
+
+.code-wrap > .code::selection {
+  background: var(--accent-weak);
+  color: transparent;
+}
+
+/* Hidden (tabbed) editor collapses its whole overlay. */
+.code-wrap:has(> .code[hidden]) {
+  display: none;
+}
+
+/* ---- Expand toggle + fullscreen example --------------------------------- */
+.expand-btn {
+  margin-left: auto;   /* push to the right edge of the actions row */
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.expand-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.example--expanded {
+  position: fixed;
+  inset: 16px;
+  z-index: 1000;
+  margin: 0;
+  max-width: none;
+  overflow: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+body.example-lock {
+  overflow: hidden;
+}
+
 .example-actions {
   display: flex;
   gap: 8px;
@@ -488,7 +581,8 @@ kbd {
 }
 
 .run-btn,
-.reset-btn {
+.reset-btn,
+.expand-btn {
   font: inherit;
   font-size: 0.87rem;
   font-weight: 600;

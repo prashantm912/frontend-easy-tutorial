@@ -108,6 +108,35 @@
   function initExamples() {
     var examples = toArray(document.querySelectorAll(".example"));
     examples.forEach(setupExample);
+
+    // Escape collapses any expanded example.
+    document.addEventListener("keydown", function (ev) {
+      if (ev.key !== "Escape") return;
+      var ex = document.querySelector(".example--expanded");
+      if (!ex) return;
+      ex.classList.remove("example--expanded");
+      document.body.classList.remove("example-lock");
+      var btn = ex.querySelector(".expand-btn");
+      if (btn) btn.textContent = "Expand";
+    });
+  }
+
+  function autoGrowEditor(ta) {
+    // Grow the textarea to fit its content so no inner scrollbar appears.
+    ta.style.height = "auto";
+    ta.style.height = (ta.scrollHeight + (ta.offsetHeight - ta.clientHeight)) + "px";
+  }
+
+  function paintEditor(ta) {
+    if (ta.__hlCode) {
+      // Trailing newline keeps the final line rendered during auto-grow.
+      ta.__hlCode.innerHTML = highlightSource(ta.__lang, ta.value + "\n");
+    }
+  }
+
+  function syncEditor(ta) {
+    paintEditor(ta);
+    autoGrowEditor(ta);
   }
 
   function setupExample(root) {
@@ -125,6 +154,23 @@
       var lang = (ta.getAttribute("data-lang") || "html").toLowerCase();
       byLang[lang] = ta;
       ta.__initial = ta.value;
+
+      // Build the syntax-highlight overlay: a <pre> painted behind a
+      // transparent <textarea>. Both share identical box metrics so the
+      // caret lines up over the colored text.
+      var wrap = document.createElement("div");
+      wrap.className = "code-wrap";
+      var pre = document.createElement("pre");
+      pre.className = "code-hl";
+      pre.setAttribute("aria-hidden", "true");
+      var codeEl = document.createElement("code");
+      pre.appendChild(codeEl);
+      ta.parentNode.insertBefore(wrap, ta);
+      wrap.appendChild(pre);
+      wrap.appendChild(ta);
+      ta.__lang = lang;
+      ta.__hlCode = codeEl;
+      ta.__hlPre = pre;
     });
 
     function collect(lang) {
@@ -174,6 +220,7 @@
           var match = (ta.getAttribute("data-lang") || "") === lang;
           if (match) {
             ta.removeAttribute("hidden");
+            syncEditor(ta);
           } else {
             ta.setAttribute("hidden", "");
           }
@@ -224,6 +271,7 @@
       resetBtn.addEventListener("click", function () {
         editors.forEach(function (ta) {
           ta.value = ta.__initial;
+          syncEditor(ta);
         });
         run();
       });
@@ -232,13 +280,42 @@
     var liveRun = debounce(run, 250);
 
     editors.forEach(function (ta) {
-      ta.addEventListener("input", liveRun);
+      ta.addEventListener("input", function () {
+        syncEditor(ta);
+        liveRun();
+      });
+
+      // Keep the highlight layer scroll-aligned with the textarea.
+      ta.addEventListener("scroll", function () {
+        if (ta.__hlPre) {
+          ta.__hlPre.scrollTop = ta.scrollTop;
+          ta.__hlPre.scrollLeft = ta.scrollLeft;
+        }
+      });
 
       ta.addEventListener("keydown", function (ev) {
         // Ctrl/Cmd + Enter => run immediately.
         if ((ev.ctrlKey || ev.metaKey) && ev.key === "Enter") {
           ev.preventDefault();
           run();
+          return;
+        }
+        // Plain Enter => newline that keeps the previous line's indent,
+        // plus one extra step after an opening bracket.
+        if (ev.key === "Enter") {
+          ev.preventDefault();
+          var s = ta.selectionStart;
+          var e = ta.selectionEnd;
+          var v = ta.value;
+          var lineStart = v.lastIndexOf("\n", s - 1) + 1;
+          var indent = (v.slice(lineStart, s).match(/^[ \t]*/) || [""])[0];
+          var prevChar = v.slice(0, s).replace(/[ \t]+$/, "").slice(-1);
+          var extra = /[{([]/.test(prevChar) ? "  " : "";
+          var ins = "\n" + indent + extra;
+          ta.value = v.slice(0, s) + ins + v.slice(e);
+          ta.selectionStart = ta.selectionEnd = s + ins.length;
+          syncEditor(ta);
+          liveRun();
           return;
         }
         // Tab inserts two spaces instead of moving focus.
@@ -249,9 +326,32 @@
           var val = ta.value;
           ta.value = val.slice(0, start) + "  " + val.slice(end);
           ta.selectionStart = ta.selectionEnd = start + 2;
+          syncEditor(ta);
+          liveRun();
         }
       });
     });
+
+    // Paint + size every editor before the first run.
+    editors.forEach(syncEditor);
+
+    // Add an Expand toggle for a roomy, IDE-like fullscreen view.
+    var actions = root.querySelector(".example-actions");
+    if (actions) {
+      var expandBtn = document.createElement("button");
+      expandBtn.type = "button";
+      expandBtn.className = "expand-btn";
+      expandBtn.textContent = "Expand";
+      actions.appendChild(expandBtn);
+      expandBtn.addEventListener("click", function () {
+        var on = root.classList.toggle("example--expanded");
+        document.body.classList.toggle("example-lock", on);
+        expandBtn.textContent = on ? "Collapse" : "Expand";
+        editors.forEach(function (ta) {
+          if (!ta.hasAttribute("hidden")) syncEditor(ta);
+        });
+      });
+    }
 
     // Auto-run once on init.
     run();
@@ -409,6 +509,28 @@
       return store[Number(i)];
     });
     return out;
+  }
+
+  // Shared entry point: HTML-escape raw source and highlight it by language.
+  // Reused by both the static code blocks and the live editor overlays.
+  function highlightSource(lang, raw) {
+    var escaped = escapeHtml(raw);
+    try {
+      if (lang === "html") return highlightMarkup(escaped);
+      if (lang === "css") return highlightCss(escaped);
+      if (lang === "js" || lang === "javascript") return highlightGeneric(escaped, KEYWORDS.js);
+      if (lang === "ts" || lang === "typescript") return highlightGeneric(escaped, KEYWORDS.ts);
+      if (lang === "json") return highlightGeneric(escaped, KEYWORDS.json);
+      if (lang === "bash" || lang === "sh" || lang === "shell") {
+        var withHash = escaped.replace(/(^|\n)(\s*#[^\n]*)/g, function (m, p, c) {
+          return p + '<span class="tok-comment">' + c + "</span>";
+        });
+        return highlightGeneric(withHash, KEYWORDS.bash);
+      }
+      return escaped;
+    } catch (e) {
+      return escaped; // never break on unmatched input
+    }
   }
 
   function initHighlight() {
