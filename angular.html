@@ -49,15 +49,18 @@
           <li><a href="#view-child">ViewChild &amp; content queries</a></li>
           <li><a href="#content-projection">Content projection</a></li>
           <li><a href="#view-encapsulation">View encapsulation</a></li>
+          <li><a href="#styling-scss">SCSS architecture &amp; theming</a></li>
           <li><a href="#pipes">Pipes (built-in &amp; custom)</a></li>
           <li><a href="#services">Services &amp; @Injectable</a></li>
           <li><a href="#http-client">HttpClient &amp; async pipe</a></li>
+          <li><a href="#interceptors">HTTP interceptors &amp; errors</a></li>
           <li><a href="#dependency-injection">Dependency injection</a></li>
           <li><a href="#di-decorators">DI decorators &amp; inject()</a></li>
           <li><a href="#change-detection">Change detection</a></li>
           <li><a href="#lifecycle-hooks">Lifecycle hooks</a></li>
           <li><a href="#modules">NgModules &amp; feature modules</a></li>
           <li><a href="#standalone">Standalone components</a></li>
+          <li><a href="#shared-ui">Reusable &amp; shared UI</a></li>
           <li><a href="#routing">Routing &amp; guards</a></li>
           <li><a href="#forms">Forms (template &amp; reactive)</a></li>
           <li><a href="#rxjs">RxJS in Angular</a></li>
@@ -68,6 +71,7 @@
           <li><a href="#zoneless">Zoneless &amp; modern reactivity</a></li>
           <li><a href="#ssr-i18n">SSR, hydration, i18n &amp; Elements</a></li>
           <li><a href="#testing-modern">Testing &amp; Angular 18–22</a></li>
+          <li><a href="#use-case-employee-portal">Use case: Employee Portal</a></li>
         </ul>
       </nav>
     </aside>
@@ -1262,6 +1266,114 @@ Global page CSS cannot reach inside.</div>
   <p class="note note-perf">Note: Avoid <code>::ng-deep</code> — it is deprecated and leaks styles because the pierced rule ends up global. To let a parent skin a child, expose CSS custom properties (e.g. <code>--btn-bg</code>) which cross <code>Emulated</code> boundaries naturally and even cross Shadow DOM.</p>
 </section>
 
+<section id="styling-scss" class="concept" tabindex="-1">
+  <h2>SCSS architecture &amp; theming</h2>
+  <p>Angular scopes a component's styles to that component by default (see <a href="#view-encapsulation">View encapsulation</a>). You author those styles in whatever CSS dialect the project is configured for — plain CSS, SCSS, Sass, or Less. SCSS is the most common choice because it adds variables, <code>@mixin</code>/<code>@include</code>, nesting, and file <code>@use</code> composition on top of CSS while still compiling down to it. You select the dialect when scaffolding (<code>ng new app --style=scss</code>) or later in <code>angular.json</code>, and the CLI wires the SCSS compiler into the build for you.</p>
+  <p>A maintainable stylesheet architecture usually splits into three layers: <strong>global</strong> styles (<code>src/styles.scss</code> — resets, typography, utility classes, and CSS custom properties that define your theme), <strong>shared SCSS partials</strong> (<code>_variables.scss</code>, <code>_mixins.scss</code>) consumed with <code>@use</code>, and <strong>component styles</strong> (each component's own <code>.scss</code>, kept small and scoped). Because component styles are encapsulated, class names inside them can be short and local without collision risk.</p>
+  <p>Theming — including light/dark mode — is best done with <strong>CSS custom properties</strong> rather than SCSS variables. SCSS variables are resolved at build time and cannot change at runtime; CSS variables cascade and <em>can</em> be swapped live. Define your palette as CSS variables on <code>:root</code>, override them under a theme selector such as <code>[data-theme="dark"]</code>, and toggle a single attribute at the document root to flip the whole app. Components read the variables (<code>var(--surface)</code>) and automatically restyle. The <code>:host-context()</code> selector lets an encapsulated component react to an ancestor theme class.</p>
+  <h3>Example: enable SCSS in a project</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="bash"><code># Scaffold a new app using SCSS for component styles
+ng new employee-portal --style=scss
+
+# Or switch an existing project's default in angular.json:
+#   "schematics": { "@schematics/angular:component":
+#                     { "style": "scss" } }
+# and set the global entry to styles.scss under
+#   "architect" &gt; "build" &gt; "options" &gt; "styles"</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>New components are generated with a <span class="io-comment">.scss</span> file and <code>styleUrl: './x.component.scss'</code>. The build compiles SCSS to CSS automatically — no extra tooling to install.</div>
+  </div>
+  <h3>Example: scoped component SCSS with variables &amp; nesting</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// employee-card.component.ts
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+
+@Component({
+  selector: 'app-employee-card',
+  standalone: true,
+  templateUrl: './employee-card.component.html',
+  styleUrl: './employee-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class EmployeeCardComponent {}</code></pre>
+    <div class="io-output"><span class="io-title">employee-card.component.scss</span>$radius: 10px;
+
+.card {
+  padding: 1rem;
+  border-radius: $radius;
+  background: var(--surface);   // theme-aware
+
+  .name { font-weight: 600; }
+  .role { color: var(--muted); }
+
+  &amp;:hover { box-shadow: 0 4px 14px rgba(0,0,0,.12); }
+}</div>
+  </div>
+  <h3>Example: shared partials &amp; utility classes</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="css"><code>/* _variables.scss */
+$space: 8px;
+$breakpoint-md: 768px;
+
+/* _mixins.scss */
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@mixin respond($w) {
+  @media (min-width: $w) { @content; }
+}</code></pre>
+    <div class="io-output"><span class="io-title">styles.scss (global)</span>@use 'variables' as v;
+@use 'mixins' as m;
+
+/* utility classes usable app-wide */
+.u-center { @include m.flex-center; }
+.u-stack &gt; * + * { margin-top: v.$space; }
+.u-muted  { color: var(--muted); }
+
+.toolbar {
+  @include m.respond(v.$breakpoint-md) {
+    padding-inline: 2rem;
+  }
+}</div>
+  </div>
+  <h3>Example: light/dark theming with CSS variables</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="css"><code>/* styles.scss — palette as CSS custom properties */
+:root {
+  --surface: #ffffff;
+  --text: #1b1f24;
+  --muted: #5b6470;
+  --accent: #0b63ce;
+}
+[data-theme='dark'] {
+  --surface: #161b22;
+  --text: #e6edf3;
+  --muted: #9aa7b4;
+  --accent: #4d9cff;
+}
+/* Respect the OS preference when no explicit choice is set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) { --surface: #161b22; --text: #e6edf3; }
+}</code></pre>
+    <div class="io-output"><span class="io-title">theme.service.ts</span>@Injectable({ providedIn: 'root' })
+export class ThemeService {
+  private theme = signal&lt;'light' | 'dark'&gt;('light');
+  readonly current = this.theme.asReadonly();
+  toggle() {
+    const next = this.theme() === 'dark' ? 'light' : 'dark';
+    this.theme.set(next);
+    document.documentElement.dataset['theme'] = next;
+  }
+}
+// Toggling the root attribute swaps every --var live — the
+// whole app re-themes with no component code changes.</div>
+  </div>
+  <p class="note note-perf">Note: prefer CSS custom properties for anything that changes at runtime (themes, density, brand colors) and SCSS variables for build-time constants (breakpoints, spacing scales). Mixing them well is the core of a scalable Angular style system.</p>
+  <p class="note">Note: avoid <code>::ng-deep</code> for theming — it is deprecated. Expose theming hooks as CSS variables on <code>:host</code> instead, and let ancestors override them; this keeps encapsulation intact.</p>
+</section>
+
 <section id="pipes" class="concept" tabindex="-1">
   <h2>Pipes (built-in &amp; custom)</h2>
   <p>A pipe transforms a value for display without mutating the underlying data. In a template you apply one with the <code>|</code> operator inside an interpolation or binding: <code>{{ value | pipeName }}</code>. Pipes are pure, declarative formatters — the component holds raw data (a <code>Date</code>, a number, a string) and the pipe renders a human-friendly version, keeping formatting logic out of your class.</p>
@@ -1450,6 +1562,94 @@ After response arrives:
 Auto-unsubscribes on destroy.</div>
   </div>
   <p class="note note-perf">Note: The <code>async</code> pipe removes an entire class of subscription-leak bugs and pairs perfectly with <code>OnPush</code> change detection. If you must subscribe manually, pipe through <code>takeUntilDestroyed()</code> to clean up automatically.</p>
+</section>
+
+<section id="interceptors" class="concept" tabindex="-1">
+  <h2>HTTP interceptors &amp; global errors</h2>
+  <p>An HTTP interceptor sits in the pipeline between <code>HttpClient</code> and the network. Every outgoing request passes through the interceptor chain on the way out, and every response (or error) passes back through it on the way in. This is the right place for <em>cross-cutting</em> HTTP concerns that should not be repeated in every service: attaching an auth token, logging, adding correlation ids, retrying, showing a global spinner, and centralized error handling.</p>
+  <p>Modern Angular (v15+) uses <strong>functional interceptors</strong> — a plain function of type <code>HttpInterceptorFn</code> that receives the request and a <code>next</code> handler and returns an <code>Observable</code> of the event stream. You register them with <code>provideHttpClient(withInterceptors([...]))</code>, and they run in array order. Requests are <strong>immutable</strong>: you never mutate <code>req</code> directly — you call <code>req.clone({ setHeaders: ... })</code> to produce a modified copy and pass it to <code>next()</code>.</p>
+  <p>For error handling there are two complementary tools. Inside an interceptor, <code>catchError</code> lets you inspect failed responses (by <code>HttpErrorResponse.status</code>), react (redirect on 401, toast on 500), and either recover or rethrow. Separately, Angular's <code>ErrorHandler</code> provider is the last-resort hook for <em>uncaught</em> errors anywhere in the app (not just HTTP) — override it to log or report to a monitoring service.</p>
+  <h3>Example: auth interceptor (add Authorization header)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// auth.interceptor.ts
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthService } from './auth.service';
+
+export const authInterceptor: HttpInterceptorFn = (req, next) =&gt; {
+  const token = inject(AuthService).token();      // a signal/getter
+  if (!token) return next(req);                    // pass through
+
+  // Requests are immutable — clone with the extra header.
+  const authReq = req.clone({
+    setHeaders: { Authorization: `Bearer ${token}` },
+  });
+  return next(authReq);
+};</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Every request made through <code>HttpClient</code> now carries <span class="io-comment">Authorization: Bearer &lt;token&gt;</span> — services stay unaware of auth. Requests without a token pass through unchanged.</div>
+  </div>
+  <h3>Example: global error interceptor</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// error.interceptor.ts
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { NotificationService } from './notification.service';
+
+export const errorInterceptor: HttpInterceptorFn = (req, next) =&gt; {
+  const router = inject(Router);
+  const notify = inject(NotificationService);
+  return next(req).pipe(
+    catchError((err: HttpErrorResponse) =&gt; {
+      if (err.status === 401) router.navigate(['/login']);
+      else notify.error(`Request failed (${err.status})`);
+      return throwError(() =&gt; err);   // rethrow for callers
+    }),
+  );
+};</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>A <span class="io-comment">401</span> redirects to <code>/login</code>; any other failure pushes a message into the global <code>NotificationService</code> (a Subject-backed toast stream). Callers still receive the rethrown error if they need it.</div>
+  </div>
+  <h3>Example: register interceptors at bootstrap</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// main.ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { App } from './app/app';
+import { authInterceptor } from './app/auth.interceptor';
+import { errorInterceptor } from './app/error.interceptor';
+
+bootstrapApplication(App, {
+  providers: [
+    provideHttpClient(
+      withInterceptors([authInterceptor, errorInterceptor]),
+    ),
+  ],
+});</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Interceptors run in array order on the way out (<code>auth</code> then <code>error</code>) and in reverse on the way back. Order matters: put auth before logging/error so logged requests already carry the header.</div>
+  </div>
+  <h3>Example: global ErrorHandler for uncaught errors</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// global-error-handler.ts
+import { ErrorHandler, Injectable, inject } from '@angular/core';
+import { NotificationService } from './notification.service';
+
+@Injectable()
+export class GlobalErrorHandler implements ErrorHandler {
+  private notify = inject(NotificationService);
+  handleError(error: unknown): void {
+    console.error('Uncaught:', error);
+    this.notify.error('Something went wrong.');
+    // …forward to Sentry / a logging endpoint here…
+  }
+}
+
+// main.ts providers:
+//   { provide: ErrorHandler, useClass: GlobalErrorHandler }</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Any error not caught elsewhere (a thrown exception in a component, a template error, an unhandled rejection) reaches <code>handleError</code> — one place to log and notify. This is broader than the HTTP interceptor, which only sees HTTP failures.</div>
+  </div>
+  <p class="note">Note: interceptors run in an injection context, so <code>inject()</code> works directly inside them — that is how a functional interceptor reaches services like <code>AuthService</code> or <code>Router</code> without a constructor.</p>
+  <p class="note note-perf">Note: use interceptors for <em>retry</em> too — <code>next(req).pipe(retry({ count: 2, delay: 1000 }))</code> transparently retries transient failures for every request, no per-call code.</p>
 </section>
 
 <section id="dependency-injection" class="concept" tabindex="-1">
@@ -1786,6 +1986,83 @@ export class MenuComponent {}</code></pre>
   </div>
   <p class="note note-compat">Note: standalone components interoperate with NgModules in both directions — you can list a standalone component in an NgModule's <code>imports</code>, and import an NgModule into a standalone component's <code>imports</code>. This lets you migrate incrementally rather than all at once.</p>
 </section>
+<section id="shared-ui" class="concept" tabindex="-1">
+  <h2>Reusable &amp; shared UI</h2>
+  <p>A well-structured app separates <strong>presentational</strong> ("dumb") components from <strong>container</strong> ("smart") components. A presentational component takes data through inputs and emits events through outputs; it holds no services and no business logic, which makes it trivially reusable and easy to test. A container component injects services, owns the data flow, and composes presentational children. In the Employee portal, <code>EmployeeListComponent</code> is a container that fetches data and hands each record to a reusable, presentational <code>EmployeeCardComponent</code>.</p>
+  <p>With standalone components, "sharing" UI no longer needs a <code>SharedModule</code>. You simply <code>import</code> the reusable standalone components (and directives/pipes) into whichever component's <code>imports: []</code> array needs them. A common convention is a <code>shared/</code> folder of standalone building blocks (buttons, cards, dialogs, a spinner) plus a barrel <code>index.ts</code> that re-exports them, so consumers import from one path. Legacy codebases still use an <code>NgModule</code> that declares and exports the shared pieces — you will meet both.</p>
+  <p>Two composition tools make components genuinely reusable: <a href="#component-input">inputs/outputs</a> for data and events, and <a href="#content-projection">content projection</a> (<code>ng-content</code>) for letting the consumer supply arbitrary markup into a slot. Mark presentational components <code>OnPush</code> so they only re-render when their inputs change — see <a href="#change-detection">Change detection</a>.</p>
+  <h3>Example: a reusable presentational button</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// shared/ui-button.component.ts
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { input, output } from '@angular/core';
+
+@Component({
+  selector: 'app-ui-button',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    &lt;button [class]="'btn btn--' + variant()"
+            [disabled]="disabled()"
+            (click)="pressed.emit()"&gt;
+      &lt;ng-content /&gt;
+    &lt;/button&gt;`,
+  styleUrl: './ui-button.component.scss',
+})
+export class UiButtonComponent {
+  variant = input&lt;'primary' | 'ghost'&gt;('primary');
+  disabled = input(false);
+  pressed = output&lt;void&gt;();
+}</code></pre>
+    <div class="io-output"><span class="io-title">Usage &amp; Output</span>&lt;app-ui-button variant="ghost" (pressed)="save()"&gt;
+  Save
+&lt;/app-ui-button&gt;
+
+Renders a themed <code>&lt;button class="btn btn--ghost"&gt;Save&lt;/button&gt;</code>. The label is projected via <code>ng-content</code>; the click surfaces as the <code>pressed</code> output. No services — reusable anywhere.</div>
+  </div>
+  <h3>Example: container passes data to presentational children</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// employee-list.component.ts (container)
+@Component({
+  selector: 'app-employee-list',
+  standalone: true,
+  imports: [EmployeeCardComponent, UiButtonComponent],
+  template: `
+    @for (e of employees(); track e.id) {
+      &lt;app-employee-card [employee]="e"
+                         (remove)="onRemove(e.id)" /&gt;
+    } @empty {
+      &lt;p&gt;No employees yet.&lt;/p&gt;
+    }`,
+})
+export class EmployeeListComponent {
+  private service = inject(EmployeeService);
+  employees = toSignal(this.service.employees$, { initialValue: [] });
+  onRemove(id: number) { this.service.remove(id); }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The container owns the service and the stream; each <code>EmployeeCardComponent</code> is a pure input/output component. Swapping the data source or reusing the card elsewhere needs zero changes to the card.</div>
+  </div>
+  <h3>Example: a shared barrel &amp; the legacy SharedModule</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// shared/index.ts — one import path for all building blocks
+export * from './ui-button.component';
+export * from './employee-card.component';
+export * from './spinner.component';
+
+// A consumer imports only what it uses:
+//   imports: [UiButtonComponent, SpinnerComponent]
+
+// Legacy alternative (pre-standalone):
+@NgModule({
+  declarations: [/* … */],
+  exports: [UiButtonComponent, SpinnerComponent, CommonModule],
+})
+export class SharedModule {}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Standalone + a barrel gives tree-shakeable, explicit imports with no module boilerplate. The <code>SharedModule</code> form still works and is common in older apps, but standalone is the recommended path.</div>
+  </div>
+  <p class="note">Note: keep presentational components free of <code>inject()</code> and router/HTTP calls. If a "reusable" component starts injecting services, it is turning into a container — split it.</p>
+</section>
+
 <section id="routing" class="concept" tabindex="-1">
   <h2>Routing &amp; guards</h2>
   <p>Angular's router maps URL paths to components. In a modern standalone app you enable it during bootstrap with <code>provideRouter(routes)</code> instead of the legacy <code>RouterModule.forRoot()</code>. The <code>routes</code> value is a <code>Routes</code> array where each entry describes a <code>path</code> (without a leading slash) and what to render: a <code>component</code>, a <code>redirectTo</code> (paired with <code>pathMatch: 'full'</code> for exact matches), or child routes. A wildcard entry <code>{ path: '**', component: NotFound }</code> placed last catches anything unmatched and typically renders a 404 page.</p>
@@ -2332,6 +2609,30 @@ ng generate @angular/core:control-flow</code></pre>
   </div>
   <p>Key takeaways: modern Angular is standalone-first and signal-centric. Declare state with <code>signal()</code>, derive with <code>computed()</code>/<code>linkedSignal()</code>, pass data with signal <code>input()</code>/<code>output()</code>/<code>model()</code>, fetch with the Resource API, and let signals — not <code>zone.js</code> — drive precise change detection. Combine that with built-in control flow, SSR plus incremental hydration, and a faster Vitest-based test story, and you get smaller, faster, and more predictable applications. Adopt these APIs incrementally: the migration schematics and backward compatibility let you modernize an existing codebase one component at a time.</p>
   <p class="note">Note: prefer importing standalone components directly in <code>TestBed</code> over recreating NgModules, and reach for harnesses instead of hand-written CSS queries so tests stay resilient as Angular and Material internals evolve.</p>
+</section>
+
+<section id="use-case-employee-portal" class="concept" tabindex="-1">
+  <h2>Use case: Employee Management Portal</h2>
+  <p>The sections above are not isolated tricks — taken together they teach everything needed to build an <strong>Employee Management Portal</strong>: a routed Angular app with a header, an employee list backed by an <code>Observable</code> stream, an add/edit form, a custom pipe that highlights high salaries, an auth interceptor and a global error handler, a reusable shared UI layer, and a themeable SCSS architecture with light/dark mode. This is a <em>learning map</em>: it points at the section that teaches each piece so you can assemble the portal yourself.</p>
+  <h3>Building blocks → topic map</h3>
+  <ul>
+    <li><strong>Components (<code>employee-list</code>, <code>employee-form</code>, <code>header</code>)</strong> — component anatomy, selectors, and composition: <a href="#first-component">Your first component</a>, and container-vs-presentational structure in <a href="#shared-ui">Reusable &amp; shared UI</a>.</li>
+    <li><strong>Passing data &amp; events between them</strong> — <code>@Input</code>/signal <code>input()</code> and <code>@Output</code>/<code>output()</code>: <a href="#component-input">Component @Input</a>, <a href="#component-output">@Output &amp; EventEmitter</a>, and <a href="#signal-io">Signal inputs, outputs &amp; model</a>.</li>
+    <li><strong><code>employee-form.component.ts</code></strong> — building and validating the add/edit form: <a href="#forms">Forms (template &amp; reactive)</a>, with two-way binding from <a href="#two-way-binding">Two-way binding &amp; ngModel</a>.</li>
+    <li><strong><code>employee.service.ts</code> (employee list streams)</strong> — a tree-shakeable service exposing <code>Observable</code> data: <a href="#services">Services &amp; @Injectable</a> and <a href="#http-client">HttpClient &amp; async pipe</a>.</li>
+    <li><strong><code>notification.service.ts</code> (global notifications)</strong> — a <code>Subject</code>/<code>BehaviorSubject</code> broadcast stream consumed via the async pipe: <a href="#rxjs">RxJS in Angular</a>.</li>
+    <li><strong>RxJS operators (<code>map</code>, <code>filter</code>, <code>debounceTime</code>, <code>switchMap</code>)</strong> — search-as-you-type and stream transformation: <a href="#rxjs">RxJS in Angular</a>.</li>
+    <li><strong><code>auth.interceptor.ts</code> (Auth header) + global error handler</strong> — cross-cutting HTTP concerns and app-wide error handling: <a href="#interceptors">HTTP interceptors &amp; global errors</a>, built on <a href="#di-decorators">inject()</a>.</li>
+    <li><strong>Custom pipe <code>salaryHighlight.pipe.ts</code></strong> — a <code>@Pipe</code> that flags salaries over a threshold: <a href="#pipes">Pipes (built-in &amp; custom)</a>.</li>
+    <li><strong>Built-in pipes (<code>date</code>, <code>currency</code>)</strong> — formatting hire dates and pay in the template: <a href="#pipes">Pipes (built-in &amp; custom)</a>.</li>
+    <li><strong>Reusable components / shared UI</strong> — buttons, cards, and a barrel of standalone building blocks (or a <code>SharedModule</code>): <a href="#shared-ui">Reusable &amp; shared UI</a> and <a href="#content-projection">Content projection</a>.</li>
+    <li><strong>SCSS architecture (variables, mixins, nesting, utility classes)</strong> — a scalable, layered stylesheet: <a href="#styling-scss">SCSS architecture &amp; theming</a>.</li>
+    <li><strong>Theming — light/dark mode with CSS variables</strong> — a palette swapped at the document root by a <code>ThemeService</code>: <a href="#styling-scss">SCSS architecture &amp; theming</a> and <a href="#view-encapsulation">View encapsulation</a> (<code>:host-context</code>).</li>
+    <li><strong>Routing (list ↔ form, header nav, guards)</strong> — routes, <code>router-outlet</code>, params, and functional guards: <a href="#routing">Routing &amp; guards</a>.</li>
+    <li><strong>Efficient rendering</strong> — <code>OnPush</code> for presentational components and signals for data: <a href="#change-detection">Change detection</a> and <a href="#signals">Signals</a>.</li>
+    <li><strong>App bootstrap &amp; providers</strong> — wiring <code>provideRouter</code>, <code>provideHttpClient(withInterceptors(...))</code>, and the <code>ErrorHandler</code>: <a href="#standalone">Standalone components</a>.</li>
+  </ul>
+  <p class="note">Note: this is a learning map, not an implementation — it links each portal requirement to the section that teaches it so you can assemble the app yourself. The site ships no Employee Portal build.</p>
 </section>
     </main>
   </div>
