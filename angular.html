@@ -1,0 +1,2340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Angular — DevDocs</title>
+  <meta name="description" content="Angular from first principles to advanced: components, inputs/outputs, the Angular 17+ control flow (@if/@for/@switch), directives, dependency injection, change detection, lifecycle hooks, standalone components, @defer, Signals, the Resource API, zoneless reactivity, SSR, and more — up to Angular 22.">
+  <link rel="stylesheet" href="styles/site.css">
+  <script src="scripts/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html">DevDocs</a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="html.html">HTML</a>
+      <a href="css.html">CSS</a>
+      <a href="javascript.html">JavaScript</a>
+      <a href="typescript.html">TypeScript</a>
+      <a href="angular.html">Angular</a>
+    </nav>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme</button>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="toc" aria-label="On this page">
+        <label class="toc-search-label" for="toc-search">Filter topics</label>
+        <input type="search" id="toc-search" class="toc-search" placeholder="Type to filter…" autocomplete="off">
+        <ul class="toc-list">
+          <li><a href="#introduction">Introduction to Angular</a></li>
+          <li><a href="#why-angular">Why Angular: key features</a></li>
+          <li><a href="#dev-setup">Setup, CLI &amp; versions</a></li>
+          <li><a href="#ts-jumpstart">TypeScript jumpstart</a></li>
+          <li><a href="#first-component">Your first component</a></li>
+          <li><a href="#component-input">Component @Input</a></li>
+          <li><a href="#component-output">@Output &amp; EventEmitter</a></li>
+          <li><a href="#two-way-binding">Two-way binding &amp; ngModel</a></li>
+          <li><a href="#control-flow-if">Control flow: @if / @else</a></li>
+          <li><a href="#control-flow-for">Control flow: @for</a></li>
+          <li><a href="#control-flow-switch">Control flow: @switch</a></li>
+          <li><a href="#legacy-structural">*ngIf / *ngFor / *ngSwitch</a></li>
+          <li><a href="#let-block">The @let block</a></li>
+          <li><a href="#ngclass-ngstyle">ngClass &amp; ngStyle</a></li>
+          <li><a href="#ng-container">ng-container</a></li>
+          <li><a href="#attribute-directives">Attribute directives</a></li>
+          <li><a href="#structural-directives">Custom structural directives</a></li>
+          <li><a href="#templates">ng-template &amp; ngTemplateOutlet</a></li>
+          <li><a href="#view-child">ViewChild &amp; content queries</a></li>
+          <li><a href="#content-projection">Content projection</a></li>
+          <li><a href="#view-encapsulation">View encapsulation</a></li>
+          <li><a href="#pipes">Pipes (built-in &amp; custom)</a></li>
+          <li><a href="#services">Services &amp; @Injectable</a></li>
+          <li><a href="#http-client">HttpClient &amp; async pipe</a></li>
+          <li><a href="#dependency-injection">Dependency injection</a></li>
+          <li><a href="#di-decorators">DI decorators &amp; inject()</a></li>
+          <li><a href="#change-detection">Change detection</a></li>
+          <li><a href="#lifecycle-hooks">Lifecycle hooks</a></li>
+          <li><a href="#modules">NgModules &amp; feature modules</a></li>
+          <li><a href="#standalone">Standalone components</a></li>
+          <li><a href="#routing">Routing &amp; guards</a></li>
+          <li><a href="#forms">Forms (template &amp; reactive)</a></li>
+          <li><a href="#rxjs">RxJS in Angular</a></li>
+          <li><a href="#defer">Deferrable views @defer</a></li>
+          <li><a href="#signals">Signals</a></li>
+          <li><a href="#signal-io">Signal inputs, outputs &amp; model</a></li>
+          <li><a href="#resource-api">Resource API &amp; httpResource</a></li>
+          <li><a href="#zoneless">Zoneless &amp; modern reactivity</a></li>
+          <li><a href="#ssr-i18n">SSR, hydration, i18n &amp; Elements</a></li>
+          <li><a href="#testing-modern">Testing &amp; Angular 18–22</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main id="main" class="content">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> <span aria-hidden="true">/</span> <span aria-current="page">Angular</span>
+      </nav>
+      <h1>Angular</h1>
+      <p class="overview">Angular is a batteries-included, TypeScript-first framework for building single-page applications. It gives you components with a powerful template syntax, dependency injection, a router, forms, an HTTP client, and — since Angular 16&ndash;17 — a signals-based reactivity model and a new block control-flow syntax (<code>@if</code>, <code>@for</code>, <code>@switch</code>, <code>@defer</code>). This guide moves from first principles (what a component <em>is</em>) through the directives, DI, change detection, and lifecycle machinery, and on to the modern, signals-first Angular of versions 17&ndash;22: standalone components, deferrable views, the Resource API, and zoneless change detection. <strong>This docsite is fully offline and bundles no Angular compiler, so components cannot be built or executed live.</strong> For every concept the source is shown in a static code block paired, side by side, with an <code>Output</code> box that states the <em>simulated</em> rendered result, console output, or CLI diagnostic. Read the code on the left and the outcome on the right.</p>
+      <p class="note note-compat">Note: version tags like <em>(v17+)</em> mark when an API became stable. The block control flow and deferrable views landed in v17; signal <code>input()</code>/<code>output()</code>/<code>model()</code> in v17.1&ndash;17.2; the Resource API and zoneless change detection matured across v18&ndash;20. Everything here targets the standalone, signals-first style Angular recommends going forward.</p>
+<section id="introduction" class="concept" tabindex="-1">
+  <h2>Introduction to Angular</h2>
+  <p>Angular is a full-featured, TypeScript-first framework for building single-page applications (SPAs). Unlike a page that reloads on every navigation, an SPA loads once and then updates the DOM in place as the user interacts. Angular's job is to keep the visible page (the <em>view</em>) synchronized with your application's data (the <em>model</em>) so you rarely touch the DOM by hand. The core building block is the <strong>component</strong>: a reusable piece of UI that behaves, in practice, like a custom HTML element you define yourself.</p>
+  <p>A component is two things fused together: a TypeScript <em>class</em> and a <em>template</em>. The class holds state and behavior — its fields form the model, and its methods respond to events. The template is HTML enriched with Angular syntax that describes what to render. Each component declares a <code>selector</code>, a CSS-like tag name such as <code>app-greeting</code>; wherever that tag appears in another template, Angular instantiates the component and renders its template there. This is why people say a component is essentially a custom element backed by a class.</p>
+  <p>The bridge between model and view is <strong>data binding</strong>, and modern Angular gives you three everyday flavors. <em>Interpolation</em> <code>{{ expression }}</code> renders a class field or expression as text inside the template. <em>Property binding</em> <code>[prop]="expr"</code> sets a DOM property or an input on a child component from a class expression. <em>Event binding</em> <code>(event)="handler()"</code> runs a class method when a DOM event fires. Interpolation and property binding flow data class → view; event binding flows view → class. Together they form a complete loop with no manual DOM manipulation.</p>
+  <h3>Example: a minimal standalone component</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-greeting',
+  template: `&lt;h1&gt;Hello, {{ name }}!&lt;/h1&gt;`,
+})
+export class Greeting {
+  name = 'Angular';
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Renders the element:
+&lt;h1&gt;Hello, Angular!&lt;/h1&gt;
+i.e. the page shows the heading "Hello, Angular!"</div>
+  </div>
+  <h3>Example: interpolation vs. property binding</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;!-- text content via interpolation --&gt;
+&lt;p&gt;{{ title }}&lt;/p&gt;
+
+&lt;!-- a DOM property via property binding --&gt;
+&lt;img [src]="logoUrl" [alt]="title" /&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>If title = "DevDocs" and logoUrl = "/logo.png":
+&lt;p&gt;DevDocs&lt;/p&gt;
+&lt;img src="/logo.png" alt="DevDocs"&gt;</div>
+  </div>
+  <h3>Example: event binding into the class</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-counter',
+  template: `
+    &lt;button (click)="increment()"&gt;Clicked {{ count }}x&lt;/button&gt;
+  `,
+})
+export class Counter {
+  count = 0;
+  increment() { this.count++; }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Initial button label: "Clicked 0x"
+After three clicks: "Clicked 3x"
+(The class field is the model; the view updates automatically.)</div>
+  </div>
+  <p class="note">Note: In modern Angular, expressions in <code>{{ }}</code> should stay simple and side-effect free — they can be re-evaluated often. Put real logic in class methods or, better, in computed signals, and only read the result in the template.</p>
+</section>
+
+<section id="why-angular" class="concept" tabindex="-1">
+  <h2>Why Angular: key features</h2>
+  <p>Angular is an <em>opinionated, batteries-included framework</em> rather than a small view library. A router, a two-flavored forms system, an <code>HttpClient</code>, dependency injection (DI), internationalization, and a first-party CLI all ship as official, version-aligned packages under the <code>@angular</code> scope. Because these pieces are designed together, you spend less time choosing and gluing third-party libraries and more time building features — and upgrades move the whole stack forward in lockstep.</p>
+  <p>The framework is <strong>TypeScript-first</strong>: components, services, and templates are all type-checked, and Angular's template type-checking catches binding mistakes at build time. Its <strong>component + template</strong> model keeps UI modular and testable. Since Angular v16+, reactivity is built on <strong>signals</strong> — <code>signal()</code>, <code>computed()</code>, and <code>effect()</code> — giving fine-grained, predictable updates that are gradually replacing the older Zone.js change detection. Dependency injection makes code <strong>testable</strong>: any dependency can be swapped for a fake in a test, and the modern <code>inject()</code> function makes wiring concise.</p>
+  <p>Finally, Angular is known for its <strong>tooling and longevity</strong>. The CLI (<code>ng</code>) scaffolds projects, generates components, runs a dev server with hot reload, builds optimized bundles, and runs tests. Angular follows a predictable release cadence (roughly two major versions per year) with a documented support window and automated <code>ng update</code> migrations (schematics) that rewrite your code for you. For teams, that means a stable, well-signposted upgrade path over many years rather than churn.</p>
+  <h3>Example: create a new project</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="bash"><code>ng new my-app</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>? Which stylesheet format? CSS
+? Do you want to enable Server-Side Rendering (SSR)? No
+CREATE my-app/package.json
+CREATE my-app/angular.json
+CREATE my-app/src/main.ts
+CREATE my-app/src/app/app.ts
+... (standalone project by default)
+✔ Packages installed successfully.</div>
+  </div>
+  <h3>Example: generated project structure</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="bash"><code>my-app/
+├── src/
+│   ├── app/
+│   │   ├── app.ts          # root standalone component
+│   │   ├── app.html        # root template
+│   │   ├── app.css
+│   │   └── app.config.ts   # providers (router, http, ...)
+│   ├── main.ts             # bootstrapApplication(App)
+│   └── index.html
+├── angular.json            # build/serve configuration
+├── package.json
+└── tsconfig.json           # strict TypeScript by default</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>A ready-to-run standalone app: no NgModule required, strict mode on, one component wired up.</div>
+  </div>
+  <h3>Example: run the dev server</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="bash"><code>cd my-app
+ng serve</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Initial chunk files | Names         |  Raw size
+main.js             | main          | 210.45 kB
+...
+Application bundle generation complete. [2.1 seconds]
+➜  Local:   http://localhost:4200/
+✔ Compiled successfully. Watching for file changes...</div>
+  </div>
+  <p class="note note-compat">Note: Standalone components are the default from Angular v17 onward, and v19+ treats standalone as implicit (you no longer write <code>standalone: true</code>). NgModules still work but are no longer the recommended starting point.</p>
+</section>
+
+<section id="dev-setup" class="concept" tabindex="-1">
+  <h2>Setup, CLI &amp; versions</h2>
+  <p>Angular runs on <strong>Node.js</strong> and uses <strong>npm</strong> (or an alternative like pnpm/yarn) to manage packages. Always install an <em>LTS</em> (Long-Term Support) release of Node — Angular pins supported versions per release, and recent Angular (v20+) requires Node 20 or 22. Using a non-LTS or too-old Node is the most common cause of confusing install errors, so check <code>node --version</code> first. A Node version manager (nvm on macOS/Linux, nvm-windows) makes it easy to keep the right version per project.</p>
+  <p>With Node in place, install the Angular CLI globally so the <code>ng</code> command is available everywhere: <code>npm install -g @angular/cli</code>. The CLI is your primary interface to Angular — it scaffolds, serves, generates, tests, and builds. Verify the install and see the aligned versions of the CLI, framework, and TypeScript with <code>ng version</code>. Create a project with <code>ng new my-app</code>, which is <strong>standalone by default</strong> and enables TypeScript strict mode.</p>
+  <p>Day to day you'll lean on a handful of commands. <code>ng serve</code> starts a hot-reloading dev server (default port 4200). <code>ng generate component x</code> (short: <code>ng g c x</code>) scaffolds a new component with its template, styles, and class. <code>ng build</code> produces an optimized production bundle in <code>dist/</code>. The important folders are <code>src/app</code> (your components and services), <code>src/main.ts</code> (the bootstrap entry point), and <code>angular.json</code> (build and serve configuration).</p>
+  <h3>Example: check versions</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="bash"><code>node --version
+npm install -g @angular/cli
+ng version</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>v22.11.0
+
+Angular CLI: 20.0.0
+Node: 22.11.0
+Package Manager: npm 10.9.0
+Angular: 20.0.0
+... @angular-devkit/build-angular 20.0.0
+Typescript 5.8.2</div>
+  </div>
+  <h3>Example: scaffold and serve</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="bash"><code>ng new my-app
+cd my-app
+ng serve --open</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>✔ Application bundle generation complete.
+➜  Local:   http://localhost:4200/
+(--open launches your default browser automatically)</div>
+  </div>
+  <h3>Example: generate a component</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="bash"><code>ng generate component user-card
+# or the shorthand:
+ng g c user-card</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>CREATE src/app/user-card/user-card.ts (232 bytes)
+CREATE src/app/user-card/user-card.html (24 bytes)
+CREATE src/app/user-card/user-card.css (0 bytes)
+CREATE src/app/user-card/user-card.spec.ts (492 bytes)</div>
+  </div>
+  <h3>Example: production build</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="bash"><code>ng build</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Initial chunk files | Names   | Raw size | Transfer size
+main-ABC123.js      | main    | 190 kB   |  55 kB
+...
+Application bundle generation complete. [4.8 s]
+Output written to dist/my-app/</div>
+  </div>
+  <p class="note note-compat">Note: Match your Node version to the Angular release notes — each major Angular version lists its supported Node and TypeScript ranges. When in doubt, prefer the newest active LTS Node and let <code>ng update</code> handle framework upgrades.</p>
+</section>
+
+<section id="ts-jumpstart" class="concept" tabindex="-1">
+  <h2>TypeScript jumpstart</h2>
+  <p>Angular is written in and designed around <strong>TypeScript</strong>, a superset of JavaScript that adds a static type system. You get autocompletion, refactoring safety, and compile-time error checking — mistakes surface in your editor instead of at runtime. Angular leans on several TS features so heavily that understanding them is understanding Angular. The first is <strong>classes</strong>: every component and service is a class, with fields (state) and methods (behavior).</p>
+  <p>Next are <strong>decorators</strong> — the <code>@Something(...)</code> annotations attached to a class. Angular uses <code>@Component</code> to mark a class as a component (and supply its selector and template) and <code>@Injectable</code> to mark a class as a service that participates in dependency injection. Decorators are metadata: they tell Angular how to treat the class. You'll also use <strong>interfaces</strong> and <strong>type aliases</strong> to describe the shape of your data models, giving your app self-documenting, checkable contracts.</p>
+  <p>Rounding out the essentials: <strong>access modifiers</strong> (<code>private</code>, <code>protected</code>, <code>public</code>) and <code>readonly</code> control visibility and mutability; <strong>generics</strong> like <code>Array&lt;User&gt;</code> or <code>Signal&lt;number&gt;</code> let types be parameterized; <strong>strict null checks</strong> (on by default in <code>ng new</code>) force you to handle <code>null</code>/<code>undefined</code> explicitly; and <strong>union and literal types</strong> (<code>'idle' | 'loading' | 'error'</code>) model a fixed set of allowed values precisely. Angular's template type-checking uses all of these to validate your bindings.</p>
+  <h3>Example: an interface as a data model</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>export interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'admin' | 'member' | 'guest'; // literal union
+  avatarUrl?: string;                  // optional
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Assigning role: 'owner' fails to compile:
+Type '"owner"' is not assignable to type
+'"admin" | "member" | "guest"'.</div>
+  </div>
+  <h3>Example: a class using modifiers &amp; generics</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>export class UserStore {
+  private readonly users: User[] = [];
+
+  add(user: User): void {
+    this.users.push(user);
+  }
+
+  find(id: number): User | undefined {
+    return this.users.find(u =&gt; u.id === id);
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>find() returns User | undefined — strict null checks
+force callers to handle the "not found" case before
+reading .name, preventing runtime "undefined" errors.</div>
+  </div>
+  <h3>Example: a decorated, injectable service</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Injectable, signal } from '@angular/core';
+
+@Injectable({ providedIn: 'root' })
+export class Counter {
+  private readonly value = signal&lt;number&gt;(0);
+  readonly count = this.value.asReadonly();
+
+  increment(): void {
+    this.value.update(n =&gt; n + 1);
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>@Injectable + providedIn:'root' registers one shared
+instance app-wide. Signal&lt;number&gt; gives a typed,
+reactive counter exposed read-only to consumers.</div>
+  </div>
+  <p class="note">Note: Keep strict mode on (the <code>ng new</code> default). The extra up-front discipline around <code>null</code>, exact types, and access modifiers eliminates a large class of runtime bugs and makes Angular's template type-checking far more useful.</p>
+</section>
+
+<section id="first-component" class="concept" tabindex="-1">
+  <h2>Your first component</h2>
+  <p>A component is created by attaching the <code>@Component</code> decorator to a class. The decorator's configuration object drives everything Angular needs. <code>selector</code> is the custom tag name. The view can be defined inline with <code>template</code> or in a separate file with <code>templateUrl</code>; styles likewise use inline <code>styles</code> or an external <code>styleUrl</code>. In modern Angular, components are <strong>standalone</strong> by default, so they list their own template dependencies in an <code>imports</code> array instead of belonging to an NgModule.</p>
+  <p>The class beneath the decorator holds the model and behavior. To render the root component into the page, <code>main.ts</code> calls <code>bootstrapApplication(App, appConfig)</code>, which mounts the root component's selector (found in <code>index.html</code>) and supplies app-wide providers. From there, you compose UI by <strong>nesting</strong>: import a child component into a parent's <code>imports</code>, then place the child's selector — as if it were a native element — inside the parent's template.</p>
+  <p>Inside templates you connect data with the bindings from the introduction: interpolation <code>{{ }}</code> for text, <code>[prop]</code> for properties and inputs, and <code>(event)</code> for events. A child exposes data entry points with the <code>input()</code> signal function (the modern replacement for the <code>@Input()</code> decorator), and the parent feeds them through property binding. This is how a component tree passes data downward while staying strongly typed end to end.</p>
+  <h3>Example: inline template &amp; bootstrap</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// app.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  template: `&lt;h1&gt;{{ title }}&lt;/h1&gt;`,
+  styles: [`h1 { color: rebeccapurple; }`],
+})
+export class App {
+  title = 'DevDocs';
+}
+
+// main.ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { App } from './app/app';
+
+bootstrapApplication(App);</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>index.html contains &lt;app-root&gt;&lt;/app-root&gt;.
+Angular replaces it, rendering:
+&lt;h1 style="color: rebeccapurple"&gt;DevDocs&lt;/h1&gt;</div>
+  </div>
+  <h3>Example: external template file</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// user-card.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-user-card',
+  templateUrl: './user-card.html',
+  styleUrl: './user-card.css',
+})
+export class UserCard {
+  name = 'Ada Lovelace';
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;!-- user-card.html --&gt;
+&lt;p&gt;{{ name }}&lt;/p&gt;
+renders:
+&lt;p&gt;Ada Lovelace&lt;/p&gt;</div>
+  </div>
+  <h3>Example: nesting with an input</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, input } from '@angular/core';
+
+@Component({
+  selector: 'app-badge',
+  template: `&lt;span class="badge"&gt;{{ label() }}&lt;/span&gt;`,
+})
+export class Badge {
+  label = input.required&lt;string&gt;();
+}
+
+@Component({
+  selector: 'app-root',
+  imports: [Badge],
+  template: `&lt;app-badge [label]="status" /&gt;`,
+})
+export class App {
+  status = 'Online';
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The parent binds status → the child's label input:
+&lt;span class="badge"&gt;Online&lt;/span&gt;</div>
+  </div>
+  <p class="note note-compat">Note: Prefer the signal-based <code>input()</code> / <code>input.required()</code> over the legacy <code>@Input()</code> decorator in new code (Angular v17.1+). Inputs are read as functions in the template — write <code>{{ label() }}</code>, not <code>{{ label }}</code>.</p>
+</section>
+<section id="component-input" class="concept" tabindex="-1">
+  <h2>Component @Input</h2>
+  <p>Angular components are composed into trees, and data flows <em>down</em> from a parent to its children. An <code>@Input()</code> decorator marks a class property as a public entry point: the parent writes to it through template binding. Inside the child's class you simply declare <code>@Input() name = '';</code>, and the parent supplies a value with the square-bracket syntax <code>[name]="expr"</code>. The brackets mean "property binding" — Angular evaluates <code>expr</code> as a component expression and assigns the result. Without brackets, as in <code>name="Ada"</code>, the value is passed as a literal string, which is fine only when you really want a constant string.</p>
+  <p>Inputs can be aliased so the public template name differs from the internal field name: <code>@Input('userName') name = '';</code> exposes the binding as <code>[userName]</code> while your code keeps using <code>this.name</code>. You can also intercept assignments with a setter/getter pair, which is the classic way to run logic every time a new value arrives — recomputing derived state, logging, or normalising input. A plain default value on the property acts as the fallback when the parent binds nothing.</p>
+  <p>Modern Angular hardens inputs with options. <code>@Input({ required: true })</code> makes the compiler error at build time if a parent forgets to bind the input, catching wiring mistakes early. The <code>transform</code> option runs a pure function on the incoming value: the built-in <code>booleanAttribute</code> turns the presence of an attribute (or the strings <code>"true"</code>/<code>""</code>) into a real <code>boolean</code>, and <code>numberAttribute</code> coerces a string to a <code>number</code>. This mirrors how native HTML boolean attributes behave.</p>
+  <h3>Example: basic input + property binding</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-greeting',
+  standalone: true,
+  template: `&lt;p&gt;Hello, {{ name }}!&lt;/p&gt;`,
+})
+export class GreetingComponent {
+  @Input() name = 'stranger';
+}
+
+// Parent template:
+// &lt;app-greeting [name]="userName" /&gt;
+// &lt;app-greeting name="Grace" /&gt;   // literal string</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>With userName = 'Ada':
+&lt;p&gt;Hello, Ada!&lt;/p&gt;
+&lt;p&gt;Hello, Grace!&lt;/p&gt;</div>
+  </div>
+  <h3>Example: aliasing + setter that reacts to changes</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-price',
+  standalone: true,
+  template: `&lt;span&gt;{{ formatted }}&lt;/span&gt;`,
+})
+export class PriceComponent {
+  formatted = '';
+
+  // public binding name is [amount], field is _cents
+  @Input('amount')
+  set amount(value: number) {
+    this._cents = value;
+    this.formatted = '$' + (value / 100).toFixed(2);
+  }
+  get amount() { return this._cents; }
+  private _cents = 0;
+}
+
+// Parent: &lt;app-price [amount]="1999" /&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;span&gt;$19.99&lt;/span&gt;
+
+Every time [amount] changes, the setter
+recomputes `formatted` automatically.</div>
+  </div>
+  <h3>Example: required inputs + transforms</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, Input, booleanAttribute, numberAttribute }
+  from '@angular/core';
+
+@Component({
+  selector: 'app-badge',
+  standalone: true,
+  template: `&lt;b&gt;{{ label }} ({{ count }}) {{ active ? 'ON' : 'off' }}&lt;/b&gt;`,
+})
+export class BadgeComponent {
+  @Input({ required: true }) label!: string;
+  @Input({ transform: numberAttribute }) count = 0;
+  @Input({ transform: booleanAttribute }) active = false;
+}
+
+// &lt;app-badge label="Inbox" count="42" active /&gt;
+// &lt;app-badge count="7" /&gt;   // compile error: label required</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;b&gt;Inbox (42) ON&lt;/b&gt;
+
+count="42" (string) becomes number 42.
+Bare `active` attribute becomes true.
+Omitting label fails the build.</div>
+  </div>
+  <p class="note note-compat">Note: <code>@Input()</code> is the decorator-based API and still fully supported. Angular v17.1+ also offers the signal-based <code>input()</code> function (<code>name = input.required&lt;string&gt;()</code>), which is reactive and read as <code>name()</code>. Prefer signal inputs in new code, but the concepts here transfer directly.</p>
+</section>
+
+<section id="component-output" class="concept" tabindex="-1">
+  <h2>@Output &amp; EventEmitter</h2>
+  <p>If inputs push data down the tree, outputs send events <em>up</em>. A child cannot reach into its parent, but it can announce that something happened and let the parent decide how to respond. You declare an output as a property initialised to an <code>EventEmitter</code>: <code>@Output() saved = new EventEmitter&lt;string&gt;();</code>. The generic parameter is the payload type. When the child wants to notify the parent, it calls <code>this.saved.emit(payload)</code>.</p>
+  <p>The parent subscribes using the parentheses (event) binding syntax: <code>(saved)="onSaved($event)"</code>. Here <code>$event</code> is the exact value passed to <code>emit()</code> — not a DOM event. This is the same binding mechanism used for native events like <code>(click)</code>, which keeps the mental model uniform: parentheses always mean "listen for something." Outputs can also be aliased, e.g. <code>@Output('valueChange') change = new EventEmitter&lt;number&gt;()</code>, so the template name and internal name can differ.</p>
+  <p>Together, <code>@Input</code> and <code>@Output</code> form the fundamental parent-child contract. A common pattern is a "dumb" presentational child that receives data via inputs and emits user intent via outputs, while a "smart" parent owns the state and reacts to those events. This keeps children reusable and side-effect free.</p>
+  <h3>Example: child emits a value on click</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-rater',
+  standalone: true,
+  template: `
+    &lt;button (click)="rate(1)"&gt;👍&lt;/button&gt;
+    &lt;button (click)="rate(-1)"&gt;👎&lt;/button&gt;
+  `,
+})
+export class RaterComponent {
+  @Output() rated = new EventEmitter&lt;number&gt;();
+  rate(delta: number) { this.rated.emit(delta); }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Renders two buttons.
+Clicking 👍 emits 1, 👎 emits -1
+to whoever is listening on (rated).</div>
+  </div>
+  <h3>Example: parent handles the event</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-feed',
+  standalone: true,
+  imports: [RaterComponent],
+  template: `
+    &lt;app-rater (rated)="onRated($event)" /&gt;
+    &lt;p&gt;Score: {{ score }}&lt;/p&gt;
+  `,
+})
+export class FeedComponent {
+  score = 0;
+  onRated(delta: number) { this.score += delta; }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Start:  Score: 0
+Click 👍 → Score: 1
+Click 👍 → Score: 2
+Click 👎 → Score: 1
+
+$event is the emitted number.</div>
+  </div>
+  <h3>Example: counter child with aliased output</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-counter',
+  standalone: true,
+  template: `
+    &lt;button (click)="dec()"&gt;-&lt;/button&gt;
+    &lt;span&gt;{{ value }}&lt;/span&gt;
+    &lt;button (click)="inc()"&gt;+&lt;/button&gt;
+  `,
+})
+export class CounterComponent {
+  value = 0;
+  // internal name `change`, public event `valueChange`
+  @Output('valueChange') change = new EventEmitter&lt;number&gt;();
+  inc() { this.value++; this.change.emit(this.value); }
+  dec() { this.value--; this.change.emit(this.value); }
+}
+
+// Parent: &lt;app-counter (valueChange)="log($event)" /&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Clicking + three times emits:
+1, then 2, then 3
+
+Parent's log($event) receives each value.</div>
+  </div>
+  <p class="note note-perf">Note: never emit inside a getter or a template expression — that fires on every change-detection cycle. Emit only from real user actions or lifecycle events. The signal-based <code>output()</code> function (v17.3+) is the modern alternative and does not need <code>EventEmitter</code>.</p>
+</section>
+
+<section id="two-way-binding" class="concept" tabindex="-1">
+  <h2>Two-way binding &amp; ngModel</h2>
+  <p>Two-way binding lets a value flow down into a child <em>and</em> changes flow back up, using a single compact syntax: <code>[(x)]="value"</code>. The nickname is the "banana in a box" because the parentheses (the banana) sit inside the brackets (the box). It is pure syntactic sugar. Angular desugars <code>[(x)]="value"</code> into two separate bindings: a property binding <code>[x]="value"</code> plus an event binding <code>(xChange)="value = $event"</code>. The convention is strict — for any input named <code>x</code>, the paired output must be named <code>xChange</code> for the shorthand to work.</p>
+  <p>The most familiar case is <code>[(ngModel)]</code>, which binds a form control's value to a component property. It comes from <code>FormsModule</code>, so a standalone component must add it to its <code>imports</code> array. Typing in the input updates the property, and changing the property programmatically updates the input — both directions stay in sync automatically.</p>
+  <p>You can build your own two-way property by exposing an input and a matching <code>Change</code> output. Follow the naming rule and any consumer can use the banana-in-a-box shorthand on your component. This is exactly how <code>ngModel</code> and Angular Material components work under the hood.</p>
+  <h3>Example: [(ngModel)] with FormsModule</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-name-form',
+  standalone: true,
+  imports: [FormsModule],
+  template: `
+    &lt;input [(ngModel)]="name" placeholder="Type..." /&gt;
+    &lt;p&gt;Hello, {{ name || '???' }}&lt;/p&gt;
+  `,
+})
+export class NameFormComponent {
+  name = '';
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Type "Lin" in the box →
+&lt;p&gt;Hello, Lin&lt;/p&gt;
+
+Clearing the box →
+&lt;p&gt;Hello, ???&lt;/p&gt;</div>
+  </div>
+  <h3>Example: the desugaring, written out</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;!-- shorthand --&gt;
+&lt;app-toggle [(on)]="isOn"&gt;&lt;/app-toggle&gt;
+
+&lt;!-- is exactly equivalent to --&gt;
+&lt;app-toggle
+  [on]="isOn"
+  (onChange)="isOn = $event"&gt;
+&lt;/app-toggle&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Both forms behave identically.
+Input `on` receives isOn.
+Output `onChange` writes $event back
+into isOn — a full round trip.</div>
+  </div>
+  <h3>Example: a custom two-way [(on)] property</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, Input, Output, EventEmitter }
+  from '@angular/core';
+
+@Component({
+  selector: 'app-toggle',
+  standalone: true,
+  template: `&lt;button (click)="flip()"&gt;{{ on ? 'ON' : 'OFF' }}&lt;/button&gt;`,
+})
+export class ToggleComponent {
+  @Input() on = false;
+  @Output() onChange = new EventEmitter&lt;boolean&gt;();
+  flip() {
+    this.on = !this.on;
+    this.onChange.emit(this.on);   // completes the loop
+  }
+}
+// Parent: &lt;app-toggle [(on)]="isOn" /&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Button shows OFF (isOn = false).
+Click → emits true → parent's isOn = true.
+Button now shows ON, and any other
+binding to isOn updates too.</div>
+  </div>
+  <p class="note note-compat">Note: since v17.2 the <code>model()</code> signal function replaces this boilerplate entirely — <code>on = model(false)</code> creates a writable signal that is automatically two-way bindable, no separate <code>Change</code> output required. It is covered later; the desugaring rule above still explains what happens under the hood.</p>
+</section>
+
+<section id="control-flow-if" class="concept" tabindex="-1">
+  <h2>Control flow: @if / @else</h2>
+  <p>Angular v17 introduced built-in control flow blocks that live directly in the template syntax rather than as structural directives. The <code>@if</code> block conditionally renders a chunk of template when its expression is truthy. Unlike the old <code>*ngIf</code>, these blocks are part of the framework's syntax: there is <strong>nothing to import</strong> and no directive to add to <code>imports</code>. They are also faster and produce clearer type-narrowing for the compiler.</p>
+  <p>The full form chains with <code>@else if (…)</code> and a final <code>@else</code>, evaluated top to bottom until one condition matches — much like a JavaScript <code>if/else</code> ladder. The condition is any component expression: a property, a method call, or a signal read such as <code>isLoggedIn()</code>. Only the matching branch is instantiated in the DOM; the others are not created at all, which keeps the DOM minimal.</p>
+  <p>A powerful feature is aliasing the evaluated condition with <code>as</code>: <code>@if (user(); as u) { … }</code> stores the (truthy) result in the local variable <code>u</code> for the block's scope. This is ideal for unwrapping a nullable value or the emission of an async signal exactly once, avoiding repeated calls and giving you a non-null, well-typed reference inside the block.</p>
+  <h3>Example: basic @if / @else</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@if (isLoggedIn()) {
+  &lt;p&gt;Welcome back!&lt;/p&gt;
+} @else {
+  &lt;a href="/login"&gt;Please sign in&lt;/a&gt;
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>isLoggedIn() === true →
+&lt;p&gt;Welcome back!&lt;/p&gt;
+
+isLoggedIn() === false →
+&lt;a href="/login"&gt;Please sign in&lt;/a&gt;</div>
+  </div>
+  <h3>Example: @else if ladder</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@if (status() === 'loading') {
+  &lt;spinner /&gt;
+} @else if (status() === 'error') {
+  &lt;p class="err"&gt;Something broke.&lt;/p&gt;
+} @else {
+  &lt;p&gt;Loaded {{ count() }} items.&lt;/p&gt;
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>status()='loading' → &lt;spinner&gt;
+status()='error'   → &lt;p class="err"&gt;Something broke.&lt;/p&gt;
+status()='ready'   → &lt;p&gt;Loaded 12 items.&lt;/p&gt;
+
+Only one branch ever exists in the DOM.</div>
+  </div>
+  <h3>Example: aliasing the result with `as`</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@if (user(); as u) {
+  &lt;p&gt;{{ u.name }} — {{ u.email }}&lt;/p&gt;
+} @else {
+  &lt;p&gt;No user loaded.&lt;/p&gt;
+}
+&lt;!-- `u` is the non-null result of user();
+     called once, typed as User (not User|null) --&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>user() = { name:'Rae', email:'r@x.io' } →
+&lt;p&gt;Rae — r@x.io&lt;/p&gt;
+
+user() = null →
+&lt;p&gt;No user loaded.&lt;/p&gt;</div>
+  </div>
+  <p class="note">Note: <code>@if</code> fully replaces <code>*ngIf</code>. Run <code>ng generate @angular/core:control-flow</code> to auto-migrate an existing codebase. The <code>as</code> alias is scoped only to that block — you cannot use <code>u</code> in the <code>@else</code>.</p>
+</section>
+
+<section id="control-flow-for" class="concept" tabindex="-1">
+  <h2>Control flow: @for</h2>
+  <p>The <code>@for</code> block iterates over a collection and renders its template once per item: <code>@for (item of items; track item.id) { … }</code>. The <code>track</code> expression is <strong>mandatory</strong> — the compiler rejects a <code>@for</code> without it. Its purpose is identity: <code>track</code> tells Angular how to recognise the "same" item across renders so it can reuse existing DOM nodes instead of destroying and recreating them. Tracking by a stable unique key like <code>item.id</code> yields the best performance and preserves focus, scroll, and animation state; use <code>track $index</code> only for primitive lists that never reorder.</p>
+  <p>Inside the block Angular exposes contextual variables. <code>$index</code> is the zero-based position, <code>$count</code> is the total length, <code>$first</code> and <code>$last</code> are booleans for the ends, and <code>$even</code>/<code>$odd</code> reflect the index parity — handy for zebra striping. You can alias them (<code>let i = $index</code>) if a nested loop needs to disambiguate.</p>
+  <p>An optional <code>@empty</code> block renders when the collection has zero items, giving you a clean fallback without a separate <code>@if</code>. <code>@for</code> blocks nest freely; each level has its own contextual variables. This block replaces <code>*ngFor</code> and, like <code>@if</code>, needs no import.</p>
+  <h3>Example: basic @for with track</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@for (todo of todos(); track todo.id) {
+  &lt;li&gt;{{ todo.title }}&lt;/li&gt;
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>todos() = [
+  {id:1,title:'Buy milk'},
+  {id:2,title:'Walk dog'} ]
+
+&lt;li&gt;Buy milk&lt;/li&gt;
+&lt;li&gt;Walk dog&lt;/li&gt;</div>
+  </div>
+  <h3>Example: contextual variables + @empty</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@for (u of users(); track u.id) {
+  &lt;div [class.stripe]="$even"&gt;
+    {{ $index + 1 }}/{{ $count }}: {{ u.name }}
+    @if ($first) { &lt;b&gt;(top)&lt;/b&gt; }
+    @if ($last)  { &lt;b&gt;(end)&lt;/b&gt; }
+  &lt;/div&gt;
+} @empty {
+  &lt;p&gt;No users found.&lt;/p&gt;
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>users = [Ana, Bo, Cy]:
+&lt;div class="stripe"&gt;1/3: Ana &lt;b&gt;(top)&lt;/b&gt;&lt;/div&gt;
+&lt;div&gt;2/3: Bo&lt;/div&gt;
+&lt;div class="stripe"&gt;3/3: Cy &lt;b&gt;(end)&lt;/b&gt;&lt;/div&gt;
+
+users = []:
+&lt;p&gt;No users found.&lt;/p&gt;</div>
+  </div>
+  <h3>Example: nested loops with aliased index</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@for (row of grid(); track row.id; let r = $index) {
+  @for (cell of row.cells; track cell.id; let c = $index) {
+    &lt;span&gt;[{{ r }},{{ c }}]={{ cell.value }}&lt;/span&gt;
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>grid = 2 rows x 2 cells:
+&lt;span&gt;[0,0]=A&lt;/span&gt;&lt;span&gt;[0,1]=B&lt;/span&gt;
+&lt;span&gt;[1,0]=C&lt;/span&gt;&lt;span&gt;[1,1]=D&lt;/span&gt;
+
+Aliasing keeps inner/outer $index distinct.</div>
+  </div>
+  <p class="note note-perf">Note: choosing a bad <code>track</code> (e.g. tracking a whole object or an unstable value) forces Angular to recreate every row on each update, tanking performance and losing DOM state. Always track by a stable identifier when one exists.</p>
+</section>
+<section id="control-flow-switch" class="concept" tabindex="-1">
+  <h2>Control flow: @switch</h2>
+  <p>The <code>@switch</code> block is Angular's built-in control-flow primitive for choosing exactly one branch out of many based on a single value. It was introduced alongside <code>@if</code> and <code>@for</code> in v17 and is written directly in the template as <code>@switch (expr) { @case (v) { ... } @default { ... } }</code>. The runtime evaluates <code>expr</code> once, then renders the first <code>@case</code> whose value matches, or the <code>@default</code> block if none match. Unlike the older <code>*ngSwitch</code>, it requires no imports and produces no wrapper elements.</p>
+  <p>Matching uses strict equality — the exact same semantics as JavaScript's <code>===</code>. That means <code>@case (1)</code> matches the number <code>1</code> but not the string <code>'1'</code>, and object cases match by reference identity, not structural equality. There is intentionally no fall-through: once a case matches, only that block renders and evaluation stops, so you never need a <code>break</code> statement the way you would in a C-style switch. Cases are also not required to be exhaustive; if nothing matches and there is no <code>@default</code>, nothing is rendered.</p>
+  <p>Prefer <code>@switch</code> over a long chain of <code>@if</code> / <code>@else if</code> when every branch is testing the <em>same</em> expression against a set of discrete literal values — a status string, an enum, a numeric mode. It reads more clearly, evaluates the discriminant a single time, and pairs naturally with TypeScript discriminated unions. Reach for <code>@if</code> chains instead when each branch tests a <em>different</em> condition.</p>
+  <h3>Example: status string</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@switch (status()) {
+  @case ('loading') { &lt;p&gt;Loading…&lt;/p&gt; }
+  @case ('success') { &lt;p&gt;Done!&lt;/p&gt; }
+  @case ('error')   { &lt;p&gt;Failed.&lt;/p&gt; }
+  @default          { &lt;p&gt;Idle&lt;/p&gt; }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>When status() is 'success':<br>&lt;p&gt;Done!&lt;/p&gt;</div>
+  </div>
+  <h3>Example: numeric case, strict compare</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@switch (code()) {
+  @case (200) { &lt;span&gt;OK&lt;/span&gt; }
+  @case (404) { &lt;span&gt;Not found&lt;/span&gt; }
+  @default    { &lt;span&gt;Other&lt;/span&gt; }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>code() === 404 renders:<br>&lt;span&gt;Not found&lt;/span&gt;<br>The string '404' would NOT match — falls to Other.</div>
+  </div>
+  <h3>Example: no default, no match</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@switch (role()) {
+  @case ('admin')  { &lt;button&gt;Manage&lt;/button&gt; }
+  @case ('editor') { &lt;button&gt;Edit&lt;/button&gt; }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>When role() is 'guest':<br>(nothing rendered — no matching case and no @default)</div>
+  </div>
+  <p class="note">Note: <code>@case</code> compares with strict <code>===</code>. A common bug is a numeric value coming in as a string (e.g. from a route param) and silently falling through to <code>@default</code>. Coerce the type before switching.</p>
+</section>
+
+<section id="legacy-structural" class="concept" tabindex="-1">
+  <h2>*ngIf / *ngFor / *ngSwitch</h2>
+  <p>Before the built-in <code>@</code>-block syntax, Angular expressed conditional and repeated rendering with <em>structural directives</em>: <code>*ngIf</code>, <code>*ngFor</code>, and <code>*ngSwitch</code>. The asterisk is syntactic sugar — <code>*ngIf</code> desugars to an <code>&lt;ng-template&gt;</code> that the directive stamps in or out of the DOM. These directives are still fully supported and appear across the majority of existing codebases, so you must be able to read and maintain them.</p>
+  <p>They are not available by default, though. In a standalone component you must import them, either individually as <code>NgIf</code>, <code>NgFor</code>, <code>NgSwitch</code> from <code>@angular/common</code>, or in bulk via <code>CommonModule</code>. Forgetting the import produces a template error like "Can't bind to 'ngIf' since it isn't a known property". <code>*ngIf</code> supports an <em>else</em> branch that points at a named template: <code>*ngIf="ok; else fallback"</code> paired with <code>&lt;ng-template #fallback&gt;</code>. Inside expressions the safe-navigation ("Elvis") operator <code>user?.name</code> guards against <code>null</code>/<code>undefined</code> without throwing.</p>
+  <p><code>*ngFor</code> exposes rich local variables — <code>index</code>, <code>first</code>, <code>last</code>, <code>even</code>, <code>odd</code>, <code>count</code> — assigned via <code>let i = index</code>, and a <code>trackBy</code> function so Angular can reuse DOM nodes across changes instead of destroying and rebuilding them. <code>[ngSwitch]</code> works with the <code>*ngSwitchCase</code> and <code>*ngSwitchDefault</code> companion directives on child elements.</p>
+  <p>Compared with the new control flow, the directives require imports, are slower (they run through the generic directive machinery rather than dedicated compiled code), and give weaker type narrowing. The <code>@</code>-blocks are built into the template compiler, need no imports, narrow types precisely, ship a faster diffing algorithm for <code>@for</code>, and make <code>track</code> mandatory. New code should prefer <code>@if</code>/<code>@for</code>/<code>@switch</code>; the directives remain for legacy and interop.</p>
+  <h3>Example: *ngIf with else template</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;p *ngIf="user; else anon"&gt;
+  Hi {{ user?.name }}
+&lt;/p&gt;
+&lt;ng-template #anon&gt;
+  &lt;p&gt;Please sign in&lt;/p&gt;
+&lt;/ng-template&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>When user is null:<br>&lt;p&gt;Please sign in&lt;/p&gt;<br>The Elvis operator keeps user?.name safe.</div>
+  </div>
+  <h3>Example: *ngFor with trackBy and locals</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;li *ngFor="let t of todos;
+      let i = index; let last = last;
+      trackBy: byId"
+    [class.end]="last"&gt;
+  {{ i + 1 }}. {{ t.text }}
+&lt;/li&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;li&gt;1. Buy milk&lt;/li&gt;<br>&lt;li class="end"&gt;2. Walk dog&lt;/li&gt;<br>byId lets Angular reuse rows across updates.</div>
+  </div>
+  <h3>Example: odd / even zebra rows</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;tr *ngFor="let r of rows; let odd = odd"
+    [class.shaded]="odd"&gt;
+  &lt;td&gt;{{ r }}&lt;/td&gt;
+&lt;/tr&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;tr&gt;&lt;td&gt;A&lt;/td&gt;&lt;/tr&gt;<br>&lt;tr class="shaded"&gt;&lt;td&gt;B&lt;/td&gt;&lt;/tr&gt;<br>&lt;tr&gt;&lt;td&gt;C&lt;/td&gt;&lt;/tr&gt;</div>
+  </div>
+  <h3>Example: [ngSwitch]</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;div [ngSwitch]="tab"&gt;
+  &lt;p *ngSwitchCase="'home'"&gt;Home&lt;/p&gt;
+  &lt;p *ngSwitchCase="'help'"&gt;Help&lt;/p&gt;
+  &lt;p *ngSwitchDefault&gt;404&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>When tab === 'help':<br>&lt;div&gt;&lt;p&gt;Help&lt;/p&gt;&lt;/div&gt;</div>
+  </div>
+  <p class="note note-compat">Note: In standalone components remember to add <code>CommonModule</code> (or the specific <code>NgIf</code>/<code>NgFor</code>/<code>NgSwitch</code>) to <code>imports</code>. The <code>@</code>-blocks need no import at all — one reason to prefer them in new code.</p>
+</section>
+
+<section id="let-block" class="concept" tabindex="-1">
+  <h2>The @let block</h2>
+  <p>Introduced in v18, <code>@let</code> declares a <em>template-local variable</em>: <code>@let name = expression;</code>. It lets you name the result of an expression once and reuse that name throughout the template instead of repeating the expression — the template equivalent of a local <code>const</code>. The declaration ends with a semicolon and the variable becomes available immediately after it, on the same line's following siblings and any nested content.</p>
+  <p>A key benefit is computing something a single time. Writing <code>@let u = user();</code> reads the signal once and binds every subsequent <code>{{ u.name }}</code>, <code>{{ u.email }}</code> to that captured value, which is clearer and avoids scattering calls to <code>user()</code>. You can build derived values too, such as <code>@let total = price() + tax();</code>. The variable is reactive: whenever a dependency of its expression changes, Angular re-evaluates the <code>@let</code> and updates every place it is used.</p>
+  <p>Scope follows the view: a <code>@let</code> is visible in the view where it is declared and in any views nested below it (inside <code>@if</code>, <code>@for</code>, <code>&lt;ng-template&gt;</code>), but not in sibling or parent views. <code>@let</code> variables are read-only — you cannot assign to them from the template. They pair especially well with the <code>async</code> pipe: <code>@let vm = data$ | async;</code> subscribes once and gives every binding a stable snapshot, replacing the old <code>*ngIf="data$ | async as vm"</code> pattern.</p>
+  <h3>Example: capture a signal once</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@let u = user();
+&lt;h3&gt;{{ u.name }}&lt;/h3&gt;
+&lt;p&gt;{{ u.email }}&lt;/p&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;h3&gt;Ada Lovelace&lt;/h3&gt;<br>&lt;p&gt;ada@calc.io&lt;/p&gt;<br>user() is read a single time.</div>
+  </div>
+  <h3>Example: derived value</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@let total = price() + tax();
+&lt;span&gt;Total: {{ total | currency }}&lt;/span&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;span&gt;Total: $12.60&lt;/span&gt;<br>Recomputes when price() or tax() changes.</div>
+  </div>
+  <h3>Example: with the async pipe</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@let vm = data$ | async;
+@if (vm) {
+  &lt;ul&gt;
+    @for (x of vm.items; track x.id) {
+      &lt;li&gt;{{ x.label }}&lt;/li&gt;
+    }
+  &lt;/ul&gt;
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Once the observable emits:<br>&lt;ul&gt;&lt;li&gt;First&lt;/li&gt;&lt;li&gt;Second&lt;/li&gt;&lt;/ul&gt;<br>One subscription, shared snapshot.</div>
+  </div>
+  <p class="note">Note: <code>@let</code> is read-only and scoped to its view and descendants. A variable declared inside an <code>@if</code> block is not visible after the block closes — declare it higher up if you need it outside.</p>
+</section>
+
+<section id="ngclass-ngstyle" class="concept" tabindex="-1">
+  <h2>ngClass &amp; ngStyle</h2>
+  <p><code>[ngClass]</code> and <code>[ngStyle]</code> are directives from <code>@angular/common</code> that apply CSS classes and inline styles dynamically. <code>[ngClass]</code> accepts three input shapes: a <em>string</em> of space-separated class names (<code>[ngClass]="'a b'"</code>), an <em>array</em> of class names (<code>[ngClass]="['a', 'b']"</code>), or — most usefully — an <em>object map</em> where each key is a class name and each value is a boolean deciding whether that class is applied (<code>[ngClass]="{ active: isOn, disabled: !enabled }"</code>).</p>
+  <p><code>[ngStyle]</code> takes an object of CSS properties to values, e.g. <code>[ngStyle]="{ color: c, 'font-weight': w }"</code>. Property names may carry a unit suffix so you can bind a plain number: <code>'font-size.px': 14</code> applies <code>font-size: 14px</code>, and <code>'width.%': 50</code> applies <code>width: 50%</code>. Both directives require <code>CommonModule</code> (or the standalone <code>NgClass</code>/<code>NgStyle</code>) in a standalone component's imports.</p>
+  <p>Angular also has native class and style bindings that need <em>no</em> directive and no import: <code>[class.active]="isOn"</code> toggles a single class, and <code>[style.color]="c"</code> or <code>[style.width.px]="w"</code> sets a single property. Prefer these native bindings when you are toggling one or two known classes/properties — they are lighter and read cleanly. Reach for <code>[ngClass]</code>/<code>[ngStyle]</code> when the set of classes or styles is dynamic, computed as an object, or too numerous to list individually.</p>
+  <h3>Example: ngClass object map</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;button
+  [ngClass]="{
+    primary: isPrimary,
+    disabled: !enabled
+  }"&gt;Save&lt;/button&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>isPrimary=true, enabled=false:<br>&lt;button class="primary disabled"&gt;Save&lt;/button&gt;</div>
+  </div>
+  <h3>Example: ngStyle with units</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;p [ngStyle]="{
+     color: color,
+     'font-size.px': size
+   }"&gt;Hi&lt;/p&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>color='red', size=20:<br>&lt;p style="color: red; font-size: 20px;"&gt;Hi&lt;/p&gt;</div>
+  </div>
+  <h3>Example: native [class.x] binding</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;li [class.active]="isSelected"&gt;
+  Item
+&lt;/li&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>isSelected=true:<br>&lt;li class="active"&gt;Item&lt;/li&gt;<br>No import needed for [class.x].</div>
+  </div>
+  <h3>Example: native [style.x.unit] binding</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;div [style.width.%]="pct"
+     [style.color]="'navy'"&gt;
+  bar
+&lt;/div&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>pct=75:<br>&lt;div style="width: 75%; color: navy;"&gt;bar&lt;/div&gt;</div>
+  </div>
+  <p class="note note-perf">Note: For a single known class or style, prefer native <code>[class.x]</code> / <code>[style.x]</code> bindings — they skip the directive overhead and object diffing that <code>[ngClass]</code>/<code>[ngStyle]</code> incur.</p>
+</section>
+
+<section id="ng-container" class="concept" tabindex="-1">
+  <h2>ng-container</h2>
+  <p><code>&lt;ng-container&gt;</code> is a logical grouping element that renders <em>no DOM of its own</em>. Angular processes its bindings and children but emits nothing in place of the container tag itself, so it is the tool for grouping or applying directives without polluting the markup with an extra <code>&lt;div&gt;</code>. This matters when a wrapper element would break CSS layout (flex/grid children, table structure) or semantic HTML.</p>
+  <p>Its classic use is hosting a structural directive when you have nothing to attach it to. Instead of adding a throwaway <code>&lt;div *ngIf&gt;</code>, you write <code>&lt;ng-container *ngIf="ok"&gt;</code>, and only the inner content reaches the DOM. It also solves the "two structural directives on one element" restriction: since Angular forbids <code>*ngIf</code> and <code>*ngFor</code> on the same tag, you nest them — one directive on an <code>&lt;ng-container&gt;</code> and the other on the child.</p>
+  <p><code>&lt;ng-container&gt;</code> works with the new control-flow blocks too — you can put <code>@if</code> or <code>@for</code> content inside one to group siblings under a shared condition without a wrapper. It is also the standard host for <code>[ngTemplateOutlet]</code>, which renders a referenced <code>&lt;ng-template&gt;</code> in place; combined with an outlet context you can stamp reusable template fragments with no surrounding element.</p>
+  <h3>Example: *ngIf with no wrapper div</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;ng-container *ngIf="user"&gt;
+  &lt;span&gt;{{ user.name }}&lt;/span&gt;
+  &lt;span&gt;{{ user.role }}&lt;/span&gt;
+&lt;/ng-container&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;span&gt;Ada&lt;/span&gt;&lt;span&gt;Admin&lt;/span&gt;<br>No wrapping element around the two spans.</div>
+  </div>
+  <h3>Example: two structural directives</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;ng-container *ngFor="let u of users"&gt;
+  &lt;li *ngIf="u.active"&gt;{{ u.name }}&lt;/li&gt;
+&lt;/ng-container&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;li&gt;Ada&lt;/li&gt;<br>&lt;li&gt;Grace&lt;/li&gt;<br>Inactive users emit nothing — no stray container tags.</div>
+  </div>
+  <h3>Example: grouping with @if</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;ng-container&gt;
+  @if (loaded()) {
+    &lt;h2&gt;Title&lt;/h2&gt;
+    &lt;p&gt;Body&lt;/p&gt;
+  }
+&lt;/ng-container&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;h2&gt;Title&lt;/h2&gt;&lt;p&gt;Body&lt;/p&gt;<br>The container leaves no trace in the DOM.</div>
+  </div>
+  <h3>Example: ngTemplateOutlet</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;ng-template #greet let-n&gt;
+  &lt;p&gt;Hello {{ n }}&lt;/p&gt;
+&lt;/ng-template&gt;
+
+&lt;ng-container
+  [ngTemplateOutlet]="greet"
+  [ngTemplateOutletContext]="{ $implicit: 'Sam' }"&gt;
+&lt;/ng-container&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>&lt;p&gt;Hello Sam&lt;/p&gt;<br>Rendered in place with no host element.</div>
+  </div>
+  <p class="note">Note: <code>&lt;ng-container&gt;</code> accepts structural directives, template bindings, and outlets but cannot take a class, id, or style — it never becomes a real element. Use a normal tag if you actually need a DOM node.</p>
+</section>
+<section id="attribute-directives" class="concept" tabindex="-1">
+  <h2>Attribute directives</h2>
+  <p>An <em>attribute directive</em> attaches behavior to an existing host element without changing the DOM structure. You declare it with <code>@Directive</code> and give it an attribute-style selector such as <code>selector: '[appHighlight]'</code>. When Angular finds an element carrying that attribute, it instantiates the directive class and links it to that host element. Modern directives should be <code>standalone: true</code> (the default from v19) so they can be imported directly into a component's <code>imports</code> array.</p>
+  <p>To read or mutate the host element you <code>inject()</code> its <code>ElementRef</code> (a wrapper around the native node) and, for safe DOM manipulation, <code>Renderer2</code>. Prefer <code>Renderer2</code> over touching <code>nativeElement</code> directly: it keeps your code compatible with server-side rendering and other non-browser platforms where <code>nativeElement</code> may not exist. Even better, prefer <code>@HostBinding</code>, which lets Angular manage the binding declaratively and participate in change detection.</p>
+  <p><code>@HostBinding</code> binds a class property to something on the host: a class (<code>@HostBinding('class.active')</code>), a style (<code>@HostBinding('style.color')</code>), an attribute (<code>@HostBinding('attr.role')</code>), or a DOM property (<code>@HostBinding('disabled')</code>). Note the DOM <em>property</em> vs HTML <em>attribute</em> distinction: <code>attr.*</code> writes the static HTML attribute (useful for ARIA and things with no property), while a bare name binds the live JavaScript property on the element. <code>@HostListener</code> subscribes to host events, and <code>@Input()</code> on the directive lets a consumer configure it. Finally, <code>exportAs</code> names the directive instance so a template reference variable can grab it, e.g. <code>#ref="appThing"</code>.</p>
+
+  <h3>Example: highlight-on-hover directive</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Directive, ElementRef, HostBinding,
+  HostListener, Input, inject } from '@angular/core';
+
+@Directive({ selector: '[appHighlight]', standalone: true })
+export class HighlightDirective {
+  private el = inject(ElementRef&lt;HTMLElement&gt;);
+
+  @Input('appHighlight') color = 'yellow';
+  @HostBinding('style.backgroundColor') bg = '';
+  @HostBinding('style.cursor') cursor = 'pointer';
+
+  @HostListener('mouseenter') onEnter() { this.bg = this.color; }
+  @HostListener('mouseleave') onLeave() { this.bg = ''; }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Template: &lt;p [appHighlight]="'#cff'"&gt;Hover me&lt;/p&gt;. On mouseenter the paragraph's background turns light-blue; on mouseleave it clears. The cursor shows a pointer at all times.</div>
+  </div>
+
+  <h3>Example: Renderer2 vs direct DOM</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Directive, ElementRef, Renderer2,
+  HostListener, inject } from '@angular/core';
+
+@Directive({ selector: '[appPulse]', standalone: true })
+export class PulseDirective {
+  private el = inject(ElementRef);
+  private r = inject(Renderer2);
+
+  @HostListener('click') pulse() {
+    // Safe, SSR-friendly DOM writes:
+    this.r.addClass(this.el.nativeElement, 'pulsing');
+    this.r.setAttribute(this.el.nativeElement, 'aria-busy', 'true');
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Clicking the host adds the <code>pulsing</code> CSS class and sets <code>aria-busy="true"</code> on it. Using <code>Renderer2</code> instead of <code>nativeElement.classList</code> keeps the directive usable under server-side rendering.</div>
+  </div>
+
+  <h3>Example: exportAs + template reference variable</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Directive({
+  selector: '[appToggle]',
+  standalone: true,
+  exportAs: 'appToggle',
+})
+export class ToggleDirective {
+  open = false;
+  toggle() { this.open = !this.open; }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Template:<br>&lt;div appToggle #t="appToggle"&gt;<br>&nbsp;&nbsp;&lt;button (click)="t.toggle()"&gt;Toggle&lt;/button&gt;<br>&nbsp;&nbsp;&lt;p *ngIf="t.open"&gt;Now open&lt;/p&gt;<br>&lt;/div&gt;<br>The <code>#t</code> variable is the directive <em>instance</em>, so the template can call <code>t.toggle()</code> and read <code>t.open</code> directly.</div>
+  </div>
+
+  <p class="note note-compat">Note: <code>@HostBinding</code>/<code>@HostListener</code> still work, but modern Angular also supports the <code>host</code> object in the decorator metadata (<code>host: { '[class.active]': 'isActive', '(click)': 'onClick()' }</code>). Both are equivalent; pick one style per project for consistency.</p>
+</section>
+
+<section id="structural-directives" class="concept" tabindex="-1">
+  <h2>Custom structural directives</h2>
+  <p>Structural directives add and remove elements from the DOM. The leading asterisk in <code>*ngIf</code> or <code>*appUnless</code> is pure syntactic sugar: Angular <em>desugars</em> it by wrapping the host element in an <code>&lt;ng-template&gt;</code> and moving the directive (plus its microsyntax expression) onto that template. So <code>&lt;div *appUnless="cond"&gt;…&lt;/div&gt;</code> becomes <code>&lt;ng-template [appUnless]="cond"&gt;&lt;div&gt;…&lt;/div&gt;&lt;/ng-template&gt;</code>. The template's content is not rendered until the directive explicitly instantiates it.</p>
+  <p>A structural directive <code>inject()</code>s two collaborators: <code>TemplateRef</code>, a handle to the wrapped template, and <code>ViewContainerRef</code>, a slot in the DOM where views can be created and destroyed. To render, call <code>viewContainer.createEmbeddedView(templateRef)</code>; to remove, call <code>viewContainer.clear()</code>. The directive decides <em>when</em> and <em>how many times</em> to create views based on its inputs.</p>
+  <p>Directives can pass data to the template through a <em>context</em> object. The special <code>$implicit</code> property fills a bare <code>let x</code> in the template, and named properties fill <code>let name = ...</code>. The microsyntax (the string after <code>*</code>) is a compact grammar that Angular parses into inputs and <code>let-</code> bindings — for example <code>*appRepeat="5 as count"</code> binds the value and exposes a variable.</p>
+
+  <h3>Example: *appUnless (renders when false)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Directive, Input, TemplateRef,
+  ViewContainerRef, inject } from '@angular/core';
+
+@Directive({ selector: '[appUnless]', standalone: true })
+export class UnlessDirective {
+  private tpl = inject(TemplateRef&lt;unknown&gt;);
+  private vcr = inject(ViewContainerRef);
+  private shown = false;
+
+  @Input() set appUnless(cond: boolean) {
+    if (!cond &amp;&amp; !this.shown) {
+      this.vcr.createEmbeddedView(this.tpl);
+      this.shown = true;
+    } else if (cond &amp;&amp; this.shown) {
+      this.vcr.clear();
+      this.shown = false;
+    }
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Template: &lt;p *appUnless="isLoggedIn"&gt;Please sign in&lt;/p&gt;. When <code>isLoggedIn</code> is <code>false</code> the paragraph renders; when it becomes <code>true</code> the view is cleared and the paragraph disappears.</div>
+  </div>
+
+  <h3>Example: desugared form of *appUnless</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;!-- What you write --&gt;
+&lt;p *appUnless="isLoggedIn"&gt;Please sign in&lt;/p&gt;
+
+&lt;!-- What Angular compiles it to --&gt;
+&lt;ng-template [appUnless]="isLoggedIn"&gt;
+  &lt;p&gt;Please sign in&lt;/p&gt;
+&lt;/ng-template&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Both forms behave identically. The <code>*</code> version is just a shorthand; the compiler produces the explicit <code>&lt;ng-template&gt;</code> with the directive applied as an ordinary input binding.</div>
+  </div>
+
+  <h3>Example: *appRepeat with context ($implicit)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Directive({ selector: '[appRepeat]', standalone: true })
+export class RepeatDirective {
+  private tpl = inject(TemplateRef&lt;{ $implicit: number; index: number }&gt;);
+  private vcr = inject(ViewContainerRef);
+
+  @Input() set appRepeat(count: number) {
+    this.vcr.clear();
+    for (let i = 0; i &lt; count; i++) {
+      this.vcr.createEmbeddedView(this.tpl, { $implicit: i + 1, index: i });
+    }
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Template:<br>&lt;span *appRepeat="3; let n; let i = index"&gt;#{{n}}({{i}}) &lt;/span&gt;<br>Renders: <code>#1(0) #2(1) #3(2)</code>. <code>let n</code> receives <code>$implicit</code>; <code>let i = index</code> receives the named context property.</div>
+  </div>
+
+  <p class="note">Note: In new code the built-in control flow (<code>@if</code>, <code>@for</code>, <code>@switch</code>) replaces most uses of <code>*ngIf</code>/<code>*ngFor</code> and is faster. Custom structural directives remain the right tool when you need reusable, parameterized rendering logic that the built-in blocks do not cover.</p>
+</section>
+
+<section id="templates" class="concept" tabindex="-1">
+  <h2>ng-template &amp; ngTemplateOutlet</h2>
+  <p><code>&lt;ng-template&gt;</code> declares a chunk of markup that Angular parses but does <em>not</em> render immediately. It is inert until something instantiates it — either a structural directive or an explicit outlet. This makes it the foundation of deferred and reusable rendering: define the shape once, decide later where and how many times it appears.</p>
+  <p>You obtain a <code>TemplateRef</code> to a template in several ways. Placing a template reference variable on it (<code>&lt;ng-template #tpl&gt;</code>) lets you query it with <code>@ViewChild('tpl')</code> or reference it directly in the template. To render one, apply <code>[ngTemplateOutlet]="tpl"</code> to any element (commonly <code>&lt;ng-container&gt;</code>) and Angular stamps the template's content there. Pass data with <code>[ngTemplateOutletContext]="{ $implicit: x, name: y }"</code>; inside the template, <code>let-value</code> binds <code>$implicit</code> and <code>let-n="name"</code> binds a named key.</p>
+  <p>A powerful pattern is passing a <code>TemplateRef</code> into a component as an <code>@Input()</code>. The component owns the loop or layout logic but delegates the per-item markup to the caller's template. This inverts control cleanly: a generic list component renders each row using a template supplied from outside, so the consumer controls appearance without the component knowing anything about the data shape.</p>
+
+  <h3>Example: ngTemplateOutlet with context</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;ng-template #greeting let-name let-role="role"&gt;
+  &lt;p&gt;Hello {{ name }} — {{ role }}&lt;/p&gt;
+&lt;/ng-template&gt;
+
+&lt;ng-container
+  [ngTemplateOutlet]="greeting"
+  [ngTemplateOutletContext]="{ $implicit: 'Ada', role: 'admin' }"&gt;
+&lt;/ng-container&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Renders: <code>Hello Ada — admin</code>. <code>let-name</code> picks up <code>$implicit</code> ('Ada'); <code>let-role="role"</code> picks up the named context key ('admin').</div>
+  </div>
+
+  <h3>Example: reusing one template twice</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;ng-template #badge let-text&gt;
+  &lt;span class="badge"&gt;{{ text }}&lt;/span&gt;
+&lt;/ng-template&gt;
+
+&lt;ng-container *ngTemplateOutlet="badge; context: { $implicit: 'New' }"&gt;&lt;/ng-container&gt;
+&lt;ng-container *ngTemplateOutlet="badge; context: { $implicit: 'Sale' }"&gt;&lt;/ng-container&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Renders two badges: <code>New</code> and <code>Sale</code>. The same <code>TemplateRef</code> is instantiated twice with different context objects. The <code>*ngTemplateOutlet</code> microsyntax is an alternate shorthand for the property bindings.</div>
+  </div>
+
+  <h3>Example: passing a row template into a list component</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-list',
+  standalone: true,
+  imports: [NgTemplateOutlet],
+  template: `
+    &lt;div *ngFor="let item of items"&gt;
+      &lt;ng-container
+        [ngTemplateOutlet]="rowTpl"
+        [ngTemplateOutletContext]="{ $implicit: item }"&gt;
+      &lt;/ng-container&gt;
+    &lt;/div&gt;`,
+})
+export class ListComponent {
+  @Input() items: unknown[] = [];
+  @Input() rowTpl!: TemplateRef&lt;{ $implicit: unknown }&gt;;
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Consumer:<br>&lt;app-list [items]="users" [rowTpl]="row"&gt;&lt;/app-list&gt;<br>&lt;ng-template #row let-u&gt;&lt;b&gt;{{u.name}}&lt;/b&gt;&lt;/ng-template&gt;<br>The list owns iteration; the caller controls how each row looks. Each user renders bold via the supplied template.</div>
+  </div>
+
+  <p class="note note-perf">Note: A template is inert until instantiated, which makes <code>&lt;ng-template&gt;</code> ideal for lazy/optional content — nothing in it runs or renders until an outlet or structural directive creates its view.</p>
+</section>
+
+<section id="view-child" class="concept" tabindex="-1">
+  <h2>ViewChild &amp; content queries</h2>
+  <p>A component can query elements, directives, and child components inside its own template. <code>@ViewChild(ChildComponent)</code> returns the first matching instance; <code>@ViewChildren(ChildComponent)</code> returns a live <code>QueryList</code> that updates as the view changes and can be iterated or subscribed to via its <code>changes</code> observable. You can query by component/directive type, by a template reference variable name (<code>@ViewChild('ref')</code>), or by an injection token.</p>
+  <p>Timing matters for the classic decorators. A view query with <code>{ static: true }</code> resolves before <code>ngOnInit</code>, but only works for children that are unconditionally present (not inside <code>*ngIf</code>/<code>@if</code>). The default is dynamic (<code>static: false</code>), and those results are guaranteed available in <code>ngAfterViewInit</code>, after the child views have been created. Reading a value in the constructor is always too early.</p>
+  <p>By default a query returns the component/directive instance. The <code>{ read: ... }</code> option changes what you get: <code>@ViewChild(ChildComponent, { read: ElementRef })</code> returns the host element wrapper instead of the instance. Since v17.2 Angular offers <em>signal queries</em> — <code>viewChild()</code>, <code>viewChildren()</code>, and <code>contentChild()</code> — that return signals. They need no lifecycle hook: you read them like any signal (<code>this.child()</code>) and they are reactive, so effects and computeds can depend on them. Signal queries are the recommended modern approach.</p>
+
+  <h3>Example: classic @ViewChild in ngAfterViewInit</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({ selector: 'app-parent', standalone: true,
+  imports: [ChildComponent],
+  template: `&lt;app-child&gt;&lt;/app-child&gt;` })
+export class ParentComponent implements AfterViewInit {
+  @ViewChild(ChildComponent) child!: ChildComponent;
+
+  ngAfterViewInit() {
+    console.log(this.child.title); // safe here
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Console: the child's <code>title</code> value, e.g. <code>Child ready</code>. Accessing <code>this.child</code> in the constructor or <code>ngOnInit</code> (with the default dynamic query) would be <code>undefined</code>.</div>
+  </div>
+
+  <h3>Example: @ViewChildren QueryList + read: ElementRef</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({ /* template has three &lt;app-item&gt; rows */ })
+export class ListComponent implements AfterViewInit {
+  @ViewChildren(ItemComponent) items!: QueryList&lt;ItemComponent&gt;;
+  @ViewChild('title', { read: ElementRef }) titleEl!: ElementRef;
+
+  ngAfterViewInit() {
+    console.log(this.items.length);           // 3
+    console.log(this.titleEl.nativeElement.tagName); // 'H1'
+    this.items.changes.subscribe(list =&gt; { /* reacts to add/remove */ });
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Console: <code>3</code> then <code>H1</code>. <code>QueryList</code> exposes <code>.length</code>, iteration, and a <code>changes</code> stream; <code>{ read: ElementRef }</code> yields the DOM wrapper rather than a component/directive instance.</div>
+  </div>
+
+  <h3>Example: modern signal queries (v17.2+)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, viewChild, viewChildren, effect } from '@angular/core';
+
+@Component({ selector: 'app-host', standalone: true,
+  imports: [ChildComponent],
+  template: `&lt;app-child /&gt;&lt;app-child /&gt;` })
+export class HostComponent {
+  first = viewChild(ChildComponent);            // Signal&lt;Child | undefined&gt;
+  all = viewChildren(ChildComponent);           // Signal&lt;readonly Child[]&gt;
+  required = viewChild.required('title');       // Signal&lt;ElementRef&gt;
+
+  constructor() {
+    effect(() =&gt; console.log('count', this.all().length));
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Console (via effect): <code>count 2</code>. Signal queries are read as functions (<code>this.all()</code>), need no <code>ngAfterViewInit</code>, and integrate with <code>effect()</code>/<code>computed()</code>. <code>viewChild.required</code> guarantees a non-null result or throws.</div>
+  </div>
+
+  <p class="note note-perf">Note: Prefer signal queries in new code — they eliminate lifecycle-timing bugs and are reactive by design. Use <code>viewChild.required</code> when the child must exist so you avoid <code>undefined</code> checks.</p>
+</section>
+
+<section id="content-projection" class="concept" tabindex="-1">
+  <h2>Content projection</h2>
+  <p>Content projection lets a component render markup that the <em>consumer</em> places between its opening and closing tags. Inside the component's template, <code>&lt;ng-content&gt;</code> marks the slot where that projected content appears. This is Angular's version of transclusion / "slots" and is the basis for reusable wrappers like cards, dialogs, and tabs whose inner content is controlled by the caller.</p>
+  <p>A single bare <code>&lt;ng-content&gt;</code> projects everything. For multiple slots, add a CSS-selector to each: <code>&lt;ng-content select=".header"&gt;</code> captures children matching that selector, and a trailing selector-less <code>&lt;ng-content&gt;</code> catches the rest. The selector can match by class, attribute, element name, or component selector. Projected nodes keep their original component context — they are <em>not</em> re-parented into the host component's data.</p>
+  <p>To query projected content from the host component, use <code>@ContentChild</code>/<code>@ContentChildren</code> (or the signal form <code>contentChild()</code>). Crucially, this is where the <em>view vs content</em> distinction lives: <em>view children</em> are declared in the component's own template and resolve in <code>ngAfterViewInit</code>; <em>content children</em> are projected in from outside and resolve in <code>ngAfterContentInit</code>, which runs earlier. Mixing the two hooks up incorrectly is a common source of <code>undefined</code> query results.</p>
+
+  <h3>Example: single-slot card</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-card',
+  standalone: true,
+  template: `
+    &lt;div class="card"&gt;
+      &lt;ng-content&gt;&lt;/ng-content&gt;
+    &lt;/div&gt;`,
+})
+export class CardComponent {}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Consumer:<br>&lt;app-card&gt;&lt;p&gt;Hello&lt;/p&gt;&lt;/app-card&gt;<br>Renders a <code>.card</code> box wrapping <code>&lt;p&gt;Hello&lt;/p&gt;</code>. The paragraph was written by the caller and projected into the slot.</div>
+  </div>
+
+  <h3>Example: multi-slot with select</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;!-- panel.component.html --&gt;
+&lt;section class="panel"&gt;
+  &lt;header&gt;&lt;ng-content select="[panelTitle]"&gt;&lt;/ng-content&gt;&lt;/header&gt;
+  &lt;div class="body"&gt;&lt;ng-content&gt;&lt;/ng-content&gt;&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- consumer --&gt;
+&lt;app-panel&gt;
+  &lt;h2 panelTitle&gt;Settings&lt;/h2&gt;
+  &lt;p&gt;Body content here&lt;/p&gt;
+&lt;/app-panel&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The <code>&lt;h2 panelTitle&gt;</code> lands in the header slot; the <code>&lt;p&gt;</code> falls through to the default slot in <code>.body</code>. Result: a panel titled "Settings" above the body text.</div>
+  </div>
+
+  <h3>Example: @ContentChildren in ngAfterContentInit (tabs)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({ selector: 'app-tabs', standalone: true,
+  template: `&lt;ng-content&gt;&lt;/ng-content&gt;` })
+export class TabsComponent implements AfterContentInit {
+  @ContentChildren(TabComponent) tabs!: QueryList&lt;TabComponent&gt;;
+
+  ngAfterContentInit() {
+    // Projected tabs are ready here, NOT in ngAfterViewInit:
+    this.tabs.first.active = true;
+    console.log('tab count', this.tabs.length);
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Consumer projects three <code>&lt;app-tab&gt;</code> elements. Console: <code>tab count 3</code>, and the first tab is activated. Querying these in <code>ngAfterViewInit</code> would still work, but content queries are guaranteed by <code>ngAfterContentInit</code>.</div>
+  </div>
+
+  <h3>Example: signal content query</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, contentChildren } from '@angular/core';
+
+@Component({ selector: 'app-tabs', standalone: true,
+  template: `&lt;ng-content /&gt;` })
+export class TabsComponent {
+  tabs = contentChildren(TabComponent); // Signal&lt;readonly TabComponent[]&gt;
+
+  count = computed(() =&gt; this.tabs().length);
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span><code>this.tabs()</code> returns the projected tabs reactively with no lifecycle hook; <code>count()</code> stays in sync as tabs are added or removed. This is the modern replacement for <code>@ContentChildren</code> + <code>ngAfterContentInit</code>.</div>
+  </div>
+
+  <p class="note note-a11y">Note: Remember the timing rule — <em>content</em> children (projected) are ready in <code>ngAfterContentInit</code>; <em>view</em> children (your own template) are ready in <code>ngAfterViewInit</code>. Signal queries (<code>contentChild()</code>/<code>viewChild()</code>) sidestep both hooks entirely.</p>
+</section>
+<section id="view-encapsulation" class="concept" tabindex="-1">
+  <h2>View encapsulation</h2>
+  <p>Angular scopes a component's styles so that CSS written in one component cannot accidentally bleed into another. This behaviour is controlled by the <code>encapsulation</code> field of the <code>@Component</code> decorator, whose value comes from the <code>ViewEncapsulation</code> enum. The default is <code>ViewEncapsulation.Emulated</code>, which emulates the isolation of the Shadow DOM without actually using it. At build time Angular rewrites your selectors and stamps unique attributes onto elements so the rules only ever match this component's markup.</p>
+  <p>Under <code>Emulated</code>, every host element receives a generated <code>_nghost-xyz</code> attribute and every element inside the template receives a matching <code>_ngcontent-xyz</code> attribute. A rule like <code>p { color: red }</code> is compiled to <code>p[_ngcontent-xyz] { color: red }</code>, so it can never touch a paragraph belonging to a different component. The <code>:host</code> pseudo-class targets the component's own host element, and <code>:host-context(.theme)</code> matches the host only when some ancestor carries the <code>.theme</code> class — perfect for theming.</p>
+  <p>The two other modes trade isolation for reach. <code>ViewEncapsulation.None</code> disables scoping entirely: your styles are injected as-is into the document <code>&lt;head&gt;</code> and become global, affecting the whole application. <code>ViewEncapsulation.ShadowDom</code> uses the browser's native Shadow DOM — the component gets a real shadow root, styles are truly encapsulated by the platform, and outside CSS cannot reach in at all. The legacy <code>::ng-deep</code> combinator forces a rule to pierce through child encapsulation, but it is deprecated; prefer CSS custom properties for crossing component boundaries.</p>
+  <h3>Example: emulated scoping (default)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-card',
+  standalone: true,
+  template: `&lt;p class="label"&gt;Hi&lt;/p&gt;`,
+  styles: [`
+    :host { display: block; padding: 1rem; }
+    .label { color: crimson; }
+  `],
+  // encapsulation: ViewEncapsulation.Emulated (default)
+})
+export class CardComponent {}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Rendered DOM (attributes generated):
+&lt;app-card _nghost-a1 class="..."&gt;
+  &lt;p _ngcontent-a1 class="label"&gt;Hi&lt;/p&gt;
+&lt;/app-card&gt;
+
+Compiled CSS:
+[_nghost-a1] { display: block; padding: 1rem; }
+.label[_ngcontent-a1] { color: crimson; }</div>
+  </div>
+  <h3>Example: :host-context for theming</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-btn',
+  standalone: true,
+  template: `&lt;button&gt;Save&lt;/button&gt;`,
+  styles: [`
+    button { background: #eee; color: #111; }
+    :host-context(.dark) button {
+      background: #222; color: #fff;
+    }
+  `],
+})
+export class BtnComponent {}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Inside &lt;body class="dark"&gt;… the button
+renders dark: background #222, text #fff.
+Outside a .dark ancestor it stays light:
+background #eee, text #111.</div>
+  </div>
+  <h3>Example: None makes styles global</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { ViewEncapsulation } from '@angular/core';
+
+@Component({
+  selector: 'app-reset',
+  standalone: true,
+  template: ``,
+  styles: [`h1 { font-family: system-ui; }`],
+  encapsulation: ViewEncapsulation.None,
+})
+export class ResetComponent {}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The rule is injected globally:
+h1 { font-family: system-ui; }
+EVERY &lt;h1&gt; on the page is affected,
+not just ones inside this component.</div>
+  </div>
+  <h3>Example: ShadowDom real isolation</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-widget',
+  standalone: true,
+  template: `&lt;p&gt;Encapsulated&lt;/p&gt;`,
+  styles: [`p { color: green; }`],
+  encapsulation: ViewEncapsulation.ShadowDom,
+})
+export class WidgetComponent {}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>DOM:
+&lt;app-widget&gt;
+  #shadow-root (open)
+    &lt;style&gt;p { color: green; }&lt;/style&gt;
+    &lt;p&gt;Encapsulated&lt;/p&gt;
+&lt;/app-widget&gt;
+Global page CSS cannot reach inside.</div>
+  </div>
+  <p class="note note-perf">Note: Avoid <code>::ng-deep</code> — it is deprecated and leaks styles because the pierced rule ends up global. To let a parent skin a child, expose CSS custom properties (e.g. <code>--btn-bg</code>) which cross <code>Emulated</code> boundaries naturally and even cross Shadow DOM.</p>
+</section>
+
+<section id="pipes" class="concept" tabindex="-1">
+  <h2>Pipes (built-in &amp; custom)</h2>
+  <p>A pipe transforms a value for display without mutating the underlying data. In a template you apply one with the <code>|</code> operator inside an interpolation or binding: <code>{{ value | pipeName }}</code>. Pipes are pure, declarative formatters — the component holds raw data (a <code>Date</code>, a number, a string) and the pipe renders a human-friendly version, keeping formatting logic out of your class.</p>
+  <p>Angular ships a rich catalog in <code>@angular/common</code>: <code>date</code>, <code>currency</code>, <code>percent</code>, <code>number</code> (alias <code>decimal</code>), <code>json</code>, <code>uppercase</code>, <code>lowercase</code>, <code>titlecase</code>, <code>slice</code>, <code>keyvalue</code>, and the special <code>async</code> pipe that unwraps Observables and Promises. With standalone components you import the ones you use (e.g. <code>DatePipe</code>, <code>CurrencyPipe</code>) directly into the component's <code>imports</code> array. Pipes accept parameters after a colon and can be chained left-to-right: <code>{{ now | date:'short' | uppercase }}</code>.</p>
+  <p>You write your own with the <code>@Pipe</code> decorator on a class implementing <code>PipeTransform</code>'s <code>transform(value, ...args)</code> method. By default a pipe is <em>pure</em>: Angular memoizes it and only re-invokes <code>transform</code> when the input reference (or a primitive value) changes, which is highly efficient. Setting <code>pure: false</code> makes it <em>impure</em>, running on every change-detection cycle — necessary for pipes that depend on mutable data like arrays being pushed to, but a real performance cost. The <code>async</code> pipe is itself impure by necessity.</p>
+  <h3>Example: built-ins with parameters</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;p&gt;{{ today | date:'fullDate' }}&lt;/p&gt;
+&lt;p&gt;{{ 1299.5 | currency:'USD' }}&lt;/p&gt;
+&lt;p&gt;{{ 0.734 | percent:'1.0-1' }}&lt;/p&gt;
+&lt;p&gt;{{ 'hello world' | titlecase }}&lt;/p&gt;
+&lt;p&gt;{{ [1,2,3,4] | slice:1:3 | json }}&lt;/p&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Thursday, July 5, 2026
+$1,299.50
+73%
+Hello World
+[2,3]</div>
+  </div>
+  <h3>Example: chaining pipes</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;!-- imports: [DatePipe, UpperCasePipe] --&gt;
+&lt;span&gt;{{ order.createdAt | date:'short' | uppercase }}&lt;/span&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>7/5/26, 2:30 PM  →  after uppercase:
+7/5/26, 2:30 PM  (digits unchanged, AM/PM upper)</div>
+  </div>
+  <h3>Example: a pure custom pipe</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({ name: 'truncate', standalone: true })
+export class TruncatePipe implements PipeTransform {
+  transform(value: string, limit = 20, ellipsis = '…'): string {
+    if (!value || value.length &lt;= limit) return value;
+    return value.slice(0, limit) + ellipsis;
+  }
+}
+// template: {{ post.body | truncate:10 }}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Input:  "Angular pipes are great"
+Output: "Angular pi…"
+Re-runs only when post.body changes.</div>
+  </div>
+  <h3>Example: impure pipe (runs every CD)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Pipe({ name: 'filterDone', standalone: true, pure: false })
+export class FilterDonePipe implements PipeTransform {
+  transform(todos: Todo[]): Todo[] {
+    return todos.filter(t =&gt; !t.done);
+  }
+}
+// Needed because todos is mutated in place (push/splice).</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>List updates even when the SAME array
+reference is mutated — but transform()
+runs on EVERY change-detection pass.
+Prefer immutable updates + a pure pipe.</div>
+  </div>
+  <p class="note note-perf">Note: Default to pure pipes and update data immutably (return a new array) so the reference changes and the pure pipe re-runs. Reach for <code>pure:false</code> only when unavoidable, since impure pipes execute on every tick and can dominate render cost.</p>
+</section>
+
+<section id="services" class="concept" tabindex="-1">
+  <h2>Services &amp; @Injectable</h2>
+  <p>A service is a plain TypeScript class that holds reusable logic or state — data fetching, business rules, caching, shared signals — that does not belong to any single component. Marking it with <code>@Injectable()</code> tells Angular's dependency-injection system it can be constructed and injected. The idiomatic form is <code>@Injectable({ providedIn: 'root' })</code>, which registers the service with the root injector as an application-wide singleton and, crucially, makes it <em>tree-shakeable</em>: if nothing injects it, the bundler drops it.</p>
+  <p>Services keep components thin. Instead of a component holding an HTTP call, an array of items, and mutation methods, you move that into a service; the component just injects it and renders. Because the root-provided service is a singleton, every component that injects it shares the same instance and therefore the same state — a natural way to share data across an app without a global store.</p>
+  <p>There are two ways to obtain a dependency: the classic constructor parameter with an access modifier, or the modern <code>inject()</code> function called in the field initializer or constructor context. <code>inject()</code> reads more cleanly, avoids long constructor signatures, and composes well with base classes and functional guards/resolvers. Both resolve against the same injector tree.</p>
+  <h3>Example: a root singleton service</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Injectable, signal } from '@angular/core';
+
+@Injectable({ providedIn: 'root' })
+export class CartService {
+  private items = signal&lt;string[]&gt;([]);
+  readonly count = () =&gt; this.items().length;
+
+  add(name: string) {
+    this.items.update(list =&gt; [...list, name]);
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>One shared instance across the whole app.
+add('Book'); add('Pen') → count() === 2
+Tree-shaken away if never injected.</div>
+  </div>
+  <h3>Example: injecting via inject()</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, inject } from '@angular/core';
+
+@Component({
+  selector: 'app-cart',
+  standalone: true,
+  template: `&lt;p&gt;Items: {{ cart.count() }}&lt;/p&gt;
+             &lt;button (click)="cart.add('Book')"&gt;Add&lt;/button&gt;`,
+})
+export class CartComponent {
+  cart = inject(CartService);
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Initial:  Items: 0
+Click Add → Items: 1
+Click Add → Items: 2</div>
+  </div>
+  <h3>Example: injecting via constructor</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-badge',
+  standalone: true,
+  template: `&lt;span class="badge"&gt;{{ cart.count() }}&lt;/span&gt;`,
+})
+export class BadgeComponent {
+  constructor(public cart: CartService) {}
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Badge shows the SAME count as CartComponent
+because both share the one root singleton.</div>
+  </div>
+  <p class="note">Note: Prefer <code>providedIn: 'root'</code> over listing services in a <code>providers</code> array for app-wide singletons — it is tree-shakeable and needs no wiring. Provide a service in a component's <code>providers</code> only when you deliberately want a fresh, scoped instance per component.</p>
+</section>
+
+<section id="http-client" class="concept" tabindex="-1">
+  <h2>HttpClient &amp; async pipe</h2>
+  <p>Angular talks to REST APIs through <code>HttpClient</code> from <code>@angular/common/http</code>. In a modern standalone app you enable it once by adding <code>provideHttpClient()</code> to the <code>providers</code> of <code>bootstrapApplication</code> — no <code>HttpClientModule</code> needed. After that any service or component can <code>inject(HttpClient)</code>.</p>
+  <p>Its methods — <code>get&lt;T&gt;()</code>, <code>post&lt;T&gt;()</code>, <code>put&lt;T&gt;()</code>, <code>delete&lt;T&gt;()</code> — return <em>cold</em> RxJS <code>Observable</code>s: nothing happens until something subscribes, and each subscription fires its own request. The generic type parameter types the parsed JSON body, so <code>get&lt;User[]&gt;(url)</code> yields an <code>Observable&lt;User[]&gt;</code>. You shape the request with <code>HttpParams</code> for query strings and <code>HttpHeaders</code> (or a plain object) for headers, passed via the options argument.</p>
+  <p>You can subscribe manually in the class, but then you must remember to unsubscribe to avoid leaks and manually trigger change detection of the assigned value. The cleaner path is to keep the Observable as a field and bind it in the template with the <code>async</code> pipe: it subscribes for you, renders each emission, and unsubscribes automatically when the component is destroyed. Combined with <code>@if</code> you get a tidy loading/loaded pattern.</p>
+  <h3>Example: enabling HttpClient at bootstrap</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient } from '@angular/common/http';
+import { AppComponent } from './app.component';
+
+bootstrapApplication(AppComponent, {
+  providers: [provideHttpClient()],
+});</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>HttpClient is now injectable anywhere
+in the application. No NgModule required.</div>
+  </div>
+  <h3>Example: typed GET in a service</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+interface User { id: number; name: string; }
+
+@Injectable({ providedIn: 'root' })
+export class UserApi {
+  private http = inject(HttpClient);
+  getUser(id: number): Observable&lt;User&gt; {
+    return this.http.get&lt;User&gt;(`/api/users/${id}`);
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>getUser(1) subscription resolves to:
+{ "id": 1, "name": "Ada" }
+Typed as User — editor autocompletes .name.</div>
+  </div>
+  <h3>Example: HttpParams &amp; headers</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { HttpParams, HttpHeaders } from '@angular/common/http';
+
+search(term: string) {
+  const params = new HttpParams()
+    .set('q', term).set('limit', 10);
+  const headers = new HttpHeaders({ 'X-Api-Version': '2' });
+  return this.http.get&lt;User[]&gt;('/api/users', { params, headers });
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Sends:
+GET /api/users?q=ada&amp;limit=10
+Header: X-Api-Version: 2
+Response: [{ "id": 1, "name": "Ada" }]</div>
+  </div>
+  <h3>Example: async pipe in the template</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-users',
+  standalone: true,
+  imports: [AsyncPipe],
+  template: `
+    @if (users$ | async; as users) {
+      &lt;ul&gt;@for (u of users; track u.id) {
+        &lt;li&gt;{{ u.name }}&lt;/li&gt;
+      }&lt;/ul&gt;
+    } @else { &lt;p&gt;Loading…&lt;/p&gt; }
+  `,
+})
+export class UsersComponent {
+  users$ = inject(UserApi).search('');
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>First render: Loading…
+After response arrives:
+• Ada
+• Grace
+Auto-unsubscribes on destroy.</div>
+  </div>
+  <p class="note note-perf">Note: The <code>async</code> pipe removes an entire class of subscription-leak bugs and pairs perfectly with <code>OnPush</code> change detection. If you must subscribe manually, pipe through <code>takeUntilDestroyed()</code> to clean up automatically.</p>
+</section>
+
+<section id="dependency-injection" class="concept" tabindex="-1">
+  <h2>Dependency injection</h2>
+  <p>Dependency injection (DI) is a design pattern where a class declares what it needs and a framework supplies it, rather than the class constructing its own collaborators. In Angular this decouples consumers from concrete implementations: a component asking for a <code>Logger</code> does not care which logger it gets, which makes code easier to test (swap in a fake), reconfigure, and reuse. Angular's injector reads a <em>token</em>, looks up a matching <em>provider</em>, and returns an instance.</p>
+  <p>A provider maps a token to a recipe. There are four recipes: <code>useClass</code> instantiates a class; <code>useValue</code> supplies a ready-made object or primitive; <code>useFactory</code> runs a function (optionally with its own injected <code>deps</code>) to compute the value at resolution time; and <code>useExisting</code> aliases one token to another so both resolve to the same instance. The shorthand <code>{ provide: Logger }</code> is just <code>useClass: Logger</code>.</p>
+  <p>Not every dependency is a class — config objects, base URLs, and feature flags have no constructor to use as a token. For these you create an <code>InjectionToken&lt;T&gt;</code>, a unique, typed key you can provide and inject. Angular's injectors form a <em>hierarchy</em>: a root injector plus a child injector for every component that declares its own <code>providers</code>. Resolution starts at the component and walks up the tree until a provider is found, so a component-level provider shadows the root one for that subtree. Services declared with <code>providedIn: 'root'</code> live at the top, are singletons, and remain tree-shakeable.</p>
+  <h3>Example: the four provider recipes</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>providers: [
+  { provide: Logger, useClass: ConsoleLogger },
+  { provide: API_URL, useValue: 'https://api.dev' },
+  { provide: Clock, useFactory: () =&gt; new Clock(Date.now()) },
+  { provide: OldLogger, useExisting: Logger }, // alias
+]</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Logger    → new ConsoleLogger()
+API_URL   → 'https://api.dev'
+Clock     → factory-built instance
+OldLogger → same object as Logger</div>
+  </div>
+  <h3>Example: useFactory with deps</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>{
+  provide: HttpCache,
+  useFactory: (url: string) =&gt; new HttpCache(url),
+  deps: [API_URL],
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Angular resolves API_URL first,
+then calls factory('https://api.dev')
+→ HttpCache pointed at that base URL.</div>
+  </div>
+  <h3>Example: InjectionToken for config</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { InjectionToken, inject } from '@angular/core';
+
+export interface AppConfig { title: string; retries: number; }
+export const APP_CONFIG = new InjectionToken&lt;AppConfig&gt;('app.config');
+
+// provide:
+// { provide: APP_CONFIG, useValue: { title: 'DevDocs', retries: 3 } }
+
+@Injectable({ providedIn: 'root' })
+export class Settings {
+  cfg = inject(APP_CONFIG);
+  get title() { return this.cfg.title; }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>settings.title === 'DevDocs'
+Typed as AppConfig — no class needed
+to inject a plain configuration object.</div>
+  </div>
+  <h3>Example: hierarchical resolution</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// root: providedIn 'root' → GlobalTheme (singleton)
+
+@Component({
+  selector: 'app-panel',
+  standalone: true,
+  providers: [{ provide: ThemeService, useClass: DarkTheme }],
+  template: `&lt;p&gt;{{ theme.name }}&lt;/p&gt;`,
+})
+export class PanelComponent {
+  theme = inject(ThemeService); // resolves at THIS level first
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Inside &lt;app-panel&gt;: theme.name === 'dark'
+(component provider shadows root).
+Elsewhere: injector walks up → root singleton.</div>
+  </div>
+  <p class="note">Note: Put app-wide singletons at the root with <code>providedIn: 'root'</code> (tree-shakeable). Use a component's <code>providers</code> array only when you want a scoped, per-subtree instance — every child under it then shares that local provider instead of the root one.</p>
+</section>
+<section id="di-decorators" class="concept" tabindex="-1">
+  <h2>DI decorators &amp; inject()</h2>
+  <p>Angular's dependency injection resolves a token by walking up a hierarchy of injectors. By default, when a class asks for a dependency, Angular starts at the current element injector and climbs toward the root, throwing a runtime error if nothing provides the token. A family of <em>resolution-modifier</em> decorators lets you change that search. <code>@Optional()</code> makes a missing dependency non-fatal — Angular injects <code>null</code> instead of throwing. <code>@Self()</code> restricts the search to the current injector only. <code>@SkipSelf()</code> does the opposite, ignoring the current injector and starting at the parent. <code>@Host()</code> stops the search at the host component's boundary, which is useful for directives that should bind only to their host.</p>
+  <p>Two more decorators cover token-based needs. <code>@Inject(TOKEN)</code> tells Angular exactly which token to look up — essential when the dependency is an <code>InjectionToken</code> or an interface (interfaces vanish at runtime, so they cannot be used as tokens on their own). <code>@Attribute('name')</code> is a special one: it reads a <em>static</em> host attribute string once at construction time, never reacting to later changes, which makes it cheaper than an <code>@Input()</code> for values that never move.</p>
+  <p>Modern Angular prefers the <code>inject()</code> function over constructor-parameter decorators. <code>inject()</code> must be called in an <em>injection context</em> — inside a constructor, a field initializer, a factory, or a functional guard/resolver. It returns the same instance a constructor parameter would, but reads more cleanly and, crucially, works inside reusable helper functions that are not classes. The modifier decorators have <code>inject()</code> option equivalents: <code>inject(TOKEN, { optional: true, self: true, skipSelf: true, host: true })</code>.</p>
+  <h3>Example: constructor decorators vs inject()</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// Classic constructor injection with modifiers
+&#64;Component({ selector: 'app-old', standalone: true, template: '' })
+export class OldCmp {
+  constructor(
+    &#64;Optional() private logger: Logger | null,
+    &#64;SkipSelf() private parentSvc: PanelService,
+    &#64;Attribute('data-role') public role: string,
+  ) {}
+}
+
+// Same thing with inject()
+&#64;Component({ selector: 'app-new', standalone: true, template: '' })
+export class NewCmp {
+  private logger = inject(Logger, { optional: true });
+  private parentSvc = inject(PanelService, { skipSelf: true });
+  // &#64;Attribute has no inject() form; use HostAttributeToken (v18+)
+  role = inject(new HostAttributeToken('data-role'), { optional: true });
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Both components construct identically: <code>logger</code> is <code>null</code> when no <code>Logger</code> is provided, <code>parentSvc</code> resolves from an ancestor injector, and <code>role</code> holds the literal <code>data-role</code> attribute string.</div>
+  </div>
+  <h3>Example: token-based injection with &#64;Inject / inject()</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>export const API_URL = new InjectionToken&lt;string&gt;('API_URL');
+
+// provided at bootstrap:
+// { provide: API_URL, useValue: 'https://api.example.com' }
+
+&#64;Injectable({ providedIn: 'root' })
+export class Api {
+  private url = inject(API_URL);          // functional form
+  constructor(&#64;Inject(API_URL) legacy: string) {} // decorator form
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Both <code>this.url</code> and the <code>legacy</code> parameter receive <code>'https://api.example.com'</code>. An interface could never be the token here — only the runtime <code>InjectionToken</code> value can.</div>
+  </div>
+  <h3>Example: inject() in a functional guard</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>export const authGuard: CanActivateFn = () =&gt; {
+  const auth = inject(AuthService);   // injection context: the guard call
+  const router = inject(Router);
+  return auth.isLoggedIn() ? true : router.parseUrl('/login');
+};</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Navigating to a protected route returns <code>true</code> when logged in; otherwise Angular redirects to <code>/login</code>. No class or constructor is involved — this is only possible because <code>inject()</code> works in the guard's injection context.</div>
+  </div>
+  <p class="note">Note: <code>inject()</code> throws <code>NG0203</code> if called outside an injection context (for example inside a <code>setTimeout</code> or an event handler). Capture the dependency in a field or constructor first, then use it later.</p>
+</section>
+
+<section id="change-detection" class="concept" tabindex="-1">
+  <h2>Change detection</h2>
+  <p>Change detection (CD) is how Angular keeps the DOM in sync with your component state. Traditionally, Angular ships with <code>zone.js</code>, a library that monkey-patches asynchronous browser APIs — <code>setTimeout</code>, <code>addEventListener</code>, <code>Promise</code>, XHR/fetch. When any patched task finishes, zone.js notifies Angular, which then runs a <em>top-down</em> check of the entire component tree, re-evaluating every template binding and updating the DOM where a value changed. This is reliable but can be wasteful in large trees.</p>
+  <p><code>ChangeDetectionStrategy.Default</code> checks a component every CD cycle. <code>ChangeDetectionStrategy.OnPush</code> tells Angular to skip a component unless one of a few things happens: an <code>&#64;Input()</code> receives a <em>new reference</em>, an event fires from within the component's template, the <code>async</code> pipe emits a new value, or (in modern Angular) a <em>signal</em> read in the template changes. Because OnPush relies on reference identity for inputs, immutability matters: mutating an object in place (<code>obj.name = 'x'</code>) keeps the same reference and the view will <em>not</em> update; you must assign a new object instead.</p>
+  <p>When you need to override the defaults, inject <code>ChangeDetectorRef</code>. <code>markForCheck()</code> flags this component and its ancestors to be checked on the next cycle — the go-to for OnPush components whose state changed outside the four triggers. <code>detectChanges()</code> runs CD synchronously for this component now. <code>detach()</code> removes the component from the CD tree entirely (you then drive updates manually), and <code>reattach()</code> puts it back. The idiomatic modern pattern is Observables + the <code>async</code> pipe + OnPush: the pipe subscribes, calls <code>markForCheck()</code> on every emission, and unsubscribes automatically on destroy.</p>
+  <h3>Example: OnPush and immutable updates</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>&#64;Component({
+  selector: 'app-user',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `{{ user.name }}`,
+})
+export class UserCmp {
+  &#64;Input() user!: { name: string };
+}
+
+// Parent:
+mutate()  { this.user.name = 'Ada'; }        // same reference
+replace() { this.user = { name: 'Ada' }; }   // new reference</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Calling <code>mutate()</code> leaves the displayed name unchanged (OnPush ignores same-reference inputs). Calling <code>replace()</code> updates the view to <code>Ada</code>.</div>
+  </div>
+  <h3>Example: async pipe + OnPush</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>&#64;Component({
+  selector: 'app-clock',
+  standalone: true,
+  imports: [AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `{{ time$ | async }}`,
+})
+export class ClockCmp {
+  time$ = interval(1000).pipe(map(() =&gt; new Date().toLocaleTimeString()));
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The time updates every second even under OnPush — the <code>async</code> pipe calls <code>markForCheck()</code> on each emission, and it cleans up the subscription automatically on destroy.</div>
+  </div>
+  <h3>Example: markForCheck after an out-of-band update</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>&#64;Component({ changeDetection: ChangeDetectionStrategy.OnPush, /* ... */ })
+export class LiveCmp {
+  private cdr = inject(ChangeDetectorRef);
+  count = 0;
+
+  constructor() {
+    // event outside Angular's four OnPush triggers
+    window.addEventListener('storage', () =&gt; {
+      this.count++;
+      this.cdr.markForCheck(); // without this, the view is stale
+    });
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Each cross-tab <code>storage</code> event increments and re-renders <code>count</code>. Remove <code>markForCheck()</code> and the number changes internally but the DOM never refreshes.</div>
+  </div>
+  <p class="note note-perf">Note: reach for OnPush plus signals or the async pipe by default in new code. It prunes whole subtrees from every CD pass and, combined with Angular's zoneless mode (v18+ experimental, stabilizing in later releases), can remove <code>zone.js</code> entirely.</p>
+</section>
+
+<section id="lifecycle-hooks" class="concept" tabindex="-1">
+  <h2>Lifecycle hooks</h2>
+  <p>A component moves through a well-defined sequence of phases, and Angular calls named methods on your class at each phase. The <code>constructor</code> runs first, but its only job should be dependency injection and cheap field setup — the component's inputs and view do not exist yet. Real initialization belongs in <code>ngOnInit</code>, which fires once after Angular has set the first input values. <code>ngOnChanges(changes: SimpleChanges)</code> runs before <code>ngOnInit</code> and again every time a bound <code>&#64;Input()</code> changes, handing you a map of previous and current values.</p>
+  <p><code>ngDoCheck</code> runs on every change-detection cycle for custom dirty-checking (use it sparingly — it is hot). The content hooks <code>ngAfterContentInit</code> and <code>ngAfterContentChecked</code> fire when projected <code>&lt;ng-content&gt;</code> has been initialized/checked. The view hooks <code>ngAfterViewInit</code> and <code>ngAfterViewChecked</code> fire once the component's own template and its children are ready — this is where <code>&#64;ViewChild</code> references become available. Beware the <code>ExpressionChangedAfterItHasBeenChecked</code> error: mutating a bound value inside <code>ngAfterViewInit</code> changes the view after Angular already checked it, so defer such changes (a microtask, or move the logic earlier).</p>
+  <p><code>ngOnDestroy</code> runs just before Angular tears the component down — the place to unsubscribe, clear timers, and detach listeners. The modern alternative is <code>DestroyRef</code>: inject it and register cleanup with <code>destroyRef.onDestroy(fn)</code>, or pipe an Observable through <code>takeUntilDestroyed()</code> so it auto-completes when the injection context is destroyed, no manual <code>ngOnDestroy</code> needed.</p>
+  <h3>Example: constructor vs ngOnInit</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>&#64;Component({ selector: 'app-profile', standalone: true, template: '' })
+export class ProfileCmp implements OnInit {
+  &#64;Input() userId!: string;
+  private http = inject(HttpClient);
+
+  constructor() {
+    console.log('ctor, userId =', this.userId); // undefined!
+  }
+  ngOnInit() {
+    console.log('init, userId =', this.userId); // set
+    this.http.get(`/api/users/${this.userId}`).subscribe();
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span><pre>ctor, userId = undefined
+init, userId = 42</pre>Inputs are unavailable in the constructor; the HTTP call correctly waits for <code>ngOnInit</code>.</div>
+  </div>
+  <h3>Example: hook order (console output)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>export class DemoCmp
+  implements OnChanges, OnInit, DoCheck,
+             AfterContentInit, AfterViewInit, OnDestroy {
+  &#64;Input() value = 0;
+  ngOnChanges(c: SimpleChanges) { console.log('OnChanges'); }
+  ngOnInit()          { console.log('OnInit'); }
+  ngDoCheck()         { console.log('DoCheck'); }
+  ngAfterContentInit(){ console.log('AfterContentInit'); }
+  ngAfterViewInit()   { console.log('AfterViewInit'); }
+  ngOnDestroy()       { console.log('OnDestroy'); }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span><pre>OnChanges
+OnInit
+DoCheck
+AfterContentInit
+AfterViewInit
+... (DoCheck repeats each CD cycle) ...
+OnDestroy</pre></div>
+  </div>
+  <h3>Example: takeUntilDestroyed vs ngOnDestroy</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>&#64;Component({ selector: 'app-ticker', standalone: true, template: '' })
+export class TickerCmp {
+  private destroyRef = inject(DestroyRef);
+
+  constructor() {
+    interval(1000)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(n =&gt; console.log(n));
+
+    this.destroyRef.onDestroy(() =&gt; console.log('cleaned up'));
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The interval logs <code>0, 1, 2, ...</code> and stops automatically when the component is destroyed, printing <code>cleaned up</code> — no <code>ngOnDestroy</code> method and no leaked subscription.</div>
+  </div>
+  <p class="note">Note: modifying a template-bound property inside <code>ngAfterViewInit</code> triggers <code>ExpressionChangedAfterItHasBeenChecked</code> in dev mode. Wrap the change in <code>queueMicrotask(...)</code> or move it to <code>ngOnInit</code>.</p>
+</section>
+
+<section id="modules" class="concept" tabindex="-1">
+  <h2>NgModules &amp; feature modules</h2>
+  <p>Before standalone components, every Angular building block lived inside an <code>&#64;NgModule</code>. A module is a class decorated with metadata that groups related code: <code>declarations</code> lists the components, directives, and pipes the module owns; <code>imports</code> pulls in other modules whose exported declarations you want to use; <code>exports</code> re-publishes declarations so importing modules can use them; <code>providers</code> registers services for DI; and <code>bootstrap</code> (root module only) names the top-level component to render.</p>
+  <p>The root module is conventionally <code>AppModule</code>. In <code>main.ts</code>, <code>platformBrowserDynamic().bootstrapModule(AppModule)</code> compiles it and mounts the component named in <code>bootstrap</code>. As an app grows, you split it into <em>feature modules</em> — one per domain area (e.g. <code>OrdersModule</code>, <code>AdminModule</code>) — which keeps declarations scoped and enables lazy loading. Cross-cutting UI (shared components, common pipes, and the Angular modules many features need such as <code>CommonModule</code> and <code>FormsModule</code>) is collected in a <code>SharedModule</code> that each feature imports.</p>
+  <p>A declaration can belong to exactly one module, and a module must import whatever it uses — forget to import <code>FormsModule</code> and <code>[(ngModel)]</code> silently fails to compile. Standalone components (next section) now replace most of this ceremony, but you will still meet NgModules in older codebases and some third-party libraries expose an <code>NgModule</code> alongside (or instead of) standalone exports.</p>
+  <h3>Example: a root AppModule</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>&#64;NgModule({
+  declarations: [AppComponent, HeaderComponent],
+  imports: [BrowserModule, FormsModule],
+  providers: [{ provide: API_URL, useValue: '/api' }],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+
+// main.ts
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
+  .catch(err =&gt; console.error(err));</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Angular compiles <code>AppModule</code>, instantiates <code>AppComponent</code>, and renders it into <code>&lt;app-root&gt;</code>. <code>HeaderComponent</code> is usable in templates because it is declared here.</div>
+  </div>
+  <h3>Example: a SharedModule</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>&#64;NgModule({
+  declarations: [CardComponent, TruncatePipe],
+  imports: [CommonModule],
+  exports: [CardComponent, TruncatePipe, CommonModule],
+})
+export class SharedModule {}
+
+// A feature module reuses everything with one import:
+&#64;NgModule({
+  declarations: [OrderListComponent],
+  imports: [SharedModule],
+})
+export class OrdersModule {}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span><code>OrderListComponent</code>'s template can use <code>&lt;app-card&gt;</code>, the <code>truncate</code> pipe, and <code>*ngIf</code>/<code>*ngFor</code> — all re-exported by <code>SharedModule</code> from a single import.</div>
+  </div>
+  <p class="note note-compat">Note: <code>CommonModule</code> (not <code>BrowserModule</code>) is what feature and shared modules import for <code>*ngIf</code>, <code>*ngFor</code>, and the async pipe. <code>BrowserModule</code> belongs only in the root module and must be imported exactly once.</p>
+</section>
+
+<section id="standalone" class="concept" tabindex="-1">
+  <h2>Standalone components</h2>
+  <p>A standalone component declares its own dependencies and no longer needs an <code>&#64;NgModule</code>. Instead of being listed in some module's <code>declarations</code>, it sets <code>standalone: true</code> (the default from v17, so you can omit it) and lists the components, directives, pipes, and Angular modules it uses directly in its own <code>imports: []</code> array. This makes each component self-contained: what it depends on is visible in one place, and there is no risk of a missing module import elsewhere.</p>
+  <p>Bootstrapping changes too. In <code>main.ts</code> you call <code>bootstrapApplication(App, { providers: [...] })</code> instead of <code>bootstrapModule</code>. Application-wide providers are supplied through configuration functions: <code>provideRouter(routes)</code>, <code>provideHttpClient()</code>, <code>provideAnimations()</code>, and so on. These replace the old pattern of importing <code>RouterModule.forRoot()</code> or <code>HttpClientModule</code> into a root module.</p>
+  <p>Standalone is the default when you scaffold new components from v17 onward, and by v19 it is fully the norm across the framework and CLI. For existing NgModule apps, Angular ships an automated migration: <code>ng generate &#64;angular/core:standalone</code> runs in stages — converting declarations to standalone, removing now-empty NgModules, and switching <code>main.ts</code> to <code>bootstrapApplication</code>.</p>
+  <h3>Example: a standalone component</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>&#64;Component({
+  selector: 'app-root',
+  standalone: true, // default in v17+, optional
+  imports: [RouterOutlet, CardComponent, AsyncPipe],
+  template: `
+    &lt;app-card&gt;{{ title }}&lt;/app-card&gt;
+    &lt;router-outlet /&gt;
+  `,
+})
+export class App {
+  title = 'DevDocs';
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Renders the card containing <code>DevDocs</code> plus the routed view. No module declares <code>App</code>; its <code>imports</code> array makes <code>&lt;app-card&gt;</code> and <code>&lt;router-outlet&gt;</code> available.</div>
+  </div>
+  <h3>Example: bootstrapApplication in main.ts</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// main.ts
+bootstrapApplication(App, {
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(),
+  ],
+}).catch(err =&gt; console.error(err));</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The app boots with routing and <code>HttpClient</code> configured application-wide — no <code>AppModule</code>, no <code>RouterModule.forRoot()</code>, no <code>HttpClientModule</code>.</div>
+  </div>
+  <h3>Example: before (NgModule) vs after (standalone)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// BEFORE
+&#64;NgModule({
+  declarations: [MenuComponent],
+  imports: [CommonModule],
+  exports: [MenuComponent],
+})
+export class MenuModule {}
+
+// AFTER
+&#64;Component({
+  selector: 'app-menu',
+  standalone: true,
+  imports: [NgFor, NgIf], // only what it needs
+  template: `...`,
+})
+export class MenuComponent {}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The wrapping module disappears; <code>MenuComponent</code> is imported directly wherever it is used. Running <code>ng generate &#64;angular/core:standalone</code> performs this transformation across the project automatically.</div>
+  </div>
+  <p class="note note-compat">Note: standalone components interoperate with NgModules in both directions — you can list a standalone component in an NgModule's <code>imports</code>, and import an NgModule into a standalone component's <code>imports</code>. This lets you migrate incrementally rather than all at once.</p>
+</section>
+<section id="routing" class="concept" tabindex="-1">
+  <h2>Routing &amp; guards</h2>
+  <p>Angular's router maps URL paths to components. In a modern standalone app you enable it during bootstrap with <code>provideRouter(routes)</code> instead of the legacy <code>RouterModule.forRoot()</code>. The <code>routes</code> value is a <code>Routes</code> array where each entry describes a <code>path</code> (without a leading slash) and what to render: a <code>component</code>, a <code>redirectTo</code> (paired with <code>pathMatch: 'full'</code> for exact matches), or child routes. A wildcard entry <code>{ path: '**', component: NotFound }</code> placed last catches anything unmatched and typically renders a 404 page.</p>
+  <p>Wherever you place <code>&lt;router-outlet&gt;</code> in a template, the router renders the matched component. Navigation in templates uses the <code>routerLink</code> directive rather than a raw <code>href</code>, so navigation happens client-side without a full page reload; <code>routerLinkActive</code> adds a CSS class when its link matches the current URL. To read the current URL's parameters you can inject <code>ActivatedRoute</code> and subscribe to <code>paramMap</code>, or — far simpler — enable <code>withComponentInputBinding()</code> so route params, query params, and resolved data are bound straight into matching component <code>@Input()</code> (or <code>input()</code>) properties.</p>
+  <p>Lazy loading keeps the initial bundle small. <code>loadComponent: () =&gt; import('./x').then(m =&gt; m.X)</code> defers a single standalone component; <code>loadChildren</code> defers a whole set of routes. Route protection is now expressed as <em>functional guards</em>: a <code>CanActivateFn</code> is just a function that can call <code>inject()</code> to reach services, and returns a <code>boolean</code>, a <code>UrlTree</code> (to redirect), or a <code>Promise</code>/<code>Observable</code> of those.</p>
+  <h3>Example: bootstrap + routes + outlet</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// main.ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { Routes } from '@angular/router';
+import { App } from './app';
+import { Home } from './home';
+
+export const routes: Routes = [
+  { path: '', component: Home },
+  { path: 'users/:id', loadComponent: () =&gt;
+      import('./user').then(m =&gt; m.User) },
+  { path: 'old', redirectTo: '', pathMatch: 'full' },
+  { path: '**', loadComponent: () =&gt;
+      import('./not-found').then(m =&gt; m.NotFound) },
+];
+
+bootstrapApplication(App, {
+  providers: [provideRouter(routes, withComponentInputBinding())],
+});</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Visiting <code>/</code> renders Home. <code>/users/42</code> lazily fetches the User chunk. <code>/old</code> 301-style redirects to <code>/</code>. Any other URL renders the NotFound chunk.</div>
+  </div>
+  <h3>Example: routerLink and active styling</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;nav&gt;
+  &lt;a routerLink="/" routerLinkActive="active"
+     [routerLinkActiveOptions]="{ exact: true }"&gt;Home&lt;/a&gt;
+  &lt;a routerLink="/users/42" routerLinkActive="active"&gt;User 42&lt;/a&gt;
+&lt;/nav&gt;
+&lt;router-outlet /&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>On <code>/users/42</code> the second link gains the <code>active</code> class; the Home link stays inactive because of <code>exact: true</code>. Clicking navigates without a page reload.</div>
+  </div>
+  <h3>Example: route params via input binding</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, input } from '@angular/core';
+
+@Component({
+  selector: 'app-user',
+  template: `&lt;h1&gt;User #{{ id() }}&lt;/h1&gt;`,
+})
+export class User {
+  // matches the :id segment thanks to withComponentInputBinding()
+  id = input.required&lt;string&gt;();
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Navigating to <code>/users/42</code> renders <code>&lt;h1&gt;User #42&lt;/h1&gt;</code>. No <code>ActivatedRoute</code> subscription needed.</div>
+  </div>
+  <h3>Example: functional CanActivateFn guard</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { Auth } from './auth';
+
+export const authGuard: CanActivateFn = (route, state) =&gt; {
+  const auth = inject(Auth);
+  const router = inject(Router);
+  return auth.isLoggedIn()
+    ? true
+    : router.createUrlTree(['/login']);
+};
+
+// usage: { path: 'admin', component: Admin, canActivate: [authGuard] }</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Logged-in users see Admin. Others are redirected to <code>/login</code> because the guard returns a <code>UrlTree</code>.</div>
+  </div>
+  <p class="note note-perf">Note: Prefer <code>loadComponent</code>/<code>loadChildren</code> for any route not needed on first paint — lazy chunks shrink the initial bundle and improve time-to-interactive.</p>
+</section>
+
+<section id="forms" class="concept" tabindex="-1">
+  <h2>Forms (template &amp; reactive)</h2>
+  <p>Angular ships two form systems. <em>Template-driven forms</em> keep the source of truth in the template: you import <code>FormsModule</code>, bind an input with <code>[(ngModel)]</code>, and Angular builds the form model implicitly. A template reference variable like <code>#form="ngForm"</code> exposes the aggregate form state, while each control exposes validity flags such as <code>valid</code>, <code>invalid</code>, <code>touched</code>, <code>dirty</code>, and <code>pristine</code>. This style is quick for small forms but harder to unit test.</p>
+  <p><em>Reactive forms</em> make the model explicit in TypeScript. You import <code>ReactiveFormsModule</code> and build a tree of <code>FormControl</code> and <code>FormGroup</code> instances — usually via the injected <code>FormBuilder</code> for brevity. <code>Validators</code> like <code>Validators.required</code> and <code>Validators.email</code> attach synchronous validation. Each control exposes a <code>valueChanges</code> <code>Observable</code> so you can react to edits, and the whole group is testable without touching the DOM.</p>
+  <p>Since v14 reactive forms are <em>typed</em>: <code>FormControl&lt;string&gt;</code> and the shape inferred by <code>FormBuilder</code> give you compile-time safety on <code>value</code> and <code>setValue</code>. Note that a control created with an initial value is <em>nullable</em> by default (it becomes <code>null</code> when reset); use <code>nonNullable: true</code> to keep the type non-null. Display errors by reading a control's <code>errors</code> map only after it is <code>touched</code>, so messages don't flash before the user interacts.</p>
+  <h3>Example: template-driven form</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-tpl',
+  imports: [FormsModule],
+  template: `
+    &lt;form #f="ngForm" (ngSubmit)="save(f.value)"&gt;
+      &lt;input name="email" [(ngModel)]="email"
+             required email #e="ngModel"&gt;
+      &lt;p *ngIf="e.invalid &amp;&amp; e.touched"&gt;Bad email&lt;/p&gt;
+      &lt;button [disabled]="f.invalid"&gt;Save&lt;/button&gt;
+    &lt;/form&gt;`,
+})
+export class Tpl {
+  email = '';
+  save(v: unknown) { console.log(v); }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Typing "abc" then blurring shows "Bad email" and keeps Save disabled. Entering "a@b.co" hides the message and enables Save; submitting logs <code>{ email: 'a@b.co' }</code>.</div>
+  </div>
+  <h3>Example: typed reactive form</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule,
+         Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-rx',
+  imports: [ReactiveFormsModule],
+  template: `
+    &lt;form [formGroup]="form" (ngSubmit)="save()"&gt;
+      &lt;input formControlName="email"&gt;
+      &lt;p *ngIf="form.controls.email.touched
+                &amp;&amp; form.controls.email.errors?.['email']"&gt;
+        Invalid email
+      &lt;/p&gt;
+    &lt;/form&gt;`,
+})
+export class Rx {
+  private fb = inject(FormBuilder);
+  form = this.fb.nonNullable.group({
+    email: ['', [Validators.required, Validators.email]],
+  });
+  save() { console.log(this.form.getRawValue()); }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span><code>form.value.email</code> is typed as <code>string</code> (non-null). Blurring an invalid entry reveals "Invalid email". Submit logs <code>{ email: '...' }</code>.</div>
+  </div>
+  <h3>Example: reacting to valueChanges</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, inject } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DestroyRef } from '@angular/core';
+
+@Component({ /* ... */ })
+export class Search {
+  private destroyRef = inject(DestroyRef);
+  query = new FormControl('');
+
+  constructor() {
+    this.query.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(v =&gt; console.log('search:', v));
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Each keystroke logs <code>search: a</code>, <code>search: ab</code>, … The subscription auto-completes when the component is destroyed, preventing a leak.</div>
+  </div>
+  <p class="note">Note: Only show validation messages once a control is <code>touched</code> (template-driven) or after blur, so errors don't appear before the user has had a chance to type.</p>
+</section>
+
+<section id="rxjs" class="concept" tabindex="-1">
+  <h2>RxJS in Angular</h2>
+  <p>An <code>Observable</code> is a lazy, push-based stream that can emit zero, one, or many values over time and then complete or error. "Lazy" means nothing runs until you <code>subscribe</code>; "push" means the producer decides when values arrive. Angular's <code>HttpClient</code>, router events, and reactive-form <code>valueChanges</code> are all Observables. Because a manual <code>subscribe</code> keeps running until it completes, long-lived streams must be unsubscribed to avoid memory leaks.</p>
+  <p>Operators transform streams functionally inside <code>.pipe()</code>. <code>map</code> reshapes each value, <code>filter</code> drops values, <code>debounceTime</code> waits for a quiet gap (ideal for search boxes), and <code>switchMap</code> flattens an inner Observable while cancelling the previous inner subscription — perfect for type-ahead HTTP where stale requests should be abandoned. <code>combineLatest</code> merges the newest value from several sources. For shared, imperative state, a <code>Subject</code> is a multicast Observable you can push into with <code>next()</code>, and <code>BehaviorSubject</code> additionally holds a current value that new subscribers receive immediately.</p>
+  <p>In templates the <code>async</code> pipe subscribes for you and unsubscribes automatically when the view is destroyed, eliminating most manual cleanup. In component code, <code>takeUntilDestroyed()</code> ties a subscription's lifetime to the component. Finally, the interop helpers bridge both worlds: <code>toSignal(obs$)</code> converts an Observable into a signal, and <code>toObservable(sig)</code> converts a signal back into a stream.</p>
+  <h3>Example: async pipe (no manual unsubscribe)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { AsyncPipe } from '@angular/common';
+
+@Component({
+  selector: 'app-clock',
+  imports: [AsyncPipe],
+  template: `&lt;p&gt;{{ user$ | async | json }}&lt;/p&gt;`,
+})
+export class Clock {
+  private http = inject(HttpClient);
+  user$ = this.http.get('/api/me');
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>When the request resolves, the paragraph renders <code>{ "name": "Ada" }</code>. The pipe unsubscribes automatically when the component is destroyed.</div>
+  </div>
+  <h3>Example: debounceTime + switchMap search</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { debounceTime, switchMap, filter } from 'rxjs';
+
+results$ = this.query.valueChanges.pipe(
+  filter((q): q is string =&gt; !!q &amp;&amp; q.length &gt; 2),
+  debounceTime(300),
+  switchMap(q =&gt; this.http.get(`/api/search?q=${q}`)),
+);</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Typing "ang" then "angu" fires one request 300ms after the last keystroke; the earlier "ang" request is cancelled by <code>switchMap</code>, so only the latest results render.</div>
+  </div>
+  <h3>Example: BehaviorSubject shared state</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class CartStore {
+  private count = new BehaviorSubject(0);
+  count$ = this.count.asObservable();
+  add() { this.count.next(this.count.value + 1); }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>A newly subscribing component immediately receives <code>0</code>. After two <code>add()</code> calls, every subscriber of <code>count$</code> sees <code>2</code>.</div>
+  </div>
+  <h3>Example: toSignal interop</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { toSignal } from '@angular/core/rxjs-interop';
+import { interval } from 'rxjs';
+
+// stream -&gt; signal usable directly in templates
+seconds = toSignal(interval(1000), { initialValue: 0 });
+// template: {{ seconds() }}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The template shows <code>0</code>, then <code>1</code>, <code>2</code>, … each second. <code>toSignal</code> manages the subscription and cleanup for you.</div>
+  </div>
+  <p class="note note-perf">Note: Prefer the <code>async</code> pipe or <code>toSignal()</code> over manual <code>subscribe()</code>. If you must subscribe in code, pair it with <code>takeUntilDestroyed()</code> so the stream is torn down with the component.</p>
+</section>
+
+<section id="defer" class="concept" tabindex="-1">
+  <h2>Deferrable views @defer</h2>
+  <p>Introduced in v17, the <code>@defer</code> block is a template-level way to lazy-load a section of UI along with its component dependencies. Everything inside <code>@defer { … }</code> becomes a separate JavaScript chunk that Angular fetches only when a <em>trigger</em> fires. This is more granular than route-level lazy loading: you can defer a heavy chart or comment thread that sits below the fold without splitting your routes.</p>
+  <p>A defer block has companion blocks for the states around loading. <code>@placeholder</code> shows content before the trigger fires (and can declare a <code>minimum</code> display time). <code>@loading</code> shows while the chunk downloads and supports <code>minimum</code> and <code>after</code> to avoid flicker on fast connections. <code>@error</code> renders if the import fails. Only <code>@defer</code> is required; the rest are optional.</p>
+  <p>Triggers decide <em>when</em> to load: <code>on idle</code> (the default, when the browser is idle), <code>immediate</code>, <code>on timer(2s)</code>, <code>on viewport</code> (when it scrolls into view), <code>on interaction</code>, and <code>on hover</code>. The viewport/interaction/hover triggers can reference an element via a template variable, e.g. <code>on viewport(ref)</code>. You can also <code>prefetch</code> independently — <code>@defer (on viewport; prefetch on idle)</code> downloads early but renders late. Finally, <code>when</code> takes a boolean expression, and multiple triggers can be combined.</p>
+  <h3>Example: viewport trigger with placeholder</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@defer (on viewport) {
+  &lt;app-heavy-chart /&gt;
+} @placeholder (minimum 500ms) {
+  &lt;p&gt;Scroll down to load the chart…&lt;/p&gt;
+} @loading (after 100ms; minimum 1s) {
+  &lt;p&gt;Loading chart…&lt;/p&gt;
+} @error {
+  &lt;p&gt;Could not load chart.&lt;/p&gt;
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Initially shows "Scroll down to load the chart…". When it scrolls into view, "Loading chart…" appears (only if load takes &gt;100ms), then the real <code>&lt;app-heavy-chart&gt;</code> renders. A failed import shows the error text.</div>
+  </div>
+  <h3>Example: interaction trigger referencing #ref</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;button #loadBtn&gt;Show comments&lt;/button&gt;
+
+@defer (on interaction(loadBtn); prefetch on idle) {
+  &lt;app-comments /&gt;
+} @placeholder {
+  &lt;p&gt;Comments hidden&lt;/p&gt;
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The chunk prefetches during idle time. Clicking the button swaps "Comments hidden" for the live <code>&lt;app-comments&gt;</code> instantly, since the code was already fetched.</div>
+  </div>
+  <h3>Example: when condition + timer</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@defer (when isReady(); on timer(2s)) {
+  &lt;app-dashboard /&gt;
+} @loading {
+  &lt;p&gt;Preparing dashboard…&lt;/p&gt;
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The dashboard loads as soon as the <code>isReady()</code> signal returns true, or after 2 seconds at the latest — whichever fires first. "Preparing dashboard…" shows meanwhile.</div>
+  </div>
+  <p class="note note-perf">Note: Reach for <code>@defer</code> on below-the-fold or rarely-used UI. Combine a late render trigger (<code>on viewport</code>) with an early <code>prefetch on idle</code> so the content appears instantly the moment it's needed.</p>
+</section>
+
+<section id="signals" class="concept" tabindex="-1">
+  <h2>Signals</h2>
+  <p>A signal is a reactive wrapper around a value. <code>signal(initial)</code> returns a getter function you call to read the current value — <code>count()</code>, not <code>count</code>. You change it with <code>.set(v)</code> to replace the value outright, or <code>.update(fn)</code> to derive the next value from the current one, e.g. <code>count.update(n =&gt; n + 1)</code>. Expose a read-only view to consumers with <code>.asReadonly()</code> so they can read but not write.</p>
+  <p>Signal equality is by reference for objects. When a signal holds an object or array, you must <code>set</code> a <em>new</em> reference to trigger updates — mutating the existing object in place will not notify anything. So use <code>items.update(list =&gt; [...list, next])</code> rather than <code>list.push(next)</code>. <code>computed(() =&gt; …)</code> creates a derived signal that is both lazy (it only recomputes when read) and memoized (it caches until a dependency changes). Angular discovers dependencies automatically: whichever signals you read <em>during</em> the computation are tracked, so you never declare a dependency list.</p>
+  <p><code>effect(() =&gt; …)</code> runs a side effect whenever any signal it reads changes — logging, syncing to <code>localStorage</code>, imperative DOM work. Effects must be created in an <em>injection context</em> (a constructor or with an explicit <code>Injector</code>) and are cleaned up when that context is destroyed; register per-run teardown via the <code>onCleanup</code> callback. Signals integrate tightly with change detection: reading a signal in a template registers that view as a consumer, so a signal change marks exactly the affected views dirty — the basis of Angular's zoneless future.</p>
+  <h3>Example: signal, set, update</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { signal } from '@angular/core';
+
+const count = signal(0);
+count();            // read -&gt; 0
+count.set(5);       // replace
+count();            // -&gt; 5
+count.update(n =&gt; n + 1);
+count();            // -&gt; 6
+
+const ro = count.asReadonly();
+// ro.set(9)  // compile error: no set on readonly</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Reads yield <code>0</code>, then <code>5</code>, then <code>6</code>. The read-only view exposes only the getter — attempting <code>ro.set</code> fails at compile time.</div>
+  </div>
+  <h3>Example: computed derived value</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { signal, computed } from '@angular/core';
+
+const price = signal(100);
+const qty = signal(2);
+const total = computed(() =&gt; price() * qty());
+
+total();          // -&gt; 200 (computed &amp; cached)
+qty.set(3);
+total();          // -&gt; 300 (recomputed on read)</code></pre>
+    <div class="io-output"><span class="io-title">Output</span><code>total()</code> is <code>200</code>, then <code>300</code> after <code>qty</code> changes. It only recomputes when a tracked dependency (<code>price</code> or <code>qty</code>) changes and is then read.</div>
+  </div>
+  <h3>Example: immutable array update</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>const items = signal&lt;string[]&gt;(['a']);
+
+// WRONG: mutation, no notification
+// items().push('b');
+
+// RIGHT: new reference
+items.update(list =&gt; [...list, 'b']);
+items();   // -&gt; ['a', 'b']</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The mutating <code>push</code> would leave dependents stale. The <code>update</code> with a fresh array yields <code>['a', 'b']</code> and notifies all consumers.</div>
+  </div>
+  <h3>Example: effect with cleanup</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { Component, signal, effect } from '@angular/core';
+
+@Component({
+  selector: 'app-counter',
+  template: `&lt;button (click)="inc()"&gt;{{ count() }}&lt;/button&gt;`,
+})
+export class Counter {
+  count = signal(0);
+  inc() { this.count.update(n =&gt; n + 1); }
+
+  constructor() {
+    effect((onCleanup) =&gt; {
+      const id = setTimeout(() =&gt; console.log(this.count()));
+      onCleanup(() =&gt; clearTimeout(id));
+    });
+  }
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Each click re-renders the button label and re-runs the effect; the previous timeout is cleared via <code>onCleanup</code> before the next run. The template updates without <code>zone.js</code> ceremony.</div>
+  </div>
+  <p class="note note-compat">Note: <code>effect()</code> must be created in an injection context (typically a constructor or field initializer). For pure derivations prefer <code>computed()</code> over an effect that writes another signal — it's lazier, memoized, and avoids feedback loops.</p>
+</section>
+<section id="signal-io" class="concept" tabindex="-1">
+  <h2>Signal inputs, outputs &amp; model</h2>
+  <p>Modern Angular replaces the decorator-based <code>@Input()</code> / <code>@Output()</code> API with a set of functions that produce <em>signals</em>. The <code>input()</code> function declares an optional input and returns a read-only <code>InputSignal&lt;T&gt;</code>; you read the current value by calling it like any signal (<code>this.name()</code>). Because it is a signal, it participates in the reactive graph, so you no longer implement <code>ngOnChanges</code> to react to changes — you derive with <code>computed()</code> or run side effects with <code>effect()</code>. For a mandatory input use <code>input.required&lt;T&gt;()</code>, which has no default and makes Angular enforce that a value is bound.</p>
+  <p>Both forms accept an options object with <code>alias</code> (expose a different binding name to templates) and <code>transform</code> (coerce the incoming value, e.g. <code>booleanAttribute</code> or <code>numberAttribute</code>). The transform runs on every write, so the signal always holds the normalized value. This is fully typed: the accepted binding type and the stored type can differ (a <code>transform</code> from <code>string | number</code> to <code>number</code>, for example).</p>
+  <p>Outputs are declared with <code>output()</code>, which returns an <code>OutputEmitterRef&lt;T&gt;</code> — call <code>emit(value)</code> to fire. This replaces <code>@Output()</code> plus <code>new EventEmitter()</code> and is not an RxJS Subject, though <code>outputFromObservable()</code> can bridge one. For two-way binding, <code>model()</code> (and <code>model.required()</code>) creates a <em>writable</em> signal that Angular pairs with an implicit <code>xChange</code> output, so a parent can use the banana-in-a-box syntax <code>[(value)]="..."</code>. Finally, the signal-based queries <code>viewChild()</code> and <code>contentChild()</code> (plus their <code>*Children</code> plurals) return signals instead of requiring <code>@ViewChild</code> and <code>AfterViewInit</code> timing.</p>
+  <h3>Example: input() vs @Input()</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// Old: decorator + lifecycle hook
+@Input() count = 0;
+ngOnChanges() { this.doubled = this.count * 2; }
+
+// New: signal input + computed
+count = input(0);                 // InputSignal&lt;number&gt;
+label = input.required&lt;string&gt;(); // must be bound
+doubled = computed(() =&gt; this.count() * 2);</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>No ngOnChanges needed. When the parent binds <code>[count]="5"</code>, <code>count()</code> returns <code>5</code> and <code>doubled()</code> recomputes to <code>10</code> automatically.</div>
+  </div>
+  <h3>Example: alias &amp; transform</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { input, booleanAttribute } from '@angular/core';
+
+// Template binds [isDisabled], component reads disabled()
+disabled = input(false, {
+  alias: 'isDisabled',
+  transform: booleanAttribute,
+});
+// &lt;my-btn isDisabled&gt;  → disabled() === true</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Binding the bare attribute <code>isDisabled</code> passes the string <code>""</code>; <code>booleanAttribute</code> coerces it, so <code>disabled()</code> returns <code>true</code>.</div>
+  </div>
+  <h3>Example: output() &amp; model()</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>// Child
+saved = output&lt;string&gt;();          // replaces @Output EventEmitter
+value = model('');                 // two-way signal
+save() { this.saved.emit(this.value()); }
+
+// Parent template
+&lt;editor [(value)]="text" (saved)="onSaved($event)" /&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span><code>[(value)]</code> keeps <code>text</code> and the child's <code>value()</code> in sync both ways; calling <code>save()</code> emits the string to <code>onSaved</code>.</div>
+  </div>
+  <h3>Example: signal queries</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>import { viewChild, contentChild, ElementRef } from '@angular/core';
+
+box = viewChild&lt;ElementRef&gt;('box');         // Signal&lt;ElementRef | undefined&gt;
+header = contentChild.required(HeaderCmp);  // guaranteed present
+
+focus() { this.box()?.nativeElement.focus(); }</code></pre>
+    <div class="io-output"><span class="io-title">Output</span><code>box()</code> is <code>undefined</code> until the view renders, then resolves to the element ref — no <code>AfterViewInit</code> juggling required.</div>
+  </div>
+  <p class="note note-compat">Note: signal inputs are read-only from inside the component — you cannot assign to them. Use <code>model()</code> when the component itself must change the value, and reserve <code>effect()</code> for genuine side effects (never to sync one signal into another; prefer <code>computed()</code> or <code>linkedSignal()</code>).</p>
+</section>
+
+<section id="resource-api" class="concept" tabindex="-1">
+  <h2>Resource API &amp; httpResource</h2>
+  <p>The Resource API models asynchronous data as signals. <code>resource({ request, loader })</code> takes a <code>request</code> function that reads signals and returns a plain request object, and a <code>loader</code> that receives that request and returns a <code>Promise</code>. Whenever any signal read inside <code>request</code> changes, Angular re-invokes the loader (aborting the previous call via an <code>AbortSignal</code>). The returned resource exposes reactive members: <code>value()</code> (the loaded data), <code>status()</code> (an enum like <code>idle</code>, <code>loading</code>, <code>resolved</code>, <code>error</code>), <code>error()</code>, <code>isLoading()</code>, and an imperative <code>reload()</code>. It shipped in v19 and is still marked experimental.</p>
+  <p>When your loader is more naturally an <code>Observable</code> — for example an existing <code>HttpClient</code> stream or something with cancellation semantics — use <code>rxResource()</code>. It has the same shape but the loader returns an Observable, and Angular takes the first emission and manages the subscription for you. This lets you keep RxJS operators while still exposing the data as signals to the template.</p>
+  <p>Going one level higher, <code>httpResource()</code> (stable in v20) is a declarative HTTP-as-a-signal helper built on <code>HttpClient</code>. You give it a function returning a URL (or a full request descriptor) that reads signals; it performs the GET and re-fetches automatically when those signals change. The result is a resource whose <code>value()</code> is the typed response body, plus <code>headers()</code>, <code>statusCode()</code>, and the usual <code>isLoading()</code>/<code>error()</code>. It requires <code>provideHttpClient()</code> to be configured.</p>
+  <h3>Example: resource() with a request signal</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>userId = signal(1);
+
+user = resource({
+  request: () =&gt; ({ id: this.userId() }),
+  loader: async ({ request, abortSignal }) =&gt; {
+    const r = await fetch(`/api/users/${request.id}`, { signal: abortSignal });
+    return r.json();
+  },
+});
+// user.isLoading(), user.value(), user.error(), user.reload()</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Initially <code>isLoading()</code> is <code>true</code>, <code>value()</code> is <code>undefined</code>. After the fetch resolves, <code>value()</code> holds the user and <code>status()</code> becomes <code>resolved</code>. Setting <code>userId.set(2)</code> aborts the old request and reloads.</div>
+  </div>
+  <h3>Example: rxResource() with an Observable loader</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>private http = inject(HttpClient);
+query = signal('angular');
+
+results = rxResource({
+  request: () =&gt; this.query(),
+  loader: ({ request }) =&gt;
+    this.http.get&lt;Repo[]&gt;(`/search?q=${request}`),
+});</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Typing into a box that calls <code>query.set(...)</code> re-runs the HTTP GET; <code>results.value()</code> updates to the newest response and prior in-flight requests are unsubscribed.</div>
+  </div>
+  <h3>Example: httpResource() in a template</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>id = signal(42);
+product = httpResource&lt;Product&gt;(() =&gt; `/api/products/${this.id()}`);</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Template can branch on state:<br><code>@if (product.isLoading()) { Loading… }</code><br><code>@else if (product.error()) { Failed }</code><br><code>@else { {{ product.value()?.name }} }</code></div>
+  </div>
+  <p class="note note-perf">Note: keep the <code>request</code> function pure and cheap — it re-runs on every dependency change and its return value is compared to decide whether to reload. Do not call the loader manually; drive it by updating the signals it depends on, and use <code>reload()</code> only for explicit refreshes.</p>
+</section>
+
+<section id="zoneless" class="concept" tabindex="-1">
+  <h2>Zoneless &amp; modern reactivity</h2>
+  <p>Historically Angular relied on <code>zone.js</code> to monkey-patch async APIs (<code>setTimeout</code>, DOM events, XHR) and trigger change detection globally after anything ran. With signals, Angular knows precisely which state changed, so the zone becomes unnecessary. Calling <code>provideZonelessChangeDetection()</code> in your application providers drops <code>zone.js</code> entirely; change detection is then scheduled by signal writes, template event bindings, and explicit <code>markForCheck</code> calls. This API is the stabilized successor to the earlier <code>provideExperimentalZonelessChangeDetection()</code> and became available around v20. Remember to remove <code>zone.js</code> from the <code>polyfills</code> array in your build config.</p>
+  <p>The payoff is concrete: a smaller bundle (no zone.js), lower runtime overhead (no global patching or full-tree dirty checking), and precise, targeted updates that only refresh the components whose signals actually changed. It also removes a class of confusing timing bugs and makes interop with third-party libraries that fought the zone much simpler.</p>
+  <p>Two v19 helpers round out the reactivity story. <code>linkedSignal()</code> creates a <em>writable</em> signal that is derived from a source signal: it recomputes when the source changes (like <code>computed()</code>) but can also be set imperatively (like a plain <code>signal()</code>), which is ideal for state that should reset when inputs change yet still be user-editable. For DOM work, <code>afterNextRender()</code> runs a callback once after the next render (a safe place to read layout), and <code>afterRenderEffect()</code> runs reactively after every render that touched its dependencies — both only execute in the browser, never during SSR.</p>
+  <h3>Example: going zoneless</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>bootstrapApplication(App, {
+  providers: [
+    provideZonelessChangeDetection(),
+    provideHttpClient(),
+  ],
+});
+// also delete 'zone.js' from angular.json polyfills</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The app boots without zone.js. A signal write like <code>count.update(c =&gt; c + 1)</code> schedules change detection for just the affected view.</div>
+  </div>
+  <h3>Example: linkedSignal()</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>options = input&lt;string[]&gt;([]);
+
+// resets to first option when options change,
+// but the user can still override it
+selected = linkedSignal(() =&gt; this.options()[0]);
+
+choose(o: string) { this.selected.set(o); }</code></pre>
+    <div class="io-output"><span class="io-title">Output</span><code>selected()</code> tracks the first option; picking another sets it manually. When <code>options</code> changes, <code>selected()</code> resets to the new first item.</div>
+  </div>
+  <h3>Example: afterNextRender()</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>chart = viewChild&lt;ElementRef&gt;('chart');
+
+constructor() {
+  afterNextRender(() =&gt; {
+    const w = this.chart()!.nativeElement.offsetWidth;
+    this.width.set(w);           // safe DOM read
+  });
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Runs once in the browser after the view is painted; <code>offsetWidth</code> is measured reliably and never executes on the server.</div>
+  </div>
+  <p class="note note-perf">Note: in zoneless apps, mutate state through signals or immutable updates. A raw array push (<code>this.items.push(x)</code>) with an <code>OnPush</code>/zoneless tree will not be noticed — call <code>this.items.update(...)</code> so the signal actually changes.</p>
+</section>
+
+<section id="ssr-i18n" class="concept" tabindex="-1">
+  <h2>SSR, hydration, i18n &amp; Elements</h2>
+  <p>Angular's server-side rendering lives in the <code>@angular/ssr</code> package. Running <code>ng add @angular/ssr</code> wires up a Node/Express server entry, a server build target, and the app-shell plumbing so pages are rendered to HTML on the server and streamed to the browser for fast first paint and SEO. On the client you enable <em>hydration</em> with <code>provideClientHydration()</code>, which reuses the server-rendered DOM instead of destroying and re-creating it. Adding <code>withIncrementalHydration()</code> (v19) goes further: components stay dormant and hydrate lazily on interaction or viewport visibility (driven by <code>@defer</code> triggers), shipping and executing less JavaScript up front.</p>
+  <p>Internationalization uses the compile-time <code>i18n</code> system. Mark translatable text with the <code>i18n</code> attribute; give a stable custom id with <code>i18n="@@myId"</code> so translations survive text edits. Complex grammar is expressed with ICU expressions — <code>{count, plural, ...}</code> for counting and <code>{gender, select, ...}</code> for alternatives. You extract all marked messages into an XLIFF/XMB file with <code>ng extract-i18n</code>, translate per locale, then produce a separate optimized build per locale (each with its own baked-in translations and <code>LOCALE_ID</code>).</p>
+  <p>Finally, <em>Angular Elements</em> lets you ship a component as a standard Web Component. <code>createCustomElement(MyComponent, { injector })</code> returns a class you register with <code>customElements.define('my-widget', ...)</code>. The result is a framework-agnostic custom element with inputs surfaced as attributes/properties and outputs surfaced as DOM <code>CustomEvent</code>s, usable in plain HTML, React, Vue, or anywhere the browser runs.</p>
+  <h3>Example: SSR + hydration</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="bash"><code>ng add @angular/ssr</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Scaffolds <code>server.ts</code>, a server build target, and adds <code>provideClientHydration()</code> to the app config. Pages now render to HTML on the server.</div>
+  </div>
+  <h3>Example: incremental hydration</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>bootstrapApplication(App, {
+  providers: [
+    provideClientHydration(withIncrementalHydration()),
+  ],
+});</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Server DOM is reused (no flicker). A block marked <code>@defer (hydrate on interaction)</code> stays inert until the user interacts, deferring its JS.</div>
+  </div>
+  <h3>Example: i18n with ICU plural</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>&lt;h1 i18n="@@homeTitle"&gt;Welcome&lt;/h1&gt;
+
+&lt;p i18n&gt;{count, plural,
+  =0 {No items}
+  =1 {One item}
+  other {{{count}} items}
+}&lt;/p&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span><code>ng extract-i18n</code> collects <code>homeTitle</code> and the plural message. With <code>count = 3</code>, the rendered text reads: <code>3 items</code>.</div>
+  </div>
+  <h3>Example: Angular Elements</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>const el = createCustomElement(RatingComponent, {
+  injector: this.injector,
+});
+customElements.define('star-rating', el);
+
+// Now usable anywhere:
+// &lt;star-rating value="4"&gt;&lt;/star-rating&gt;</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The browser registers <code>&lt;star-rating&gt;</code>. Setting the <code>value</code> attribute feeds the input; an <code>output()</code> named <code>rated</code> dispatches a <code>rated</code> <code>CustomEvent</code>.</div>
+  </div>
+  <p class="note note-a11y">Note: hydration requires the server and client to render the same DOM. Manual DOM manipulation outside Angular, or invalid HTML nesting, causes hydration mismatch errors — keep DOM changes inside templates and directives so the reused markup matches.</p>
+</section>
+
+<section id="testing-modern" class="concept" tabindex="-1">
+  <h2>Testing &amp; Angular 18–22 highlights</h2>
+  <p>Angular's unit-testing foundation is <code>TestBed</code>. You configure a testing environment with <code>TestBed.configureTestingModule({ imports: [MyComponent], providers: [...] })</code> — with standalone components you import the component directly rather than declaring it in an NgModule. Create an instance with <code>TestBed.createComponent(MyComponent)</code>, which returns a <code>ComponentFixture</code>. Call <code>fixture.detectChanges()</code> to run change detection and render the template, then assert against the DOM through <code>fixture.debugElement</code> (Angular's wrapper, queryable with <code>By.css(...)</code>) or the raw <code>fixture.nativeElement</code>.</p>
+  <p>For richer, reuse-friendly interactions, <em>component test harnesses</em> from <code>@angular/cdk/testing</code> provide a stable API over a component's DOM: you obtain a <code>HarnessLoader</code> and load typed harnesses (e.g. a Material button harness) so tests describe behavior, not brittle selectors. Meanwhile the ecosystem is shifting away from the long-default Karma + Jasmine runner toward faster, modern alternatives — Angular now offers first-class support for <em>Vitest</em> and <em>web-test-runner</em>, which run in-process or in real browsers with quicker feedback and native ESM.</p>
+  <h3>Example: TestBed component test</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>TestBed.configureTestingModule({ imports: [CounterComponent] });
+
+const fixture = TestBed.createComponent(CounterComponent);
+fixture.detectChanges();
+
+const btn = fixture.debugElement.query(By.css('button'));
+btn.nativeElement.click();
+fixture.detectChanges();
+
+expect(fixture.nativeElement.textContent).toContain('Count: 1');</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The button click increments the signal; after <code>detectChanges()</code> the DOM shows <code>Count: 1</code> and the assertion passes.</div>
+  </div>
+  <h3>Example: a component harness</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="ts"><code>const loader = TestbedHarnessEnvironment.loader(fixture);
+const button = await loader.getHarness(MatButtonHarness);
+
+await button.click();
+expect(await button.getText()).toBe('Saved');</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>The harness clicks the Material button and reads its text without any CSS selectors, so the test survives internal markup changes.</div>
+  </div>
+  <h3>Example: what changed across 18–22</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="html"><code>@let total = price() * qty();
+
+@if (total &gt; 0) {
+  &lt;p&gt;Subtotal: {{ total }}&lt;/p&gt;
+} @else {
+  &lt;p&gt;Empty cart&lt;/p&gt;
+}
+
+@for (item of items(); track item.id) {
+  &lt;li&gt;{{ item.name }}&lt;/li&gt;
+}</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Built-in control flow (<code>@if</code>/<code>@for</code>/<code>@switch</code>) and the <code>@let</code> template variable are stable — no <code>*ngIf</code>/<code>*ngFor</code> imports needed. A schematic auto-migrates old syntax.</div>
+  </div>
+  <h3>What's new in Angular 18–22 (recap)</h3>
+  <div class="io-grid">
+    <pre class="code-block" data-lang="bash"><code># migrate legacy structural directives to @if/@for/@switch
+ng generate @angular/core:control-flow</code></pre>
+    <div class="io-output"><span class="io-title">Output</span>Highlights: stable built-in control flow &amp; <code>@let</code>; signal <code>input()</code>/<code>output()</code>/<code>model()</code> stable; the Resource API (<code>resource</code>/<code>rxResource</code>/<code>httpResource</code>); zoneless change detection; incremental hydration; Material 3 theming; and this control-flow migration schematic.</div>
+  </div>
+  <p>Key takeaways: modern Angular is standalone-first and signal-centric. Declare state with <code>signal()</code>, derive with <code>computed()</code>/<code>linkedSignal()</code>, pass data with signal <code>input()</code>/<code>output()</code>/<code>model()</code>, fetch with the Resource API, and let signals — not <code>zone.js</code> — drive precise change detection. Combine that with built-in control flow, SSR plus incremental hydration, and a faster Vitest-based test story, and you get smaller, faster, and more predictable applications. Adopt these APIs incrementally: the migration schematics and backward compatibility let you modernize an existing codebase one component at a time.</p>
+  <p class="note">Note: prefer importing standalone components directly in <code>TestBed</code> over recreating NgModules, and reach for harnesses instead of hand-written CSS queries so tests stay resilient as Angular and Material internals evolve.</p>
+</section>
+    </main>
+  </div>
+  <footer class="site-footer"><p>DevDocs — static, self-contained learning reference.</p></footer>
+</body>
+</html>

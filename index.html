@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Home — DevDocs</title>
-  <meta name="description" content="A fully offline, self-contained learning reference for HTML, CSS, JavaScript, and TypeScript with live editable examples.">
+  <meta name="description" content="A fully offline, self-contained learning reference for HTML, CSS, JavaScript, TypeScript, and Angular with live editable examples.">
   <link rel="stylesheet" href="styles/site.css">
   <script src="scripts/site.js" defer></script>
 </head>
@@ -18,6 +18,7 @@
       <a href="css.html">CSS</a>
       <a href="javascript.html">JavaScript</a>
       <a href="typescript.html">TypeScript</a>
+      <a href="angular.html">Angular</a>
     </nav>
     <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme</button>
   </header>
@@ -32,6 +33,7 @@
           <li><a href="#css">CSS</a></li>
           <li><a href="#javascript">JavaScript</a></li>
           <li><a href="#typescript">TypeScript</a></li>
+          <li><a href="#angular">Angular</a></li>
           <li><a href="#notes">Notes</a></li>
           <li><a href="#use-case-employee-dashboard">Use case: Employee Dashboard</a></li>
           <li><a href="#use-case-typed-employee">Use case: Typed Employee Model</a></li>
@@ -251,9 +253,45 @@ console.log("Playground ready. Edit the code, then press Run.");</textarea>
         <p class="note note-compat">Note: TypeScript types are erased at compile time — they add zero runtime cost and the emitted JavaScript runs anywhere.</p>
       </section>
 
+      <section id="angular" class="concept" tabindex="-1">
+        <h2>Angular</h2>
+        <p>Angular is a batteries-included, TypeScript-first framework for single-page applications: components and templates, dependency injection, a router, forms, and an HTTP client all ship first-party. The Angular guide starts from first principles — what a component is, the model&ndash;view relationship, and the three kinds of data binding — then works through inputs and outputs, the Angular 17+ block control flow, directives, pipes, dependency injection, change detection, and the full lifecycle.</p>
+        <p>From there it covers the modern, signals-first Angular of versions 17&ndash;22: standalone components, deferrable views with <code>@defer</code>, Signals and the signal-based <code>input()</code>/<code>output()</code>/<code>model()</code> APIs, the Resource API, zoneless change detection, SSR with hydration, and testing. Every concept pairs a static code block with a side-by-side <code>Output</code> box.</p>
+        <p><a class="card-link" href="angular.html">Open the Angular guide →</a></p>
+        <ul>
+          <li><a href="angular.html#introduction">Introduction &amp; why Angular</a></li>
+          <li><a href="angular.html#first-component">Components</a></li>
+          <li><a href="angular.html#component-input">Inputs &amp; outputs</a></li>
+          <li><a href="angular.html#control-flow-if">Control flow (@if/@for/@switch)</a></li>
+          <li><a href="angular.html#legacy-structural">Structural directives</a></li>
+          <li><a href="angular.html#attribute-directives">Attribute directives</a></li>
+          <li><a href="angular.html#templates">Templates &amp; projection</a></li>
+          <li><a href="angular.html#view-encapsulation">View encapsulation</a></li>
+          <li><a href="angular.html#pipes">Pipes</a></li>
+          <li><a href="angular.html#services">Services</a></li>
+          <li><a href="angular.html#http-client">HttpClient &amp; async pipe</a></li>
+          <li><a href="angular.html#dependency-injection">Dependency injection</a></li>
+          <li><a href="angular.html#change-detection">Change detection</a></li>
+          <li><a href="angular.html#lifecycle-hooks">Lifecycle hooks</a></li>
+          <li><a href="angular.html#modules">NgModules</a></li>
+          <li><a href="angular.html#standalone">Standalone components</a></li>
+          <li><a href="angular.html#routing">Routing &amp; guards</a></li>
+          <li><a href="angular.html#forms">Forms</a></li>
+          <li><a href="angular.html#rxjs">RxJS</a></li>
+          <li><a href="angular.html#defer">Deferrable views</a></li>
+          <li><a href="angular.html#signals">Signals</a></li>
+          <li><a href="angular.html#signal-io">Signal inputs/outputs/model</a></li>
+          <li><a href="angular.html#resource-api">Resource API</a></li>
+          <li><a href="angular.html#zoneless">Zoneless reactivity</a></li>
+          <li><a href="angular.html#ssr-i18n">SSR, i18n &amp; Elements</a></li>
+          <li><a href="angular.html#testing-modern">Testing &amp; v18–22</a></li>
+        </ul>
+        <p class="note note-compat">Note: the guide targets the standalone, signals-first style Angular recommends going forward — the block control flow and <code>@defer</code> (v17), signal APIs (v17.1+), and the Resource API and zoneless change detection (v18–20).</p>
+      </section>
+
       <section id="notes" class="concept" tabindex="-1">
         <h2>Notes</h2>
-        <p>Each technology lives on its own page: <a href="html.html">html.html</a>, <a href="css.html">css.html</a>, <a href="javascript.html">javascript.html</a>, and <a href="typescript.html">typescript.html</a>. All pages are fully static — there is no server, no bundler, and no external network dependency. You can open any page by double-clicking the file in your file manager, and every runnable example works directly from the local filesystem.</p>
+        <p>Each technology lives on its own page: <a href="html.html">html.html</a>, <a href="css.html">css.html</a>, <a href="javascript.html">javascript.html</a>, <a href="typescript.html">typescript.html</a>, and <a href="angular.html">angular.html</a>. All pages are fully static — there is no server, no bundler, and no external network dependency. You can open any page by double-clicking the file in your file manager, and every runnable example works directly from the local filesystem.</p>
         <p>Because the site is fully offline and no compiler is bundled, TypeScript examples are presented as annotated source in static code blocks alongside a simulated <code>tsc</code> or runtime result, rather than compiled and executed in the browser. The HTML, CSS, and JavaScript examples are genuinely runnable and render live in a sandboxed preview.</p>
         <p class="note">Note: this page is itself interactive — the mini playground in "How to use" runs the same code path as every other example on the site.</p>
       </section>
