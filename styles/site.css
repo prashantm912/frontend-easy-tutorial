@@ -205,9 +205,10 @@ kbd {
   z-index: 100;
   display: flex;
   align-items: center;
-  gap: 20px;
-  height: var(--header-h);
-  padding: 0 20px;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  min-height: var(--header-h);
+  padding: 8px 20px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   backdrop-filter: saturate(1.2);
