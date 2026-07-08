@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cheatsheets — DevDocs</title>
+  <meta name="description" content="Quick-reference cheatsheets: every concept from the Angular and Web Design (HTML/CSS/JS) guides condensed to a syntax snippet, its output, and a diagram — no long prose.">
+  <link rel="stylesheet" href="styles/site.css">
+  <script src="scripts/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html">DevDocs</a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="html.html">HTML</a>
+      <a href="css.html">CSS</a>
+      <a href="javascript.html">JavaScript</a>
+      <a href="typescript.html">TypeScript</a>
+      <a href="angular.html">Angular</a>
+      <a href="angular-core-deep-dive.html">Angular Deep Dive</a>
+      <a href="web-design-html-css-js.html">Web Design</a>
+      <a href="cheatsheets.html" aria-current="page">Cheatsheets</a>
+    </nav>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">Theme</button>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="toc" aria-label="On this page">
+        <label class="toc-search-label" for="toc-search">Filter topics</label>
+        <input type="search" id="toc-search" class="toc-search" placeholder="Type to filter…" autocomplete="off">
+        <ul class="toc-list">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#angular">Angular cheatsheet</a></li>
+          <li><a href="#web-design">Web Design cheatsheet</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main id="main" class="content">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="index.html">Home</a> <span aria-hidden="true">/</span> <span aria-current="page">Cheatsheets</span>
+      </nav>
+      <h1>Cheatsheets</h1>
+      <p class="overview">Fast, scannable quick-reference for everything the guides teach. Each cheatsheet condenses a whole subject into small concept cards — a one-line reminder, a minimal syntax snippet, the resulting output, and a diagram where it helps — with no long explanations. Use them to recall a syntax, compare options, or revise before an interview. Each opens as its own page with a live filter box. More cheatsheets will be added here as new topics land.</p>
+
+      <section id="overview" class="concept" tabindex="-1">
+        <h2>Pick a cheatsheet</h2>
+        <p>Two are available today. Click through to the full, filterable reference; for depth on any concept, follow it back to its guide.</p>
+        <div class="note">Note: cheatsheets are reminders, not tutorials — they assume you have met the concept before. New to a topic? Start with its full guide, then keep the cheatsheet open for recall.</div>
+      </section>
+
+      <section id="angular" class="concept" tabindex="-1">
+        <h2>Angular cheatsheet</h2>
+        <p>Angular 17–22 at a glance, distilled primarily from the <a href="angular-core-deep-dive.html">Angular Core Deep Dive</a> — its structure and depth drive the cards — with the <a href="angular.html">Angular guide</a> supplying the "beyond the core" topics (forms, routing, RxJS, testing). Components and core directives, template querying, content projection, templates, directives, view encapsulation, services &amp; HttpClient, dependency injection, change detection, lifecycle, modules &amp; pipes, i18n, standalone/Elements/@defer, and Signals — each a card with a tiny example and its output.</p>
+        <p><a class="card-link" href="cheatsheet-angular.html">Open the Angular cheatsheet →</a></p>
+        <ul>
+          <li><a href="cheatsheet-angular.html#a-intro">Introduction</a></li>
+          <li><a href="cheatsheet-angular.html#a-components">Components, core directives &amp; pipes</a></li>
+          <li><a href="cheatsheet-angular.html#a-querying">Template querying</a></li>
+          <li><a href="cheatsheet-angular.html#a-projection">Content projection</a></li>
+          <li><a href="cheatsheet-angular.html#a-templates">Templates (ng-template)</a></li>
+          <li><a href="cheatsheet-angular.html#a-directives">Directives in depth</a></li>
+          <li><a href="cheatsheet-angular.html#a-encapsulation">View encapsulation</a></li>
+          <li><a href="cheatsheet-angular.html#a-services-http">Injectable services &amp; HttpClient</a></li>
+          <li><a href="cheatsheet-angular.html#a-di">Dependency injection in depth</a></li>
+          <li><a href="cheatsheet-angular.html#a-change-detection">Change detection</a></li>
+          <li><a href="cheatsheet-angular.html#a-lifecycle">Lifecycle hooks</a></li>
+          <li><a href="cheatsheet-angular.html#a-modules-pipes">Modules &amp; custom pipes</a></li>
+          <li><a href="cheatsheet-angular.html#a-i18n">Internationalization (i18n)</a></li>
+          <li><a href="cheatsheet-angular.html#a-standalone-defer">Standalone, Elements &amp; @defer</a></li>
+          <li><a href="cheatsheet-angular.html#a-signals">Signals in depth</a></li>
+          <li><a href="cheatsheet-angular.html#a-beyond">Beyond the core: forms, routing, RxJS &amp; testing</a></li>
+        </ul>
+      </section>
+
+      <section id="web-design" class="concept" tabindex="-1">
+        <h2>Web Design cheatsheet</h2>
+        <p>HTML, CSS &amp; JavaScript essentials, distilled primarily from the <a href="web-design-html-css-js.html">Web Design course</a> — its 8-section structure drives the cards — with the <a href="html.html">HTML</a>, <a href="css.html">CSS</a>, and <a href="javascript.html">JavaScript</a> guides filling gaps. Follows the course order: HTML foundations, styling with CSS, JavaScript fundamentals, the DOM, building a responsive site, JavaScript in practice, advanced JS, and publishing — each a card with a snippet and its result.</p>
+        <p><a class="card-link" href="cheatsheet-web-design.html">Open the Web Design cheatsheet →</a></p>
+        <ul>
+          <li><a href="cheatsheet-web-design.html#w-html">HTML foundations</a></li>
+          <li><a href="cheatsheet-web-design.html#w-css">Styling with CSS</a></li>
+          <li><a href="cheatsheet-web-design.html#w-js">JavaScript fundamentals</a></li>
+          <li><a href="cheatsheet-web-design.html#w-dom">The DOM</a></li>
+          <li><a href="cheatsheet-web-design.html#w-responsive-build">Build a responsive website</a></li>
+          <li><a href="cheatsheet-web-design.html#w-js-practice">JavaScript in practice</a></li>
+          <li><a href="cheatsheet-web-design.html#w-advanced">Advanced JavaScript</a></li>
+          <li><a href="cheatsheet-web-design.html#w-publish">Publishing &amp; next steps</a></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+  <footer class="site-footer"><p>DevDocs — static, self-contained learning reference.</p></footer>
+</body>
+</html>

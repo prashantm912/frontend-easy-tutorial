@@ -1,0 +1,2228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Angular Cheatsheet</title>
+<meta name="description" content="Angular 17–22 — every core concept at a glance: syntax, a tiny example, and the output. Condensed from the Angular guide and the Angular Core Deep Dive.">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f5f7fa; --surface-2:#eceff4; --text:#1b1f24; --muted:#5b6470;
+  --border:#d8dee6; --accent:#0b63ce; --accent-weak:#e5f0fc; --accent-contrast:#fff;
+  --code-bg:#f3f5f8; --code-text:#1b1f24; --ok:#2f855a; --warn:#b7791f; --danger:#c0392b;
+  --tok-comment:#6a737d; --tok-string:#0a7d33; --tok-number:#b5390b; --tok-keyword:#a626a4;
+  --radius:10px; --radius-sm:6px; --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
+  --mono:ui-monospace,"SFMono-Regular","Consolas","Liberation Mono",Menlo,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; --header-h:56px;
+}
+:root[data-theme="dark"]{
+  --bg:#0f1319; --surface:#161b22; --surface-2:#1c232d; --text:#e6edf3; --muted:#9aa7b4;
+  --border:#2a323d; --accent:#4d9cff; --accent-weak:#16283f; --accent-contrast:#0f1319;
+  --code-bg:#12171e; --code-text:#e6edf3; --ok:#56d364; --warn:#e3b341; --danger:#ff7b72;
+  --tok-comment:#8b949e; --tok-string:#7ee787; --tok-number:#ffab70; --tok-keyword:#d2a8ff;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){
+  --bg:#0f1319; --surface:#161b22; --surface-2:#1c232d; --text:#e6edf3; --muted:#9aa7b4;
+  --border:#2a323d; --accent:#4d9cff; --accent-weak:#16283f; --accent-contrast:#0f1319;
+  --code-bg:#12171e; --code-text:#e6edf3; --ok:#56d364; --warn:#e3b341; --danger:#ff7b72;
+  --tok-comment:#8b949e; --tok-string:#7ee787; --tok-number:#ffab70; --tok-keyword:#d2a8ff;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+}}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.skip-link{position:absolute;left:-999px;top:0;background:var(--accent);color:#fff;padding:8px 12px;z-index:200}
+.skip-link:focus{left:8px;top:8px}
+.site-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  min-height:var(--header-h);padding:8px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.site-header h1{font-size:1.05rem;margin:0;font-weight:700}
+.site-header .sub{color:var(--muted);font-size:.85rem;font-weight:400}
+.header-links{display:flex;gap:4px;flex-wrap:wrap;margin-left:8px}
+.header-links a{color:var(--muted);font-size:.85rem;padding:5px 9px;border-radius:var(--radius-sm)}
+.header-links a:hover{color:var(--accent);background:var(--surface-2);text-decoration:none}
+.theme-toggle{margin-left:auto;font:inherit;font-size:.85rem;padding:6px 12px;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--surface-2);color:var(--text);cursor:pointer}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:0;align-items:start}
+.sidebar{position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto;padding:14px 12px;
+  border-right:1px solid var(--border);background:var(--bg)}
+.toc-search{width:100%;padding:8px 10px;margin-bottom:10px;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font:inherit;font-size:.9rem}
+.toc-search::placeholder{color:var(--muted)}
+.toc-sections{list-style:none;margin:0;padding:0;font-size:.86rem}
+.toc-sections>li{margin:1px 0}
+.toc-sections>li[hidden]{display:none}
+.toc-sections>li>a{display:block;font-weight:600;padding:5px 6px;border-radius:4px;text-decoration:none;color:var(--text)}
+.toc-sections>li>a:hover{background:var(--surface-2);color:var(--accent)}
+.toc-sections a.active{background:var(--accent-weak);color:var(--accent)}
+.toc-empty{color:var(--muted);font-size:.85rem;padding:6px}
+.content{padding:22px 28px;max-width:1280px;min-width:0}
+.intro{color:var(--muted);max-width:80ch;margin:.1em 0 1.4em}
+.cs-cat{margin:0 0 10px;scroll-margin-top:70px}
+.cs-cat[hidden]{display:none}
+.cs-cat>h2{font-size:1.3rem;border-bottom:2px solid var(--accent);padding-bottom:5px;margin:1.3em 0 .7em}
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;align-items:start}
+.cs-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;break-inside:avoid}
+.cs-card[hidden]{display:none}
+.cs-title{font-size:.98rem;margin:0 0 3px;color:var(--text);font-weight:650}
+.cs-title code{background:none;border:none;padding:0;color:var(--accent);font-size:.95em}
+.cs-desc{margin:0 0 8px;color:var(--muted);font-size:.86rem}
+pre.code-block{margin:.4em 0 .5em;padding:10px 12px;background:var(--code-bg);color:var(--code-text);border:1px solid var(--border);
+  border-radius:var(--radius-sm);overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.5}
+pre.code-block code{font-family:inherit;white-space:pre}
+.io-output{margin:.3em 0 .2em;padding:8px 11px;background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--accent);
+  border-radius:var(--radius-sm);font-family:var(--mono);font-size:.76rem;line-height:1.45;color:var(--text);white-space:pre-wrap;word-break:break-word;overflow-x:auto}
+.io-output .io-title{display:block;font-family:var(--sans);font-weight:600;font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px}
+.io-output .io-comment{color:var(--muted)}
+figure{margin:.4em 0 .2em;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm)}
+figure svg{max-width:100%;height:auto;display:block}
+figcaption{font-size:.74rem;color:var(--muted);margin-top:4px;text-align:center}
+.tok-comment{color:var(--tok-comment);font-style:italic}.tok-string{color:var(--tok-string)}
+.tok-number{color:var(--tok-number)}.tok-keyword{color:var(--tok-keyword);font-weight:600}
+code:not(pre code){background:var(--code-bg);border:1px solid var(--border);border-radius:4px;padding:.06em .35em;font-family:var(--mono);font-size:.86em}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+  .toc-sections{max-height:200px;overflow:auto}
+  .content{padding:16px}
+}
+@media print{
+  .site-header,.sidebar,.theme-toggle,.toc-search{display:none!important}
+  .layout{grid-template-columns:1fr}.content{max-width:none;padding:0}
+  .cs-grid{grid-template-columns:1fr 1fr}
+  .cs-card{break-inside:avoid;border-color:#ccc}
+  a{color:inherit;text-decoration:none}body{color:#000;background:#fff;font-size:11px}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <h1>Angular Cheatsheet <span class="sub">— quick reference</span></h1>
+  <nav class="header-links" aria-label="Site">
+    <a href="index.html">Home</a>
+    <a href="cheatsheets.html">Cheatsheets</a>
+    <a href="cheatsheet-web-design.html">Web Design cheatsheet</a>
+  </nav>
+  <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">◑ Theme</button>
+</header>
+<div class="layout">
+  <nav class="sidebar" aria-label="Table of contents">
+    <input type="search" id="toc-search" class="toc-search" placeholder="Filter concepts…" autocomplete="off" aria-label="Filter concepts">
+    <div id="toc"><ul class="toc-sections">
+      <li class="toc-sec"><a href="#a-intro">Introduction</a></li>
+      <li class="toc-sec"><a href="#a-components">Components, Core Directives & Pipes</a></li>
+      <li class="toc-sec"><a href="#a-querying">Template Querying</a></li>
+      <li class="toc-sec"><a href="#a-projection">Content Projection</a></li>
+      <li class="toc-sec"><a href="#a-templates">Templates (ng-template)</a></li>
+      <li class="toc-sec"><a href="#a-directives">Directives In Depth</a></li>
+      <li class="toc-sec"><a href="#a-encapsulation">View Encapsulation</a></li>
+      <li class="toc-sec"><a href="#a-services-http">Injectable Services & HttpClient</a></li>
+      <li class="toc-sec"><a href="#a-di">Dependency Injection In Depth</a></li>
+      <li class="toc-sec"><a href="#a-change-detection">Change Detection</a></li>
+      <li class="toc-sec"><a href="#a-lifecycle">Lifecycle Hooks</a></li>
+      <li class="toc-sec"><a href="#a-modules-pipes">Modules & Custom Pipes</a></li>
+      <li class="toc-sec"><a href="#a-i18n">Internationalization (i18n)</a></li>
+      <li class="toc-sec"><a href="#a-standalone-defer">Standalone, Elements & @defer</a></li>
+      <li class="toc-sec"><a href="#a-signals">Signals In Depth</a></li>
+      <li class="toc-sec"><a href="#a-beyond">Beyond the Core: Forms, Routing, RxJS & Testing</a></li>
+    </ul></div>
+    <p class="toc-empty" id="toc-empty" hidden>No concepts match.</p>
+  </nav>
+  <main id="main" class="content">
+    <h2 style="font-size:1.7rem;border:none;margin:.1em 0 .2em">Angular Cheatsheet</h2>
+    <p class="intro">Angular 17–22 — every core concept at a glance: syntax, a tiny example, and the output. Condensed from the Angular guide and the Angular Core Deep Dive. Use the filter box to jump to any concept. Each card is a reminder, not a tutorial — for depth, see the full guides.</p>
+<section class="cs-cat" id="a-intro">
+  <h2>Introduction</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-intro-01">
+      <h3 class="cs-title">What Angular is <code>@Component</code></h3>
+      <p class="cs-desc">A component-based framework: you build UI from components, each of which renders as its own custom HTML element extending the browser's tag set.</p>
+      <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-root',
+  template: '&lt;h1&gt;Hello&lt;/h1&gt;',
+})
+export class AppComponent {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>&lt;app-root&gt; renders in the DOM as your own custom element.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-intro-02">
+      <h3 class="cs-title">Custom HTML elements</h3>
+      <p class="cs-desc">The page's <code>&lt;body&gt;</code> is nearly empty — one custom tag (the root component). Angular injects all visible content into it; the <code>selector</code> is the tag name.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;!-- index.html --&gt;
+&lt;body&gt;
+  &lt;app-root&gt;&lt;/app-root&gt;
+&lt;/body&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Title, links, and markup all appear inside &lt;app-root&gt;, not in index.html.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-intro-03">
+      <h3 class="cs-title">Model vs View <code>{{ }}</code></h3>
+      <p class="cs-desc">The model is the data on the component class (TS); the view is the template (HTML). Interpolation binds them by evaluating a JS expression against the instance.</p>
+      <pre class="code-block" data-lang="ts"><code>export class AppComponent {
+  data = { title: 'Angular Core Deep Dive' };
+}
+// template: &lt;h1&gt;{{ data.title }}&lt;/h1&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>&lt;h1&gt;Angular Core Deep Dive&lt;/h1&gt;</div>
+      <figure>
+        <svg viewBox="0 0 400 120" role="img" aria-label="Model flows into view via interpolation" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="35" width="150" height="55" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="85" y="58" text-anchor="middle" font-size="13" font-weight="bold" fill="var(--text)">Model</text>
+          <text x="85" y="76" text-anchor="middle" font-size="10" fill="var(--muted)">data.title</text>
+          <rect x="240" y="35" width="150" height="55" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="315" y="58" text-anchor="middle" font-size="13" font-weight="bold" fill="var(--text)">View</text>
+          <text x="315" y="76" text-anchor="middle" font-size="10" fill="var(--muted)">{{ data.title }}</text>
+          <line x1="160" y1="62" x2="238" y2="62" stroke="var(--accent)" stroke-width="2" marker-end="url(#a-intro-arr)"/>
+          <text x="199" y="52" text-anchor="middle" font-size="9" fill="var(--muted)">interpolation</text>
+          <defs><marker id="a-intro-arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--accent)"/></marker></defs>
+        </svg>
+        <figcaption>One-way binding: model data flows into the view.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-intro-04">
+      <h3 class="cs-title">A component = three files</h3>
+      <p class="cs-desc">Each component pairs a <code>@Component</code>-decorated class (model), an HTML template (view), and scoped CSS — wired via <code>templateUrl</code>/<code>styleUrl</code>.</p>
+      <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
+})
+export class AppComponent {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Class, template, and scoped styles combine to render one custom element.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-intro-05">
+      <h3 class="cs-title">Why Angular — key features</h3>
+      <p class="cs-desc">Property/event binding, automatic change detection (view auto-syncs to the model), built-in XSS-escaping, scoped styles, DI, and a full CLI/tooling ecosystem.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;input #box [value]="data.title"
+       (keyup)="onKeyUp(box.value)"&gt;
+&lt;h1&gt;{{ data.title }}&lt;/h1&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Typing updates the &lt;h1&gt; automatically; any &lt;script&gt; in data is escaped, not run.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-intro-06">
+      <h3 class="cs-title">Modern vs classic styles</h3>
+      <p class="cs-desc">Signals + new control flow (<code>@if</code>/<code>@for</code>) are the modern style; decorators + structural directives (<code>*ngIf</code>) are classic. Both are supported and coexist in real code.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;!-- modern --&gt;
+@if (show) { &lt;p&gt;Hi&lt;/p&gt; }
+
+&lt;!-- classic --&gt;
+&lt;p *ngIf="show"&gt;Hi&lt;/p&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Both render &lt;p&gt;Hi&lt;/p&gt; when show is true; codebases often mix the two.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-components">
+  <h2>Components, Core Directives &amp; Pipes</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-components-01">
+      <h3 class="cs-title">First component <code>@Component</code></h3>
+      <p class="cs-desc">A component = a decorated class (the model) + a template (the view) + scoped styles; <code>selector</code> is its custom tag.</p>
+      <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'course-card',
+  standalone: true,
+  templateUrl: './course-card.component.html',
+  styleUrl: './course-card.component.css'
+})
+export class CourseCardComponent {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>&lt;course-card&gt;&lt;/course-card&gt; renders the component's template wherever the tag appears.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-02">
+      <h3 class="cs-title">Interpolation <code>{{ expr }}</code></h3>
+      <p class="cs-desc">One-way binding from model to view: the expression is evaluated against the component instance and can reach into objects.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;h2&gt;{{ course.description }}&lt;/h2&gt;
+&lt;p&gt;{{ data.title }}&lt;/p&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Renders the class property values as text; expressions must be side-effect free.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-03">
+      <h3 class="cs-title">Pass data down <code>@Input()</code></h3>
+      <p class="cs-desc">Marks a child property as a bindable input; the parent feeds it via square-bracket property binding. Pass a whole typed object over many primitives.</p>
+      <pre class="code-block" data-lang="ts"><code>export class CourseCardComponent {
+  @Input({ required: true }) course!: Course;
+}</code></pre>
+      <pre class="code-block" data-lang="html"><code>&lt;course-card [course]="coreCourse"&gt;&lt;/course-card&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Each card shows its own course; <code>required: true</code> is a compile error if omitted.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-04">
+      <h3 class="cs-title">Emit events up <code>@Output()</code> + <code>EventEmitter</code></h3>
+      <p class="cs-desc">A child announces intent by emitting a custom event; the parent listens with the parentheses binding and reads the payload via <code>$event</code>.</p>
+      <pre class="code-block" data-lang="ts"><code>@Output() courseSelected = new EventEmitter&lt;Course&gt;();
+onClick() { this.courseSelected.emit(this.course); }</code></pre>
+      <pre class="code-block" data-lang="html"><code>&lt;course-card (courseSelected)="onSelected($event)" /&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Parent's handler receives the emitted Course. Custom events do NOT bubble — only <code>@Output</code> exposes them.</div>
+      <figure><svg viewBox="0 0 320 120" role="img" aria-label="Parent and child data flow" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="10" width="280" height="30" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="160" y="30" text-anchor="middle" font-size="12" fill="var(--text)">Parent</text>
+        <rect x="90" y="80" width="140" height="30" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="160" y="100" text-anchor="middle" font-size="12" fill="var(--text)">Child</text>
+        <line x1="120" y1="40" x2="120" y2="80" stroke="var(--accent)" stroke-width="2"/>
+        <text x="70" y="64" text-anchor="middle" font-size="10" fill="var(--muted)">@Input ↓</text>
+        <line x1="200" y1="80" x2="200" y2="40" stroke="var(--accent)" stroke-width="2"/>
+        <text x="250" y="64" text-anchor="middle" font-size="10" fill="var(--muted)">@Output ↑</text>
+      </svg><figcaption>Data flows down via @Input; events flow up via @Output.</figcaption></figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-05">
+      <h3 class="cs-title">Conditional render <code>@if / @else</code></h3>
+      <p class="cs-desc">Built-in control flow (Angular 17+): renders a block when truthy, with <code>@else if</code> / <code>@else</code> fallbacks. No import needed.</p>
+      <pre class="code-block" data-lang="html"><code>@if (course.id === 1) {
+  &lt;div&gt;Course with id one&lt;/div&gt;
+} @else if (course.iconUrl) {
+  &lt;img [src]="course.iconUrl"&gt;
+} @else {
+  &lt;div&gt;No image available&lt;/div&gt;
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Exactly one branch renders; the element is removed from the DOM (not just hidden).</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-06">
+      <h3 class="cs-title">Loop <code>@for</code> — track, <code>@empty</code> &amp; vars</h3>
+      <p class="cs-desc">Iterates an iterable; <code>track</code> is mandatory (identity for DOM reuse). Exposes <code>$index $count $first $last $even $odd</code>; <code>@empty</code> handles zero items.</p>
+      <pre class="code-block" data-lang="html"><code>@for (course of courses; track course.id; let i = $index) {
+  &lt;course-card [course]="course" [class.first]="$first" /&gt;
+} @empty {
+  &lt;h2&gt;No courses found&lt;/h2&gt;
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>One card per item, indexed from 0; empty array shows the fallback. Omitting <code>track</code> is a compile error.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-07">
+      <h3 class="cs-title">@for tracking functions <code>track</code></h3>
+      <p class="cs-desc">Track by a stable unique key (<code>item.id</code>) for best diffing; use a function for computed identity, or <code>$index</code> for primitive lists that never reorder.</p>
+      <pre class="code-block" data-lang="html"><code>@for (course of courses; track course.id) { … }
+@for (course of courses; track trackCourse($index, course)) { … }
+@for (tag of tags; track $index) { &lt;span&gt;{{ tag }}&lt;/span&gt; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Stable keys yield minimal DOM operations and preserve focus/scroll state.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-08">
+      <h3 class="cs-title">Legacy loop <code>*ngFor</code></h3>
+      <p class="cs-desc">The structural directive @for replaced; aliases locals with <code>let</code> (<code>index first last even odd</code>) and takes an optional <code>trackBy</code>. Needs <code>CommonModule</code>.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;course-card
+  *ngFor="let course of courses; let i = index; trackBy: trackCourse"
+  [course]="course" [index]="i"&gt;&lt;/course-card&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Same list rendering; unlike @for, forgetting <code>trackBy</code> compiles fine (silent perf trap).</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-09">
+      <h3 class="cs-title">Legacy <code>*ngIf</code> + else template</h3>
+      <p class="cs-desc">Conditional structural directive; the <code>else</code> branch points at a named <code>&lt;ng-template&gt;</code>. Guard nullables with the Elvis operator <code>?.</code></p>
+      <pre class="code-block" data-lang="html"><code>&lt;p *ngIf="user; else anon"&gt;{{ user?.name }}&lt;/p&gt;
+&lt;ng-template #anon&gt;&lt;p&gt;Not signed in&lt;/p&gt;&lt;/ng-template&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Shows the name when user exists, else the fallback template.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-10">
+      <h3 class="cs-title">Legacy <code>*ngSwitch</code></h3>
+      <p class="cs-desc">Multi-branch legacy directive: <code>[ngSwitch]</code> on the parent, <code>*ngSwitchCase</code> / <code>*ngSwitchDefault</code> on children. Case must live on a child, not the host.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;div [ngSwitch]="course.category"&gt;
+  &lt;div *ngSwitchCase="'BEGINNER'"&gt;Beginner&lt;/div&gt;
+  &lt;div *ngSwitchCase="'ADVANCED'"&gt;Advanced&lt;/div&gt;
+  &lt;div *ngSwitchDefault&gt;All Levels&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Renders the child whose case strictly equals the expression, else the default.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-11">
+      <h3 class="cs-title">Blocks vs directives <code>ng generate control-flow</code></h3>
+      <p class="cs-desc">@for/@if/@switch are compiled, need no imports, narrow types, and make tracking mandatory; the directives are slower and must be imported. Auto-migrate the codebase.</p>
+      <pre class="code-block" data-lang="bash"><code>ng generate @angular/core:control-flow</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Rewrites *ngIf/*ngFor/*ngSwitch to @if/@for/@switch across the project (~95% automatic).</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-12">
+      <h3 class="cs-title">Multi-branch <code>@switch / @case / @default</code></h3>
+      <p class="cs-desc">Modern control flow that renders one branch by strict equality (<code>===</code>) — no fall-through, no <code>break</code>, no import.</p>
+      <pre class="code-block" data-lang="html"><code>@switch (course.category) {
+  @case ('BEGINNER')     { &lt;div&gt;Beginner&lt;/div&gt; }
+  @case ('INTERMEDIATE') { &lt;div&gt;Intermediate&lt;/div&gt; }
+  @default               { &lt;div&gt;All Levels&lt;/div&gt; }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Only the matching case renders; without a <code>@default</code> an unmatched value shows nothing.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-13">
+      <h3 class="cs-title">Conditional classes <code>[ngClass]</code></h3>
+      <p class="cs-desc">Toggles state classes from a string, array, or (most useful) object map of class → boolean. Keep static classes on the plain <code>class</code> attribute.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;div class="course-card"
+     [ngClass]="{ beginner: isBeginner, highlighted: isActive }"&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Adds each class whose value is true. For one class, prefer native <code>[class.beginner]="isBeginner"</code>.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-14">
+      <h3 class="cs-title">Dynamic styles <code>[ngStyle]</code></h3>
+      <p class="cs-desc">Applies several inline styles at once from an object of CSS property → value. Use only for data-driven properties; static styling belongs in a stylesheet.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;div [ngStyle]="{
+  'background-image': 'url(' + course.iconUrl + ')',
+  'font-size.px': 14
+}"&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Sets the listed inline styles; unit suffixes like <code>.px</code> / <code>.%</code> let you bind a plain number.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-15">
+      <h3 class="cs-title">Group without an element <code>&lt;ng-container&gt;</code></h3>
+      <p class="cs-desc">A logical wrapper that renders no DOM of its own — host a structural directive or group siblings without polluting markup with an extra <code>&lt;div&gt;</code>.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;ng-container *ngFor="let u of users"&gt;
+  &lt;li *ngIf="u.active"&gt;{{ u.name }}&lt;/li&gt;
+&lt;/ng-container&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Only the inner &lt;li&gt; elements reach the DOM; solves "two structural directives on one element".</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-components-16">
+      <h3 class="cs-title">Built-in pipes <code>value | pipe:arg</code></h3>
+      <p class="cs-desc">Transform data for display with <code>|</code>; pass args after colons. Catalog: date, uppercase/lowercase/titlecase, number/percent/currency, json, slice, keyvalue, async.</p>
+      <pre class="code-block" data-lang="html"><code>{{ startDate | date:'MMMM d, yyyy' }}
+{{ title | uppercase }}   {{ title | titlecase }}
+{{ price | number:'3.3-5' }}   {{ price | currency:'EUR' }}
+{{ rate | percent }}   {{ courses | slice:0:2 }}
+&lt;pre&gt;{{ course | json }}&lt;/pre&gt;
+@for (p of course | keyvalue; track p.key) { {{ p.key }}: {{ p.value }} }
+{{ user$ | async }}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>"January 1, 2000"; "ANGULAR" / "Angular"; "009.990"; "€9.99"; "67%"; first 2 items; JSON dump; object entries; unwrapped observable.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-querying">
+  <h2>Template Querying</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-querying-01">
+      <h3 class="cs-title">Grab a child <code>@ViewChild()</code></h3>
+      <p class="cs-desc">Pull a rendered child component, directive, or element up into the class so code can drive it imperatively. A component locator returns the instance.</p>
+      <pre class="code-block" data-lang="ts"><code>import { Component, ViewChild } from '@angular/core';
+
+@Component({ /* imports: [CourseCardComponent] */ })
+export class AppComponent {
+  @ViewChild(CourseCardComponent) card!: CourseCardComponent;
+
+  onClick() {
+    console.log(this.card.course.description); // read a prop
+    this.card.highlight();                     // call a method
+  }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Logs the child's course description; runs highlight() on the live instance.</div>
+      <figure>
+        <svg role="img" viewBox="0 0 380 120" xmlns="http://www.w3.org/2000/svg" aria-label="ViewChild resolves the first matching child in the component's own template">
+          <rect x="12" y="40" width="120" height="40" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="72" y="58" text-anchor="middle" font-size="11" fill="var(--text)">AppComponent</text>
+          <text x="72" y="72" text-anchor="middle" font-size="9" fill="var(--muted)">class + template</text>
+          <rect x="220" y="16" width="150" height="40" rx="6" fill="var(--accent)" stroke="var(--accent)"/>
+          <text x="295" y="34" text-anchor="middle" font-size="11" fill="#fff">&lt;app-course-card&gt;</text>
+          <text x="295" y="48" text-anchor="middle" font-size="9" fill="#fff">→ instance (first match)</text>
+          <rect x="220" y="70" width="150" height="34" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-dasharray="4 3"/>
+          <text x="295" y="90" text-anchor="middle" font-size="9" fill="var(--muted)">2nd match ignored</text>
+          <path d="M132 54 L220 36" stroke="var(--accent)" fill="none"/>
+        </svg>
+        <figcaption>Only the first match, from this component's own template, is captured.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-querying-02">
+      <h3 class="cs-title">Locators &amp; <code>read:</code></h3>
+      <p class="cs-desc">Locate by component class, by template-ref-variable name (string), or a plain element. A component returns its instance; <code>read: ElementRef</code> overrides that to hand back the host DOM node.</p>
+      <pre class="code-block" data-lang="ts"><code>// by ref name → component instance
+@ViewChild('cardOne') cardOne!: CourseCardComponent;
+
+// plain element → ElementRef (.nativeElement is the node)
+@ViewChild('container') box!: ElementRef;
+
+// component, but read its host element instead
+@ViewChild(CourseCardComponent, { read: ElementRef })
+cardEl!: ElementRef;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>box.nativeElement is the real &lt;div&gt;; cardEl.nativeElement is the &lt;app-course-card&gt; host.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-querying-03">
+      <h3 class="cs-title">Query timing <code>static: true | false</code></h3>
+      <p class="cs-desc">Default <code>static: false</code> resolves the field in <code>ngAfterViewInit</code>; <code>static: true</code> resolves it in the first change-detection pass so it is ready in <code>ngOnInit</code> — only for non-conditional single elements.</p>
+      <pre class="code-block" data-lang="ts"><code>@ViewChild('container', { static: true }) box!: ElementRef;
+
+ngOnInit() {
+  // available now because static:true
+  console.log(this.box.nativeElement);
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Logs the &lt;div&gt; in ngOnInit. With static:false it would be undefined here.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-querying-04">
+      <h3 class="cs-title">Ready in <code>ngAfterViewInit()</code></h3>
+      <p class="cs-desc">Query fields are undefined in the constructor and ngOnInit; Angular fills them once the view is built and calls AfterViewInit. Queries are local — never into a child's template, never up to the parent.</p>
+      <pre class="code-block" data-lang="ts"><code>export class AppComponent implements AfterViewInit {
+  @ViewChild('container') box!: ElementRef;
+
+  constructor() { console.log(this.box); }   // undefined
+  ngAfterViewInit() { console.log(this.box.nativeElement); } // ready
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>ctor: undefined — afterViewInit: &lt;div class="courses"&gt;…&lt;/div&gt;</div>
+      <figure>
+        <svg role="img" viewBox="0 0 400 90" xmlns="http://www.w3.org/2000/svg" aria-label="View query is populated only at ngAfterViewInit">
+          <line x1="24" y1="46" x2="380" y2="46" stroke="var(--border)" stroke-width="2"/>
+          <circle cx="70" cy="46" r="6" fill="var(--surface)" stroke="var(--muted)" stroke-width="2"/>
+          <text x="70" y="30" text-anchor="middle" font-size="9" fill="var(--text)">constructor</text>
+          <text x="70" y="66" text-anchor="middle" font-size="8" fill="var(--muted)">undefined</text>
+          <circle cx="180" cy="46" r="6" fill="var(--surface)" stroke="var(--muted)" stroke-width="2"/>
+          <text x="180" y="30" text-anchor="middle" font-size="9" fill="var(--text)">ngOnInit</text>
+          <text x="180" y="66" text-anchor="middle" font-size="8" fill="var(--muted)">undefined</text>
+          <circle cx="330" cy="46" r="7" fill="var(--accent)" stroke="var(--accent)" stroke-width="2"/>
+          <text x="330" y="30" text-anchor="middle" font-size="9" fill="var(--text)">ngAfterViewInit</text>
+          <text x="330" y="66" text-anchor="middle" font-size="8" fill="var(--accent)">populated</text>
+        </svg>
+        <figcaption>The field stays undefined until the view is built.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-querying-05">
+      <h3 class="cs-title">Many matches <code>@ViewChildren</code> + <code>QueryList</code></h3>
+      <p class="cs-desc">Returns every match as a QueryList (not an Array). Use first/last/length/map/forEach; subscribe to changes to react when @for adds or removes items.</p>
+      <pre class="code-block" data-lang="ts"><code>@ViewChildren(CourseCardComponent)
+cards!: QueryList&lt;CourseCardComponent&gt;;
+
+ngAfterViewInit() {
+  console.log(this.cards.first, this.cards.length);
+  this.cards.forEach(c =&gt; console.log(c.course.id));
+  this.cards.changes.subscribe(list =&gt;
+    console.log('changed → length', list.length));
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Logs first + count now; emits new length when the collection changes (not on initial fill).</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-querying-06">
+      <h3 class="cs-title">QueryList to real Array <code>toArray()</code></h3>
+      <p class="cs-desc">A QueryList is iterable but not an Array — filter/reduce are absent. Call toArray() first when you need genuine array methods.</p>
+      <pre class="code-block" data-lang="ts"><code>ngAfterViewInit() {
+  const arr = this.cards.toArray();          // CourseCardComponent[]
+  const rest = arr.filter(c =&gt; c.course.id &gt; 1);
+  console.log('total:', arr.length, 'filtered:', rest.length);
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>total: 10 filtered: 9</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-projection">
+  <h2>Content Projection</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-projection-01">
+      <h3 class="cs-title">Single slot <code>&lt;ng-content&gt;</code></h3>
+      <p class="cs-desc">A bare <code>&lt;ng-content&gt;</code> is a landing spot for whatever markup the parent writes between the component's tags.</p>
+      <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'ui-card', standalone: true,
+  template: `&lt;div class="card"&gt;&lt;ng-content&gt;&lt;/ng-content&gt;&lt;/div&gt;`
+})
+export class CardComponent {}
+
+// Usage:
+&lt;ui-card&gt;&lt;h2&gt;Hello&lt;/h2&gt;&lt;/ui-card&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>The parent's <code>&lt;h2&gt;Hello&lt;/h2&gt;</code> renders inside the card's <code>.card</code> div.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-projection-02">
+      <h3 class="cs-title">Multi-slot <code>select=</code></h3>
+      <p class="cs-desc">Named slots route projected nodes by <code>select</code> (element, <code>.class</code>, or <code>[attr]</code>); a selector-less slot catches the rest.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;section class="panel"&gt;
+  &lt;header&gt;&lt;ng-content select="[panel-title]"&gt;&lt;/ng-content&gt;&lt;/header&gt;
+  &lt;div&gt;&lt;ng-content&gt;&lt;/ng-content&gt;&lt;/div&gt;              &lt;!-- catch-all --&gt;
+  &lt;footer&gt;&lt;ng-content select="[panel-actions]"&gt;&lt;/ng-content&gt;&lt;/footer&gt;
+&lt;/section&gt;
+
+&lt;ui-panel&gt;
+  &lt;h3 panel-title&gt;Title&lt;/h3&gt;
+  &lt;p&gt;Body text&lt;/p&gt;
+  &lt;button panel-actions&gt;OK&lt;/button&gt;
+&lt;/ui-panel&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Title → header, button → footer, the <code>&lt;p&gt;</code> → catch-all body. Each node lands in exactly one slot.</div>
+      <figure><svg viewBox="0 0 320 150" role="img" aria-label="Parent markup routed by select into matching ng-content slots" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="10" width="120" height="130" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="68" y="26" text-anchor="middle" font-size="9" fill="var(--muted)">parent markup</text>
+        <rect x="18" y="34" width="100" height="24" rx="3" fill="var(--accent)"/><text x="68" y="49" text-anchor="middle" font-size="9" fill="#fff">[panel-title]</text>
+        <rect x="18" y="64" width="100" height="24" rx="3" fill="var(--border)"/><text x="68" y="79" text-anchor="middle" font-size="9" fill="var(--text)">&lt;p&gt; (no attr)</text>
+        <rect x="18" y="94" width="100" height="24" rx="3" fill="var(--accent)"/><text x="68" y="109" text-anchor="middle" font-size="9" fill="#fff">[panel-actions]</text>
+        <rect x="192" y="10" width="120" height="130" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="252" y="26" text-anchor="middle" font-size="9" fill="var(--muted)">component slots</text>
+        <rect x="202" y="34" width="100" height="24" rx="3" fill="var(--surface)" stroke="var(--accent)"/><text x="252" y="49" text-anchor="middle" font-size="8.5" fill="var(--text)">header</text>
+        <rect x="202" y="64" width="100" height="24" rx="3" fill="var(--surface)" stroke="var(--border)"/><text x="252" y="79" text-anchor="middle" font-size="8.5" fill="var(--text)">catch-all</text>
+        <rect x="202" y="94" width="100" height="24" rx="3" fill="var(--surface)" stroke="var(--accent)"/><text x="252" y="109" text-anchor="middle" font-size="8.5" fill="var(--text)">footer</text>
+        <line x1="118" y1="46" x2="202" y2="46" stroke="var(--accent)"/><line x1="118" y1="76" x2="202" y2="76" stroke="var(--border)"/><line x1="118" y1="106" x2="202" y2="106" stroke="var(--accent)"/>
+      </svg><figcaption><code>select</code> matches top-level projected nodes only.</figcaption></figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-projection-03">
+      <h3 class="cs-title">Query projected node <code>@ContentChild</code></h3>
+      <p class="cs-desc">Gets a class-level handle on a single <em>projected</em> node (by template ref or type). Ready in <code>ngAfterContentInit</code>, not the constructor.</p>
+      <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'ui-card', standalone: true,
+  template: `&lt;ng-content&gt;&lt;/ng-content&gt;`
+})
+export class CardComponent implements AfterContentInit {
+  @ContentChild(CourseImageComponent) image?: CourseImageComponent;
+  // by ref: @ContentChild('cover', { read: ElementRef }) el!: ElementRef;
+
+  ngAfterContentInit() { console.log(this.image); }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Logs the projected <code>CourseImageComponent</code> instance; returns <code>undefined</code> (silently) if nothing matches.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-projection-04">
+      <h3 class="cs-title">Query a collection <code>@ContentChildren</code></h3>
+      <p class="cs-desc">Returns a <code>QueryList</code> of all matching projected nodes; read it in <code>ngAfterContentInit</code>. Subscribe <code>.changes</code> for dynamic updates.</p>
+      <pre class="code-block" data-lang="ts"><code>export class AccGroupComponent implements AfterContentInit {
+  @ContentChildren(AccPanelComponent)
+  panels!: QueryList&lt;AccPanelComponent&gt;;
+
+  ngAfterContentInit() {
+    console.log(this.panels.length);
+    this.panels.first?.open();      // coordinate children
+  }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>3</code> — panel count is known and the first panel opens once content is initialised.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-projection-05">
+      <h3 class="cs-title">Signal queries <code>contentChild()</code></h3>
+      <p class="cs-desc">Modern signal forms return a signal (or <code>Signal&lt;readonly T[]&gt;</code>) — read reactively, no lifecycle hook required.</p>
+      <pre class="code-block" data-lang="ts"><code>export class CardComponent {
+  image = contentChild(CourseImageComponent);       // Signal&lt;T | undefined&gt;
+  panels = contentChildren(AccPanelComponent);       // Signal&lt;readonly T[]&gt;
+
+  count = computed(() =&gt; this.panels().length);
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>count()</code> tracks the projected panels reactively — no <code>ngAfterContentInit</code> needed.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-projection-06">
+      <h3 class="cs-title">View children vs content children</h3>
+      <p class="cs-desc"><code>@ViewChild</code> queries the component's <em>own</em> template (ready at <code>ngAfterViewInit</code>); <code>@ContentChild</code> queries <em>projected</em> content (ready at <code>ngAfterContentInit</code>). Neither crosses into the other.</p>
+      <pre class="code-block" data-lang="ts"><code>@ViewChild('ownEl')  own!: ElementRef;      // from THIS template
+@ContentChild('proj') proj!: ElementRef;     // projected via &lt;ng-content&gt;
+// content query inspects what's passed between the tags,
+// even if the template has NO &lt;ng-content&gt; to render it.</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Content queries populate at <code>ngAfterContentInit</code>, view queries at <code>ngAfterViewInit</code>; both are <code>undefined</code> in the constructor and <code>ngOnInit</code>.</div>
+      <figure><svg viewBox="0 0 320 120" role="img" aria-label="Lifecycle order of content and view query hooks" xmlns="http://www.w3.org/2000/svg">
+        <line x1="12" y1="60" x2="308" y2="60" stroke="var(--border)"/>
+        <g font-size="8" text-anchor="middle">
+          <circle cx="40" cy="60" r="5" fill="var(--muted)"/><text x="40" y="80" fill="var(--muted)">ngOnInit</text><text x="40" y="90" fill="var(--muted)">(empty)</text>
+          <circle cx="140" cy="60" r="6" fill="var(--accent)"/><text x="140" y="80" fill="var(--text)">AfterContentInit</text><text x="140" y="90" fill="var(--accent)">@ContentChild ✓</text>
+          <circle cx="260" cy="60" r="6" fill="var(--accent)"/><text x="260" y="80" fill="var(--text)">AfterViewInit</text><text x="260" y="90" fill="var(--accent)">@ViewChild ✓</text>
+        </g>
+        <text x="160" y="24" text-anchor="middle" font-size="9" fill="var(--muted)">lifecycle order →</text>
+      </svg><figcaption>Content queries resolve before view queries.</figcaption></figure>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-templates">
+  <h2>Templates (ng-template)</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-templates-01">
+      <h3 class="cs-title">Declaring a template <code>&lt;ng-template #ref&gt;</code></h3>
+      <p class="cs-desc">Defines an inert fragment that is parsed but NOT rendered until something instantiates it; the <code>#ref</code> handle lets you pass it around.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;ng-template #blankImage&gt;
+  &lt;div class="warn"&gt;No image available&lt;/div&gt;
+&lt;/ng-template&gt;
+
+&lt;!-- referenced via an else branch --&gt;
+&lt;img *ngIf="course.iconUrl; else blankImage" [src]="course.iconUrl"&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Placeholder stays a ghost slot until <code>iconUrl</code> is falsy; remove the ref and it simply never reaches the DOM (no error).</div>
+      <figure>
+        <svg viewBox="0 0 380 150" role="img" aria-label="An ng-template is held in reserve and only enters the DOM when referenced" xmlns="http://www.w3.org/2000/svg">
+          <rect x="12" y="20" width="150" height="110" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-dasharray="5 4"/>
+          <text x="87" y="45" font-size="11" text-anchor="middle" fill="var(--muted)">&lt;ng-template&gt;</text>
+          <text x="87" y="70" font-size="10" text-anchor="middle" fill="var(--text)">parsed,</text>
+          <text x="87" y="86" font-size="10" text-anchor="middle" fill="var(--text)">held in reserve</text>
+          <text x="87" y="108" font-size="10" text-anchor="middle" fill="var(--muted)">NOT in DOM</text>
+          <path d="M170 75 L232 75" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#a-templates-ah)"/>
+          <text x="201" y="66" font-size="9" text-anchor="middle" fill="var(--muted)">reference</text>
+          <rect x="238" y="20" width="130" height="110" rx="8" fill="var(--accent)"/>
+          <text x="303" y="70" font-size="11" text-anchor="middle" fill="#fff">live view</text>
+          <text x="303" y="88" font-size="11" text-anchor="middle" fill="#fff">in the DOM</text>
+          <defs><marker id="a-templates-ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/></marker></defs>
+        </svg>
+        <figcaption>Materialised only when referenced — else, outlet, or a structural directive.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-templates-02">
+      <h3 class="cs-title">Rendering it <code>*ngTemplateOutlet</code></h3>
+      <p class="cs-desc">Stamps a <code>TemplateRef</code> on demand; host it on <code>&lt;ng-container&gt;</code> so no wrapper element is added.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;ng-template #blankImage&gt;
+  &lt;div class="warn"&gt;No image available&lt;/div&gt;
+&lt;/ng-template&gt;
+
+&lt;ng-container *ngTemplateOutlet="blankImage"&gt;&lt;/ng-container&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Renders the fragment in place. Forget the leading <code>*</code> and nothing is stamped out.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-templates-03">
+      <h3 class="cs-title">Context + <code>let-</code> bindings</h3>
+      <p class="cs-desc">A context object gives each instance private variables; <code>let-x</code> reads <code>$implicit</code>, <code>let-x="key"</code> reads a named property.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;ng-template #greet let-name let-role="role"&gt;
+  &lt;p&gt;Hello {{ name }} — {{ role }}&lt;/p&gt;
+&lt;/ng-template&gt;
+
+&lt;ng-container *ngTemplateOutlet="greet;
+  context: { $implicit: 'Ada', role: 'admin' }"&gt;&lt;/ng-container&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>Hello Ada — admin</code>. A missing/mis-spelled key just yields <code>undefined</code> — no error.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-templates-04">
+      <h3 class="cs-title">Reusing one template</h3>
+      <p class="cs-desc">The same <code>TemplateRef</code> with different contexts yields independent instances.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;ng-template #badge let-text&gt;
+  &lt;span class="badge"&gt;{{ text }}&lt;/span&gt;
+&lt;/ng-template&gt;
+
+&lt;ng-container *ngTemplateOutlet="badge; context: { $implicit: 'New' }"&gt;&lt;/ng-container&gt;
+&lt;ng-container *ngTemplateOutlet="badge; context: { $implicit: 'Sale' }"&gt;&lt;/ng-container&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Two badges: <code>New</code> and <code>Sale</code>, each with its own scope.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-templates-05">
+      <h3 class="cs-title">TemplateRef as an <code>@Input()</code></h3>
+      <p class="cs-desc">Pass a template into a component to customise its rendering — the component owns the loop, the caller controls each row's markup.</p>
+      <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-list',
+  template: `
+    &lt;div *ngFor="let item of items"&gt;
+      &lt;ng-container [ngTemplateOutlet]="rowTpl"
+        [ngTemplateOutletContext]="{ $implicit: item }"&gt;&lt;/ng-container&gt;
+    &lt;/div&gt;`,
+})
+export class ListComponent {
+  @Input() items: unknown[] = [];
+  @Input() rowTpl!: TemplateRef&lt;{ $implicit: unknown }&gt;;
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Consumer: <code>&lt;app-list [items]="users" [rowTpl]="row"&gt;</code> with <code>&lt;ng-template #row let-u&gt;{{u.name}}&lt;/ng-template&gt;</code> — inverts control of appearance.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-directives">
+  <h2>Directives In Depth</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-directives-01">
+      <h3 class="cs-title">Attribute directive <code>@Directive({ selector: '[appX]' })</code></h3>
+      <p class="cs-desc">Attaches behaviour to a host element without changing DOM structure; the bracketed <em>attribute</em> selector matches any element carrying that attribute. Inject <code>ElementRef</code> to reach the native node.</p>
+      <pre class="code-block" data-lang="ts"><code>import { Directive, ElementRef, inject } from '@angular/core';
+
+@Directive({ selector: '[appHighlight]', standalone: true })
+export class HighlightDirective {
+  private el = inject(ElementRef) as ElementRef&lt;HTMLElement&gt;;
+  constructor() { this.el.nativeElement.style.outline = '2px solid red'; }
+}
+// &lt;course-card appHighlight&gt;  → one instance per matching element</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Every element with the <code>appHighlight</code> attribute gets a red outline; dropping the attribute never instantiates the directive.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-directives-02">
+      <h3 class="cs-title">Prefer <code>Renderer2</code> over <code>nativeElement</code></h3>
+      <p class="cs-desc">Mutating <code>nativeElement</code> directly breaks under SSR/non-browser platforms; <code>Renderer2</code> is the safe, platform-agnostic way to touch the DOM.</p>
+      <pre class="code-block" data-lang="ts"><code>@Directive({ selector: '[appPulse]', standalone: true })
+export class PulseDirective {
+  private el = inject(ElementRef);
+  private r  = inject(Renderer2);
+  @HostListener('click') on() {
+    this.r.addClass(this.el.nativeElement, 'pulsing');
+    this.r.setAttribute(this.el.nativeElement, 'aria-busy', 'true');
+  }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Click adds the <code>pulsing</code> class and <code>aria-busy="true"</code> — safely, even during server-side rendering.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-directives-03">
+      <h3 class="cs-title">@HostBinding <code>@HostBinding('class.x')</code></h3>
+      <p class="cs-desc">Declaratively writes a host class/style/property/attribute from a field or getter — Angular keeps it in sync with change detection, no imperative DOM poking.</p>
+      <pre class="code-block" data-lang="ts"><code>@Directive({ selector: '[appHighlight]', standalone: true })
+export class HighlightDirective {
+  @Input('appHighlight') on = false;            // alias == selector
+
+  @HostBinding('class.highlighted') get cls() { return this.on; }
+  @HostBinding('style.border')     get bd()  { return this.on ? '2px solid red' : null; }
+  @HostBinding('attr.data-on')     get flag(){ return String(this.on); }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>When <code>[appHighlight]="true"</code>: <code>&lt;course-card class="highlighted" style="border:2px solid red" data-on="true"&gt;</code>.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-directives-04">
+      <h3 class="cs-title">DOM property vs HTML attribute <code>attr.</code></h3>
+      <p class="cs-desc">A bare name binds the live JS <em>property</em>; the <code>attr.</code> prefix writes the static HTML <em>attribute</em>. Use <code>attr.</code> for ARIA and anything with no matching property.</p>
+      <pre class="code-block" data-lang="ts"><code>@HostBinding('value')        v = 'live';   // .value property (what user sees now)
+@HostBinding('attr.value')   a = 'init';   // value="init" HTML attribute
+@HostBinding('attr.colspan') c = 2;        // no 'colspan' property → MUST use attr.
+// @HostBinding('doesNotExist') → runtime error: property does not exist</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>The markup <code>value</code> attribute holds only the initial string; <code>.value</code> tracks live edits. Binding an unknown property throws.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-directives-05">
+      <h3 class="cs-title">@HostListener <code>@HostListener('event', ['$event'])</code></h3>
+      <p class="cs-desc">Runs a method whenever the named native event fires on the host; pass <code>['$event']</code> to receive the event object. Any DOM event works.</p>
+      <pre class="code-block" data-lang="ts"><code>@Directive({ selector: '[appHighlight]', standalone: true })
+export class HighlightDirective {
+  @HostBinding('class.highlighted') on = false;
+
+  @HostListener('mouseover', ['$event']) enter(e: MouseEvent) { this.on = true;  }
+  @HostListener('mouseleave')            leave()             { this.on = false; }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Hovering adds <code>.highlighted</code>, leaving removes it. Use <code>mouseleave</code>, not <code>mouseout</code> — <code>mouseout</code> bubbles from children and flickers.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-directives-06">
+      <h3 class="cs-title">exportAs <code>exportAs: 'name'</code></h3>
+      <p class="cs-desc">Names the directive instance so a template reference variable can grab its public API; query the same instance from the class with <code>@ViewChild</code> (ready in <code>ngAfterViewInit</code>).</p>
+      <pre class="code-block" data-lang="ts"><code>@Directive({ selector: '[appHighlight]', exportAs: 'appHighlight', standalone: true })
+export class HighlightDirective { toggle() { /* ... */ } }</code></pre>
+      <pre class="code-block" data-lang="html"><code>&lt;course-card appHighlight #hl="appHighlight" (dblclick)="hl.toggle()"&gt;&lt;/course-card&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Each double-click calls the directive's <code>toggle()</code>. The <code>exportAs</code> string is chosen independently of the selector; a mismatched <code>#hl="..."</code> errors "no directive with exportAs set to ...".</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-directives-07">
+      <h3 class="cs-title">Structural <code>*</code> desugaring <code>*ngIf</code></h3>
+      <p class="cs-desc">The leading <code>*</code> is sugar: Angular wraps the host in an implicit <code>&lt;ng-template&gt;</code> and rebinds the directive as a property binding on it. Two structural directives can't share one element.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;!-- what you write --&gt;
+&lt;div *ngIf="course as c"&gt;{{ c.title }}&lt;/div&gt;
+
+&lt;!-- what Angular runs --&gt;
+&lt;ng-template [ngIf]="course" let-c="ngIf"&gt;
+  &lt;div&gt;{{ c.title }}&lt;/div&gt;
+&lt;/ng-template&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Both render identically. <code>&lt;div *ngIf *ngFor&gt;</code> is a compile error — wrap one in <code>&lt;ng-container&gt;</code>.</div>
+      <figure>
+        <svg viewBox="0 0 360 170" role="img" aria-label="Star syntax desugaring into an ng-template" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="14" width="230" height="46" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+          <text x="20" y="34" font-size="11" fill="var(--text)" font-family="monospace">&lt;div *ngIf="c"&gt;</text>
+          <text x="20" y="50" font-size="10" fill="var(--muted)" font-family="monospace">…</text>
+          <text x="14" y="9" font-size="9" fill="var(--accent)">sugar</text>
+          <line x1="125" y1="62" x2="125" y2="92" stroke="var(--muted)" marker-end="url(#a-directives-ar)"/>
+          <text x="132" y="82" font-size="9" fill="var(--muted)">desugars</text>
+          <defs><marker id="a-directives-ar" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="var(--muted)"/></marker></defs>
+          <rect x="10" y="96" width="330" height="62" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="20" y="118" font-size="11" fill="var(--text)" font-family="monospace">&lt;ng-template [ngIf]="c"&gt;</text>
+          <text x="30" y="134" font-size="10" fill="var(--muted)" font-family="monospace">&lt;div&gt;…&lt;/div&gt;</text>
+          <text x="20" y="150" font-size="11" fill="var(--text)" font-family="monospace">&lt;/ng-template&gt;</text>
+          <text x="14" y="91" font-size="9" fill="var(--accent)">desugared</text>
+        </svg>
+        <figcaption>The <code>*</code> wraps the host in an <code>&lt;ng-template&gt;</code> and rebinds the directive.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-directives-08">
+      <h3 class="cs-title">Custom structural directive <code>TemplateRef</code> + <code>ViewContainerRef</code></h3>
+      <p class="cs-desc">Inject the wrapped <code>TemplateRef</code> (the stamp) and a <code>ViewContainerRef</code> (the slot). An input <em>setter</em> named exactly like the selector drives <code>createEmbeddedView()</code> (show) / <code>clear()</code> (hide).</p>
+      <pre class="code-block" data-lang="ts"><code>import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+
+@Directive({ selector: '[appUnless]', standalone: true })
+export class UnlessDirective {
+  private visible = false;
+  constructor(private tpl: TemplateRef&lt;any&gt;, private vcr: ViewContainerRef) {}
+
+  @Input() set appUnless(cond: boolean) {          // setter name == selector
+    if (!cond &amp;&amp; !this.visible) { this.vcr.createEmbeddedView(this.tpl); this.visible = true; }
+    else if (cond &amp;&amp; this.visible) { this.vcr.clear(); this.visible = false; }
+  }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>&lt;p *appUnless="user.isAdmin"&gt;</code> shows for non-admins only (inverse of <code>*ngIf</code>). The <code>visible</code> flag skips redundant re-renders.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-encapsulation">
+  <h2>View Encapsulation</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-encapsulation-01">
+      <h3 class="cs-title">Emulated scoping <code>_ngcontent</code></h3>
+      <p class="cs-desc">Default mode: the compiler stamps a per-component attribute on every element and rewrites each CSS selector to require it, so styles cannot leak out.</p>
+      <pre class="code-block" data-lang="css"><code>/* you write in course-card.component.css */
+.course-card { box-shadow: 0 0 10px #0002; }
+
+/* compiler rewrites it to: */
+.course-card[_ngcontent-ng-c1] { box-shadow: 0 0 10px #0002; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Only real &lt;course-card&gt; elements match; a plain .course-card div elsewhere is untouched.</div>
+      <figure><svg viewBox="0 0 320 150" role="img" aria-label="Emulated attribute scoping on a flat DOM" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="12" width="300" height="126" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="20" y="34" font-size="12" fill="var(--muted)" font-family="monospace">&lt;course-card _nghost-ng-c1&gt;</text>
+        <rect x="30" y="44" width="270" height="60" rx="4" fill="var(--accent)" opacity="0.15" stroke="var(--accent)"/>
+        <text x="40" y="66" font-size="11" fill="var(--text)" font-family="monospace">&lt;div .course-card _ngcontent-ng-c1&gt;</text>
+        <text x="40" y="88" font-size="11" fill="var(--text)" font-family="monospace">&lt;h2 .title _ngcontent-ng-c1&gt;</text>
+        <text x="20" y="126" font-size="11" fill="var(--muted)" font-family="monospace">host id ≠ content id → isolated</text>
+      </svg><figcaption>Single flat DOM; generated ids scope every rule.</figcaption></figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-encapsulation-02">
+      <h3 class="cs-title">Style the host <code>:host</code></h3>
+      <p class="cs-desc">Targets the component's own element (compiles to <code>[_nghost-id]</code>); a bare tag-name selector fails because the host carries no content attribute.</p>
+      <pre class="code-block" data-lang="css"><code>:host {
+  display: block;
+  padding: 1rem;
+}
+/* conditional: host when it also has .selected */
+:host(.selected) { border: 2px solid dodgerblue; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>The &lt;course-card&gt; wrapper becomes a padded block; a highlighted border appears only when it has class "selected".</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-encapsulation-03">
+      <h3 class="cs-title">Theme from an ancestor <code>:host-context()</code></h3>
+      <p class="cs-desc">Styles this component based on a class on any ancestor (e.g. a theme wrapper), while the styled selector stays scoped to the component only.</p>
+      <pre class="code-block" data-lang="css"><code>/* when ANY ancestor has .salmon-theme, theme MY card only */
+:host-context(.salmon-theme) .course-card {
+  background-color: lightsalmon;
+}
+/* compiles to: .salmon-theme .course-card[_ngcontent-ng-c1] */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>This component's card is themed; a plain .course-card sibling under the same ancestor is NOT.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-encapsulation-04">
+      <h3 class="cs-title">Pierce the boundary <code>::ng-deep</code></h3>
+      <p class="cs-desc">Drops the content-attribute requirement so a rule reaches projected/descendant nodes; deprecated — always anchor it with <code>:host</code> so it stays contained.</p>
+      <pre class="code-block" data-lang="css"><code>/* reach content projected by a DIFFERENT component */
+:host ::ng-deep .course-description {
+  color: gray;
+}
+/* bare ::ng-deep .foo (no :host) leaks globally — avoid */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Projected .course-description is styled. Prefer CSS custom properties or ::part instead — ::ng-deep is deprecated.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-encapsulation-05">
+      <h3 class="cs-title">Modes <code>ViewEncapsulation</code></h3>
+      <p class="cs-desc">Three modes: Emulated (default, attribute scoping), None (all CSS global), ShadowDom (native shadow root).</p>
+      <pre class="code-block" data-lang="ts"><code>import { Component, ViewEncapsulation } from '@angular/core';
+
+@Component({
+  selector: 'app-badge',
+  encapsulation: ViewEncapsulation.Emulated, // default, recommended
+  // ViewEncapsulation.None      → styles become global
+  // ViewEncapsulation.ShadowDom → real shadow root
+})
+export class BadgeComponent {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>None makes .badge restyle any element on the page; Emulated keeps it scoped. Native mode is deprecated — use ShadowDom.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-encapsulation-06">
+      <h3 class="cs-title">Emulated vs ShadowDom isolation</h3>
+      <p class="cs-desc">Emulated is one-way (blocks leaking out, global styles still cascade in). ShadowDom is near two-way native isolation — outer non-inherited styles are blocked (inherited props and CSS vars still cross).</p>
+      <pre class="code-block" data-lang="ts"><code>encapsulation: ViewEncapsulation.ShadowDom
+/* &lt;app-badge&gt;
+     #shadow-root
+       &lt;style&gt;…&lt;/style&gt;   ← lives INSIDE, blocks page cascade
+       &lt;span class="badge"&gt;…</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>ShadowDom silently blocks your global stylesheet/resets from reaching the component — switch modes deliberately.</div>
+      <figure><svg viewBox="0 0 320 130" role="img" aria-label="One-way emulated versus two-way shadow isolation" xmlns="http://www.w3.org/2000/svg">
+        <rect x="12" y="20" width="130" height="90" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="77" y="38" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text)">Emulated</text>
+        <line x1="30" y1="70" x2="124" y2="70" stroke="var(--accent)" stroke-width="2" marker-end="url(#a-encapsulation-ar)"/>
+        <text x="77" y="94" text-anchor="middle" font-size="9" fill="var(--muted)">global CSS cascades in</text>
+        <rect x="178" y="20" width="130" height="90" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="243" y="38" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text)">ShadowDom</text>
+        <line x1="196" y1="70" x2="250" y2="70" stroke="var(--border)" stroke-width="2" stroke-dasharray="3 3"/>
+        <text x="256" y="74" font-size="12" fill="var(--muted)">✕</text>
+        <text x="243" y="94" text-anchor="middle" font-size="9" fill="var(--muted)">outer cascade blocked</text>
+        <defs><marker id="a-encapsulation-ar" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/></marker></defs>
+      </svg><figcaption>One-way vs two-way isolation.</figcaption></figure>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-services-http">
+  <h2>Injectable Services &amp; HttpClient</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-services-http-01">
+      <h3 class="cs-title">Enable HttpClient <code>provideHttpClient()</code></h3>
+      <p class="cs-desc">Register the HTTP service once at bootstrap; then any service or component can <code>inject(HttpClient)</code>. No <code>HttpClientModule</code> needed.</p>
+      <pre class="code-block" data-lang="ts"><code>// app.config.ts
+import { provideHttpClient } from '@angular/common/http';
+
+export const appConfig = {
+  providers: [ provideHttpClient() ]
+};</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>HttpClient is now injectable app-wide.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-services-http-02">
+      <h3 class="cs-title">GET with query params <code>HttpParams</code></h3>
+      <p class="cs-desc">Fire a typed GET in <code>ngOnInit</code>. <code>HttpParams</code> is immutable, so each <code>set()</code> returns a new instance — chain them and pass under the <code>params</code> option.</p>
+      <pre class="code-block" data-lang="ts"><code>private http = inject(HttpClient);
+
+ngOnInit() {
+  const params = new HttpParams()
+    .set('pageNumber', '1')
+    .set('pageSize', '10');
+  this.http.get&lt;Course[]&gt;('/api/courses', { params });
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>GET /api/courses?pageNumber=1&amp;pageSize=10 → 200</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-services-http-03">
+      <h3 class="cs-title">Subscribe to send the request <code>.subscribe()</code></h3>
+      <p class="cs-desc"><code>http.get()</code> returns a cold Observable — nothing is sent until you subscribe. Assign the emitted body to a field so the view can render it.</p>
+      <pre class="code-block" data-lang="ts"><code>courses: Course[] = [];
+
+ngOnInit() {
+  this.http.get&lt;Course[]&gt;('/api/courses')
+    .subscribe(courses =&gt; {
+      this.courses = courses;   // feed the view
+    });
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Without subscribe(): no request. Without the assign: blank list.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-services-http-04">
+      <h3 class="cs-title">Async pipe <code>observable$ | async</code></h3>
+      <p class="cs-desc">Expose an Observable field (<code>$</code> suffix) and let the template subscribe. It unwraps the latest value and auto-unsubscribes on destroy — no cleanup, no leaks.</p>
+      <pre class="code-block" data-lang="ts"><code>courses$!: Observable&lt;Course[]&gt;;
+ngOnInit() {
+  this.courses$ = this.http.get&lt;Course[]&gt;('/api/courses');
+}</code></pre>
+      <pre class="code-block" data-lang="html"><code>&lt;!-- unwrap once with an alias, then loop --&gt;
+@if (courses$ | async; as courses) {
+  @for (c of courses; track c.id) {
+    &lt;course-card [course]="c" /&gt;
+  }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>List renders; subscription cleaned up automatically.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-services-http-05">
+      <h3 class="cs-title">Custom service <code>@Injectable</code></h3>
+      <p class="cs-desc"><code>@Injectable({ providedIn: 'root' })</code> makes a class injectable and lets it receive its own deps. The root injector gives one shared singleton app-wide.</p>
+      <pre class="code-block" data-lang="ts"><code>@Injectable({ providedIn: 'root' })
+export class CoursesService {
+  private http = inject(HttpClient);   // DI supplies it
+  constructor() { console.log('created'); }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Injected in many components → constructor logs exactly once.</div>
+      <figure>
+        <svg viewBox="0 0 320 150" role="img" aria-label="Three components inject one shared service instance" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="10" width="96" height="30" rx="6" fill="var(--accent-weak)" stroke="var(--accent)"/>
+          <text x="56" y="30" text-anchor="middle" font-size="10" fill="var(--text)">AppComponent</text>
+          <rect x="8" y="58" width="96" height="30" rx="6" fill="var(--accent-weak)" stroke="var(--accent)"/>
+          <text x="56" y="78" text-anchor="middle" font-size="10" fill="var(--text)">CourseCard #1</text>
+          <rect x="8" y="106" width="96" height="30" rx="6" fill="var(--accent-weak)" stroke="var(--accent)"/>
+          <text x="56" y="126" text-anchor="middle" font-size="10" fill="var(--text)">CourseCard #2</text>
+          <rect x="196" y="52" width="116" height="46" rx="8" fill="var(--accent)" stroke="var(--accent)"/>
+          <text x="254" y="72" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">CoursesService</text>
+          <text x="254" y="88" text-anchor="middle" font-size="8" fill="#fff">one instance</text>
+          <line x1="104" y1="25" x2="194" y2="66" stroke="var(--accent)" marker-end="url(#a-services-http-ah)"/>
+          <line x1="104" y1="73" x2="194" y2="75" stroke="var(--accent)" marker-end="url(#a-services-http-ah)"/>
+          <line x1="104" y1="121" x2="194" y2="84" stroke="var(--accent)" marker-end="url(#a-services-http-ah)"/>
+          <defs>
+            <marker id="a-services-http-ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/></marker>
+          </defs>
+        </svg>
+        <figcaption>Many injection points, one construction — the signature of a root singleton.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-services-http-06">
+      <h3 class="cs-title">Fetch &amp; expose from a service <code>loadCourses()</code></h3>
+      <p class="cs-desc">Move HTTP logic into an intent-revealing method returning <code>Observable&lt;Course[]&gt;</code>. The component depends on the service, not on <code>HttpClient</code>.</p>
+      <pre class="code-block" data-lang="ts"><code>// courses.service.ts
+loadCourses(): Observable&lt;Course[]&gt; {
+  return this.http.get&lt;Course[]&gt;('/api/courses');
+}
+
+// app.component.ts
+private svc = inject(CoursesService);
+courses$ = this.svc.loadCourses();   // don't subscribe in service</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Same 10 cards; HTTP detail hidden behind the service API.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-services-http-07">
+      <h3 class="cs-title">Modify data <code>http.put()</code></h3>
+      <p class="cs-desc">PUT takes <code>(url, body, options)</code> — the body is mandatory. Add headers via immutable <code>HttpHeaders</code>. It's a cold Observable, so <code>subscribe()</code> to actually save.</p>
+      <pre class="code-block" data-lang="ts"><code>saveCourse(course: Course): Observable&lt;any&gt; {
+  const headers = new HttpHeaders().set('X-Auth', 'token');
+  return this.http.put(
+    `/api/courses/${course.id}`,   // url with id
+    course,                         // body (required)
+    { headers });                   // options
+}
+// caller
+this.svc.saveCourse(c).subscribe(() =&gt; console.log('saved'));</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>PUT /api/courses/1 → 200 OK; new title persists on reload.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-di">
+  <h2>Dependency Injection In Depth</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-di-01">
+      <h3 class="cs-title">How DI works <code>inject()</code></h3>
+      <p class="cs-desc">A class declares its dependencies (via <code>inject()</code> or constructor params); Angular's injector finds the matching provider, constructs the value once, and hands it over. No provider anywhere &rarr; <em>NullInjectorError</em>.</p>
+      <pre class="code-block" data-lang="ts"><code>@Injectable({ providedIn: 'root' })
+export class CoursesService {
+  private http = inject(HttpClient);   // service's own dep
+}
+
+@Component({ selector: 'app-root', standalone: true })
+export class AppComponent {
+  private courses = inject(CoursesService);  // Angular supplies it
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Injector resolves &amp; constructs CoursesService once. Remove its provider &rarr; <code>NullInjectorError: No provider for CoursesService!</code></div>
+    </article>
+
+    <article class="cs-card" id="cs-a-di-02">
+      <h3 class="cs-title">Providers &amp; tokens <code>{ provide, useClass }</code></h3>
+      <p class="cs-desc">A <em>provider</em> is the recipe that produces a dependency; a <em>token</em> is the lookup key. A class doubles as its own token (it exists at runtime); an interface cannot.</p>
+      <pre class="code-block" data-lang="ts"><code>// Fully explicit provider: token + recipe + its deps
+providers: [
+  {
+    provide: CoursesService,               // token (the key)
+    useFactory: (h: HttpClient) =&gt; new CoursesService(h),
+    deps: [HttpClient],                    // resolved &amp; passed to factory
+  },
+]</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Factory runs once on first request. A missing <code>deps</code> array &rarr; <em>Can't resolve all parameters</em> (Angular does not read the signature).</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-di-03">
+      <h3 class="cs-title">Simplified provider config <code>useClass / useValue / useFactory / useExisting</code></h3>
+      <p class="cs-desc">Shorthands for the four provider recipes. <code>[Service]</code> expands to <code>{ provide: Service, useClass: Service }</code>.</p>
+      <pre class="code-block" data-lang="ts"><code>providers: [CoursesService]  // sugar for { provide, useClass }
+
+// useClass  -&gt; new instance of a class
+// useValue  -&gt; inject a ready-made object/primitive as-is
+// useFactory-&gt; run a fn (with deps) to compute the value
+// useExisting-&gt; ALIAS to an already-provided token (shared, no new copy)
+
+let n = 0;  @Injectable() class Svc { id = ++n; }
+providers: [Svc, { provide: API, useExisting: Svc }]  // one object
+providers: [Svc, { provide: API, useClass:    Svc }]  // two objects</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>useExisting</code>: inject(Svc).id === inject(API).id &rarr; true. <code>useClass</code>: false (a second instance).</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-di-04">
+      <h3 class="cs-title">Hierarchical injection <code>providers: []</code></h3>
+      <p class="cs-desc">Injectors form a tree mirroring the component tree. A request searches the local injector, then climbs to parents up to root. A component-level provider mints a <em>private</em> instance for that subtree.</p>
+      <pre class="code-block" data-lang="ts"><code>// Root singleton: inherited where no local provider exists
+@Injectable({ providedIn: 'root' })
+export class CoursesService { id = ++counter; }
+
+// Own provider -&gt; private instance PER rendered card
+@Component({ selector: 'course-card', standalone: true,
+            providers: [CoursesService] })
+export class CourseCardComponent {
+  private courses = inject(CoursesService);
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Root uses #1; each card builds its own #2, #3&hellip;. Remove the card provider &rarr; every card falls back to root #1.</div>
+      <figure><svg viewBox="0 0 420 176" role="img" aria-label="Injector tree: request climbs up until a provider is found" xmlns="http://www.w3.org/2000/svg">
+        <rect x="120" y="10" width="180" height="38" rx="6" fill="var(--accent)"/>
+        <text x="210" y="27" text-anchor="middle" font-size="11" fill="#fff">Root injector</text>
+        <text x="210" y="41" text-anchor="middle" font-size="9" fill="#fff">CoursesService #1</text>
+        <line x1="210" y1="48" x2="90" y2="80" stroke="var(--border)"/>
+        <line x1="210" y1="48" x2="330" y2="80" stroke="var(--border)"/>
+        <rect x="10" y="80" width="160" height="40" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="90" y="97" text-anchor="middle" font-size="10" fill="var(--text)">AppComponent</text>
+        <text x="90" y="111" text-anchor="middle" font-size="9" fill="var(--muted)">no provider &rarr; #1</text>
+        <rect x="250" y="80" width="160" height="40" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+        <text x="330" y="97" text-anchor="middle" font-size="10" fill="var(--text)">CourseCard</text>
+        <text x="330" y="111" text-anchor="middle" font-size="9" fill="var(--muted)">providers:[Svc] &rarr; #2</text>
+        <path d="M90 120 V150 H210 V48" fill="none" stroke="var(--accent)" stroke-dasharray="4 3"/>
+        <text x="120" y="146" font-size="9" fill="var(--accent)">climbs up &rarr; resolves #1</text>
+      </svg><figcaption>Resolution climbs the injector tree until a provider is found.</figcaption></figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-di-05">
+      <h3 class="cs-title">Tree-shakeable providers <code>providedIn: 'root'</code></h3>
+      <p class="cs-desc">Configure the provider on the service itself so the bundler can drop it when nothing injects it. Registers an app-wide singleton and is the default choice for stateless services.</p>
+      <pre class="code-block" data-lang="ts"><code>@Injectable({ providedIn: 'root' })   // tree-shakeable singleton
+export class CoursesService {
+  private http = inject(HttpClient);
+}
+
+// Also accepts the recipes; providedIn is required:
+@Injectable({ providedIn: 'root',
+  useFactory: (h: HttpClient) =&gt; new CoursesService(h), deps: [HttpClient] })
+export class CoursesService {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Unused &rarr; code removed from the bundle. Injected &rarr; one lazy root instance. (Listing it in <code>providers</code> too creates a second, shadowing instance.)</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-di-06">
+      <h3 class="cs-title">InjectionToken for non-class values <code>new InjectionToken&lt;T&gt;()</code></h3>
+      <p class="cs-desc">A type/interface has no runtime identity, so plain config objects need an explicit token. Give it a <code>{ providedIn, factory }</code> to stay tree-shakeable.</p>
+      <pre class="code-block" data-lang="ts"><code>export type AppConfig = { apiUrl: string };
+export const APP_CONFIG: AppConfig = { apiUrl: 'http://localhost:9000' };
+
+export const CONFIG_TOKEN = new InjectionToken&lt;AppConfig&gt;('CONFIG_TOKEN', {
+  providedIn: 'root',
+  factory: () =&gt; APP_CONFIG,          // tree-shakeable
+});
+
+private config = inject(CONFIG_TOKEN);  // must ask by token
+// Non-tree-shakeable: providers: [{ provide: CONFIG_TOKEN, useValue: APP_CONFIG }]</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Injects the object. <code>inject(AppConfig)</code> (the type) fails &mdash; types vanish at runtime; inject the token value.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-di-07">
+      <h3 class="cs-title">@Optional, @Self, @SkipSelf <code>inject(X, { self })</code></h3>
+      <p class="cs-desc">Modifiers that steer resolution: tolerate a missing provider, forbid climbing, or force climbing past the local injector.</p>
+      <pre class="code-block" data-lang="ts"><code>// null instead of throwing (must guard the null)
+private log = inject(LoggerService, { optional: true });
+// only this component's own provider (else error)
+private local = inject(CoursesService, { self: true });
+// ignore local; take a parent's instance
+private parent = inject(CoursesService, { skipSelf: true });
+
+// Classic decorator form:
+// constructor(@Optional() log: LoggerService,
+//   @Self() local: CoursesService, @SkipSelf() parent: CoursesService) {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>self</code> with no local provider &rarr; No provider error. <code>optional</code> with nothing to inject &rarr; null (no crash).</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-di-08">
+      <h3 class="cs-title">@Host decorator <code>inject(X, { host: true })</code></h3>
+      <p class="cs-desc">Caps a directive's upward search at its host element's injector; the host component (or the directive) must provide it, or injection errors &mdash; it will not fall back to root.</p>
+      <pre class="code-block" data-lang="ts"><code>@Directive({ selector: '[highlighted]', standalone: true })
+export class HighlightedDirective {
+  private courses = inject(CoursesService, { host: true });  // no climbing to root
+}
+
+@Component({ selector: 'course-card', standalone: true,
+  imports: [HighlightedDirective],
+  providers: [CoursesService],   // REQUIRED for host-scoped injection
+})
+export class CourseCardComponent {}
+// constructor(@Host() private courses: CoursesService) {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>With host provider: gets the card's private instance. Remove it &rarr; <code>NullInjectorError: No provider (found by @Host)</code>.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-change-detection">
+  <h2>Change Detection</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-change-detection-01">
+      <h3 class="cs-title">Default change detection</h3>
+      <p class="cs-desc">Active out of the box: after any async event Angular re-checks the whole tree top-down, comparing each binding's current value to its previous one. Zone.js is what signals when to run.</p>
+      <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'course-card',
+  template: `&lt;h2&gt;{{ course.description }}&lt;/h2&gt;
+    &lt;input #t (keyup)="onChange(t.value)"&gt;`
+})
+export class CourseCardComponent {
+  @Input() course!: { description: string };
+  onChange(v: string) {
+    this.course.description = v; // mutation is fine
+  }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Every keyup fires a pass; the &lt;h2&gt; updates live. Direct mutation works because each expression is re-read.</div>
+      <figure>
+        <svg viewBox="0 0 300 178" role="img" aria-label="Default change detection flow" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="a-change-detection-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/>
+            </marker>
+          </defs>
+          <rect x="40" y="8" width="220" height="30" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+          <text x="150" y="27" text-anchor="middle" font-size="11" fill="var(--text)">Async event (click / XHR / timer)</text>
+          <line x1="150" y1="38" x2="150" y2="56" stroke="var(--muted)" marker-end="url(#a-change-detection-arr)"/>
+          <rect x="40" y="58" width="220" height="30" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="150" y="77" text-anchor="middle" font-size="11" fill="var(--text)">Zone.js notifies Angular</text>
+          <line x1="150" y1="88" x2="150" y2="106" stroke="var(--muted)" marker-end="url(#a-change-detection-arr)"/>
+          <rect x="40" y="108" width="220" height="30" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="150" y="127" text-anchor="middle" font-size="11" fill="var(--text)">Top-down diff: prev vs current</text>
+          <line x1="150" y1="138" x2="150" y2="156" stroke="var(--muted)" marker-end="url(#a-change-detection-arr)"/>
+          <rect x="40" y="150" width="220" height="26" rx="6" fill="var(--accent)" stroke="var(--accent)"/>
+          <text x="150" y="167" text-anchor="middle" font-size="11" fill="#fff">Patch changed DOM nodes</text>
+        </svg>
+        <figcaption>One top-down pass per async event.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-change-detection-02">
+      <h3 class="cs-title">OnPush strategy <code>ChangeDetectionStrategy.OnPush</code></h3>
+      <p class="cs-desc">Opt in for speed: the component is checked only on an @Input <em>reference</em> change, an in-component event, an async-pipe emission, or a signal read change — otherwise its whole subtree is skipped.</p>
+      <pre class="code-block" data-lang="ts"><code>@Component({
+  selector: 'app-root',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `&lt;course-card [course]="course"&gt;&lt;/course-card&gt;`
+})
+export class AppComponent {
+  course = { description: 'Angular Basics' };
+  mutate()  { this.course.description = 'Edited'; }        // ignored
+  replace() { this.course = { ...this.course,
+                              description: 'Edited' }; }    // updates
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>"Mutate" leaves the card stale (same reference); "Replace" swaps the reference and re-renders. Immutable updates pair naturally with OnPush.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-change-detection-03">
+      <h3 class="cs-title">OnPush with Observables <code>| async</code></h3>
+      <p class="cs-desc">Under OnPush, feed streams through the async pipe — each emission marks the component for check. A manual <code>subscribe</code> + field assignment is no trigger and leaves the view blank.</p>
+      <pre class="code-block" data-lang="ts"><code>@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AsyncPipe],
+  template: `
+    @if (courses$ | async; as courses) {
+      @for (c of courses; track c.id) {
+        &lt;course-card [course]="c"&gt;&lt;/course-card&gt;
+      }
+    }`
+})
+export class AppComponent implements OnInit {
+  courses$!: Observable&lt;Course[]&gt;;
+  constructor(private svc: CoursesService) {}
+  ngOnInit() { this.courses$ = this.svc.loadCourses(); }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>List renders when the HTTP response lands and repaints on every emission; the pipe also unsubscribes on destroy.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-change-detection-04">
+      <h3 class="cs-title">The <code>@Attribute</code> decorator</h3>
+      <p class="cs-desc">Reads a static host attribute once at construction — never re-checked on later passes. Use for values fixed for the component's lifetime (a "kind"/"variant" string).</p>
+      <pre class="code-block" data-lang="ts"><code>import { Attribute, Component } from '@angular/core';
+
+@Component({
+  selector: 'course-card',
+  template: `&lt;div class="card {{ type }}"&gt;...&lt;/div&gt;`
+})
+export class CourseCardComponent {
+  constructor(@Attribute('type') public type: string) {
+    console.log('card type =', this.type); // once per instance
+  }
+}
+// &lt;course-card type="beginner"&gt;&lt;/course-card&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Logs once per instance from the constructor; later clicks/timers never re-read it. Value is always a string (or null if absent).</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-change-detection-05">
+      <h3 class="cs-title">Manual control <code>markForCheck()</code></h3>
+      <p class="cs-desc">Inject <code>ChangeDetectorRef</code>; <code>markForCheck()</code> flags the component and its ancestors for the next pass — the fix after a manual subscribe under OnPush. Put per-pass logic in <code>ngDoCheck</code>.</p>
+      <pre class="code-block" data-lang="ts"><code>constructor(private svc: CoursesService,
+            private cd: ChangeDetectorRef) {}
+
+ngOnInit() {
+  this.svc.loadCourses().subscribe(list =&gt; {
+    this.courses = list;
+    this.loaded = true;
+  });
+}
+ngDoCheck() {
+  if (this.loaded) {
+    this.cd.markForCheck();   // schedule next pass
+    this.loaded = false;      // render first batch only
+  }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>ngDoCheck</code> fires every pass; <code>markForCheck()</code> runs once so the initial list renders. Prefer <code>| async</code> over this.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-change-detection-06">
+      <h3 class="cs-title">detectChanges &amp; detach/reattach</h3>
+      <p class="cs-desc"><code>detectChanges()</code> runs a pass on this component now, synchronously. <code>detach()</code> removes a subtree from automatic checking; <code>reattach()</code> restores it — pair with a timer to throttle a high-frequency stream.</p>
+      <pre class="code-block" data-lang="ts"><code>constructor(private cd: ChangeDetectorRef) {}
+
+ngOnInit() {
+  this.cd.detach();                 // off automatic checking
+  setInterval(() =&gt; {
+    this.value = this.stream.now();
+    this.cd.detectChanges();        // repaint once per second
+  }, 1000);
+}
+// this.cd.reattach();  // hand control back to Angular</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>A firehose stream repaints at most once per second instead of on every emission. Use all of this sparingly, as a last resort.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-lifecycle">
+  <h2>Lifecycle Hooks</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-lifecycle-01">
+      <h3 class="cs-title">Setup <code>ngOnInit()</code></h3>
+      <p class="cs-desc">Runs once after inputs are set — the home for init logic; the constructor should only capture injected deps (inputs are still <code>undefined</code> there).</p>
+      <pre class="code-block" data-lang="ts"><code>export class CourseCard implements OnInit {
+  @Input() course: any;
+  constructor() { console.log(this.course); } // undefined
+  ngOnInit() { console.log(this.course); }    // set (sync inputs)
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>constructor: undefined &nbsp;·&nbsp; ngOnInit: { title: 'Angular Core' }</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-lifecycle-02">
+      <h3 class="cs-title">Teardown <code>ngOnDestroy()</code></h3>
+      <p class="cs-desc">Fires once just before Angular removes the component — release manual subscriptions here (often unneeded: the <code>async</code> pipe / <code>takeUntilDestroyed()</code> auto-clean).</p>
+      <pre class="code-block" data-lang="ts"><code>export class CourseCard implements OnDestroy {
+  private sub = interval(1000).subscribe();
+  ngOnDestroy() { this.sub.unsubscribe(); } // free resources
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Called when an <code>@if</code> wrapping the component turns false and removes it.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-lifecycle-03">
+      <h3 class="cs-title">React to input changes <code>ngOnChanges()</code></h3>
+      <p class="cs-desc">Runs before <code>ngOnInit</code> and again on every input change. <code>SimpleChanges</code> maps each input to <code>previousValue</code>, <code>currentValue</code>, <code>firstChange</code>.</p>
+      <pre class="code-block" data-lang="ts"><code>ngOnChanges(changes: SimpleChanges) {
+  const c = changes['course'];
+  console.log(c.firstChange, c.previousValue, c.currentValue);
+}
+// Fires only on a NEW reference:
+this.courses = [{ ...this.courses[0], title: 'x' }, ...rest];</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>true, undefined, {…} &nbsp;→&nbsp; false, {old}, {new}. Mutating a property in place does NOT fire it.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-lifecycle-04">
+      <h3 class="cs-title">Projected content ready <code>ngAfterContentInit / …Checked</code></h3>
+      <p class="cs-desc">Content = markup a parent passes into <code>&lt;ng-content&gt;</code>. Init runs once (<code>@ContentChild</code> queries ready); Checked runs every cycle — keep it cheap.</p>
+      <pre class="code-block" data-lang="ts"><code>ngAfterContentChecked() {
+  this.course.category = 'ADVANCED';   // OK: not in projected content
+  // this.course.iconUrl = '';         // THROWS if bound in &lt;ng-content&gt;
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Pitfall: mutating a checked projected value throws <code>ExpressionChangedAfterItHasBeenCheckedError</code> (dev mode). No backend calls here.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-lifecycle-05">
+      <h3 class="cs-title">View + children ready <code>ngAfterViewInit / …Checked</code></h3>
+      <p class="cs-desc">View = the component's own template. Init runs once (<code>@ViewChild</code> populated); Checked runs every cycle — for DOM ops only, never data writes.</p>
+      <pre class="code-block" data-lang="ts"><code>@ViewChild('list') list!: ElementRef;
+ngAfterViewInit() { console.log(this.list); } // now defined
+ngAfterViewChecked() {
+  const el = this.list.nativeElement;
+  el.scrollTop = el.scrollHeight;             // DOM ready: safe
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Scrolls the freshly rendered list to the bottom. Writing a bound value here throws the changed-after-checked error.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-lifecycle-06">
+      <h3 class="cs-title">Complete hook order</h3>
+      <p class="cs-desc">Fixed sequence per component. Init hooks (green) run once; Checked/DoCheck (amber) repeat every change-detection cycle; destroy (red) runs once on removal.</p>
+      <pre class="code-block" data-lang="ts"><code>constructor()            // capture injected deps only
+ngOnChanges(changes)     // inputs set/changed by REFERENCE
+ngOnInit()               // once: init using inputs
+ngDoCheck()              // every cycle: custom change detection
+ngAfterContentInit()     // once: @ContentChild(ren) ready
+ngAfterContentChecked()  // every cycle
+ngAfterViewInit()        // once: @ViewChild(ren) ready
+ngAfterViewChecked()     // every cycle: DOM ops
+ngOnDestroy()            // once: cleanup</code></pre>
+      <figure>
+        <svg viewBox="0 0 560 150" role="img" aria-label="Angular lifecycle hook order timeline" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="52" x2="540" y2="52" stroke="var(--border)" stroke-width="2"/>
+          <circle cx="50"  cy="52" r="6" fill="var(--muted)"/>
+          <text x="50"  y="36" text-anchor="middle" font-size="9" fill="var(--text)">constructor</text>
+          <circle cx="130" cy="52" r="6" fill="var(--accent)"/>
+          <text x="130" y="36" text-anchor="middle" font-size="9" fill="var(--text)">ngOnChanges</text>
+          <circle cx="210" cy="52" r="6" fill="var(--accent)"/>
+          <text x="210" y="36" text-anchor="middle" font-size="9" fill="var(--text)">ngOnInit</text>
+          <circle cx="290" cy="52" r="6" fill="var(--muted)"/>
+          <text x="290" y="36" text-anchor="middle" font-size="9" fill="var(--text)">ngDoCheck</text>
+          <circle cx="370" cy="52" r="6" fill="var(--accent)"/>
+          <text x="370" y="72" text-anchor="middle" font-size="9" fill="var(--text)">AfterContent*</text>
+          <circle cx="450" cy="52" r="6" fill="var(--accent)"/>
+          <text x="450" y="36" text-anchor="middle" font-size="9" fill="var(--text)">AfterView*</text>
+          <circle cx="520" cy="52" r="6" fill="var(--muted)"/>
+          <text x="520" y="72" text-anchor="middle" font-size="9" fill="var(--text)">ngOnDestroy</text>
+          <rect x="150" y="100" width="300" height="34" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="300" y="121" text-anchor="middle" font-size="9.5" fill="var(--muted)">Checked hooks + ngOnChanges + ngDoCheck repeat every cycle</text>
+        </svg>
+        <figcaption>Angular calls hooks left to right; the "checked" hooks loop while the component lives.</figcaption>
+      </figure>
+      <div class="io-output"><span class="io-title">Output</span>Most components need only <code>ngOnInit</code>. Signal inputs (<code>input()</code>) avoid <code>ngOnChanges</code> entirely.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-modules-pipes">
+  <h2>Modules &amp; Custom Pipes</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-modules-pipes-01">
+      <h3 class="cs-title">NgModule metadata <code>&#64;NgModule</code></h3>
+      <p class="cs-desc">The classic packaging model: a class whose metadata groups related building blocks and wires DI.</p>
+      <pre class="code-block" data-lang="ts"><code>&#64;NgModule({
+  declarations: [AppComponent, HeaderComponent], // owns these
+  imports: [BrowserModule, FormsModule],         // pull in other modules
+  providers: [{ provide: API_URL, useValue: '/api' }],
+  bootstrap: [AppComponent],                     // root module only
+})
+export class AppModule {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Angular compiles the module and mounts <code>AppComponent</code>; a declaration belongs to exactly one module.</div>
+      <figure>
+        <svg viewBox="0 0 300 130" role="img" aria-label="NgModule metadata slots" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="284" height="114" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="150" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="var(--text)">@NgModule</text>
+          <rect x="20" y="40" width="128" height="28" rx="4" fill="var(--accent)"/><text x="84" y="58" text-anchor="middle" font-size="10" fill="#fff">declarations</text>
+          <rect x="152" y="40" width="128" height="28" rx="4" fill="var(--accent)"/><text x="216" y="58" text-anchor="middle" font-size="10" fill="#fff">imports</text>
+          <rect x="20" y="74" width="128" height="28" rx="4" fill="var(--accent)"/><text x="84" y="92" text-anchor="middle" font-size="10" fill="#fff">exports</text>
+          <rect x="152" y="74" width="128" height="28" rx="4" fill="var(--accent)"/><text x="216" y="92" text-anchor="middle" font-size="10" fill="#fff">providers</text>
+        </svg>
+        <figcaption>Own with <code>declarations</code>, borrow with <code>imports</code>, share with <code>exports</code>, inject with <code>providers</code>.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-modules-pipes-02">
+      <h3 class="cs-title">Feature &amp; shared modules <code>exports</code></h3>
+      <p class="cs-desc">Split an app into per-domain feature modules; collect cross-cutting UI in a SharedModule and re-export it.</p>
+      <pre class="code-block" data-lang="ts"><code>&#64;NgModule({
+  declarations: [CardComponent, TruncatePipe],
+  imports: [CommonModule],
+  exports: [CardComponent, TruncatePipe, CommonModule], // re-publish
+})
+export class SharedModule {}
+
+&#64;NgModule({ declarations: [OrderListComponent], imports: [SharedModule] })
+export class OrdersModule {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>One import gives <code>OrdersModule</code> the card, the truncate pipe, and <code>*ngIf</code>/<code>*ngFor</code> — skip <code>exports</code> and they stay private.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-modules-pipes-03">
+      <h3 class="cs-title">Custom pipe <code>&#64;Pipe + PipeTransform</code></h3>
+      <p class="cs-desc">A decorated class that transforms a value for display; <code>transform</code>'s return replaces the expression in the view.</p>
+      <pre class="code-block" data-lang="ts"><code>import { Pipe, PipeTransform } from '@angular/core';
+
+&#64;Pipe({ name: 'filterByCategory' })  // standalone default v19+
+export class FilterByCategoryPipe implements PipeTransform {
+  transform(courses: Course[], category: string): Course[] {
+    return (courses ?? []).filter(c =&gt; c.category === category);
+  }
+}
+// template:  *ngFor="let c of (courses | filterByCategory:'BEGINNER')"</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Value left of <code>|</code> is the 1st param; each <code>:</code>-arg is the next. Only BEGINNER courses reach the loop.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-modules-pipes-04">
+      <h3 class="cs-title">Registering a pipe <code>imports</code> vs <code>declarations</code></h3>
+      <p class="cs-desc">Standalone: add the pipe to a component's <code>imports</code>. Legacy NgModule: <code>declarations</code> plus <code>exports</code> to share it.</p>
+      <pre class="code-block" data-lang="ts"><code>// MODERN standalone
+&#64;Component({ imports: [FilterByCategoryPipe], /* ... */ })
+export class CoursesComponent {}
+
+// LEGACY NgModule — export too, or only this module sees it
+&#64;NgModule({
+  declarations: [FilterByCategoryPipe],
+  exports: [FilterByCategoryPipe],
+})
+export class CoursesModule {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Forget to register and the build fails with "no pipe found with name 'filterByCategory'".</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-modules-pipes-05">
+      <h3 class="cs-title">Pure vs impure pipes <code>pure: false</code></h3>
+      <p class="cs-desc">Pure (default) re-runs only on a new input reference; impure re-runs every change-detection cycle — the performance trade-off.</p>
+      <pre class="code-block" data-lang="ts"><code>&#64;Pipe({ name: 'filterByCategory' })          // PURE (default)
+// re-runs only when the 'courses' reference changes
+
+&#64;Pipe({ name: 'filterByCategory', pure: false }) // IMPURE
+// transform() runs on EVERY CD cycle — catches in-place mutation</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Mutating the array in place leaves a pure pipe stale; <code>pure:false</code> fixes it but runs constantly. Prefer immutable updates + a pure pipe.</div>
+      <figure>
+        <svg viewBox="0 0 320 150" role="img" aria-label="Pure versus impure pipe re-evaluation" xmlns="http://www.w3.org/2000/svg">
+          <text x="80" y="18" text-anchor="middle" font-size="11" font-weight="bold" fill="var(--text)">Pure</text>
+          <text x="240" y="18" text-anchor="middle" font-size="11" font-weight="bold" fill="var(--text)">Impure (pure:false)</text>
+          <rect x="20" y="30" width="120" height="26" rx="4" fill="var(--surface)" stroke="var(--border)"/><text x="80" y="47" text-anchor="middle" font-size="9" fill="var(--muted)">CD cycle: same ref</text>
+          <rect x="20" y="62" width="120" height="26" rx="4" fill="var(--surface)" stroke="var(--border)"/><text x="80" y="79" text-anchor="middle" font-size="9" fill="var(--muted)">CD cycle: same ref</text>
+          <rect x="20" y="94" width="120" height="26" rx="4" fill="var(--accent)"/><text x="80" y="111" text-anchor="middle" font-size="9" fill="#fff">new ref → transform()</text>
+          <rect x="180" y="30" width="120" height="26" rx="4" fill="var(--accent)"/><text x="240" y="47" text-anchor="middle" font-size="9" fill="#fff">CD cycle → transform()</text>
+          <rect x="180" y="62" width="120" height="26" rx="4" fill="var(--accent)"/><text x="240" y="79" text-anchor="middle" font-size="9" fill="#fff">CD cycle → transform()</text>
+          <rect x="180" y="94" width="120" height="26" rx="4" fill="var(--accent)"/><text x="240" y="111" text-anchor="middle" font-size="9" fill="#fff">CD cycle → transform()</text>
+        </svg>
+        <figcaption>Pure runs <code>transform</code> only when the reference changes; impure runs it on every cycle.</figcaption>
+      </figure>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-i18n">
+  <h2>Internationalization (i18n)</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-i18n-01">
+      <h3 class="cs-title">Mark translatable text <code>i18n</code></h3>
+      <p class="cs-desc">The <code>i18n</code> attribute flags an element's text for translation. It is a build-time marker, not a directive — nothing happens at runtime.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;button i18n&gt;Edit Course&lt;/button&gt;
+&lt;h4 i18n&gt;Welcome to the course&lt;/h4&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Both strings become translatable units; without extraction the marker does nothing.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-i18n-02">
+      <h3 class="cs-title">Custom translation IDs <code>@@myId</code></h3>
+      <p class="cs-desc">By default Angular hashes an ID per message. Pin a stable key with <code>meaning|description@@customId</code> — every part is optional.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;h4 i18n="@@welcomeMessage"&gt;Welcome&lt;/h4&gt;
+
+&lt;h4 i18n="welcome|Greeting at course start@@welcomeMessage"&gt;
+  Welcome to the course
+&lt;/h4&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>The trans-unit uses <code>welcomeMessage</code> instead of a generated hash; prefer auto IDs, use custom rarely.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-i18n-03">
+      <h3 class="cs-title">Pluralization <code>{n, plural, ...}</code></h3>
+      <p class="cs-desc">ICU <code>plural</code> picks count-dependent wording as one translatable unit. Use <code>=0</code>/<code>=1</code> for exact matches, <code>other</code> as fallback.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;span i18n&gt;
+  &#123; totalCourses, plural,
+    =0 &#123;No courses available&#125;
+    =1 &#123;One course available&#125;
+    other &#123;&#123;&#123;totalCourses&#125;&#125; courses available&#125;
+  &#125;
+&lt;/span&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>All forms extract together; the count becomes an <code>{INTERPOLATION}</code> placeholder. Beware: <code>=1</code> (exact) &ne; CLDR <code>one</code> (grammar category).</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-i18n-04">
+      <h3 class="cs-title">Alternative expressions <code>{k, select, ...}</code></h3>
+      <p class="cs-desc">ICU <code>select</code> chooses one string from string keys — a translation-friendly replacement for <code>ngSwitch</code>, grouped as one unit.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;div class="category" i18n&gt;
+  &#123; course.category, select,
+    BEGINNER &#123;Beginner&#125;
+    INTERMEDIATE &#123;Intermediate&#125;
+    ADVANCED &#123;Advanced&#125;
+  &#125;
+&lt;/div&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Extracts as one unit with grouped alternatives; a missing comma after <code>select</code> is a build error.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-i18n-05">
+      <h3 class="cs-title">Extract messages <code>ng extract-i18n</code></h3>
+      <p class="cs-desc">Scans marked templates and writes one message file (default <code>src/messages.xlf</code>) to hand to a translator.</p>
+      <pre class="code-block" data-lang="bash"><code>ng extract-i18n
+ng extract-i18n --format json
+ng extract-i18n --output-path src/locale</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>A trans-unit per marked string, e.g. <code>&lt;source&gt;Edit Course&lt;/source&gt;</code>, ready for translation.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-i18n-06">
+      <h3 class="cs-title">Build per locale <code>localize</code></h3>
+      <p class="cs-desc">Register locales in <code>angular.json</code>'s top-level <code>i18n</code> block, then build a separate AOT bundle per locale.</p>
+      <pre class="code-block" data-lang="json"><code>"i18n": {
+  "sourceLocale": "en",
+  "locales": {
+    "fr": { "translation": "src/locale/messages.fr.xlf" }
+  }
+}</code></pre>
+      <pre class="code-block" data-lang="bash"><code>ng serve --configuration=fr     # preview one locale
+ng build --localize             # emit every locale</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Each locale compiles to <code>dist/&lt;project&gt;/&lt;locale&gt;</code>; set <code>i18nMissingTranslation: "error"</code> for production.</div>
+      <figure><svg viewBox="0 0 460 90" role="img" aria-label="i18n pipeline: marked templates extracted, translated, built per locale" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="a-i18n-arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--muted)"/></marker></defs>
+        <rect x="6" y="30" width="92" height="34" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="52" y="51" text-anchor="middle" font-size="10" fill="var(--text)">i18n markup</text>
+        <rect x="130" y="30" width="92" height="34" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="176" y="47" text-anchor="middle" font-size="9" fill="var(--text)">extract-i18n</text>
+        <text x="176" y="59" text-anchor="middle" font-size="9" fill="var(--muted)">messages.xlf</text>
+        <rect x="254" y="30" width="92" height="34" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="300" y="51" text-anchor="middle" font-size="9" fill="var(--text)">translate .fr</text>
+        <rect x="378" y="30" width="76" height="34" rx="5" fill="var(--accent)" stroke="var(--border)"/>
+        <text x="416" y="51" text-anchor="middle" font-size="9" fill="#fff">build/locale</text>
+        <line x1="100" y1="47" x2="126" y2="47" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#a-i18n-arr)"/>
+        <line x1="224" y1="47" x2="250" y2="47" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#a-i18n-arr)"/>
+        <line x1="348" y1="47" x2="374" y2="47" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#a-i18n-arr)"/>
+      </svg><figcaption>Mark &rarr; extract &rarr; translate &rarr; build one AOT bundle per locale.</figcaption></figure>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-standalone-defer">
+  <h2>Standalone, Elements &amp; @defer</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-standalone-defer-01">
+      <h3 class="cs-title">Standalone component <code>standalone: true</code></h3>
+      <p class="cs-desc">No NgModule: the component declares its own template dependencies in <code>imports: []</code>. Default from v17, implicit in v19+.</p>
+      <pre class="code-block" data-lang="ts"><code>import { NgIf } from '@angular/common';
+
+@Component({
+  selector: 'course-card',
+  standalone: true,               // default in v17+
+  imports: [NgIf, CourseImageComponent],
+  templateUrl: './course-card.component.html'
+})
+export class CourseCardComponent {}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Template using &lt;div *ngIf&gt; compiles. Un-imported directive → NG8103: not a known directive.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-standalone-defer-02">
+      <h3 class="cs-title">Migrate to standalone (3 steps)</h3>
+      <p class="cs-desc">Mark every component/pipe/directive <code>standalone</code> and remove from module <code>declarations</code>; move services to <code>providedIn: 'root'</code>; delete the empty modules.</p>
+      <pre class="code-block" data-lang="ts"><code>// step 1: each class imports its own deps
+@Pipe({ name: 'summary', standalone: true }) /* ... */
+// step 2: service provides itself, module deletable
+@Injectable({ providedIn: 'root' })
+export class CoursesService {}
+// step 3: rewrite main.ts (next card)</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Leaving a standalone class in a module → NG6008. Run <code>ng generate @angular/core:standalone</code> to automate.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-standalone-defer-03">
+      <h3 class="cs-title">Bootstrap without modules <code>bootstrapApplication()</code></h3>
+      <p class="cs-desc">Replaces <code>bootstrapModule(AppModule)</code> in <code>main.ts</code>; app-wide config comes from <code>provideX()</code> functions in <code>providers</code>.</p>
+      <pre class="code-block" data-lang="ts"><code>import { bootstrapApplication } from '@angular/platform-browser';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes),
+    provideAnimations(),
+    provideHttpClient(withInterceptors([authInterceptor]))
+  ]
+}).catch(err =&gt; console.error(err));</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Compiles and renders as before, with zero NgModules. BrowserModule is auto-provided.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-standalone-defer-04">
+      <h3 class="cs-title">Bridge a legacy module <code>importProvidersFrom()</code></h3>
+      <p class="cs-desc">Flattens a classic NgModule's providers into the app injector — use only when a library exposes no <code>provideX()</code>.</p>
+      <pre class="code-block" data-lang="ts"><code>import { importProvidersFrom } from '@angular/core';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideHttpClient(),
+    importProvidersFrom(NgxChartsModule)
+  ]
+});</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>NgxChartsModule's providers become available app-wide without an NgModule wrapper.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-standalone-defer-05">
+      <h3 class="cs-title">Angular Elements <code>createCustomElement()</code></h3>
+      <p class="cs-desc">Package a component as a native custom element. Convert once (root <code>ngOnInit</code> or after bootstrap), then register the tag with the browser.</p>
+      <pre class="code-block" data-lang="ts"><code>import { createCustomElement } from '@angular/elements';
+
+ngOnInit() {
+  const ctor = createCustomElement(CourseTitleComponent, {
+    injector: this.injector   // resolves the component's deps
+  });
+  customElements.define('course-title', ctor); // tag needs a hyphen
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>&lt;course-title&gt; is now a real browser tag; each inserted tag self-instantiates an Angular component.</div>
+      <figure>
+        <svg viewBox="0 0 460 90" role="img" aria-label="Angular component wrapped by createCustomElement, registered via customElements.define, used as a plain HTML tag" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="28" width="118" height="40" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="65" y="52" text-anchor="middle" font-size="11" fill="var(--text)">Component</text>
+          <rect x="148" y="28" width="150" height="40" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="223" y="47" text-anchor="middle" font-size="10" fill="var(--text)">createCustomElement</text>
+          <text x="223" y="60" text-anchor="middle" font-size="10" fill="var(--text)">+ define()</text>
+          <rect x="322" y="28" width="132" height="40" rx="6" fill="var(--accent)"/>
+          <text x="388" y="47" text-anchor="middle" font-size="10" fill="#fff">&lt;course-title&gt;</text>
+          <text x="388" y="60" text-anchor="middle" font-size="10" fill="#fff">in plain HTML</text>
+          <line x1="124" y1="48" x2="146" y2="48" stroke="var(--muted)" stroke-width="2" marker-end="url(#a-standalone-defer-arr)"/>
+          <line x1="298" y1="48" x2="320" y2="48" stroke="var(--muted)" stroke-width="2" marker-end="url(#a-standalone-defer-arr)"/>
+          <defs><marker id="a-standalone-defer-arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="var(--muted)"/></marker></defs>
+        </svg>
+        <figcaption>Wrapped, registered, then usable as a framework-agnostic tag.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-standalone-defer-06">
+      <h3 class="cs-title">Driving a custom element (inputs/outputs)</h3>
+      <p class="cs-desc"><code>@Input()</code> surfaces as an attribute/property; <code>@Output()</code> surfaces as a DOM <code>CustomEvent</code> read via <code>e.detail</code> — usable from plain JS, React, or Vue.</p>
+      <pre class="code-block" data-lang="ts"><code>const el = document.querySelector('course-title') as any;
+el.title = 'Updated Title';          // @Input → property/attribute
+el.addEventListener('titleClicked', (e: CustomEvent) =&gt; {
+  console.log('Clicked:', e.detail); // @Output → CustomEvent
+});</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Setting title re-renders; clicking logs "Clicked: …". To use the tag in an Angular template add <code>CUSTOM_ELEMENTS_SCHEMA</code>.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-standalone-defer-07">
+      <h3 class="cs-title">Deferrable views <code>@defer { }</code></h3>
+      <p class="cs-desc">Lazy-loads a template fragment and its dependencies into a separate JS chunk, fetched only when a trigger fires. More granular than route-level lazy loading.</p>
+      <pre class="code-block" data-lang="html"><code>@defer {
+  &lt;courses-card-list [courses]="courses"&gt;&lt;/courses-card-list&gt;
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>main.js shrinks; card-list ships as chunk-XXXX.js. Default (no trigger) = <code>on idle</code>.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-standalone-defer-08">
+      <h3 class="cs-title">Companion blocks <code>@placeholder / @loading / @error</code></h3>
+      <p class="cs-desc"><code>@placeholder</code> shows before the trigger, <code>@loading</code> while the chunk downloads, <code>@error</code> if it fails. All three load <strong>eagerly</strong> — keep them light.</p>
+      <pre class="code-block" data-lang="html"><code>@defer {
+  &lt;courses-card-list [courses]="courses"&gt;&lt;/courses-card-list&gt;
+} @loading (after 1s; minimum 3s) {
+  &lt;h2&gt;Loading...&lt;/h2&gt;
+} @error {
+  &lt;h2&gt;Could not load this section&lt;/h2&gt;
+} @placeholder (minimum 3s) {
+  &lt;p&gt;Placeholder content&lt;/p&gt;
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>after</code> skips the spinner on fast loads; <code>minimum</code> prevents flicker. <code>@placeholder</code> takes only <code>minimum</code>.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-standalone-defer-09">
+      <h3 class="cs-title">Built-in triggers <code>@defer (on …)</code></h3>
+      <p class="cs-desc">Choose when the block displays. <code>viewport</code>/<code>interaction</code>/<code>hover</code> observe the <code>@placeholder</code> by default, or a template-ref element you pass in.</p>
+      <pre class="code-block" data-lang="html"><code>@defer (on idle) { }         &lt;!-- default: browser idle --&gt;
+@defer (on immediate) { }    &lt;!-- as soon as it renders --&gt;
+@defer (on timer(5s)) { }    &lt;!-- fixed delay --&gt;
+@defer (on viewport(title)) { } &lt;!-- #title scrolls into view --&gt;
+@defer (on interaction) { }  &lt;!-- click / keydown --&gt;
+@defer (on hover) { }        &lt;!-- pointer enters --&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>viewport/interaction/hover need a placeholder OR a template-ref target, else compile error.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-standalone-defer-10">
+      <h3 class="cs-title">Prefetch &amp; custom <code>when</code> triggers</h3>
+      <p class="cs-desc"><code>prefetch on …</code> downloads on its own clock, separate from display; <code>when &lt;expr&gt;</code> drives either from any truthy component expression. Display always outranks prefetch.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;!-- fetch early on hover, reveal only on click --&gt;
+@defer (on interaction(printBtn); prefetch on hover(printBtn)) {
+  &lt;pdf-export-dialog&gt;&lt;/pdf-export-dialog&gt;
+} @placeholder { &lt;p&gt;Print-ready export&lt;/p&gt; }
+
+&lt;!-- custom: driven by component state --&gt;
+@defer (when display; prefetch when performPrefetch) { ... }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Chunk arrives on hover while placeholder stays; click swaps in the content instantly (already cached).</div>
+      <figure>
+        <svg viewBox="0 0 440 96" role="img" aria-label="Prefetch and display run on independent clocks from a shared t=0" xmlns="http://www.w3.org/2000/svg">
+          <text x="6" y="30" font-size="10" fill="var(--accent)">prefetch on hover</text>
+          <text x="6" y="66" font-size="10" fill="var(--text)">display on click</text>
+          <line x1="120" y1="26" x2="420" y2="26" stroke="var(--border)" stroke-width="2"/>
+          <line x1="120" y1="62" x2="420" y2="62" stroke="var(--border)" stroke-width="2"/>
+          <line x1="120" y1="14" x2="120" y2="80" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="120" y="92" text-anchor="middle" font-size="9" fill="var(--muted)">t=0 render</text>
+          <circle cx="250" cy="26" r="6" fill="var(--accent)"/>
+          <text x="250" y="16" text-anchor="middle" font-size="9" fill="var(--accent)">chunk fetched</text>
+          <circle cx="380" cy="62" r="6" fill="var(--text)"/>
+          <text x="380" y="52" text-anchor="middle" font-size="9" fill="var(--text)">content shown</text>
+        </svg>
+        <figcaption>Prefetch and display fire independently from the same origin.</figcaption>
+      </figure>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-signals">
+  <h2>Signals In Depth</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-signals-01">
+      <h3 class="cs-title">Writable signals <code>signal()</code></h3>
+      <p class="cs-desc">A reactive container. Create with <code>signal(initial)</code>, read by <em>calling</em> it, and write with <code>set()</code> — the write is what notifies Angular.</p>
+      <pre class="code-block" data-lang="ts"><code>import { signal } from '@angular/core';
+
+const count = signal&lt;number&gt;(0);
+
+count();              // read: 0  (invoke like a function)
+count.set(5);         // write a new value
+count();              // 5</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>0, then 5. In a template read it as <code>{{ count() }}</code> — bare <code>count</code> renders the function, not the value.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-signals-02">
+      <h3 class="cs-title">update() &amp; read-only view <code>asReadonly()</code></h3>
+      <p class="cs-desc"><code>update(fn)</code> derives the next value from the current one. <code>asReadonly()</code> returns a <code>Signal&lt;T&gt;</code> (no <code>set</code>/<code>update</code>) to hand out while keeping writes private.</p>
+      <pre class="code-block" data-lang="ts"><code>const count = signal(0);
+
+count.update(c =&gt; c + 1);        // 1 — from current value
+
+const ro = count.asReadonly();   // Signal&lt;number&gt;
+// ro.set(2);  &amp;larr; compile error, no writer
+ro();                            // 1</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>count() is 1. <code>asReadonly()</code> is a live view of the same signal, not a copy — writes through the original are still seen.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-signals-03">
+      <h3 class="cs-title">Objects &amp; arrays — replace, never mutate</h3>
+      <p class="cs-desc">Signals compare by reference (<code>Object.is</code>). Mutating in place skips the notification, so consumers never update. Always set a <em>new</em> reference.</p>
+      <pre class="code-block" data-lang="ts"><code>const course  = signal({ id: 1, title: 'Basics' });
+const courses = signal&lt;string[]&gt;(['Basics']);
+
+// WRONG — no notification:
+// course().title = 'Hi';  courses().push('Deep Dive');
+
+// RIGHT — new reference via set / update:
+course.set({ id: 1, title: 'Hi' });
+courses.update(list =&gt; [...list, 'Deep Dive']);</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>title = 'Hi'; array = ['Basics','Deep Dive']. In-place mutation may "work" under Zone.js but breaks in a zoneless setup.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-signals-04">
+      <h3 class="cs-title">Derived signals <code>computed()</code></h3>
+      <p class="cs-desc">Builds a read-only signal from other signals. It recomputes automatically when a source changes, and is lazy + memoized (only recalculates on read, when a source actually moved).</p>
+      <pre class="code-block" data-lang="ts"><code>import { signal, computed } from '@angular/core';
+
+const counter = signal(0);
+const derived = computed(() =&gt; counter() * 10);  // read-only
+
+derived();          // 0
+counter.set(3);
+derived();          // 30 — recomputed on demand</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>0, then 30. A computed has no <code>set()</code>/<code>update()</code> — change its output only by changing a source.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-signals-05">
+      <h3 class="cs-title">Automatic dependency tracking</h3>
+      <p class="cs-desc">Angular records which signals a <code>computed</code>/<code>effect</code> reads while it runs. Tracking is <em>dynamic</em> — a source read inside a skipped <code>if</code> forms no dependency. Read sources unconditionally.</p>
+      <pre class="code-block" data-lang="ts"><code>// BROKEN: counter() only read when branch runs
+const broken = computed(() =&gt; {
+  if (flag) { return counter() * 10; }  // dep not registered
+  return 0;
+});
+
+// FIXED: read the source first, always
+const fixed = computed(() =&gt; {
+  const v = counter();                  // dep always registered
+  return flag ? v * 10 : 0;
+});</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>broken stops reacting to counter; fixed recomputes on every counter change.</div>
+      <figure>
+        <svg viewBox="0 0 320 150" role="img" aria-label="Signal dependency graph" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="a-signals-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/>
+            </marker>
+          </defs>
+          <rect x="8" y="12" width="96" height="28" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="56" y="30" text-anchor="middle" font-size="10" fill="var(--text)">signal() a</text>
+          <rect x="8" y="82" width="96" height="28" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="56" y="100" text-anchor="middle" font-size="10" fill="var(--text)">signal() b</text>
+          <rect x="128" y="47" width="96" height="28" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+          <text x="176" y="65" text-anchor="middle" font-size="10" fill="var(--text)">computed()</text>
+          <rect x="248" y="47" width="64" height="28" rx="6" fill="var(--accent)" stroke="var(--accent)"/>
+          <text x="280" y="65" text-anchor="middle" font-size="10" fill="#fff">effect()</text>
+          <line x1="104" y1="26" x2="126" y2="55" stroke="var(--muted)" marker-end="url(#a-signals-arr)"/>
+          <line x1="104" y1="96" x2="126" y2="67" stroke="var(--muted)" marker-end="url(#a-signals-arr)"/>
+          <line x1="224" y1="61" x2="246" y2="61" stroke="var(--muted)" marker-end="url(#a-signals-arr)"/>
+        </svg>
+        <figcaption>Sources feed a computed, which drives an effect; arrows show notification flow.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-a-signals-06">
+      <h3 class="cs-title">Side effects <code>effect()</code></h3>
+      <p class="cs-desc">Runs a function reactively when a signal it reads changes — for logging, storage, network. Runs once up front to record deps; multiple writes in one tick coalesce into a single run.</p>
+      <pre class="code-block" data-lang="ts"><code>import { signal, effect } from '@angular/core';
+
+const counter = signal(0);
+const name = signal('Ada');
+
+effect(() =&gt; console.log(`${name()}: ${counter()}`));
+
+counter.set(1);
+name.set('Grace');   // both changes in one tick</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>"Ada: 0", then "Grace: 1" logged <em>once</em>. Don't write signals inside an effect (throws by default) — reserve for true side effects. Create in an injection context (constructor).</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-signals-07">
+      <h3 class="cs-title">Effect cleanup <code>onCleanup</code> / <code>EffectRef.destroy()</code></h3>
+      <p class="cs-desc">Effects auto-destroy with their component. For manual control pass <code>{ manualCleanup: true }</code>; the returned <code>EffectRef.destroy()</code> stops it. The <code>onCleanup</code> param runs teardown before each re-run and on destroy.</p>
+      <pre class="code-block" data-lang="ts"><code>const ref = effect((onCleanup) =&gt; {
+  const v = counter();
+  const id = setInterval(() =&gt; console.log('tick', v), 1000);
+  onCleanup(() =&gt; clearInterval(id));   // release the timer
+}, { manualCleanup: true });
+
+ref.destroy();   // stops the effect; runs final onCleanup</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Ticks each second until <code>destroy()</code>, which clears the interval once. Note: no <code>OnCleanup</code> interface exists — it's the lowercase callback param.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-signals-08">
+      <h3 class="cs-title">Signal-based data services</h3>
+      <p class="cs-desc">Share a signal across unrelated components via an injectable. Keep the writable signal private, expose <code>asReadonly()</code>, and offer methods as the only mutation path.</p>
+      <pre class="code-block" data-lang="ts"><code>@Injectable({ providedIn: 'root' })
+export class CounterService {
+  private counter = signal(0);                  // private, writable
+  readonly value = this.counter.asReadonly();   // read-only view
+
+  increment() {
+    if (this.counter() &gt;= 10) throw new Error('Max reached');
+    this.counter.update(v =&gt; v + 1);            // controlled mutation
+  }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Consumers read <code>value()</code> and call <code>increment()</code> but cannot <code>set()</code>. Centralizes validation; use only for genuinely shared state.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-signals-09">
+      <h3 class="cs-title">Signal inputs <code>input()</code></h3>
+      <p class="cs-desc">Declares a component input that <em>is</em> a signal (<code>InputSignal&lt;T&gt;</code>). Read it by calling it, and it composes directly with <code>computed()</code>/<code>effect()</code>. Read-only by design.</p>
+      <pre class="code-block" data-lang="ts"><code>import { Component, input, computed } from '@angular/core';
+
+@Component({ selector: 'course-card', standalone: true,
+  template: `&lt;h3&gt;{{ label() }}&lt;/h3&gt;` })
+export class CourseCardComponent {
+  course = input&lt;Course&gt;();   // InputSignal&lt;Course | undefined&gt;
+  label = computed(() =&gt; this.course()?.title ?? '');
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Renders the bound course's title; <code>label()</code> recomputes whenever the parent passes a new value. (For two-way binding use <code>model()</code>.)</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-signals-10">
+      <h3 class="cs-title">required, alias, transform <code>input.required()</code></h3>
+      <p class="cs-desc"><code>input.required&lt;T&gt;()</code> makes a binding mandatory (no default). <code>alias</code> renames the binding; <code>transform</code> maps the incoming value before it is stored.</p>
+      <pre class="code-block" data-lang="ts"><code>export class CourseCardComponent {
+  title = input.required&lt;string&gt;();          // must be bound
+
+  course = input&lt;number&gt;(0, {
+    alias: 'tutorial',                        // bind as [tutorial]
+    transform: (v: number) =&gt; v * 100,
+  });
+}
+// &lt;course-card [title]="'Angular'" [tutorial]="2"&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>title()</code> = 'Angular', <code>course()</code> = 200. Built-ins <code>booleanAttribute</code>/<code>numberAttribute</code> coerce string-ish template values.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-signals-11">
+      <h3 class="cs-title">Replace ngOnChanges with a signal input</h3>
+      <p class="cs-desc">A decorator input pushes you to <code>ngOnChanges</code> to observe changes. Read a signal input inside <code>effect()</code> (or <code>computed()</code>) instead and drop the hook entirely.</p>
+      <pre class="code-block" data-lang="ts"><code>// BEFORE: decorator input + lifecycle hook
+class C implements OnChanges {
+  @Input() course!: Course;
+  ngOnChanges() { console.log('changed', this.course); }
+}
+
+// AFTER: signal input + effect, no ngOnChanges
+class C {
+  course = input&lt;Course&gt;();
+  constructor() { effect(() =&gt; console.log('changed', this.course())); }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Logs on every new course from the parent. Prefer <code>computed()</code> for derived values; reserve <code>effect()</code> for real side effects.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="a-beyond">
+  <h2>Beyond the Core: Forms, Routing, RxJS &amp; Testing</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-a-beyond-01">
+      <h3 class="cs-title">Template-driven forms <code>[(ngModel)]</code></h3>
+      <p class="cs-desc">Import <code>FormsModule</code>; the model lives in the template. <code>#f="ngForm"</code> exposes aggregate state; controls expose <code>valid</code>/<code>touched</code>/<code>dirty</code>.</p>
+      <pre class="code-block" data-lang="ts"><code>imports: [FormsModule],
+template: `
+  &lt;form #f="ngForm" (ngSubmit)="save(f.value)"&gt;
+    &lt;input name="email" [(ngModel)]="email"
+           required email #e="ngModel"&gt;
+    &lt;p *ngIf="e.invalid &amp;&amp; e.touched"&gt;Bad email&lt;/p&gt;
+    &lt;button [disabled]="f.invalid"&gt;Save&lt;/button&gt;
+  &lt;/form&gt;`</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Invalid + blurred shows "Bad email" and keeps Save disabled; valid submit logs <code>{ email: 'a@b.co' }</code>.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-beyond-02">
+      <h3 class="cs-title">Reactive forms <code>FormBuilder.group()</code></h3>
+      <p class="cs-desc">Import <code>ReactiveFormsModule</code>; the model is explicit and typed in TS. Build a tree of <code>FormControl</code>/<code>FormGroup</code> with <code>Validators</code>.</p>
+      <pre class="code-block" data-lang="ts"><code>private fb = inject(FormBuilder);
+form = this.fb.nonNullable.group({
+  email: ['', [Validators.required, Validators.email]],
+});
+// template:
+//  &lt;form [formGroup]="form"&gt;
+//    &lt;input formControlName="email"&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>form.value.email</code> typed as <code>string</code> (non-null); <code>form.controls.email.errors</code> holds validation state.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-beyond-03">
+      <h3 class="cs-title">FormArray &amp; <code>valueChanges</code></h3>
+      <p class="cs-desc"><code>FormArray</code> holds a dynamic list of controls; every control exposes a <code>valueChanges</code> Observable to react to edits.</p>
+      <pre class="code-block" data-lang="ts"><code>tags = this.fb.array([this.fb.control('')]);
+addTag() { this.tags.push(this.fb.control('')); }
+
+query = new FormControl('');
+this.query.valueChanges
+  .pipe(takeUntilDestroyed(this.destroyRef))
+  .subscribe(v =&gt; console.log('search:', v));</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Each keystroke logs <code>search: a</code>, <code>search: ab</code>…; <code>addTag()</code> appends another input.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-beyond-04">
+      <h3 class="cs-title">Router setup <code>provideRouter(routes)</code></h3>
+      <p class="cs-desc">Register routes at bootstrap; <code>&lt;router-outlet&gt;</code> renders the matched component. <code>loadComponent</code> lazy-loads a chunk; <code>**</code> last catches 404.</p>
+      <pre class="code-block" data-lang="ts"><code>export const routes: Routes = [
+  { path: '', component: Home },
+  { path: 'users/:id', loadComponent: () =&gt;
+      import('./user').then(m =&gt; m.User) },
+  { path: '**', component: NotFound },
+];
+bootstrapApplication(App, {
+  providers: [provideRouter(routes, withComponentInputBinding())],
+});</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>/</code>→Home; <code>/users/42</code> lazily fetches the User chunk; unknown URLs render NotFound.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-beyond-05">
+      <h3 class="cs-title">Links &amp; route params <code>routerLink</code></h3>
+      <p class="cs-desc"><code>routerLink</code> navigates client-side; <code>routerLinkActive</code> adds a class on match. With <code>withComponentInputBinding()</code>, params bind straight to <code>input()</code>.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;a routerLink="/users/42" routerLinkActive="active"&gt;User&lt;/a&gt;
+&lt;router-outlet /&gt;
+
+&lt;!-- in User component --&gt;
+id = input.required&lt;string&gt;(); // matches :id, no ActivatedRoute</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Clicking navigates without reload; on <code>/users/42</code> the link gains <code>active</code> and <code>id()</code> is <code>'42'</code>.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-beyond-06">
+      <h3 class="cs-title">Functional guard <code>CanActivateFn</code></h3>
+      <p class="cs-desc">A guard is just a function that can <code>inject()</code> services and returns <code>boolean</code>, a <code>UrlTree</code> (redirect), or a Promise/Observable of those.</p>
+      <pre class="code-block" data-lang="ts"><code>export const authGuard: CanActivateFn = () =&gt; {
+  const auth = inject(Auth);
+  const router = inject(Router);
+  return auth.isLoggedIn()
+    ? true
+    : router.createUrlTree(['/login']);
+};
+// { path: 'admin', component: Admin, canActivate: [authGuard] }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Logged-in users see Admin; others are redirected to <code>/login</code> via the returned <code>UrlTree</code>.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-beyond-07">
+      <h3 class="cs-title">RxJS operators <code>.pipe()</code></h3>
+      <p class="cs-desc">Transform streams functionally: <code>map</code> reshapes, <code>filter</code> drops, <code>debounceTime</code> waits for a quiet gap, <code>switchMap</code> flattens and cancels stale inner requests.</p>
+      <pre class="code-block" data-lang="ts"><code>results$ = this.query.valueChanges.pipe(
+  filter((q): q is string =&gt; !!q &amp;&amp; q.length &gt; 2),
+  debounceTime(300),
+  switchMap(q =&gt; this.http.get(`/api/search?q=${q}`)),
+  catchError(() =&gt; of([])),
+);</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Typing "angu" fires one request 300ms after the last keystroke; <code>switchMap</code> cancels the stale "ang" request.</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-beyond-08">
+      <h3 class="cs-title">Leak-free subscriptions <code>takeUntilDestroyed()</code></h3>
+      <p class="cs-desc">In templates the <code>async</code> pipe subscribes/cleans up for you; in code, <code>takeUntilDestroyed()</code> ties a stream's life to the component. <code>toSignal()</code> bridges to signals.</p>
+      <pre class="code-block" data-lang="ts"><code>// template: {{ user$ | async | json }}
+user$ = this.http.get('/api/me');
+
+// stream -&gt; signal, auto-managed
+seconds = toSignal(interval(1000), { initialValue: 0 });</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Async pipe renders the resolved value then unsubscribes on destroy; <code>seconds()</code> ticks 0, 1, 2…</div>
+    </article>
+
+    <article class="cs-card" id="cs-a-beyond-09">
+      <h3 class="cs-title">Component testing <code>TestBed</code></h3>
+      <p class="cs-desc">Configure a testing module (import the standalone component), create a <code>ComponentFixture</code>, then <code>detectChanges()</code> to render before asserting on the DOM.</p>
+      <pre class="code-block" data-lang="ts"><code>TestBed.configureTestingModule({ imports: [CounterComponent] });
+const fixture = TestBed.createComponent(CounterComponent);
+fixture.detectChanges();
+
+const btn = fixture.debugElement.query(By.css('button'));
+btn.nativeElement.click();
+fixture.detectChanges();
+expect(fixture.nativeElement.textContent).toContain('Count: 1');</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Click increments the signal; after <code>detectChanges()</code> the DOM shows <code>Count: 1</code> and the assertion passes.</div>
+    </article>
+
+  </div>
+</section>
+
+  </main>
+</div>
+<script>
+(function(){
+  "use strict";
+  function toArray(n){return Array.prototype.slice.call(n||[]);}
+  function escapeHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  var KW={
+    js:["var","let","const","function","return","if","else","for","while","do","switch","case","break","continue","new","delete","typeof","instanceof","in","of","this","class","extends","super","import","export","default","try","catch","finally","throw","async","await","yield","void","null","undefined","true","false","static","get","set"],
+    ts:["var","let","const","function","return","if","else","for","while","do","switch","case","break","continue","new","delete","typeof","instanceof","in","of","this","class","extends","super","import","export","default","try","catch","finally","throw","async","await","yield","void","null","undefined","true","false","static","get","set","interface","type","enum","namespace","declare","readonly","public","private","protected","implements","abstract","as","is","keyof","infer","satisfies","never","unknown","any","string","number","boolean"],
+    css:["important","inherit","initial","unset","auto","none","flex","grid","block","inline","inline-block","absolute","relative","fixed","sticky","static","hidden","solid","dashed","dotted","transparent","currentColor"],
+    bash:["if","then","else","fi","for","in","do","done","while","function","return","export","echo","cd","npm","npx","node","ng","git"]
+  };
+  function mkStash(store){return function(cls,t){var k=" "+String.fromCharCode(0xF000+store.length)+" ";store.push('<span class="'+cls+'">'+t+"</span>");return k;};}
+  function restore(out,store){return out.replace(/ ([-]) /g,function(_,c){return store[c.charCodeAt(0)-0xF000];});}
+  function hlGeneric(esc,kw){
+    var s=[],st=mkStash(s),o=esc;
+    o=o.replace(/\/\*[\s\S]*?\*\//g,function(m){return st("tok-comment",m);});
+    o=o.replace(/\/\/[^\n]*/g,function(m){return st("tok-comment",m);});
+    o=o.replace(/"(?:[^"\\\n]|\\.)*"/g,function(m){return st("tok-string",m);});
+    o=o.replace(/'(?:[^'\\\n]|\\.)*'/g,function(m){return st("tok-string",m);});
+    o=o.replace(/`(?:[^`\\]|\\.)*`/g,function(m){return st("tok-string",m);});
+    o=o.replace(/@[A-Za-z][\w]*/g,function(m){return st("tok-keyword",m);});
+    o=o.replace(/\b(?:0[xX][0-9a-fA-F]+|\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g,function(m){return st("tok-number",m);});
+    if(kw&&kw.length){var re=new RegExp("\\b("+kw.join("|")+")\\b","g");o=o.replace(re,function(m){return st("tok-keyword",m);});}
+    return restore(o,s);
+  }
+  function hlMarkup(esc){
+    var s=[],st=mkStash(s),o=esc;
+    o=o.replace(/&lt;!--[\s\S]*?--&gt;/g,function(m){return st("tok-comment",m);});
+    o=o.replace(/&lt;\/?[a-zA-Z][\w-]*/g,function(m){return st("tok-keyword",m);});
+    o=o.replace(/"(?:[^"\\\n]|\\.)*"/g,function(m){return st("tok-string",m);});
+    o=o.replace(/'(?:[^'\\\n]|\\.)*'/g,function(m){return st("tok-string",m);});
+    return restore(o,s);
+  }
+  function hlCss(esc){
+    var s=[],st=mkStash(s),o=esc;
+    o=o.replace(/\/\*[\s\S]*?\*\//g,function(m){return st("tok-comment",m);});
+    o=o.replace(/"(?:[^"\\\n]|\\.)*"/g,function(m){return st("tok-string",m);});
+    o=o.replace(/'(?:[^'\\\n]|\\.)*'/g,function(m){return st("tok-string",m);});
+    o=o.replace(/#[0-9a-fA-F]{3,8}\b/g,function(m){return st("tok-number",m);});
+    o=o.replace(/\b\d+\.?\d*(?:px|em|rem|%|vh|vw|s|ms|fr|deg|pt)?\b/g,function(m){return st("tok-number",m);});
+    o=o.replace(/@[a-zA-Z-]+/g,function(m){return st("tok-keyword",m);});
+    return restore(o,s);
+  }
+  function highlight(lang,raw){
+    var e=escapeHtml(raw);
+    try{
+      if(lang==="html")return hlMarkup(e);
+      if(lang==="css")return hlCss(e);
+      if(lang==="ts"||lang==="typescript")return hlGeneric(e,KW.ts);
+      if(lang==="js"||lang==="javascript")return hlGeneric(e,KW.js);
+      if(lang==="bash"||lang==="sh"||lang==="shell"){
+        var h=e.replace(/(^|\n)(\s*#[^\n]*)/g,function(m,p,c){return p+'<span class="tok-comment">'+c+"</span>";});
+        return hlGeneric(h,KW.bash);
+      }
+      return e;
+    }catch(err){return e;}
+  }
+  function initHighlight(){
+    toArray(document.querySelectorAll("pre.code-block > code")).forEach(function(code){
+      var lang=(code.parentNode.getAttribute("data-lang")||"").toLowerCase();
+      code.innerHTML=highlight(lang,code.textContent);
+    });
+  }
+  var THEME_KEY="cheatsheet-theme";
+  function initTheme(){
+    var root=document.documentElement,st=null;
+    try{st=localStorage.getItem(THEME_KEY);}catch(e){}
+    if(st==="light"||st==="dark")root.dataset.theme=st;
+    else if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)root.dataset.theme="dark";
+    else root.dataset.theme="light";
+    var t=document.getElementById("theme-toggle");if(!t)return;
+    t.addEventListener("click",function(){var n=root.dataset.theme==="dark"?"light":"dark";root.dataset.theme=n;try{localStorage.setItem(THEME_KEY,n);}catch(e){}});
+  }
+  function initFilter(){
+    var input=document.getElementById("toc-search");
+    var empty=document.getElementById("toc-empty");
+    if(!input)return;
+    var cats=toArray(document.querySelectorAll("section.cs-cat"));
+    var tocLinks=toArray(document.querySelectorAll("#toc a"));
+    function apply(){
+      var q=input.value.trim().toLowerCase(),any=false;
+      cats.forEach(function(cat){
+        var cards=toArray(cat.querySelectorAll(".cs-card")),shown=0;
+        cards.forEach(function(c){
+          var hit=!q||(c.textContent||"").toLowerCase().indexOf(q)!==-1;
+          c.hidden=!hit;if(hit)shown++;
+        });
+        cat.hidden=!(shown>0);
+        var link=tocLinks.filter(function(a){return a.getAttribute("href")==="#"+cat.id;})[0];
+        if(link)link.parentNode.hidden=cat.hidden;
+        if(!cat.hidden)any=true;
+      });
+      if(empty)empty.hidden=any;
+    }
+    input.addEventListener("input",apply);input.addEventListener("search",apply);
+  }
+  function initSpy(){
+    var links=toArray(document.querySelectorAll("#toc a[href^='#']"));if(!links.length)return;
+    var secs=[];links.forEach(function(a){var el=document.getElementById(a.getAttribute("href").slice(1));if(el)secs.push(el);});
+    if(!secs.length)return;
+    function setA(id){links.forEach(function(a){a.classList.toggle("active",a.getAttribute("href")==="#"+id);});}
+    if(!("IntersectionObserver" in window)){setA(secs[0].id);return;}
+    var vis={};
+    var obs=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting)vis[e.target.id]=1;else delete vis[e.target.id];});
+      for(var i=0;i<secs.length;i++){if(vis[secs[i].id]){setA(secs[i].id);break;}}
+    },{rootMargin:"-10% 0px -75% 0px",threshold:0});
+    secs.forEach(function(s){obs.observe(s);});
+  }
+  function boot(){initTheme();initHighlight();initFilter();initSpy();}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
+</script>
+</body>
+</html>

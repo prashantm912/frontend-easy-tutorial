@@ -1,0 +1,1518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web Design Cheatsheet</title>
+<meta name="description" content="HTML, CSS & JavaScript — every concept from the Web Design course at a glance: syntax, a tiny example, and the result. Condensed for quick reference.">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f5f7fa; --surface-2:#eceff4; --text:#1b1f24; --muted:#5b6470;
+  --border:#d8dee6; --accent:#0b63ce; --accent-weak:#e5f0fc; --accent-contrast:#fff;
+  --code-bg:#f3f5f8; --code-text:#1b1f24; --ok:#2f855a; --warn:#b7791f; --danger:#c0392b;
+  --tok-comment:#6a737d; --tok-string:#0a7d33; --tok-number:#b5390b; --tok-keyword:#a626a4;
+  --radius:10px; --radius-sm:6px; --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
+  --mono:ui-monospace,"SFMono-Regular","Consolas","Liberation Mono",Menlo,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; --header-h:56px;
+}
+:root[data-theme="dark"]{
+  --bg:#0f1319; --surface:#161b22; --surface-2:#1c232d; --text:#e6edf3; --muted:#9aa7b4;
+  --border:#2a323d; --accent:#4d9cff; --accent-weak:#16283f; --accent-contrast:#0f1319;
+  --code-bg:#12171e; --code-text:#e6edf3; --ok:#56d364; --warn:#e3b341; --danger:#ff7b72;
+  --tok-comment:#8b949e; --tok-string:#7ee787; --tok-number:#ffab70; --tok-keyword:#d2a8ff;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){
+  --bg:#0f1319; --surface:#161b22; --surface-2:#1c232d; --text:#e6edf3; --muted:#9aa7b4;
+  --border:#2a323d; --accent:#4d9cff; --accent-weak:#16283f; --accent-contrast:#0f1319;
+  --code-bg:#12171e; --code-text:#e6edf3; --ok:#56d364; --warn:#e3b341; --danger:#ff7b72;
+  --tok-comment:#8b949e; --tok-string:#7ee787; --tok-number:#ffab70; --tok-keyword:#d2a8ff;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+}}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.skip-link{position:absolute;left:-999px;top:0;background:var(--accent);color:#fff;padding:8px 12px;z-index:200}
+.skip-link:focus{left:8px;top:8px}
+.site-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  min-height:var(--header-h);padding:8px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.site-header h1{font-size:1.05rem;margin:0;font-weight:700}
+.site-header .sub{color:var(--muted);font-size:.85rem;font-weight:400}
+.header-links{display:flex;gap:4px;flex-wrap:wrap;margin-left:8px}
+.header-links a{color:var(--muted);font-size:.85rem;padding:5px 9px;border-radius:var(--radius-sm)}
+.header-links a:hover{color:var(--accent);background:var(--surface-2);text-decoration:none}
+.theme-toggle{margin-left:auto;font:inherit;font-size:.85rem;padding:6px 12px;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--surface-2);color:var(--text);cursor:pointer}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:0;align-items:start}
+.sidebar{position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto;padding:14px 12px;
+  border-right:1px solid var(--border);background:var(--bg)}
+.toc-search{width:100%;padding:8px 10px;margin-bottom:10px;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font:inherit;font-size:.9rem}
+.toc-search::placeholder{color:var(--muted)}
+.toc-sections{list-style:none;margin:0;padding:0;font-size:.86rem}
+.toc-sections>li{margin:1px 0}
+.toc-sections>li[hidden]{display:none}
+.toc-sections>li>a{display:block;font-weight:600;padding:5px 6px;border-radius:4px;text-decoration:none;color:var(--text)}
+.toc-sections>li>a:hover{background:var(--surface-2);color:var(--accent)}
+.toc-sections a.active{background:var(--accent-weak);color:var(--accent)}
+.toc-empty{color:var(--muted);font-size:.85rem;padding:6px}
+.content{padding:22px 28px;max-width:1280px;min-width:0}
+.intro{color:var(--muted);max-width:80ch;margin:.1em 0 1.4em}
+.cs-cat{margin:0 0 10px;scroll-margin-top:70px}
+.cs-cat[hidden]{display:none}
+.cs-cat>h2{font-size:1.3rem;border-bottom:2px solid var(--accent);padding-bottom:5px;margin:1.3em 0 .7em}
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;align-items:start}
+.cs-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;break-inside:avoid}
+.cs-card[hidden]{display:none}
+.cs-title{font-size:.98rem;margin:0 0 3px;color:var(--text);font-weight:650}
+.cs-title code{background:none;border:none;padding:0;color:var(--accent);font-size:.95em}
+.cs-desc{margin:0 0 8px;color:var(--muted);font-size:.86rem}
+pre.code-block{margin:.4em 0 .5em;padding:10px 12px;background:var(--code-bg);color:var(--code-text);border:1px solid var(--border);
+  border-radius:var(--radius-sm);overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.5}
+pre.code-block code{font-family:inherit;white-space:pre}
+.io-output{margin:.3em 0 .2em;padding:8px 11px;background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--accent);
+  border-radius:var(--radius-sm);font-family:var(--mono);font-size:.76rem;line-height:1.45;color:var(--text);white-space:pre-wrap;word-break:break-word;overflow-x:auto}
+.io-output .io-title{display:block;font-family:var(--sans);font-weight:600;font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px}
+.io-output .io-comment{color:var(--muted)}
+figure{margin:.4em 0 .2em;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm)}
+figure svg{max-width:100%;height:auto;display:block}
+figcaption{font-size:.74rem;color:var(--muted);margin-top:4px;text-align:center}
+.tok-comment{color:var(--tok-comment);font-style:italic}.tok-string{color:var(--tok-string)}
+.tok-number{color:var(--tok-number)}.tok-keyword{color:var(--tok-keyword);font-weight:600}
+code:not(pre code){background:var(--code-bg);border:1px solid var(--border);border-radius:4px;padding:.06em .35em;font-family:var(--mono);font-size:.86em}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+  .toc-sections{max-height:200px;overflow:auto}
+  .content{padding:16px}
+}
+@media print{
+  .site-header,.sidebar,.theme-toggle,.toc-search{display:none!important}
+  .layout{grid-template-columns:1fr}.content{max-width:none;padding:0}
+  .cs-grid{grid-template-columns:1fr 1fr}
+  .cs-card{break-inside:avoid;border-color:#ccc}
+  a{color:inherit;text-decoration:none}body{color:#000;background:#fff;font-size:11px}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <h1>Web Design Cheatsheet <span class="sub">— quick reference</span></h1>
+  <nav class="header-links" aria-label="Site">
+    <a href="index.html">Home</a>
+    <a href="cheatsheets.html">Cheatsheets</a>
+    <a href="cheatsheet-angular.html">Angular cheatsheet</a>
+  </nav>
+  <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">◑ Theme</button>
+</header>
+<div class="layout">
+  <nav class="sidebar" aria-label="Table of contents">
+    <input type="search" id="toc-search" class="toc-search" placeholder="Filter concepts…" autocomplete="off" aria-label="Filter concepts">
+    <div id="toc"><ul class="toc-sections">
+      <li class="toc-sec"><a href="#w-html">HTML Foundations</a></li>
+      <li class="toc-sec"><a href="#w-css">Styling with CSS</a></li>
+      <li class="toc-sec"><a href="#w-js">JavaScript Fundamentals</a></li>
+      <li class="toc-sec"><a href="#w-dom">The DOM</a></li>
+      <li class="toc-sec"><a href="#w-responsive-build">Build a Responsive Website</a></li>
+      <li class="toc-sec"><a href="#w-js-practice">JavaScript in Practice</a></li>
+      <li class="toc-sec"><a href="#w-advanced">Advanced JavaScript</a></li>
+      <li class="toc-sec"><a href="#w-publish">Publishing & Next Steps</a></li>
+    </ul></div>
+    <p class="toc-empty" id="toc-empty" hidden>No concepts match.</p>
+  </nav>
+  <main id="main" class="content">
+    <h2 style="font-size:1.7rem;border:none;margin:.1em 0 .2em">Web Design Cheatsheet</h2>
+    <p class="intro">HTML, CSS & JavaScript — every concept from the Web Design course at a glance: syntax, a tiny example, and the result. Condensed for quick reference. Use the filter box to jump to any concept. Each card is a reminder, not a tutorial — for depth, see the full guides.</p>
+<section class="cs-cat" id="w-html">
+  <h2>HTML Foundations</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-w-html-01">
+      <h3 class="cs-title">Document skeleton <code>&lt;!DOCTYPE html&gt;</code></h3>
+      <p class="cs-desc">Every page opens with the DOCTYPE declaration, then <code>&lt;html&gt;</code> wrapping a hidden <code>&lt;head&gt;</code> (metadata) and a visible <code>&lt;body&gt;</code>.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;My Page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;Hello&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Browser tab reads "My Page"; the word "Hello" shows in the page body.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-02">
+      <h3 class="cs-title">Element anatomy &amp; nesting <code>&lt;p&gt;…&lt;/p&gt;</code></h3>
+      <p class="cs-desc">An element is an opening tag + content + closing tag; nest freely but close tags in the reverse order you opened them.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;div&gt;
+  &lt;p&gt;Hello &lt;b&gt;&lt;i&gt;there&lt;/i&gt;&lt;/b&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;!-- WRONG: overlapping --&gt;
+&lt;b&gt;&lt;i&gt;x&lt;/b&gt;&lt;/i&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Correct nesting renders "there" bold-italic; overlapping tags produce unpredictable results.</div>
+      <figure><svg viewBox="0 0 360 120" role="img" aria-label="Anatomy of a paragraph element" xmlns="http://www.w3.org/2000/svg">
+        <text x="20" y="55" fill="var(--accent)" font-size="20" font-family="monospace">&lt;p&gt;</text>
+        <text x="70" y="55" fill="var(--text)" font-size="20" font-family="monospace">Hello</text>
+        <text x="175" y="55" fill="var(--accent)" font-size="20" font-family="monospace">&lt;/p&gt;</text>
+        <text x="35" y="85" text-anchor="middle" fill="var(--muted)" font-size="11">opening</text>
+        <text x="105" y="85" text-anchor="middle" fill="var(--muted)" font-size="11">content</text>
+        <text x="205" y="85" text-anchor="middle" fill="var(--muted)" font-size="11">closing</text>
+      </svg><figcaption>The slash marks the closing tag.</figcaption></figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-03">
+      <h3 class="cs-title">Block vs inline <code>&lt;div&gt;</code> vs <code>&lt;span&gt;</code></h3>
+      <p class="cs-desc">A block element takes a full-width line of its own; an inline element flows within a line of text.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;div&gt;I am a block (own line)&lt;/div&gt;
+&lt;div&gt;Next block, new line&lt;/div&gt;
+&lt;p&gt;My name is &lt;span&gt;Ada&lt;/span&gt; Lovelace.&lt;/p&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>The two divs stack vertically; "Ada" stays inline within the sentence.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-04">
+      <h3 class="cs-title">Headings, paragraphs &amp; comments <code>&lt;h1&gt;</code></h3>
+      <p class="cs-desc">Six heading levels (h1–h6) chosen by outline importance, not size; comments <code>&lt;!-- --&gt;</code> never render.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;h1&gt;Main title&lt;/h1&gt;
+&lt;h2&gt;A section&lt;/h2&gt;
+&lt;!-- this note is invisible --&gt;
+&lt;p&gt;A paragraph of text.&lt;/p&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>h1 large, h2 smaller, then a paragraph; the comment is hidden.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-05">
+      <h3 class="cs-title">Void (self-closing) tags <code>&lt;br&gt; &lt;hr&gt; &lt;img&gt;</code></h3>
+      <p class="cs-desc">Void elements carry no content, so they have no closing tag: <code>br, hr, img, input, meta</code>.</p>
+      <pre class="code-block" data-lang="html"><code>Line one&lt;br&gt;Line two
+&lt;hr&gt;
+&lt;input placeholder="Type here"&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Text splits across two lines, a divider rule, then a live input field.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-06">
+      <h3 class="cs-title">Attributes &amp; global attributes <code>id class title</code></h3>
+      <p class="cs-desc">Attributes are quoted <code>name="value"</code> pairs in the opening tag; <code>id</code> is unique, <code>class</code> repeats, and both help CSS/JS target elements.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;h2 id="main-title"&gt;Title&lt;/h2&gt;
+&lt;p class="note" title="Hover me!"&gt;Styled by class.&lt;/p&gt;
+&lt;p class="note"&gt;Same class, same look.&lt;/p&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Both <code>.note</code> paragraphs share styling; hovering the first shows a tooltip.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-07">
+      <h3 class="cs-title">Links &amp; the anchor tag <code>&lt;a href&gt;</code></h3>
+      <p class="cs-desc">The <code>href</code> is the destination: absolute URL, relative path, <code>#in-page</code> anchor, <code>mailto:</code> or <code>tel:</code>; add <code>rel="noopener"</code> with <code>target="_blank"</code>.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;a href="about.html"&gt;About (relative)&lt;/a&gt;
+&lt;a href="https://mozilla.org" target="_blank"
+   rel="noopener"&gt;MDN (new tab)&lt;/a&gt;
+&lt;a href="#bottom"&gt;Jump down&lt;/a&gt;
+&lt;a href="mailto:hi@example.com"&gt;Email&lt;/a&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Four links: same-tab page, new-tab site, in-page scroll, and an email draft.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-08">
+      <h3 class="cs-title">Images <code>&lt;img src alt&gt;</code></h3>
+      <p class="cs-desc">Void element; <code>src</code> is required, <code>alt</code> describes it for screen readers and broken-image fallback. Set <code>width</code>/<code>height</code> to prevent layout shift.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;img src="cat.jpg" alt="A grumpy cat"
+     width="200" height="130"&gt;
+&lt;!-- responsive scale --&gt;
+&lt;img src="cat.jpg" alt="Cat" style="width:100%;height:auto"&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Image shows at 200×130; if the file is missing, the alt text appears instead.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-09">
+      <h3 class="cs-title">Lists: ul, ol, dl <code>&lt;li&gt; &lt;dt&gt; &lt;dd&gt;</code></h3>
+      <p class="cs-desc"><code>&lt;ul&gt;</code> bullets, <code>&lt;ol&gt;</code> numbers (both hold <code>&lt;li&gt;</code>), <code>&lt;dl&gt;</code> pairs terms with descriptions; nest a list inside an <code>&lt;li&gt;</code>.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;ol&gt;
+  &lt;li&gt;Boil water
+    &lt;ul&gt;&lt;li&gt;Add tea&lt;/li&gt;&lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Pour&lt;/li&gt;
+&lt;/ol&gt;
+&lt;dl&gt;&lt;dt&gt;HTML&lt;/dt&gt;&lt;dd&gt;Page structure&lt;/dd&gt;&lt;/dl&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Numbered steps with a bulleted sub-item, plus a term/description pair.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-10">
+      <h3 class="cs-title">Tables <code>&lt;table&gt; &lt;tr&gt; &lt;th&gt; &lt;td&gt;</code></h3>
+      <p class="cs-desc">Rows (<code>&lt;tr&gt;</code>) hold header (<code>&lt;th&gt;</code>) and data (<code>&lt;td&gt;</code>) cells; group with <code>&lt;thead&gt;</code>/<code>&lt;tbody&gt;</code>. For data only, not layout.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Score&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Ada&lt;/td&gt;&lt;td&gt;98&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Grid with a bold header row (Name, Score) above one data row (Ada, 98).</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-11">
+      <h3 class="cs-title">Table spans &amp; caption <code>colspan rowspan</code></h3>
+      <p class="cs-desc"><code>&lt;caption&gt;</code> names the table; <code>colspan</code> merges cells across columns, <code>rowspan</code> down rows.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;table&gt;
+  &lt;caption&gt;Room schedule&lt;/caption&gt;
+  &lt;tr&gt;&lt;td rowspan="2"&gt;Keynote&lt;/td&gt;&lt;td&gt;09:00&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;10:00&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td colspan="2"&gt;Coffee break&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>"Keynote" fills two rows tall; "Coffee break" stretches across both columns.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-12">
+      <h3 class="cs-title">HTML5 semantic elements <code>&lt;header&gt; &lt;main&gt; &lt;footer&gt;</code></h3>
+      <p class="cs-desc">Meaningful landmarks that look like divs but describe their role — better SEO and accessibility for free.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;header&gt;Logo&lt;/header&gt;
+&lt;nav&gt;Links&lt;/nav&gt;
+&lt;main&gt;
+  &lt;article&gt;A self-contained post&lt;/article&gt;
+  &lt;aside&gt;Related links&lt;/aside&gt;
+&lt;/main&gt;
+&lt;footer&gt;© 2026&lt;/footer&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Same visual stack as divs, but screen readers can jump between landmarks.</div>
+      <figure><svg viewBox="0 0 360 190" role="img" aria-label="Page layout mapped to semantic elements" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="340" height="26" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="180" y="28" text-anchor="middle" fill="var(--accent)" font-size="12" font-family="monospace">&lt;header&gt;</text>
+        <rect x="10" y="42" width="340" height="22" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="180" y="58" text-anchor="middle" fill="var(--accent)" font-size="12" font-family="monospace">&lt;nav&gt;</text>
+        <rect x="10" y="70" width="240" height="80" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="130" y="90" text-anchor="middle" fill="var(--accent)" font-size="12" font-family="monospace">&lt;main&gt;</text>
+        <text x="130" y="120" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="monospace">&lt;article&gt;</text>
+        <rect x="256" y="70" width="94" height="80" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="303" y="114" text-anchor="middle" fill="var(--accent)" font-size="12" font-family="monospace">&lt;aside&gt;</text>
+        <rect x="10" y="156" width="340" height="24" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="180" y="173" text-anchor="middle" fill="var(--accent)" font-size="12" font-family="monospace">&lt;footer&gt;</text>
+      </svg><figcaption>A page maps cleanly onto semantic landmarks.</figcaption></figure>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="w-css">
+  <h2>Styling with CSS</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-w-css-01">
+      <h3 class="cs-title">Three ways to add CSS <code>&lt;link&gt;</code></h3>
+      <p class="cs-desc">Inline styles one element, internal styles one page, external styles the whole site — prefer external.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;p style="color: teal;"&gt;inline&lt;/p&gt;         &lt;!-- one element --&gt;
+
+&lt;head&gt;
+  &lt;style&gt; p { color: teal; } &lt;/style&gt;    &lt;!-- one page --&gt;
+  &lt;link rel="stylesheet" href="styles.css"&gt; &lt;!-- whole site --&gt;
+&lt;/head&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Same look three ways; external is cached and reusable.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-02">
+      <h3 class="cs-title">Rule syntax &amp; comments <code>sel { prop: val; }</code></h3>
+      <p class="cs-desc">A selector picks elements, then property:value pairs in braces, each ended by a semicolon. Comments are block-only.</p>
+      <pre class="code-block" data-lang="css"><code>/* selector { property: value; } — no line comments in CSS */
+h1 {
+  color: navy;
+  font-family: system-ui, sans-serif;
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>All &lt;h1&gt; become navy in a system sans-serif.</div>
+      <figure>
+        <svg viewBox="0 0 420 120" role="img" aria-label="A CSS rule: selector, then property colon value semicolon in a declaration block" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="418" height="118" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="30" y="55" font-family="monospace" font-size="20" fill="var(--accent)">h1</text>
+          <text x="66" y="55" font-family="monospace" font-size="20" fill="var(--text)">{ </text>
+          <text x="92" y="55" font-family="monospace" font-size="20" fill="var(--text)">color</text>
+          <text x="152" y="55" font-family="monospace" font-size="20" fill="var(--muted)">:</text>
+          <text x="166" y="55" font-family="monospace" font-size="20" fill="var(--text)">navy</text>
+          <text x="222" y="55" font-family="monospace" font-size="20" fill="var(--muted)">;</text>
+          <text x="236" y="55" font-family="monospace" font-size="20" fill="var(--text)">}</text>
+          <text x="30" y="88" font-size="11" fill="var(--muted)">selector</text>
+          <text x="92" y="88" font-size="11" fill="var(--muted)">property</text>
+          <text x="166" y="88" font-size="11" fill="var(--muted)">value</text>
+        </svg>
+        <figcaption>Selector + declaration block (property : value ;).</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-03">
+      <h3 class="cs-title">Selectors, specificity &amp; the cascade <code>#id .class tag</code></h3>
+      <p class="cs-desc">An id beats a class beats a tag; equal specificity means the later rule wins. Inline and <code>!important</code> outrank all.</p>
+      <pre class="code-block" data-lang="css"><code>p     { color: gray; }    /* 0-0-1  tag   */
+.note { color: orange; }  /* 0-1-0  class beats tag */
+#lead { color: red; }     /* 1-0-0  id beats class  */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>#lead is red, .note orange, other &lt;p&gt; gray — highest specificity wins.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-04">
+      <h3 class="cs-title">Colors <code>color</code> / <code>background-color</code></h3>
+      <p class="cs-desc">Write a color as a name, hex, rgb(), or hsl(); add an alpha 0–1 with <code>/</code> for transparency.</p>
+      <pre class="code-block" data-lang="css"><code>.a { background-color: tomato; }              /* named  */
+.b { background-color: #0b63ce; }             /* hex    */
+.c { background-color: rgb(22 163 74); }      /* 0–255  */
+.d { background-color: hsl(280 70% 45% / 0.5); } /* hue + alpha */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Four fills; the last is 50% transparent so the page shows through.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-05">
+      <h3 class="cs-title">Box model &amp; box-sizing <code>box-sizing: border-box</code></h3>
+      <p class="cs-desc">Every element is content + padding + border + margin. <code>border-box</code> folds padding/border into <code>width</code> so sizes stay predictable.</p>
+      <pre class="code-block" data-lang="css"><code>* { box-sizing: border-box; }  /* set globally */
+div {
+  width: 200px; padding: 20px; border: 4px solid #0b63ce;
+}
+/* content-box: real width 248px; border-box: stays 200px */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>With border-box the box occupies exactly 200px wide.</div>
+      <figure>
+        <svg viewBox="0 0 300 160" role="img" aria-label="Nested box model: margin around border around padding around content" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="6" width="288" height="148" fill="none" stroke="var(--border)" stroke-dasharray="4 3"/>
+          <text x="12" y="20" font-size="10" fill="var(--muted)">margin</text>
+          <rect x="40" y="30" width="220" height="100" fill="var(--surface)" stroke="var(--accent)" stroke-width="3"/>
+          <text x="46" y="44" font-size="10" fill="var(--accent)">border</text>
+          <rect x="70" y="52" width="160" height="56" fill="var(--surface)" stroke="var(--muted)" stroke-dasharray="3 2"/>
+          <text x="76" y="66" font-size="10" fill="var(--muted)">padding</text>
+          <rect x="110" y="70" width="80" height="22" fill="var(--accent)"/>
+          <text x="118" y="85" font-size="10" fill="#fff">content</text>
+        </svg>
+        <figcaption>Content, padding, border, then margin — outward.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-06">
+      <h3 class="cs-title">Text properties <code>text-align</code> <code>line-height</code></h3>
+      <p class="cs-desc">Control alignment, decoration, case, spacing, and line height of running text.</p>
+      <pre class="code-block" data-lang="css"><code>.title {
+  text-align: center;
+  text-transform: uppercase;   /* display only, HTML unchanged */
+  letter-spacing: 3px;
+  text-decoration: underline;
+}
+.lead { line-height: 1.7; text-align: justify; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Centered, spaced, underlined UPPERCASE heading; roomy justified body.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-07">
+      <h3 class="cs-title">Fonts <code>font-family</code> stack &amp; shorthand</h3>
+      <p class="cs-desc">Give a fallback stack ending in a generic family; set size, weight (400/700), and italic style — or use the <code>font</code> shorthand.</p>
+      <pre class="code-block" data-lang="css"><code>body { font-family: "Fira Sans", system-ui, sans-serif; }
+p    { font-size: 20px; font-weight: 700; font-style: italic; }
+/* shorthand: style weight size/line-height family (size+family required) */
+h2   { font: italic 700 20px/1.5 Georgia, serif; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Bold italic 20px text; browser falls back down the stack.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-08">
+      <h3 class="cs-title">Link states &amp; pseudo-classes <code>:hover :focus</code></h3>
+      <p class="cs-desc">Style interactive states in LoVe-HAte order (link, visited, hover, active); keep <code>:focus</code> visible for keyboards.</p>
+      <pre class="code-block" data-lang="css"><code>a:link    { color: #0b63ce; }   /* unvisited */
+a:visited { color: #7c3aed; }   /* already visited */
+a:hover   { background: #0b63ce; color: white; }
+a:active  { background: #073d80; }
+a:focus   { outline: 3px solid orange; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Link inverts on hover; a Tab focus ring stays visible.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-09">
+      <h3 class="cs-title">Structural pseudo-classes <code>:nth-child()</code> <code>:not()</code></h3>
+      <p class="cs-desc">Match elements by position among siblings, or exclude a set with <code>:not()</code>.</p>
+      <pre class="code-block" data-lang="css"><code>li:first-child      { font-weight: bold; }
+li:nth-child(even)  { background: #f1f5f9; }  /* zebra stripes */
+li:nth-child(3)     { color: tomato; }
+button:not(.primary){ opacity: 0.7; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Even rows shaded, first item bold, non-primary buttons dimmed.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-10">
+      <h3 class="cs-title">Display <code>block / inline / inline-block / none</code></h3>
+      <p class="cs-desc">block takes a new line and is sizable; inline ignores width/height; inline-block is in-flow yet sizable; none removes the box.</p>
+      <pre class="code-block" data-lang="css"><code>.chip { display: inline-block; width: 80px; padding: 8px 0; }
+.gone { display: none; }        /* removed, no space kept */
+/* visibility: hidden keeps the space */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Chips sit in a row but honor their fixed 80px width; .gone disappears.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-11">
+      <h3 class="cs-title">Position <code>relative / absolute / fixed / sticky</code></h3>
+      <p class="cs-desc">Offsets (top/left…) only apply when position isn't static; absolute anchors to the nearest positioned ancestor.</p>
+      <pre class="code-block" data-lang="css"><code>.card  { position: relative; }   /* reference box */
+.badge {
+  position: absolute;            /* measured from .card */
+  top: -10px; right: -10px; z-index: 2;
+}
+.header { position: sticky; top: 0; }  /* pins after scroll */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Badge sits on the card's corner; header sticks to the top when scrolling.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-12">
+      <h3 class="cs-title">Float, clear &amp; clearfix <code>float</code> <code>clear</code></h3>
+      <p class="cs-desc">Float pulls a box aside so text wraps around it; contain all-floated children with a clearfix (or <code>display: flow-root</code>).</p>
+      <pre class="code-block" data-lang="css"><code>.thumb { float: left; width: 70px; margin: 0 12px 6px 0; }
+.wrap::after {        /* clearfix: stop parent collapsing */
+  content: ""; display: block; clear: both;
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Text wraps around the floated thumbnail; container keeps its height.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-13">
+      <h3 class="cs-title">Useful properties <code>overflow max-width opacity</code></h3>
+      <p class="cs-desc">Everyday utilities: cap width and center, scroll overflow, fade, change the cursor, and outline without shifting layout.</p>
+      <pre class="code-block" data-lang="css"><code>.column { max-width: 320px; margin: 0 auto; } /* centered column */
+.scroll { height: 70px; overflow: auto; }      /* scrollbar if needed */
+.cta    { cursor: pointer; }
+.cta:hover { opacity: 0.8; }                   /* fade on hover */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Capped centered column; inner box scrolls; button fades and shows a pointer.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-14">
+      <h3 class="cs-title">Rounding, shadow &amp; transitions <code>border-radius</code> <code>transition</code></h3>
+      <p class="cs-desc">Round corners, drop a soft shadow, and animate property changes smoothly over a duration.</p>
+      <pre class="code-block" data-lang="css"><code>.card {
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,.15);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.card:hover { transform: translateY(-4px); }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Rounded card lifts and deepens its shadow smoothly on hover.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-15">
+      <h3 class="cs-title">Combinators <code>A B &nbsp; A&gt;B &nbsp; A+B &nbsp; A~B</code></h3>
+      <p class="cs-desc">Express relationships: descendant (space), direct child (&gt;), adjacent sibling (+), general sibling (~).</p>
+      <pre class="code-block" data-lang="css"><code>article p   { color: #333; }      /* descendant: any p inside */
+article &gt; p { font-weight: bold; } /* child: direct only */
+h3 + p      { color: #0b63ce; }    /* adjacent: first p after h3 */
+h3 ~ p      { font-style: italic; }/* general: every p after h3 */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Direct paragraphs bold; nested one excluded — combinators walk siblings, not descendants.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-16">
+      <h3 class="cs-title">Pseudo-elements <code>::before ::after ::first-letter</code></h3>
+      <p class="cs-desc">Style sub-parts or inject generated content; <code>::before</code>/<code>::after</code> need a <code>content</code> value.</p>
+      <pre class="code-block" data-lang="css"><code>.story::first-letter { font-size: 3em; float: left; }  /* drop cap */
+.story::first-line   { font-variant: small-caps; }
+.tag::before { content: "\2605 "; color: gold; }        /* a star */
+.tag::after  { content: " (read this)"; color: #888; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Big drop-cap first letter, small-caps first line, star + suffix around .tag.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-17">
+      <h3 class="cs-title">Responsive design <code>@media</code> + viewport</h3>
+      <p class="cs-desc">Add the viewport meta, use relative units (%, rem, vw), and override styles at breakpoints — mobile-first.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code></pre>
+      <pre class="code-block" data-lang="css"><code>.col { width: 100%; }                 /* mobile default */
+@media (min-width: 640px) {           /* wider screens */
+  .col { width: 50%; }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Full-width columns on phones become two-up above 640px.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-18">
+      <h3 class="cs-title">Flexbox <code>display: flex</code></h3>
+      <p class="cs-desc">Lay children along one axis; <code>justify-content</code> = main axis, <code>align-items</code> = cross axis; <code>flex: 1</code> shares leftover space.</p>
+      <pre class="code-block" data-lang="css"><code>.bar {
+  display: flex;
+  align-items: center;          /* cross axis */
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.bar .fill { flex: 1; }         /* grow to fill */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Items in a centered row, spaced apart, wrapping when space runs out.</div>
+      <figure>
+        <svg viewBox="0 0 320 130" role="img" aria-label="Flex container with main axis left-to-right and cross axis top-to-bottom" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="24" width="312" height="70" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <rect x="20" y="40" width="46" height="38" rx="4" fill="var(--accent)"/>
+          <rect x="88" y="40" width="46" height="38" rx="4" fill="var(--accent)"/>
+          <rect x="156" y="40" width="46" height="38" rx="4" fill="var(--accent)"/>
+          <line x1="20" y1="112" x2="300" y2="112" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#w-css-arrow)"/>
+          <line x1="12" y1="30" x2="12" y2="88" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#w-css-arrow)"/>
+          <text x="150" y="126" font-size="10" fill="var(--muted)" text-anchor="middle">main axis (justify-content)</text>
+          <text x="230" y="60" font-size="10" fill="var(--muted)">cross (align-items)</text>
+          <defs>
+            <marker id="w-css-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0 0 L6 3 L0 6 z" fill="var(--muted)"/>
+            </marker>
+          </defs>
+        </svg>
+        <figcaption>justify-content follows the main axis; align-items the cross axis.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-19">
+      <h3 class="cs-title">CSS Grid <code>grid-template-columns</code> <code>fr</code></h3>
+      <p class="cs-desc">Lay out rows and columns at once; the <code>fr</code> unit splits free space and <code>gap</code> adds gutters.</p>
+      <pre class="code-block" data-lang="css"><code>.page {
+  display: grid;
+  grid-template-columns: 1fr 3fr;  /* sidebar + main */
+  gap: 8px;
+}
+header, footer { grid-column: 1 / -1; }  /* span all columns */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Narrow sidebar beside a 3× main column; header/footer span full width.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-20">
+      <h3 class="cs-title">Responsive grid <code>repeat(auto-fit, minmax())</code></h3>
+      <p class="cs-desc">Make columns wrap automatically: fit as many tracks as fit, each at least a minimum width, filling the row.</p>
+      <pre class="code-block" data-lang="css"><code>.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+/* auto-fit collapses empty tracks; auto-fill keeps them */</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Cards reflow from many columns to one as the viewport narrows — no media query.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="w-js">
+  <h2>JavaScript Fundamentals</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-w-js-01">
+      <h3 class="cs-title">Script tag &amp; console <code>&lt;script defer&gt;</code></h3>
+      <p class="cs-desc">Load JS with <code>defer</code> so the HTML parses first; <code>console.log()</code> prints to the dev-tools console (F12).</p>
+      <pre class="code-block" data-lang="html"><code>&lt;script src="app.js" defer&gt;&lt;/script&gt;
+&lt;!-- runs after HTML is parsed --&gt;</code></pre>
+      <pre class="code-block" data-lang="js"><code>console.log('Script is running');
+console.log(2 + 2);</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Script is running<br>4</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-02">
+      <h3 class="cs-title">Variables <code>const</code> / <code>let</code></h3>
+      <p class="cs-desc">Use <code>const</code> by default, <code>let</code> only to reassign. Both are block-scoped; avoid <code>var</code> (function-scoped, hoisted surprisingly).</p>
+      <pre class="code-block" data-lang="js"><code>const name = 'Web Design';  // fixed
+let score = 0;              // can change
+score += 15;
+// name = 'x';  // TypeError: reassign const</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>score is 15; reassigning <code>name</code> throws.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-03">
+      <h3 class="cs-title">Data types &amp; <code>typeof</code></h3>
+      <p class="cs-desc">Primitives: string, number, boolean, <code>null</code>, <code>undefined</code>. <code>typeof</code> reveals the type — note <code>typeof null</code> is the historic quirk <code>'object'</code>.</p>
+      <pre class="code-block" data-lang="js"><code>typeof 'text';    // 'string'
+typeof 42;        // 'number'
+typeof true;      // 'boolean'
+let x;            // declared only
+typeof x;         // 'undefined'
+typeof null;      // 'object' (quirk)</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>string, number, boolean, undefined, object</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-04">
+      <h3 class="cs-title">Template literals <code>`${x}`</code></h3>
+      <p class="cs-desc">Backtick strings interpolate expressions with <code>${...}</code> and span multiple lines — cleaner than <code>+</code> concatenation.</p>
+      <pre class="code-block" data-lang="js"><code>const name = 'Ada', year = 1843;
+console.log(`${name} coded in ${year}.`);
+console.log(`Line one
+Line two`);</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Ada coded in 1843.<br>Line one / Line two</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-05">
+      <h3 class="cs-title">Objects <code>obj.key</code> / <code>obj['key']</code></h3>
+      <p class="cs-desc">Key-value collections. Read with dot notation, or bracket notation when the key is dynamic or not a valid identifier.</p>
+      <pre class="code-block" data-lang="js"><code>const user = {
+  first: 'Ada',
+  langs: ['JS', 'Python'],
+};
+user.first;        // 'Ada'  (dot)
+user['first'];     // 'Ada'  (bracket)
+user.langs[1];     // 'Python'</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Ada, Ada, Python</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-06">
+      <h3 class="cs-title">Arrays <code>push()</code> / <code>pop()</code></h3>
+      <p class="cs-desc">Ordered lists, zero-indexed. <code>.length</code> counts items; <code>push</code> appends, <code>pop</code> removes from the end.</p>
+      <pre class="code-block" data-lang="js"><code>const scores = [10, 20, 30];
+scores[0];          // 10
+scores.length;      // 3
+scores.push(40);    // [10,20,30,40]
+scores.pop();       // 40  -&gt; back to length 3</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>10, 3, then push/pop mutate the array.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-07">
+      <h3 class="cs-title">Operators <code>=== &amp;&amp; %</code></h3>
+      <p class="cs-desc">Arithmetic <code>+ - * / % **</code>, assignment shorthands (<code>+= ++</code>), and logical <code>&amp;&amp; || !</code>. Prefer <code>===</code> over <code>==</code> (no type coercion).</p>
+      <pre class="code-block" data-lang="js"><code>let val = 10;
+val += 5;             // 15
+val % 7;              // 1
+10 === '10';          // false (type differs)
+10 == '10';           // true  (coerces — avoid)
+true &amp;&amp; false;        // false
+true || false;        // true</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>15, 1, false, true, false, true</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-08">
+      <h3 class="cs-title">Functions <code>function f(){}</code></h3>
+      <p class="cs-desc">Reusable named block. <em>Parameters</em> are placeholders, <em>arguments</em> the real values; <code>return</code> hands a value back and ends the function.</p>
+      <pre class="code-block" data-lang="js"><code>function adder(a, b) {
+  return a + b;   // ends the function
+}
+adder(5, 10);     // 15
+adder(117, 80);   // 197</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>15, then 197</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-09">
+      <h3 class="cs-title">Arrow functions <code>=&gt;</code></h3>
+      <p class="cs-desc">Shorter function expression. A single-expression body has an implicit return (no braces); one param can skip the parentheses.</p>
+      <pre class="code-block" data-lang="js"><code>const double = n =&gt; n * 2;        // implicit return
+const add = (a, b) =&gt; a + b;
+const greet = (who = 'friend') =&gt; `Hi, ${who}!`;
+double(4);   // 8
+add(2, 3);   // 5</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>8, 5, "Hi, friend!"</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-10">
+      <h3 class="cs-title">Conditionals <code>if / else</code> &amp; ternary</h3>
+      <p class="cs-desc">Only the first matching branch runs. The ternary <code>cond ? x : y</code> is a compact inline alternative that produces a value.</p>
+      <pre class="code-block" data-lang="js"><code>function grade(score) {
+  if (score &gt;= 90) return 'A';
+  else if (score &gt;= 70) return 'B';
+  else return 'Fail';
+}
+grade(72);                       // 'B'
+const canVote = age &gt;= 18 ? 'yes' : 'no';</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>grade(72) -&gt; "B"; ternary picks yes/no.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-11">
+      <h3 class="cs-title">Switch <code>switch/case</code></h3>
+      <p class="cs-desc">Branch on one value against many <code>case</code>s. Stacked cases fall through to share a block; <code>default</code> is the catch-all.</p>
+      <pre class="code-block" data-lang="js"><code>function describe(day) {
+  switch (day) {
+    case 'Sat':
+    case 'Sun':
+      return 'weekend';   // grouped cases
+    default:
+      return 'weekday';
+  }
+}
+describe('Sun');   // 'weekend'</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>weekend</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-12">
+      <h3 class="cs-title">Loops <code>for</code> / <code>while</code> / <code>do…while</code></h3>
+      <p class="cs-desc"><code>for</code> packs start, condition, update in one line. <code>while</code> may run zero times; <code>do…while</code> always runs at least once.</p>
+      <pre class="code-block" data-lang="js"><code>for (let i = 0; i &lt; 3; i++) console.log(i);  // 0 1 2
+
+let n = 0;
+while (n &lt; 3) { n++; }        // 0 or more times
+
+let m = 5;
+do { console.log(m); } while (m &lt; 3);  // runs once</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>0 1 2; do…while prints 5 once.</div>
+      <figure>
+        <svg viewBox="0 0 460 92" role="img" aria-label="for loop flow: initialise, then repeat test body update until the test is false" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="30" width="86" height="32" rx="6" fill="var(--accent)" stroke="var(--border)"/>
+          <text x="49" y="50" text-anchor="middle" fill="#fff" font-size="11" font-family="monospace">i = 0</text>
+          <rect x="116" y="30" width="80" height="32" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="156" y="50" text-anchor="middle" fill="var(--text)" font-size="11" font-family="monospace">i &lt; 3?</text>
+          <rect x="220" y="30" width="80" height="32" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="260" y="50" text-anchor="middle" fill="var(--text)" font-size="11" font-family="monospace">body</text>
+          <rect x="324" y="30" width="80" height="32" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="364" y="50" text-anchor="middle" fill="var(--text)" font-size="11" font-family="monospace">i++</text>
+          <line x1="92" y1="46" x2="114" y2="46" stroke="var(--border)" stroke-width="2" marker-end="url(#w-js-a)"/>
+          <line x1="196" y1="46" x2="218" y2="46" stroke="var(--border)" stroke-width="2" marker-end="url(#w-js-a)"/>
+          <line x1="300" y1="46" x2="322" y2="46" stroke="var(--border)" stroke-width="2" marker-end="url(#w-js-a)"/>
+          <path d="M364 30 L364 14 L156 14 L156 28" fill="none" stroke="var(--border)" stroke-width="2" marker-end="url(#w-js-a)"/>
+          <text x="440" y="50" text-anchor="middle" fill="var(--muted)" font-size="10" font-family="sans-serif">false→exit</text>
+          <line x1="196" y1="62" x2="430" y2="62" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#w-js-a)"/>
+          <defs>
+            <marker id="w-js-a" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 z" fill="var(--border)"/>
+            </marker>
+          </defs>
+        </svg>
+        <figcaption>Initialise once, then test → body → update until the test is false.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-13">
+      <h3 class="cs-title">Iterating arrays <code>for…of</code> / <code>forEach</code></h3>
+      <p class="cs-desc"><code>for…of</code> gives each value; <code>forEach</code> calls a function with value and index. (<code>for…in</code> yields keys — use it for objects.)</p>
+      <pre class="code-block" data-lang="js"><code>const fruit = ['apple', 'kiwi', 'mango'];
+for (const item of fruit) console.log(item);
+fruit.forEach((value, index) =&gt; console.log(index, value));</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>apple, kiwi, mango<br>0 apple, 1 kiwi, 2 mango</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="w-dom">
+  <h2>The DOM</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-w-dom-01">
+      <h3 class="cs-title">The DOM tree <code>document</code></h3>
+      <p class="cs-desc">The browser parses your HTML into a live tree of nodes; <code>document</code> is the root you script from.</p>
+      <pre class="code-block" data-lang="js"><code>document.title;              // page title
+document.body;               // the &lt;body&gt; element
+const ul = document.querySelector('ul');
+ul.parentElement;            // node above
+ul.children;                 // element children
+ul.firstElementChild;        // first &lt;li&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Navigate up (parent) and down (children) from any node.</div>
+      <figure>
+        <svg viewBox="0 0 300 170" role="img" aria-label="DOM tree from document to body to ul to li" xmlns="http://www.w3.org/2000/svg">
+          <rect x="110" y="8" width="80" height="26" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="150" y="25" text-anchor="middle" fill="var(--text)" font-size="12">document</text>
+          <line x1="150" y1="34" x2="150" y2="52" stroke="var(--border)"/>
+          <rect x="118" y="52" width="64" height="24" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="150" y="68" text-anchor="middle" fill="var(--text)" font-size="12">body</text>
+          <line x1="150" y1="76" x2="150" y2="94" stroke="var(--border)"/>
+          <rect x="124" y="94" width="52" height="24" rx="4" fill="var(--accent)"/>
+          <text x="150" y="110" text-anchor="middle" fill="#fff" font-size="12">ul</text>
+          <line x1="150" y1="118" x2="80" y2="140" stroke="var(--border)"/>
+          <line x1="150" y1="118" x2="150" y2="140" stroke="var(--border)"/>
+          <line x1="150" y1="118" x2="220" y2="140" stroke="var(--border)"/>
+          <rect x="58" y="140" width="44" height="22" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="80" y="155" text-anchor="middle" fill="var(--muted)" font-size="11">li</text>
+          <rect x="128" y="140" width="44" height="22" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="150" y="155" text-anchor="middle" fill="var(--muted)" font-size="11">li</text>
+          <rect x="198" y="140" width="44" height="22" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="220" y="155" text-anchor="middle" fill="var(--muted)" font-size="11">li</text>
+        </svg>
+        <figcaption>Every element is a node with one parent and zero or more children.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-02">
+      <h3 class="cs-title">Selecting elements <code>querySelector()</code></h3>
+      <p class="cs-desc">Grab nodes by id or CSS selector; <code>querySelectorAll</code> returns a NodeList you loop with <code>forEach</code>.</p>
+      <pre class="code-block" data-lang="js"><code>document.getElementById('fav');      // one, no # prefix
+document.querySelector('.item');     // first match
+const all = document.querySelectorAll('.item'); // all
+all.forEach((li, i) =&gt; console.log(i, li.textContent));</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>No match: <code>querySelector</code> returns <code>null</code>; <code>querySelectorAll</code> an empty list.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-03">
+      <h3 class="cs-title">Content: text vs markup <code>textContent</code></h3>
+      <p class="cs-desc"><code>textContent</code> sets plain text (safe); <code>innerHTML</code> parses a string as HTML into real elements.</p>
+      <pre class="code-block" data-lang="js"><code>el.textContent = 'Changed with JS';   // literal text
+box.innerHTML  = '&lt;strong&gt;Bold&lt;/strong&gt;'; // parsed markup
+// Never put user input in innerHTML → XSS risk.</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>textContent shows the tags as text; innerHTML renders real bold text.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-04">
+      <h3 class="cs-title">Attributes <code>get/setAttribute()</code></h3>
+      <p class="cs-desc">Read and write any attribute; common ones (<code>id</code>, <code>src</code>, <code>href</code>, <code>value</code>) are also direct properties.</p>
+      <pre class="code-block" data-lang="js"><code>el.setAttribute('data-role', 'label');
+el.getAttribute('data-role');   // "label"
+el.removeAttribute('disabled');
+img.src = 'photo.png';          // property shortcut</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>getAttribute('data-role')</code> → <code>"label"</code></div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-05">
+      <h3 class="cs-title">Styling: style &amp; classList <code>classList.toggle()</code></h3>
+      <p class="cs-desc">Set inline styles via <code>element.style</code>, but prefer flipping a CSS class with <code>classList</code> (add/remove/toggle/contains).</p>
+      <pre class="code-block" data-lang="js"><code>el.style.color = 'crimson';        // inline style
+el.classList.add('active');
+el.classList.remove('active');
+el.classList.toggle('highlight');  // on if off, off if on
+el.classList.contains('active');   // true/false</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>toggle</code> returns <code>true</code> when the class was just added.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-06">
+      <h3 class="cs-title">Reading form input <code>input.value</code></h3>
+      <p class="cs-desc">Every field's current text lives on its <code>.value</code> property; read it in an event or on submit.</p>
+      <pre class="code-block" data-lang="js"><code>const name = document.getElementById('name');
+console.log(name.value);           // current text
+const agree = document.getElementById('tos');
+console.log(agree.checked);        // checkbox → boolean</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Logs whatever the user has typed into the field.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-07">
+      <h3 class="cs-title">Event listeners <code>addEventListener()</code></h3>
+      <p class="cs-desc">Register a handler for an event type; the handler receives an event object. Multiple listeners stack (unlike <code>onclick</code>).</p>
+      <pre class="code-block" data-lang="js"><code>btn.addEventListener('click', (event) =&gt; {
+  event.target.textContent = 'Clicked!'; // element that fired
+});
+// { once: true } auto-removes after first call
+btn.addEventListener('click', fn, { once: true });</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>event.target</code> is the node the event came from.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-08">
+      <h3 class="cs-title">Forms &amp; preventDefault <code>e.preventDefault()</code></h3>
+      <p class="cs-desc">A form <code>submit</code> reloads the page by default; cancel it with <code>preventDefault()</code> and handle the data in JS.</p>
+      <pre class="code-block" data-lang="js"><code>form.addEventListener('submit', (e) =&gt; {
+  e.preventDefault();              // stop the reload
+  console.log('Sending:', field.value);
+});</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Form no longer reloads; you process <code>field.value</code> yourself.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-09">
+      <h3 class="cs-title">Common events <code>click / input / keydown</code></h3>
+      <p class="cs-desc">The events you reach for most: pointer, live typing, committed changes, submit, and keys.</p>
+      <pre class="code-block" data-lang="js"><code>el.addEventListener('click', fn);   // pointer/tap
+el.addEventListener('input', fn);   // fires on every keystroke
+el.addEventListener('change', fn);  // after value commits/blur
+form.addEventListener('submit', fn);
+document.addEventListener('keydown', (e) =&gt; console.log(e.key));</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>input</code> fires per keystroke; <code>change</code> only once done.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-10">
+      <h3 class="cs-title">DOMContentLoaded <code>DOMContentLoaded</code></h3>
+      <p class="cs-desc">Fires once the HTML is parsed and the tree exists; run setup here so a <code>&lt;head&gt;</code> script still finds its elements.</p>
+      <pre class="code-block" data-lang="js"><code>document.addEventListener('DOMContentLoaded', () =&gt; {
+  const out = document.getElementById('out'); // safe now
+  out.textContent = 'Ready';
+});</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Selectors find their targets instead of returning <code>null</code>.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-11">
+      <h3 class="cs-title">Creating &amp; inserting nodes <code>createElement()</code></h3>
+      <p class="cs-desc">Make a detached node, fill it, then <code>appendChild</code> to attach it. <code>node.remove()</code> deletes it from the tree.</p>
+      <pre class="code-block" data-lang="js"><code>const list = document.getElementById('list');
+fruits.forEach((name) =&gt; {
+  const li = document.createElement('li'); // 1. make
+  li.textContent = name;                   // 2. fill
+  list.appendChild(li);                    // 3. attach
+});
+list.firstElementChild.remove();           // delete a node</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>A new <code>&lt;li&gt;</code> per fruit appears; first one is removed.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-12">
+      <h3 class="cs-title">Animation <code>requestAnimationFrame()</code></h3>
+      <p class="cs-desc">Schedule a callback just before the next repaint (~60fps); re-call it each frame for smooth motion, cancel to stop.</p>
+      <pre class="code-block" data-lang="js"><code>let x = 0, id;
+function frame(timestamp) {
+  x += 2;
+  ball.style.left = x + 'px';
+  id = requestAnimationFrame(frame); // queue next frame
+}
+id = requestAnimationFrame(frame);   // start loop
+cancelAnimationFrame(id);            // stop it</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Ball glides across; pauses automatically in hidden tabs.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="w-responsive-build">
+  <h2>Build a Responsive Website</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-w-responsive-build-01">
+      <h3 class="cs-title">Semantic page shell <code>&lt;header&gt;&lt;main&gt;&lt;footer&gt;</code></h3>
+      <p class="cs-desc">Name the page's regions with meaning-carrying landmarks instead of anonymous divs — better for SEO, screen readers, and future-you.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;body&gt;
+  &lt;header&gt;&lt;h1&gt;My Site&lt;/h1&gt;&lt;nav&gt;&lt;!-- links --&gt;&lt;/nav&gt;&lt;/header&gt;
+  &lt;main&gt;
+    &lt;section&gt;&lt;article&gt;&lt;!-- content block --&gt;&lt;/article&gt;&lt;/section&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;&copy; 2026&lt;/footer&gt;
+&lt;/body&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>A self-documenting vertical stack: header band, main content, footer.</div>
+      <figure>
+        <svg viewBox="0 0 300 180" role="img" aria-label="Page as a vertical stack of semantic bands" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="280" height="30" rx="4" fill="var(--accent)"/>
+          <text x="150" y="30" text-anchor="middle" fill="#fff" font-size="12" font-family="monospace">&lt;header&gt; + &lt;nav&gt;</text>
+          <rect x="10" y="46" width="280" height="80" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="150" y="90" text-anchor="middle" fill="var(--text)" font-size="12" font-family="monospace">&lt;main&gt; / &lt;section&gt; / &lt;article&gt;</text>
+          <rect x="10" y="132" width="280" height="30" rx="4" fill="var(--muted)"/>
+          <text x="150" y="152" text-anchor="middle" fill="#fff" font-size="12" font-family="monospace">&lt;footer&gt;</text>
+        </svg>
+        <figcaption>Three stacked bands map onto semantic landmarks.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-responsive-build-02">
+      <h3 class="cs-title">Viewport meta (required first) <code>width=device-width</code></h3>
+      <p class="cs-desc">Without it, phones assume a ~980px desktop canvas and shrink the page, so your media queries never fire.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;meta name="viewport"
+      content="width=device-width, initial-scale=1"&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Phone renders at its real CSS width; breakpoints work as intended.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-responsive-build-03">
+      <h3 class="cs-title">Responsive navbar with flexbox <code>display:flex</code></h3>
+      <p class="cs-desc">A nav is a <code>&lt;ul&gt;</code> of links; flex lays them in a row, and a media query stacks them full-width on mobile.</p>
+      <pre class="code-block" data-lang="css"><code>.nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.nav a  { display: block; padding: 0 14px; line-height: 40px;
+          text-decoration: none; background: #222; color: #fff; }
+.nav a:hover { background: #0b63ce; }
+
+@media (max-width: 740px) {
+  .nav ul { flex-direction: column; }   /* stack, one per row */
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Row of links on wide screens; a vertical stacked menu below 740px.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-responsive-build-04">
+      <h3 class="cs-title">Load a web font + fallback <code>font-family</code></h3>
+      <p class="cs-desc">Link the font in <code>&lt;head&gt;</code>, then name it with a generic fallback last so text stays readable while it loads.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+&lt;link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=PT+Sans&amp;display=swap"&gt;</code></pre>
+      <pre class="code-block" data-lang="css"><code>body { font-family: 'PT Sans', system-ui, sans-serif; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Body renders in PT Sans; <code>display=swap</code> shows the fallback instantly, then swaps.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-responsive-build-05">
+      <h3 class="cs-title">Multi-column main that reflows <code>grid + minmax</code></h3>
+      <p class="cs-desc">Grid columns on wide screens; the media query collapses them to a single column on mobile.</p>
+      <pre class="code-block" data-lang="css"><code>* { box-sizing: border-box; }
+.main { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+
+@media (max-width: 740px) {
+  .main { grid-template-columns: 1fr; }   /* single column */
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Two side-by-side columns on desktop; stacked full-width on phones.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-responsive-build-06">
+      <h3 class="cs-title">Multi-column footer <code>flex + flex-direction</code></h3>
+      <p class="cs-desc">Flexbox spreads footer columns across a row, then stacks them vertically below the breakpoint — no clearfix needed.</p>
+      <pre class="code-block" data-lang="css"><code>.footer { display: flex; gap: 16px; background: #111; color: #fff; padding: 16px; }
+.footer &gt; div { flex: 1; }        /* equal columns */
+.footer .wide { flex: 2; }        /* twice as wide */
+
+@media (max-width: 740px) {
+  .footer { flex-direction: column; }   /* stack */
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Three columns in a dark bar on desktop; stacked on mobile.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-responsive-build-07">
+      <h3 class="cs-title">Hamburger toggle in JS <code>classList.toggle()</code></h3>
+      <p class="cs-desc">A real <code>&lt;button&gt;</code> flips a <code>.hide</code> class; JS owns only the switch, CSS owns the look. Keep <code>aria-expanded</code> in sync.</p>
+      <pre class="code-block" data-lang="js"><code>const button = document.querySelector('.menu');
+const links  = document.querySelector('.links');
+
+button.addEventListener('click', () =&gt; {
+  const hidden = links.classList.toggle('hide');  // true = just added
+  button.setAttribute('aria-expanded', String(!hidden));
+});</code></pre>
+      <pre class="code-block" data-lang="css"><code>.hide { display: none; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Tapping the button shows/hides the menu; <code>toggle</code> returns true when hidden.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-responsive-build-08">
+      <h3 class="cs-title">Mobile-first workflow <code>min-width</code> queries</h3>
+      <p class="cs-desc">Write the single-column phone layout as the default, then layer wider layouts on top with <code>min-width</code> queries.</p>
+      <pre class="code-block" data-lang="css"><code>/* base = mobile: everything stacks */
+.main { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+/* enhance upward for larger screens */
+@media (min-width: 740px) {
+  .main { grid-template-columns: 2fr 1fr; }
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Simple stacked default; multi-column layout added only where there's room.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="w-js-practice">
+  <h2>JavaScript in Practice</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-w-js-practice-01">
+      <h3 class="cs-title">Arrow functions <code>=&gt;</code></h3>
+      <p class="cs-desc">Concise function expression; a brace-less body implicitly returns its single expression.</p>
+      <pre class="code-block" data-lang="js"><code>const double = n =&gt; n * 2;          // implicit return
+const add    = (a, b) =&gt; a + b;     // multiple params
+const log    = () =&gt; { doStuff(); };// braces need explicit return
+console.log(double(5), add(2, 3));</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>10 5</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-02">
+      <h3 class="cs-title">Lexical <code>this</code></h3>
+      <p class="cs-desc">Arrows inherit <code>this</code> from the enclosing scope, so never use one as an object method that needs the object.</p>
+      <pre class="code-block" data-lang="js"><code>const obj = {
+  n: 10,
+  bad: () =&gt; this.n,   // this = outer scope, not obj
+  good() { return this.n; }
+};
+console.log(obj.bad(), obj.good());</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>undefined 10</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-03">
+      <h3 class="cs-title">map / filter / reduce</h3>
+      <p class="cs-desc">Transform, keep-matching, and fold an array into one value — the workhorse array methods.</p>
+      <pre class="code-block" data-lang="js"><code>const nums = [1, 2, 3, 4, 5, 6];
+const squared = nums.map(n =&gt; n * n);
+const evens   = nums.filter(n =&gt; n % 2 === 0);
+const total   = nums.reduce((sum, n) =&gt; sum + n, 0);
+console.log(squared, evens, total);</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>[1,4,9,16,25,36] [2,4,6] 21</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-04">
+      <h3 class="cs-title">every / some / find / includes</h3>
+      <p class="cs-desc">Test all, test any, get the first match, or check membership — each returns a single answer.</p>
+      <pre class="code-block" data-lang="js"><code>const scores = [82, 91, 78, 95];
+scores.every(s =&gt; s &gt;= 50);   // true  (all pass; true on [])
+scores.some(s =&gt; s &gt; 90);     // true  (at least one)
+scores.find(s =&gt; s &lt; 80);     // 78    (first match, else undefined)
+scores.includes(91);         // true  (===  membership)</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>true, true, 78, true</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-05">
+      <h3 class="cs-title">Summing with a loop <code>for…of</code></h3>
+      <p class="cs-desc">Accumulator pattern: start at 0, walk values, add each — the same idea <code>reduce</code> shortens.</p>
+      <pre class="code-block" data-lang="js"><code>const prices = [12.5, 4, 8.25, 30];
+let total = 0;
+for (const p of prices) total += p;   // never for…in on an array!
+console.log(total, total / prices.length);</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>54.75 13.6875</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-06">
+      <h3 class="cs-title">DOM welcome message</h3>
+      <p class="cs-desc">Read an input's <code>.value</code>, trim it, and write back with <code>textContent</code> (safe from markup injection).</p>
+      <pre class="code-block" data-lang="js"><code>const input = document.querySelector("#name");
+const msg   = document.querySelector("#message");
+document.querySelector("#go").addEventListener("click", () =&gt; {
+  const name = input.value.trim();
+  msg.textContent = name ? `Welcome, ${name}!` : "Type your name.";
+});</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Typing "Ada" then clicking shows: Welcome, Ada!</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-07">
+      <h3 class="cs-title">Closure: counter factory</h3>
+      <p class="cs-desc">An inner function keeps a live link to the outer variable, giving persistent private state.</p>
+      <pre class="code-block" data-lang="js"><code>function makeCounter() {
+  let count = 0;                 // private, survives every call
+  return () =&gt; ++count;
+}
+const next = makeCounter();
+console.log(next(), next(), next());</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>1 2 3</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-08">
+      <h3 class="cs-title">Closure: presets &amp; module pattern</h3>
+      <p class="cs-desc">Capture an argument to bake in a value; return an object of methods sharing one hidden variable.</p>
+      <pre class="code-block" data-lang="js"><code>const makeAdder = x =&gt; y =&gt; x + y;   // captures x
+const add5 = makeAdder(5);
+console.log(add5(3));               // 8
+
+const bank = (() =&gt; {               // module pattern
+  let balance = 0;
+  return { deposit: n =&gt; (balance += n), get: () =&gt; balance };
+})();
+bank.deposit(100);
+console.log(bank.get());            // 100 (balance is private)</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>8, then 100</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-09">
+      <h3 class="cs-title">JSON <code>stringify</code> / <code>parse</code></h3>
+      <p class="cs-desc">Object → text to store or send; text → object to use again. Third arg pretty-prints.</p>
+      <pre class="code-block" data-lang="js"><code>const person = { name: "Ada", langs: ["EN", "FR"] };
+const text = JSON.stringify(person, null, 2); // pretty text
+const back = JSON.parse(text);                // live object
+console.log(back.langs[1]);
+const copy = JSON.parse(JSON.stringify(person)); // cheap deep copy</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>FR</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-10">
+      <h3 class="cs-title">Fetching data <code>fetch().then()</code></h3>
+      <p class="cs-desc">Returns a promise for a <code>Response</code>; a 404 still fulfils, so check <code>response.ok</code> yourself.</p>
+      <pre class="code-block" data-lang="js"><code>fetch(url)
+  .then(res =&gt; {
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return res.json();                 // another promise
+  })
+  .then(data =&gt; console.log(data))
+  .catch(err =&gt; console.log("Failed:", err.message));</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>Parsed data object (or a network-error message)</div>
+      <figure>
+        <svg viewBox="0 0 460 110" role="img" aria-label="A promise moves from pending to fulfilled or rejected" xmlns="http://www.w3.org/2000/svg">
+          <rect x="12" y="38" width="110" height="36" rx="18" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="67" y="61" text-anchor="middle" fill="var(--text)" font-size="13">pending</text>
+          <rect x="270" y="8" width="180" height="36" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+          <text x="360" y="31" text-anchor="middle" fill="var(--text)" font-size="12">fulfilled → .then()</text>
+          <rect x="270" y="66" width="180" height="36" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="360" y="89" text-anchor="middle" fill="var(--text)" font-size="12">rejected → .catch()</text>
+          <line x1="122" y1="50" x2="268" y2="28" stroke="var(--accent)" stroke-width="2" marker-end="url(#w-js-practice-arw)"/>
+          <line x1="122" y1="62" x2="268" y2="84" stroke="var(--border)" stroke-width="2" marker-end="url(#w-js-practice-arw)"/>
+          <defs>
+            <marker id="w-js-practice-arw" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L7,3 L0,6 Z" fill="var(--text)"/>
+            </marker>
+          </defs>
+        </svg>
+        <figcaption>A promise settles once — fulfilled or rejected.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-11">
+      <h3 class="cs-title">async / await vs XHR</h3>
+      <p class="cs-desc">Flatter promise syntax; the legacy <code>XMLHttpRequest</code> does the same with verbose callbacks.</p>
+      <pre class="code-block" data-lang="js"><code>// Modern: await flattens the .then chain
+async function load(url) {
+  const res  = await fetch(url);
+  const data = await res.json();
+  return data;
+}
+// Legacy XHR equivalent
+const xhr = new XMLHttpRequest();
+xhr.open("GET", url);
+xhr.onload = () =&gt; console.log(JSON.parse(xhr.responseText));
+xhr.send();</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>Both log the parsed response data</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-12">
+      <h3 class="cs-title">Dynamic image gallery</h3>
+      <p class="cs-desc">Keep images in an array; loop to build thumbnails and swap the main <code>src</code> on click.</p>
+      <pre class="code-block" data-lang="js"><code>const images = ["one.png", "two.png", "three.png"];
+const main   = document.querySelector("#main");
+const thumbs = document.querySelector("#thumbs");
+images.forEach((src, i) =&gt; {
+  const t = document.createElement("img");
+  t.src = src;
+  t.addEventListener("click", () =&gt; { main.src = images[i]; });
+  thumbs.append(t);
+});
+main.src = images[0];</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Thumbnail row; clicking one swaps the large image. Add a picture = add an array entry.</div>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="w-advanced">
+  <h2>Advanced JavaScript</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-w-advanced-01">
+      <h3 class="cs-title">Custom <code>map()</code></h3>
+      <p class="cs-desc">A higher-order function: loop the array, call the callback <code>(value, index, array)</code> per item, collect results in a new array. Never mutates the source.</p>
+      <pre class="code-block" data-lang="js"><code>function myMap(arr, cb) {
+  const out = [];
+  for (let i = 0; i &lt; arr.length; i++) {
+    out.push(cb(arr[i], i, arr));   // one call per item
+  }
+  return out;
+}
+myMap([1, 2, 3], (n) =&gt; n * 2);</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>[2, 4, 6] — same length, source untouched. Forget to <code>return</code> in the callback and you get <code>[undefined, ...]</code>.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-advanced-02">
+      <h3 class="cs-title">Minimal promise <code>then/resolve</code></h3>
+      <p class="cs-desc">A tiny state machine: <code>pending</code> settles <em>once</em> to fulfilled or rejected, then queued <code>.then()</code> handlers run. A guard blocks any later resolve/reject.</p>
+      <pre class="code-block" data-lang="js"><code>class MyPromise {
+  constructor(executor) {
+    this.handlers = [];
+    const settle = (state) =&gt; (value) =&gt; {
+      if (this.state) return;        // settle only once
+      this.state = state; this.value = value;
+      this.handlers.forEach((h) =&gt; h(value));
+    };
+    executor(settle("fulfilled"), settle("rejected"));
+  }
+  then(onOk) {
+    if (this.state) onOk(this.value);
+    else this.handlers.push(onOk);
+    return this;
+  }
+}
+new MyPromise((res) =&gt; setTimeout(() =&gt; res("done"), 100))
+  .then((v) =&gt; console.log(v));</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>"done" — logged once the promise resolves. Returning <code>this</code> is simplified chaining; real chains return a new promise per <code>.then()</code>.</div>
+      <figure>
+        <svg viewBox="0 0 460 130" role="img" aria-label="A promise starts pending and settles once to fulfilled or rejected" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="w-advanced-parr" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"></path>
+            </marker>
+          </defs>
+          <rect x="20" y="46" width="120" height="40" rx="6" fill="var(--surface)" stroke="var(--border)"></rect>
+          <text x="80" y="71" text-anchor="middle" fill="var(--text)" font-size="13" font-family="sans-serif">pending</text>
+          <rect x="300" y="10" width="150" height="40" rx="6" fill="var(--surface)" stroke="var(--border)"></rect>
+          <text x="375" y="35" text-anchor="middle" fill="var(--text)" font-size="13" font-family="sans-serif">fulfilled</text>
+          <rect x="300" y="82" width="150" height="40" rx="6" fill="var(--surface)" stroke="var(--border)"></rect>
+          <text x="375" y="107" text-anchor="middle" fill="var(--text)" font-size="13" font-family="sans-serif">rejected</text>
+          <line x1="142" y1="58" x2="298" y2="34" stroke="var(--accent)" stroke-width="2" marker-end="url(#w-advanced-parr)"></line>
+          <line x1="142" y1="74" x2="298" y2="100" stroke="var(--accent)" stroke-width="2" marker-end="url(#w-advanced-parr)"></line>
+          <text x="200" y="40" fill="var(--muted)" font-size="11" font-family="sans-serif">resolve()</text>
+          <text x="200" y="110" fill="var(--muted)" font-size="11" font-family="sans-serif">reject()</text>
+        </svg>
+        <figcaption>Leaves <code>pending</code> exactly once, then never changes.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-advanced-03">
+      <h3 class="cs-title">Deep clone (recursive)</h3>
+      <p class="cs-desc">Spread <code>{...obj}</code> and <code>Object.assign</code> are shallow — nested objects stay shared. Recurse to rebuild every branch; return primitives and <code>null</code> as-is.</p>
+      <pre class="code-block" data-lang="js"><code>function deepClone(v) {
+  if (v === null || typeof v !== "object") return v; // null check FIRST
+  if (Array.isArray(v)) return v.map(deepClone);
+  const o = {};
+  for (const k in v) if (Object.hasOwn(v, k)) o[k] = deepClone(v[k]);
+  return o;
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Fully independent copy; editing a nested key on the clone never touches the original. Crashes with a <code>RangeError</code> on circular refs.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-advanced-04">
+      <h3 class="cs-title">Deep clone built-ins <code>structuredClone()</code></h3>
+      <p class="cs-desc">Modern browsers ship <code>structuredClone(obj)</code> — handles nesting, cycles, <code>Date</code>, <code>Map</code>. The old <code>JSON</code> round-trip is a hack that silently drops data.</p>
+      <pre class="code-block" data-lang="js"><code>const deep = structuredClone(obj);          // preferred, handles cycles
+
+// JSON round-trip caveat: drops functions, undefined,
+// Symbols; turns Date into a string; throws on cycles.
+const lossy = JSON.parse(JSON.stringify(obj));</code></pre>
+      <div class="io-output"><span class="io-title">Output</span><code>structuredClone</code>: faithful copy. <code>JSON</code> hack: <code>{ fn, d: Date }</code> becomes <code>{ d: "2026-..." }</code> — function gone, date now a string.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-advanced-05">
+      <h3 class="cs-title">Debounce <code>debounce(fn, delay)</code></h3>
+      <p class="cs-desc">Delays a function until a burst of rapid calls stops. Each call clears the previous timer via a closed-over id. Ideal for search-as-you-type, <code>resize</code>, scroll, autosave.</p>
+      <pre class="code-block" data-lang="js"><code>function debounce(fn, delay) {
+  let id;                              // remembered via closure
+  return function (...args) {
+    clearTimeout(id);                  // cancel pending run
+    id = setTimeout(() =&gt; fn.apply(this, args), delay);
+  };
+}
+const onSearch = debounce((q) =&gt; console.log("search:", q), 500);
+input.addEventListener("input", (e) =&gt; onSearch(e.target.value));</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Fires once, 500ms after the last keystroke. Create it <em>once</em> — rebuilding it per event means nothing ever cancels.</div>
+      <figure>
+        <svg viewBox="0 0 460 120" role="img" aria-label="Rapid calls reset the timer; the function fires once after the pause" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="80" x2="440" y2="80" stroke="var(--border)" stroke-width="2"></line>
+          <line x1="50" y1="50" x2="50" y2="80" stroke="var(--text)" stroke-width="2"></line>
+          <line x1="80" y1="50" x2="80" y2="80" stroke="var(--text)" stroke-width="2"></line>
+          <line x1="110" y1="50" x2="110" y2="80" stroke="var(--text)" stroke-width="2"></line>
+          <line x1="140" y1="50" x2="140" y2="80" stroke="var(--text)" stroke-width="2"></line>
+          <text x="95" y="38" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="sans-serif">rapid calls (timer resets)</text>
+          <circle cx="340" cy="42" r="6" fill="var(--accent)"></circle>
+          <line x1="340" y1="42" x2="340" y2="80" stroke="var(--accent)" stroke-width="3"></line>
+          <text x="340" y="28" text-anchor="middle" fill="var(--accent)" font-size="12" font-family="sans-serif" font-weight="bold">runs once</text>
+          <text x="240" y="108" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="sans-serif">wait for the pause (delay)</text>
+        </svg>
+        <figcaption>Only the last call survives the pause.</figcaption>
+      </figure>
+    </article>
+
+  </div>
+</section>
+<section class="cs-cat" id="w-publish">
+  <h2>Publishing &amp; Next Steps</h2>
+  <div class="cs-grid">
+
+    <article class="cs-card" id="cs-w-publish-01">
+      <h3 class="cs-title">The <code>index.html</code> convention</h3>
+      <p class="cs-desc">A web server serves <code>index.html</code> by default when a URL points at a folder — name your home page exactly that (lowercase).</p>
+      <pre class="code-block" data-lang="bash"><code>my-site/
+├── index.html      # served for "/" — the default file
+├── about.html      # reached at /about.html
+├── styles/site.css
+└── scripts/site.js</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Visiting the site root loads index.html without naming it in the URL.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-publish-02">
+      <h3 class="cs-title"><code>file://</code> vs <code>http://</code></h3>
+      <p class="cs-desc">Double-clicking a page opens it under <code>file://</code> (only you can see it); some features like <code>fetch()</code> are blocked, so serve over <code>http://</code> for realistic testing.</p>
+      <pre class="code-block" data-lang="bash"><code># from your project folder (needs Python)
+python -m http.server 5500
+# then open http://localhost:5500 in the browser</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Local server at localhost — only your machine, nothing published; fetch() now works.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-publish-03">
+      <h3 class="cs-title">Deploy to GitHub Pages <code>git push</code></h3>
+      <p class="cs-desc">Push a static folder to a <strong>public</strong> repo, then flip on Pages — free hosting for a live, shareable URL.</p>
+      <pre class="code-block" data-lang="bash"><code># inside your project folder (index.html at its root)
+git init
+git add .
+git commit -m "First version of my site"
+
+git branch -M main
+git remote add origin https://github.com/USERNAME/my-site.git
+git push -u origin main
+
+# on github.com: Settings → Pages
+# Source: Deploy from a branch → main / (root) → Save</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Site goes live (~1 min) at https://USERNAME.github.io/my-site/</div>
+      <figure>
+        <svg viewBox="0 0 560 96" role="img" aria-label="Deploy flow from local folder to GitHub to the live web" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="28" width="150" height="40" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="83" y="53" text-anchor="middle" fill="var(--text)" font-size="12">Local folder</text>
+          <rect x="205" y="28" width="150" height="40" rx="6" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="280" y="53" text-anchor="middle" fill="var(--text)" font-size="12">GitHub repo</text>
+          <rect x="402" y="28" width="150" height="40" rx="6" fill="var(--accent)" stroke="var(--border)"/>
+          <text x="477" y="53" text-anchor="middle" fill="#fff" font-size="12">Live URL</text>
+          <text x="181" y="42" text-anchor="middle" fill="var(--muted)" font-size="10">git push</text>
+          <text x="378" y="42" text-anchor="middle" fill="var(--muted)" font-size="10">Pages</text>
+          <line x1="158" y1="48" x2="203" y2="48" stroke="var(--text)"/>
+          <line x1="355" y1="48" x2="400" y2="48" stroke="var(--text)"/>
+        </svg>
+        <figcaption>Local &rarr; GitHub &rarr; live site.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-publish-04">
+      <h3 class="cs-title">Publish an update (the 3-command loop)</h3>
+      <p class="cs-desc">After the first push, every change is the same short cycle; plain <code>git push</code> works once the upstream is set.</p>
+      <pre class="code-block" data-lang="bash"><code>git add .                        # stage what you changed
+git commit -m "Update homepage"  # describe the change
+git push                         # publish — live site refreshes shortly</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>New commit lands on main; Pages rebuilds the live site within a minute.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-publish-05">
+      <h3 class="cs-title">Deploy gotchas (404 / blank page)</h3>
+      <p class="cs-desc">Pages serves from Linux, where filenames are <strong>case-sensitive</strong> — a link that works locally can 404 online.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;!-- Logo.png and logo.png are DIFFERENT files on Pages --&gt;
+&lt;img src="./assets/logo.png" alt="Logo"&gt;   &lt;!-- match case --&gt;
+&lt;link rel="stylesheet" href="./css/site.css"&gt; &lt;!-- relative, not /css --&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Check: file named index.html (lowercase), repo public, right branch. Hard-refresh Ctrl/Cmd+Shift+R.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-publish-06">
+      <h3 class="cs-title">Where to go next</h3>
+      <p class="cs-desc">Get fluent with vanilla fundamentals first; frameworks and build tools solve problems you only feel once a project grows large.</p>
+      <pre class="code-block" data-lang="bash"><code># a practical path forward
+# 1. Master CSS Grid + modern JS (modules, async/await)
+# 2. Learn Git branches and pull requests
+# 3. Pick one framework: React, Vue, or Angular
+# 4. Add a build tool (Vite) when files multiply
+# Keep MDN (developer.mozilla.org) open throughout</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Every framework is still HTML, CSS, and JS underneath — this foundation carries over.</div>
+    </article>
+
+  </div>
+</section>
+
+  </main>
+</div>
+<script>
+(function(){
+  "use strict";
+  function toArray(n){return Array.prototype.slice.call(n||[]);}
+  function escapeHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  var KW={
+    js:["var","let","const","function","return","if","else","for","while","do","switch","case","break","continue","new","delete","typeof","instanceof","in","of","this","class","extends","super","import","export","default","try","catch","finally","throw","async","await","yield","void","null","undefined","true","false","static","get","set"],
+    ts:["var","let","const","function","return","if","else","for","while","do","switch","case","break","continue","new","delete","typeof","instanceof","in","of","this","class","extends","super","import","export","default","try","catch","finally","throw","async","await","yield","void","null","undefined","true","false","static","get","set","interface","type","enum","namespace","declare","readonly","public","private","protected","implements","abstract","as","is","keyof","infer","satisfies","never","unknown","any","string","number","boolean"],
+    css:["important","inherit","initial","unset","auto","none","flex","grid","block","inline","inline-block","absolute","relative","fixed","sticky","static","hidden","solid","dashed","dotted","transparent","currentColor"],
+    bash:["if","then","else","fi","for","in","do","done","while","function","return","export","echo","cd","npm","npx","node","ng","git"]
+  };
+  function mkStash(store){return function(cls,t){var k=" "+String.fromCharCode(0xF000+store.length)+" ";store.push('<span class="'+cls+'">'+t+"</span>");return k;};}
+  function restore(out,store){return out.replace(/ ([-]) /g,function(_,c){return store[c.charCodeAt(0)-0xF000];});}
+  function hlGeneric(esc,kw){
+    var s=[],st=mkStash(s),o=esc;
+    o=o.replace(/\/\*[\s\S]*?\*\//g,function(m){return st("tok-comment",m);});
+    o=o.replace(/\/\/[^\n]*/g,function(m){return st("tok-comment",m);});
+    o=o.replace(/"(?:[^"\\\n]|\\.)*"/g,function(m){return st("tok-string",m);});
+    o=o.replace(/'(?:[^'\\\n]|\\.)*'/g,function(m){return st("tok-string",m);});
+    o=o.replace(/`(?:[^`\\]|\\.)*`/g,function(m){return st("tok-string",m);});
+    o=o.replace(/@[A-Za-z][\w]*/g,function(m){return st("tok-keyword",m);});
+    o=o.replace(/\b(?:0[xX][0-9a-fA-F]+|\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g,function(m){return st("tok-number",m);});
+    if(kw&&kw.length){var re=new RegExp("\\b("+kw.join("|")+")\\b","g");o=o.replace(re,function(m){return st("tok-keyword",m);});}
+    return restore(o,s);
+  }
+  function hlMarkup(esc){
+    var s=[],st=mkStash(s),o=esc;
+    o=o.replace(/&lt;!--[\s\S]*?--&gt;/g,function(m){return st("tok-comment",m);});
+    o=o.replace(/&lt;\/?[a-zA-Z][\w-]*/g,function(m){return st("tok-keyword",m);});
+    o=o.replace(/"(?:[^"\\\n]|\\.)*"/g,function(m){return st("tok-string",m);});
+    o=o.replace(/'(?:[^'\\\n]|\\.)*'/g,function(m){return st("tok-string",m);});
+    return restore(o,s);
+  }
+  function hlCss(esc){
+    var s=[],st=mkStash(s),o=esc;
+    o=o.replace(/\/\*[\s\S]*?\*\//g,function(m){return st("tok-comment",m);});
+    o=o.replace(/"(?:[^"\\\n]|\\.)*"/g,function(m){return st("tok-string",m);});
+    o=o.replace(/'(?:[^'\\\n]|\\.)*'/g,function(m){return st("tok-string",m);});
+    o=o.replace(/#[0-9a-fA-F]{3,8}\b/g,function(m){return st("tok-number",m);});
+    o=o.replace(/\b\d+\.?\d*(?:px|em|rem|%|vh|vw|s|ms|fr|deg|pt)?\b/g,function(m){return st("tok-number",m);});
+    o=o.replace(/@[a-zA-Z-]+/g,function(m){return st("tok-keyword",m);});
+    return restore(o,s);
+  }
+  function highlight(lang,raw){
+    var e=escapeHtml(raw);
+    try{
+      if(lang==="html")return hlMarkup(e);
+      if(lang==="css")return hlCss(e);
+      if(lang==="ts"||lang==="typescript")return hlGeneric(e,KW.ts);
+      if(lang==="js"||lang==="javascript")return hlGeneric(e,KW.js);
+      if(lang==="bash"||lang==="sh"||lang==="shell"){
+        var h=e.replace(/(^|\n)(\s*#[^\n]*)/g,function(m,p,c){return p+'<span class="tok-comment">'+c+"</span>";});
+        return hlGeneric(h,KW.bash);
+      }
+      return e;
+    }catch(err){return e;}
+  }
+  function initHighlight(){
+    toArray(document.querySelectorAll("pre.code-block > code")).forEach(function(code){
+      var lang=(code.parentNode.getAttribute("data-lang")||"").toLowerCase();
+      code.innerHTML=highlight(lang,code.textContent);
+    });
+  }
+  var THEME_KEY="cheatsheet-theme";
+  function initTheme(){
+    var root=document.documentElement,st=null;
+    try{st=localStorage.getItem(THEME_KEY);}catch(e){}
+    if(st==="light"||st==="dark")root.dataset.theme=st;
+    else if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)root.dataset.theme="dark";
+    else root.dataset.theme="light";
+    var t=document.getElementById("theme-toggle");if(!t)return;
+    t.addEventListener("click",function(){var n=root.dataset.theme==="dark"?"light":"dark";root.dataset.theme=n;try{localStorage.setItem(THEME_KEY,n);}catch(e){}});
+  }
+  function initFilter(){
+    var input=document.getElementById("toc-search");
+    var empty=document.getElementById("toc-empty");
+    if(!input)return;
+    var cats=toArray(document.querySelectorAll("section.cs-cat"));
+    var tocLinks=toArray(document.querySelectorAll("#toc a"));
+    function apply(){
+      var q=input.value.trim().toLowerCase(),any=false;
+      cats.forEach(function(cat){
+        var cards=toArray(cat.querySelectorAll(".cs-card")),shown=0;
+        cards.forEach(function(c){
+          var hit=!q||(c.textContent||"").toLowerCase().indexOf(q)!==-1;
+          c.hidden=!hit;if(hit)shown++;
+        });
+        cat.hidden=!(shown>0);
+        var link=tocLinks.filter(function(a){return a.getAttribute("href")==="#"+cat.id;})[0];
+        if(link)link.parentNode.hidden=cat.hidden;
+        if(!cat.hidden)any=true;
+      });
+      if(empty)empty.hidden=any;
+    }
+    input.addEventListener("input",apply);input.addEventListener("search",apply);
+  }
+  function initSpy(){
+    var links=toArray(document.querySelectorAll("#toc a[href^='#']"));if(!links.length)return;
+    var secs=[];links.forEach(function(a){var el=document.getElementById(a.getAttribute("href").slice(1));if(el)secs.push(el);});
+    if(!secs.length)return;
+    function setA(id){links.forEach(function(a){a.classList.toggle("active",a.getAttribute("href")==="#"+id);});}
+    if(!("IntersectionObserver" in window)){setA(secs[0].id);return;}
+    var vis={};
+    var obs=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting)vis[e.target.id]=1;else delete vis[e.target.id];});
+      for(var i=0;i<secs.length;i++){if(vis[secs[i].id]){setA(secs[i].id);break;}}
+    },{rootMargin:"-10% 0px -75% 0px",threshold:0});
+    secs.forEach(function(s){obs.observe(s);});
+  }
+  function boot(){initTheme();initHighlight();initFilter();initSpy();}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
+</script>
+</body>
+</html>
