@@ -39,6 +39,7 @@
           <li><a href="#angular">Angular</a></li>
           <li><a href="#web-design">Web Design course</a></li>
           <li><a href="#cheatsheets">Cheatsheets</a></li>
+          <li><a href="#case-study">Case study design</a></li>
           <li><a href="#notes">Notes</a></li>
           <li><a href="#use-case-employee-dashboard">Use case: Employee Dashboard</a></li>
           <li><a href="#use-case-typed-employee">Use case: Typed Employee Model</a></li>
@@ -321,6 +322,18 @@ console.log("Playground ready. Edit the code, then press Run.");</textarea>
           <li><a href="cheatsheet-web-design.html">Web Design cheatsheet</a> — the Web Design course distilled in its own order: HTML foundations, styling with CSS, JavaScript fundamentals, the DOM, building a responsive site, JavaScript in practice, advanced JS, and publishing.</li>
         </ul>
         <p class="note">Note: this menu item stays last as more cheatsheets are added over time.</p>
+      </section>
+
+      <section id="case-study" class="concept" tabindex="-1">
+        <h2>Case study design: Restaurant Chain Management</h2>
+        <p>A worked <strong>High-Level Design (HLD)</strong> and <strong>Low-Level Design (LLD)</strong> for an Angular case study — a restaurant-chain management SPA with Admin (restaurant/menu CRUD + menu assignment), Restaurant Owner (menu view), and User (browse → order → confirmation) roles. It deliberately exercises as many concepts as possible from the <a href="angular-core-deep-dive.html">Angular Core Deep Dive</a> and <a href="web-design-html-css-js.html">Web Design</a> courses, and it stays frontend-only: the backend is simulated with <strong>json-server + a dev-server proxy</strong> (with a hand-written Express variant documented as an alternative).</p>
+        <p>Every design decision is stated as <em>what</em> (the concept/tech) and <em>why</em> (the requirement it satisfies and which course teaches it), and Section 16 of the LLD is a full concept-to-file traceability matrix. The page is standalone and offline, with architecture, routing, ER and sequence diagrams drawn as inline SVG, a sticky filtered contents, theme toggle, and print styles.</p>
+        <p><a class="card-link" href="case-study-restaurant-design.html">Open the Case Study design →</a></p>
+        <ul>
+          <li><a href="case-study-restaurant-design.html#part-hld">High-Level Design</a> — architecture, actors &amp; permissions, feature decomposition, routing map, domain model, state &amp; data flow, backend simulation, cross-cutting concerns.</li>
+          <li><a href="case-study-restaurant-design.html#part-lld">Low-Level Design</a> — folder structure, routes/guards, models, signal services, interceptors, per-component design, reusable UI, pipes/directives, forms, SCSS, backend contract, testing, and the traceability matrix.</li>
+        </ul>
+        <p class="note">Note: this is a design document (not the built app). It also ships as Markdown — <code>docs/HLD.md</code> and <code>docs/LLD.md</code> — alongside this standalone HTML page.</p>
       </section>
 
       <section id="notes" class="concept" tabindex="-1">
