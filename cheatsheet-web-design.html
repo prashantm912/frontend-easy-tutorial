@@ -288,6 +288,41 @@ code:not(pre code){background:var(--code-bg);border:1px solid var(--border);bord
       </svg><figcaption>A page maps cleanly onto semantic landmarks.</figcaption></figure>
     </article>
 
+    <article class="cs-card" id="cs-w-html-13">
+      <h3 class="cs-title">The <code>&lt;head&gt;</code>: metadata &amp; meta tags</h3>
+      <p class="cs-desc">Invisible setup: <code>charset</code> for encoding, the <code>viewport</code> meta (the #1 responsive must-have), <code>description</code> for search snippets, and <code>&lt;title&gt;</code> for the tab.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport"
+        content="width=device-width, initial-scale=1"&gt;
+  &lt;meta name="description" content="A short page summary."&gt;
+  &lt;title&gt;My Page&lt;/title&gt;
+&lt;/head&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Correct encoding, mobile-friendly scaling, a search-result blurb, and a tab title.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-14">
+      <h3 class="cs-title">HTML entities <code>&amp;lt; &amp;amp; &amp;copy;</code></h3>
+      <p class="cs-desc">Reserved characters need escapes: <code>&amp;lt;</code>→&lt;, <code>&amp;gt;</code>→&gt;, <code>&amp;amp;</code>→&amp;. Also handy: <code>&amp;copy;</code>→© and <code>&amp;nbsp;</code> (non-breaking space).</p>
+      <pre class="code-block" data-lang="html"><code>&lt;p&gt;Use &amp;lt;p&amp;gt; to write a paragraph.&lt;/p&gt;
+&lt;p&gt;Tom &amp;amp; Jerry &amp;copy; 2026&lt;/p&gt;
+&lt;p&gt;10&amp;nbsp;km (never wraps)&lt;/p&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Shows literal "&lt;p&gt;", "Tom &amp; Jerry © 2026", and "10 km" kept on one line.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-html-15">
+      <h3 class="cs-title">More semantics <code>&lt;section&gt; &lt;figure&gt;</code></h3>
+      <p class="cs-desc"><code>&lt;section&gt;</code> groups a themed block (usually with a heading); <code>&lt;figure&gt;</code> wraps media with a <code>&lt;figcaption&gt;</code> label.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;section&gt;
+  &lt;h2&gt;Gallery&lt;/h2&gt;
+  &lt;figure&gt;
+    &lt;img src="cat.jpg" alt="A cat"&gt;
+    &lt;figcaption&gt;Caption&lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/section&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>A titled section containing an image with a caption beneath it.</div>
+    </article>
+
   </div>
 </section>
 <section class="cs-cat" id="w-css">
@@ -480,7 +515,7 @@ button:not(.primary){ opacity: 0.7; }</code></pre>
 article &gt; p { font-weight: bold; } /* child: direct only */
 h3 + p      { color: #0b63ce; }    /* adjacent: first p after h3 */
 h3 ~ p      { font-style: italic; }/* general: every p after h3 */</code></pre>
-      <div class="io-output"><span class="io-title">Output</span>Direct paragraphs bold; nested one excluded — combinators walk siblings, not descendants.</div>
+      <div class="io-output"><span class="io-title">Output</span>Descendant p gray, direct-child p bold; + and ~ then walk siblings after h3.</div>
     </article>
 
     <article class="cs-card" id="cs-w-css-16">
@@ -558,6 +593,18 @@ header, footer { grid-column: 1 / -1; }  /* span all columns */</code></pre>
 }
 /* auto-fit collapses empty tracks; auto-fill keeps them */</code></pre>
       <div class="io-output"><span class="io-title">Output</span>Cards reflow from many columns to one as the viewport narrows — no media query.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-css-21">
+      <h3 class="cs-title">Loading web fonts <code>&lt;link&gt;</code> / <code>@import</code> / <code>display=swap</code></h3>
+      <p class="cs-desc">Pull a hosted font via a <code>&lt;link&gt;</code> in the head or <code>@import</code> atop your CSS, then name it in <code>font-family</code>. <code>display=swap</code> shows fallback text immediately (FOUT), avoiding invisible text (FOIT).</p>
+      <pre class="code-block" data-lang="html"><code>&lt;!-- in &lt;head&gt;, before your stylesheet --&gt;
+&lt;link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=PT+Sans&amp;display=swap"&gt;</code></pre>
+      <pre class="code-block" data-lang="css"><code>/* or, at the very top of your CSS */
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans&amp;display=swap");
+body { font-family: "PT Sans", sans-serif; }</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Text renders in a fallback first, then swaps to PT Sans once it loads — no blank flash.</div>
     </article>
 
   </div>
@@ -676,6 +723,7 @@ add(2, 3);   // 5</code></pre>
   else return 'Fail';
 }
 grade(72);                       // 'B'
+const age = 20;
 const canVote = age &gt;= 18 ? 'yes' : 'no';</code></pre>
       <div class="io-output"><span class="io-title">Output</span>grade(72) -&gt; "B"; ternary picks yes/no.</div>
     </article>
@@ -740,6 +788,20 @@ do { console.log(m); } while (m &lt; 3);  // runs once</code></pre>
 for (const item of fruit) console.log(item);
 fruit.forEach((value, index) =&gt; console.log(index, value));</code></pre>
       <div class="io-output"><span class="io-title">Output</span>apple, kiwi, mango<br>0 apple, 1 kiwi, 2 mango</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-14">
+      <h3 class="cs-title">Reference vs value types</h3>
+      <p class="cs-desc">Top beginner trap: <code>const b = arr</code> copies a <em>reference</em>, so mutating <code>b</code> also changes <code>arr</code>. Primitives copy by value and never share.</p>
+      <pre class="code-block" data-lang="js"><code>const scores = [10, 20, 30];
+const b = scores;   // copies the reference, not contents
+b[1] = 999;
+scores[1];          // 999 — changed through b!
+
+let x = 5, y = x;   // primitive: copied by value
+y = 99;
+x;                  // still 5</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>scores[1] is 999; x stays 5.</div>
     </article>
 
   </div>
@@ -901,6 +963,54 @@ cancelAnimationFrame(id);            // stop it</code></pre>
       <div class="io-output"><span class="io-title">Output</span>Ball glides across; pauses automatically in hidden tabs.</div>
     </article>
 
+    <article class="cs-card" id="cs-w-dom-13">
+      <h3 class="cs-title">Bubbling &amp; delegation <code>event.target</code></h3>
+      <p class="cs-desc">Events bubble from the target up through its ancestors; put one listener on a parent and branch on <code>event.target</code> to handle many children.</p>
+      <pre class="code-block" data-lang="js"><code>list.addEventListener('click', (e) =&gt; {
+  const li = e.target.closest('li'); // which child?
+  if (!li) return;                   // clicked the gap
+  li.classList.toggle('done');
+});
+// one listener covers current AND future &lt;li&gt;s</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Clicking any <code>&lt;li&gt;</code> toggles it — no per-item listeners.</div>
+      <figure>
+        <svg viewBox="0 0 300 120" role="img" aria-label="Click on li bubbles up to ul to document" xmlns="http://www.w3.org/2000/svg">
+          <rect x="60" y="8" width="180" height="24" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="150" y="24" text-anchor="middle" fill="var(--text)" font-size="12">document</text>
+          <rect x="90" y="46" width="120" height="24" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="150" y="62" text-anchor="middle" fill="var(--text)" font-size="12">ul (listener)</text>
+          <rect x="118" y="84" width="64" height="24" rx="4" fill="var(--accent)"/>
+          <text x="150" y="100" text-anchor="middle" fill="#fff" font-size="12">li (click)</text>
+          <line x1="150" y1="84" x2="150" y2="70" stroke="var(--border)"/>
+          <line x1="150" y1="46" x2="150" y2="32" stroke="var(--border)"/>
+          <text x="200" y="60" text-anchor="start" fill="var(--muted)" font-size="10">bubbles ↑</text>
+        </svg>
+        <figcaption>The event travels target → ul → document; catch it on the parent.</figcaption>
+      </figure>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-14">
+      <h3 class="cs-title">Removing listeners <code>removeEventListener()</code></h3>
+      <p class="cs-desc">Detach a handler by passing the <em>same</em> function reference used to add it; an inline arrow can never be removed because it has no name to match.</p>
+      <pre class="code-block" data-lang="js"><code>function onClick() { console.log('hi'); }
+btn.addEventListener('click', onClick);
+btn.removeEventListener('click', onClick); // works
+
+// ✗ different function each time → cannot remove
+btn.addEventListener('click', () =&gt; {});</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Only the named-function listener detaches; the arrow one stays forever.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-dom-15">
+      <h3 class="cs-title">Moving &amp; reordering nodes <code>insertBefore()</code></h3>
+      <p class="cs-desc">A node lives in exactly one place, so re-appending an existing node <em>moves</em> it (no copy). Use <code>insertBefore</code> / <code>prepend</code> to reorder.</p>
+      <pre class="code-block" data-lang="js"><code>list.appendChild(existingLi);        // moves it to the end
+list.prepend(existingLi);            // moves it to the front
+list.insertBefore(newLi, refLi);     // put newLi before refLi
+first.after(second);                 // sibling insert</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>The node vanishes from its old spot and reappears at the new one.</div>
+    </article>
+
   </div>
 </section>
 <section class="cs-cat" id="w-responsive-build">
@@ -964,7 +1074,7 @@ cancelAnimationFrame(id);            // stop it</code></pre>
     </article>
 
     <article class="cs-card" id="cs-w-responsive-build-05">
-      <h3 class="cs-title">Multi-column main that reflows <code>grid + minmax</code></h3>
+      <h3 class="cs-title">Multi-column main that reflows <code>grid-template-columns</code></h3>
       <p class="cs-desc">Grid columns on wide screens; the media query collapses them to a single column on mobile.</p>
       <pre class="code-block" data-lang="css"><code>* { box-sizing: border-box; }
 .main { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
@@ -1013,6 +1123,34 @@ button.addEventListener('click', () =&gt; {
   .main { grid-template-columns: 2fr 1fr; }
 }</code></pre>
       <div class="io-output"><span class="io-title">Output</span>Simple stacked default; multi-column layout added only where there's room.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-responsive-build-09">
+      <h3 class="cs-title">Clearfix a floated multi-column layout <code>::after{clear:both}</code></h3>
+      <p class="cs-desc">A parent of only floated children collapses to zero height, so its background vanishes; a clearfix <code>::after</code> forces it to wrap them. Also set <code>box-sizing:border-box</code> or percentage widths + padding overflow.</p>
+      <pre class="code-block" data-lang="css"><code>* { box-sizing: border-box; }
+.footer { background: #111; }
+.footer &gt; div { float: left; width: 25%; }   /* widths total 100% */
+
+.footer::after {          /* clearfix: contain the floats */
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media (max-width: 640px) {
+  .footer &gt; div { float: none; width: 100%; }   /* stack */
+}</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Footer wraps its floated columns so the dark background and padding fill; columns stack on phones.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-responsive-build-10">
+      <h3 class="cs-title">FOIT vs FOUT + <code>display=swap</code></h3>
+      <p class="cs-desc">While a web font downloads: <strong>FOIT</strong> (Flash Of Invisible Text) hides text until it arrives; <strong>FOUT</strong> (Flash Of Unstyled Text) shows the fallback instantly. <code>display=swap</code> requests FOUT — readable now, restyles later.</p>
+      <pre class="code-block" data-lang="html"><code>&lt;link
+  href="https://fonts.googleapis.com/css2?family=PT+Sans&amp;display=swap"
+  rel="stylesheet"&gt;</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Text paints immediately in the fallback (FOUT), then swaps to PT Sans — no blank flash on slow links.</div>
     </article>
 
   </div>
@@ -1190,6 +1328,33 @@ main.src = images[0];</code></pre>
       <div class="io-output"><span class="io-title">Output</span>Thumbnail row; clicking one swaps the large image. Add a picture = add an array entry.</div>
     </article>
 
+    <article class="cs-card" id="cs-w-js-practice-13">
+      <h3 class="cs-title">Deep clone: <code>structuredClone</code></h3>
+      <p class="cs-desc">The <code>JSON</code> trick (card 09) drops functions, <code>Date</code>s, <code>undefined</code>, <code>Map</code>/<code>Set</code>. Use <code>structuredClone</code>; a spread only copies one level.</p>
+      <pre class="code-block" data-lang="js"><code>const o = { d: new Date(), fn: () =&gt; 1, tags: new Set([1]) };
+JSON.parse(JSON.stringify(o));  // d becomes a string, fn &amp; tags lost
+const deep = structuredClone(o); // true deep copy, types kept
+
+const shallow = { ...o };        // nested refs still SHARED
+shallow.tags.add(2);             // also mutates o.tags!</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>structuredClone: independent; spread: nested Set shared</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-js-practice-14">
+      <h3 class="cs-title">Closure: <code>debounce()</code></h3>
+      <p class="cs-desc">Delay a handler until input stops — restart a timer on each call so only the last fires. Great for search, resize, scroll.</p>
+      <pre class="code-block" data-lang="js"><code>const debounce = (fn, ms) =&gt; {
+  let t;
+  return (...a) =&gt; {
+    clearTimeout(t);
+    t = setTimeout(() =&gt; fn(...a), ms);
+  };
+};
+const onSearch = debounce(q =&gt; console.log("search", q), 300);
+input.addEventListener("input", e =&gt; onSearch(e.target.value));</code></pre>
+      <div class="io-output"><span class="io-title">Console</span>Fires once, 300ms after typing pauses</div>
+    </article>
+
   </div>
 </section>
 <section class="cs-cat" id="w-advanced">
@@ -1308,6 +1473,37 @@ input.addEventListener("input", (e) =&gt; onSearch(e.target.value));</code></pre
       </figure>
     </article>
 
+    <article class="cs-card" id="cs-w-advanced-06">
+      <h3 class="cs-title">Throttle vs debounce</h3>
+      <p class="cs-desc">Debounce's cousin: throttle runs the function <em>at most once per interval</em> during a burst; debounce waits for the burst to <em>stop</em>. Use throttle for scroll/mousemove, debounce for search input.</p>
+      <pre class="code-block" data-lang="js"><code>function throttle(fn, interval) {
+  let last = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - last &gt;= interval) {       // enough time passed?
+      last = now;
+      fn.apply(this, args);             // run at most once/interval
+    }
+  };
+}
+window.addEventListener("scroll", throttle(onScroll, 200));</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Throttle: steady calls every 200ms while scrolling. Debounce: silence until scrolling pauses, then one call.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-advanced-07">
+      <h3 class="cs-title">Promise <code>.catch()</code> / <code>.finally()</code></h3>
+      <p class="cs-desc">A rejected promise skips <code>.then</code> and lands in <code>.catch(onErr)</code>; <code>.finally(fn)</code> runs on either outcome for cleanup. <code>.catch</code> is just <code>.then(null, onErr)</code>.</p>
+      <pre class="code-block" data-lang="js"><code>fetch("/api")
+  .then((res) =&gt; res.json())          // runs on fulfill
+  .catch((err) =&gt; console.error(err))  // runs on any reject
+  .finally(() =&gt; hideSpinner());       // runs either way
+
+// reject example
+new Promise((res, rej) =&gt; rej(new Error("boom")))
+  .catch((e) =&gt; console.log(e.message)); // "boom"</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>On reject: <code>.then</code> is skipped, <code>.catch</code> logs the error, then <code>.finally</code> still runs. An uncaught rejection surfaces as an "unhandled rejection" warning.</div>
+    </article>
+
   </div>
 </section>
 <section class="cs-cat" id="w-publish">
@@ -1394,6 +1590,17 @@ git push                         # publish — live site refreshes shortly</code
 # 4. Add a build tool (Vite) when files multiply
 # Keep MDN (developer.mozilla.org) open throughout</code></pre>
       <div class="io-output"><span class="io-title">Output</span>Every framework is still HTML, CSS, and JS underneath — this foundation carries over.</div>
+    </article>
+
+    <article class="cs-card" id="cs-w-publish-07">
+      <h3 class="cs-title">VS Code Live Server (auto-reload)</h3>
+      <p class="cs-desc">The other easy local option: install the Live Server extension, then right-click <code>index.html</code> &rarr; Open with Live Server. The browser refreshes on every save.</p>
+      <pre class="code-block" data-lang="bash"><code># in VS Code, one-time setup:
+# Extensions panel → search "Live Server" → Install
+# then, in the file explorer:
+# right-click index.html → "Open with Live Server"
+# serves at http://127.0.0.1:5500 and hot-reloads on save</code></pre>
+      <div class="io-output"><span class="io-title">Output</span>Save a file and the page reloads itself — no manual refresh, no Python needed.</div>
     </article>
 
   </div>
