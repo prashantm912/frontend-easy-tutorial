@@ -4576,6 +4576,14 @@ pool.shutdown();                    // ALWAYS release the pool</code></pre></div
       <h2>Wrapping up</h2>
       <p>That completes the tour of Java concurrency: how threads are created, coordinated, and terminated; how to trade latency against throughput; the stack/heap memory model that decides what is shared; the hazards of shared state — race conditions, data races, and deadlocks — and the full toolkit that tames them, from <code>synchronized</code> and <code>volatile</code> through <code>ReentrantLock</code>, read-write locks, semaphores, and condition variables, to lock-free CAS algorithms and, finally, virtual threads for massively concurrent IO. The recurring lesson: share as little mutable state as possible, protect what you must share with the simplest correct primitive, and always measure — profile before adding threads, locks, or parallelism, because concurrency buys performance only when the workload and the hardware agree.</p>
     </section>
+    <section class="section" aria-label="Related guides">
+      <h2>Continue the Java track</h2>
+      <p>Four more guides in the <strong>Java Programming essentials</strong> series:</p>
+      <div class="box"><a href="java-collections.html"><strong>Java Collections</strong></a> &mdash; Arrays, the <code>Collection</code> &amp; <code>Map</code> hierarchies and their trade-offs, thread-safe concurrent variants, and streams for bulk data.</div>
+      <div class="box"><a href="java-functional-programming.html"><strong>Java Functional Programming</strong></a> &mdash; Lambdas, method references, the standard functional interfaces, and the Streams API end to end.</div>
+      <div class="box"><a href="java-modern.html"><strong>Modern Java (Java 8 &rarr; 25)</strong></a> &mdash; <code>var</code>, records, sealed types, pattern matching, text blocks, enhanced <code>switch</code>, stream gatherers, and the module system.</div>
+      <div class="box"><a href="java-design-patterns.html"><strong>SOLID &amp; Design Patterns</strong></a> &mdash; The five SOLID principles, the Gang-of-Four creational/behavioral/structural patterns, and system-design fundamentals.</div>
+    </section>
     <footer style="margin-top:24px;padding-top:12px;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem">
       <p>Original study guide — concepts paraphrased from a Java multithreading course; code examples reimplemented and improved for clarity. Not affiliated with or endorsed by the course authors.</p>
     </footer>

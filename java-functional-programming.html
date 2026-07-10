@@ -3373,6 +3373,14 @@ LongStream.rangeClosed(1, 1_000_000).parallel().sum();</code></pre></div>
       <h2>Wrapping up</h2>
       <p>That completes the tour of functional programming in Java. The core is small and composes endlessly: turn a collection into a <code>Stream</code>, chain lazy intermediate operations — <code>filter</code>, <code>map</code>, <code>sorted</code>, <code>distinct</code>, <code>limit</code> — and finish with one terminal operation such as <code>forEach</code>, <code>collect</code>, <code>reduce</code>, or a match/find. Lambdas and method references supply the behaviour; the standard functional interfaces give that behaviour a type; and higher-order methods let you pass behaviour as an argument, so the same pipeline can be reshaped without rewriting its plumbing. The recurring lesson: prefer expressions over statements, keep functions free of side effects, let the stream stay lazy until a terminal call pulls the data through, and reach for <code>parallel()</code> only once you have measured a real, CPU-bound bottleneck on a large dataset. Written this way, Java code reads as a description of the result rather than a script of the steps — shorter, clearer, and easier to parallelize.</p>
     </section>
+    <section class="section" aria-label="Related guides">
+      <h2>Continue the Java track</h2>
+      <p>Four more guides in the <strong>Java Programming essentials</strong> series:</p>
+      <div class="box"><a href="java-collections.html"><strong>Java Collections</strong></a> &mdash; Arrays, the <code>Collection</code> &amp; <code>Map</code> hierarchies and their trade-offs, thread-safe concurrent variants, and streams for bulk data.</div>
+      <div class="box"><a href="java-multithreading.html"><strong>Java Multithreading</strong></a> &mdash; Threads, synchronization, locks, semaphores, condition variables, lock-free CAS, and virtual threads &mdash; concurrency &amp; performance.</div>
+      <div class="box"><a href="java-modern.html"><strong>Modern Java (Java 8 &rarr; 25)</strong></a> &mdash; <code>var</code>, records, sealed types, pattern matching, text blocks, enhanced <code>switch</code>, stream gatherers, and the module system.</div>
+      <div class="box"><a href="java-design-patterns.html"><strong>SOLID &amp; Design Patterns</strong></a> &mdash; The five SOLID principles, the Gang-of-Four creational/behavioral/structural patterns, and system-design fundamentals.</div>
+    </section>
     <footer style="margin-top:24px;padding-top:12px;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem">
       <p>Original study guide — concepts paraphrased from a Java functional-programming course; code examples reimplemented and improved for clarity. Not affiliated with or endorsed by the course authors.</p>
     </footer>
