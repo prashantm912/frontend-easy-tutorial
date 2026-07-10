@@ -1720,7 +1720,7 @@ a       b       c&lt;/pre&gt;</textarea>
             <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML source">&lt;div id="safe"&gt;&lt;/div&gt;
 &lt;div id="unsafe"&gt;&lt;/div&gt;</textarea>
             <textarea class="code" data-lang="js" spellcheck="false" aria-label="JavaScript source">// Hostile input pretending to be a username.
-const evil = '&lt;img src=x onerror="alert(1)"&gt;Bobby';
+const evil = '&lt;img src=x onerror="console.log(\'XSS fired!\')"&gt;Bobby';
 
 // SAFE: textContent treats the string as data. The
 // browser escapes it; no element is created.
