@@ -43,6 +43,18 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .header-links{display:flex;gap:4px;flex-wrap:wrap;margin-left:8px}
 .header-links a{color:var(--muted);font-size:.85rem;padding:5px 9px;border-radius:var(--radius-sm)}
 .header-links a:hover{color:var(--accent);background:var(--surface-2);text-decoration:none}
+.nav-dropdown{position:relative;display:inline-flex}
+.nav-dropdown-toggle{display:inline-flex;align-items:center;gap:5px;color:var(--muted);background:none;border:none;
+  padding:5px 9px;border-radius:var(--radius-sm);font:inherit;font-size:.85rem;cursor:pointer}
+.nav-dropdown-toggle:hover,.nav-dropdown:focus-within .nav-dropdown-toggle{color:var(--accent);background:var(--surface-2)}
+.nav-caret{font-size:.7em;transition:transform .15s ease}
+.nav-dropdown:hover .nav-caret,.nav-dropdown:focus-within .nav-caret{transform:rotate(180deg)}
+.nav-dropdown-menu{position:absolute;top:100%;left:0;z-index:50;display:flex;flex-direction:column;min-width:190px;
+  padding:6px;margin-top:4px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+  box-shadow:0 10px 28px rgba(0,0,0,.22);opacity:0;visibility:hidden;transform:translateY(-4px);
+  transition:opacity .15s ease,transform .15s ease,visibility .15s}
+.nav-dropdown:hover .nav-dropdown-menu,.nav-dropdown:focus-within .nav-dropdown-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.nav-dropdown-menu a{padding:7px 11px;white-space:nowrap;border-radius:var(--radius-sm)}
 .theme-toggle{margin-left:auto;font:inherit;font-size:.85rem;padding:6px 12px;border:1px solid var(--border);
   border-radius:var(--radius-sm);background:var(--surface-2);color:var(--text);cursor:pointer}
 .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
@@ -105,8 +117,13 @@ code:not(pre code){background:var(--code-bg);border:1px solid var(--border);bord
   <h1>Restaurant Case Study <span class="sub">HLD &amp; LLD design</span></h1>
   <nav class="header-links" aria-label="Related">
     <a href="index.html">Home</a>
-    <a href="angular-core-deep-dive.html">Angular Deep Dive</a>
-    <a href="web-design-html-css-js.html">Web Design</a>
+    <div class="nav-dropdown">
+      <button type="button" class="nav-dropdown-toggle" aria-haspopup="true">Frontend Development with Angular <span class="nav-caret" aria-hidden="true">▾</span></button>
+      <div class="nav-dropdown-menu">
+        <a href="angular-core-deep-dive.html">Angular Deep Dive</a>
+        <a href="web-design-html-css-js.html">Web Design</a>
+      </div>
+    </div>
     <a href="cheatsheets.html">Cheatsheets</a>
   </nav>
   <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">◑ Theme</button>
