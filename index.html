@@ -30,6 +30,7 @@
         <button type="button" class="nav-dropdown-toggle" aria-haspopup="true">Java Programming essentials <span class="nav-caret" aria-hidden="true">▾</span></button>
         <div class="nav-dropdown-menu">
           <a href="java-collections.html">1 Java Collections from basics to Advanced</a>
+          <a href="java-multithreading.html">2 Java Multithreading, Concurrency &amp; Performance Optimization</a>
         </div>
       </div>
       <a href="cheatsheets.html">Cheatsheets</a>
@@ -50,6 +51,7 @@
           <li><a href="#angular">Angular</a></li>
           <li><a href="#web-design">Web Design course</a></li>
           <li><a href="#java-collections">Java Collections</a></li>
+          <li><a href="#java-multithreading">Java Multithreading</a></li>
           <li><a href="#cheatsheets">Cheatsheets</a></li>
           <li><a href="#case-study">Case study design</a></li>
           <li><a href="#notes">Notes</a></li>
@@ -343,6 +345,25 @@ console.log("Playground ready. Edit the code, then press Run.");</textarea>
           <li><a href="java-collections.html#sec-14">Generics in depth</a></li>
         </ul>
         <p class="note">Note: a self-contained, standalone page (its own inline CSS/JS) — the first entry in the Java Programming essentials track.</p>
+      </section>
+
+      <section id="java-multithreading" class="concept" tabindex="-1">
+        <h2>Java Multithreading</h2>
+        <p>A standalone, backend study guide to writing correct, fast concurrent programs in core Java — the second course under <strong>Java Programming essentials</strong>. It rewrites a full "Java Multithreading, Concurrency &amp; Performance Optimization" course into an original, paraphrased reference: thread creation and coordination, optimizing for latency and throughput, the stack/heap memory model, race conditions, data races and deadlocks, the full synchronization toolkit (<code>synchronized</code>, <code>volatile</code>, <code>ReentrantLock</code>, read-write locks, semaphores, condition variables), lock-free CAS algorithms, blocking vs non-blocking IO threading models, and virtual threads.</p>
+        <p>As with the Collections guide, each lecture pairs a focused, reimplemented Java example with its <strong>simulated console output</strong> — and because concurrency output is inherently non-deterministic, traces that depend on thread interleaving are clearly labelled illustrative. Inline diagrams, pitfalls, "Advanced" notes, cheat-sheets, and per-section quizzes throughout.</p>
+        <p><a class="card-link" href="java-multithreading.html">Open the Java Multithreading guide →</a></p>
+        <ul>
+          <li><a href="java-multithreading.html#sec-2">Thread creation</a></li>
+          <li><a href="java-multithreading.html#sec-3">Thread coordination: join, interrupt, daemon</a></li>
+          <li><a href="java-multithreading.html#sec-4">Performance: latency &amp; throughput</a></li>
+          <li><a href="java-multithreading.html#sec-6">Critical sections, synchronization &amp; deadlocks</a></li>
+          <li><a href="java-multithreading.html#sec-7">Advanced locking: ReentrantLock &amp; read-write locks</a></li>
+          <li><a href="java-multithreading.html#sec-8">Inter-thread communication</a></li>
+          <li><a href="java-multithreading.html#sec-9">Lock-free algorithms &amp; CAS</a></li>
+          <li><a href="java-multithreading.html#sec-10">Threading models for high-performance IO</a></li>
+          <li><a href="java-multithreading.html#sec-11">Virtual threads</a></li>
+        </ul>
+        <p class="note">Note: a self-contained, standalone page (its own inline CSS/JS) — the second entry in the Java Programming essentials track.</p>
       </section>
 
       <section id="cheatsheets" class="concept" tabindex="-1">
