@@ -2,7 +2,17 @@
 
 ## Purpose
 
-Convert the provided Udemy Angular Core Deep Dive transcript (split into sections and lectures) into a complete, visually appealing, copyright-safe, learner-friendly HTML site that preserves all technical information but rewrites the text in original, concise, and professional language suitable for reading (not a transcript). Use the repository examples (if a GitHub URL / branches are provided) to include runnable code; otherwise reimplement equivalent, improved examples.
+Convert a provided course transcript (split into sections and lectures) into a complete, visually appealing, copyright-safe, learner-friendly HTML page that preserves all technical information but rewrites the text in original, concise, and professional language suitable for reading (not a transcript). The course may cover **any technology — frontend or backend** (e.g. HTML/CSS/JS, TypeScript, Angular, but equally Java, Python, Go, SQL, DevOps, etc.). Use example code when supplied — from a GitHub repo/branches **or** from attached resource files bundled with the transcript — otherwise reimplement equivalent, improved examples.
+
+## Technology scope — frontend AND backend
+
+These instructions are technology-agnostic. Adapt every concrete detail to the course's actual language/stack:
+
+- **Runnable-in-browser languages** (HTML/CSS/JS): use the shared shell's live, editable sandbox iframe where it exists.
+- **Not-runnable-in-browser languages** (TypeScript, Angular, and all **backend** languages such as Java, Python, Go, C#, SQL, shell): the browser cannot execute them. Use **static code blocks next to a simulated output panel** — the `.io` / `pre.code` / `.out` two-column pattern used by `angular-core-deep-dive.html` and `typescript.html`. Trace the code by hand and show the exact console/stdout it would produce; for non-deterministic output (e.g. `HashSet`/`HashMap` iteration order) say so.
+- **"Run locally" commands must match the stack**, not a hardcoded web toolchain. Examples: Java → `javac X.java && java X` or `jshell`, Maven/Gradle for projects; Python → `python x.py`; Node → `node x.js`; Angular → `ng serve`. Never emit `npm`/`ng` for a non-JS course.
+- **Standalone vs shared shell**: a non-frontend guide is typically a **standalone page** (its own inline CSS/JS, a **unique** theme `localStorage` key) modelled on `angular-core-deep-dive.html`, because the shared front-end shell's live-iframe machinery does not apply. Reuse that page's CSS/JS design system (theme toggle, sidebar TOC + search, scroll-spy, syntax highlighter) and add the course language to the highlighter's keyword map.
+- **Syntax highlighting**: extend the highlighter with the target language's keywords; keep the escaping rules below.
 
 ## Instructions (must-follow)
 
@@ -16,7 +26,7 @@ Convert the provided Udemy Angular Core Deep Dive transcript (split into section
 
 - **Conciseness**: Reduce words where possible without losing content — prefer bullet lists, short paragraphs, and labeled code blocks. When summarizing, keep every technical point (no information loss).
 
-- **Tone & audience**: Professional, clear, explanatory — target audience: intermediate web developers who know basic TypeScript, HTML, and CSS but want deep Angular knowledge.
+- **Tone & audience**: Professional, clear, explanatory. Target the audience implied by the course — e.g. intermediate web developers for a front-end course, or intermediate programmers comfortable with core language syntax for a backend course (Java, Python, etc.). State any assumed prerequisites in a short context box rather than assuming a web background.
 
 - **Effort level**: High — generate careful, accurate code and explanations; flag any place you are unsure and request the missing detail.
 
@@ -32,9 +42,9 @@ Convert the provided Udemy Angular Core Deep Dive transcript (split into section
 - **Learning objective** (1–2 sentences)
 - **Explanatory text** (concise, rewritten, professional)
 - **Key points** as a short bullet list (2–6 bullets)
-- **Example(s)** with runnable code (TypeScript/HTML/CSS) and live output rendered side-by-side
-  - Two-column layout: code on left with syntax highlighting, output (HTML rendering or textual console output) on right
-  - Include a "Run locally" snippet with exact commands (npm commands) and a link to the relevant GitHub branch if available
+- **Example(s)** with code and output rendered side-by-side (in the course's language, not necessarily web)
+  - Two-column layout: code on left with syntax highlighting, output on right. For browser-runnable languages the output can be a live rendering; for everything else (TypeScript, Angular, and all backend languages) show a **simulated** console/stdout panel traced by hand from the code
+  - Include a "Run locally" snippet with exact commands **for the course's toolchain** (e.g. `javac`/`java`, `python`, `go run`, `mvn`, `ng serve`, `node`) and a link to the relevant GitHub branch if one is available
   
 - **GitHub examples**: When the transcript includes a specific example and a GitHub repo/branch exists, pull that example as-is then refactor/improve it (better variable names, comments, smaller focused demo). Include both the original branch reference and the improved snippet. If you cannot access the repo, reimplement an equivalent example and mark it as reimplemented.
 
@@ -60,10 +70,18 @@ For each lecture that references example code, look for matching files/branches.
 
 - Cite branch name and file path in a small metadata line above the example
 - Include both the minimal runnable example and an improved/annotated version
-- Include exact git clone and checkout commands in the "Run locally" area
-- Use safe, minimal dependencies (Angular latest LTS), include package.json snippets
-- Provide exact npm scripts to run a local demo (ng serve or node-based preview)
-- Include a short test or verification step (e.g., expected console output or screenshot alt text) so a reader can confirm the example works
+- Include exact clone/checkout (or download) commands in the "Run locally" area
+- Use safe, minimal dependencies pinned to a current stable version; include the relevant manifest snippet for the stack (`package.json`, `pom.xml`/`build.gradle`, `requirements.txt`, `go.mod`, …)
+- Provide the exact build/run commands for that toolchain (e.g. `ng serve`, `node x.js`, `javac X.java && java X`, `mvn test`, `python x.py`)
+- Include a short verification step (expected console output, exit code, or screenshot alt text) so a reader can confirm the example works
+
+### When Given Attached Resource Files (no GitHub repo):
+
+Courses often ship example code as **attached files** bundled with the transcript (e.g. a `Resources/` folder of `.java`, `.py`, `.sql` files) instead of a Git repo. Treat these the same way:
+
+- Read each file and map it to the lecture it illustrates (often the folder/section structure mirrors the transcript's sections and lectures).
+- Show an improved, focused version (better names, comments, smaller demo) and, where useful, note it was reimplemented from the attached example.
+- These resource files are **copyrighted course content** — paraphrase surrounding prose and keep the raw files out of version control if the repo gitignores them.
 
 ## Formatting, Accessibility, and Export
 
@@ -99,16 +117,22 @@ For each lecture that references example code, look for matching files/branches.
 - If any lecture references missing code or ambiguous parts, list those items in the JSON manifest and ask for the specific file path or clear text excerpt
 - If code examples require secrets or private APIs, replace those pieces with placeholders and instructions to the user on how to supply credentials locally
 
-## Example Few-Shot Guidance (3 Examples)
+## Example Few-Shot Guidance
 
-### ✓ Good Example 1
+> **Note:** the examples below are **illustrative samples only** (drawn from a web/Angular course). They are not a fixed script — add to them, improve them, and above all **translate the same treatment to the course's actual technology**. A backend example is included to make that explicit.
+
+### ✓ Good Example 1 (frontend)
 "Lecture on lifecycle hooks — produce a 2-column demo showing AppComponent toggling a child component; left: code with ngOnInit/ngOnDestroy; right: rendered view and console logs. Include a small SVG lifecycle timeline."
 
-### ✓ Good Example 2
+### ✓ Good Example 2 (frontend)
 "Dependency Injection — show a service providedIn: 'root' vs component provider; left: minimal service + two consumers; right: DOM showing injected values and a diagram explaining provider scope."
+
+### ✓ Good Example 3 (backend — Java)
+"Lecture on HashMap internals — left: a focused `HashMapDemo` putting/getting a few keys with a custom `hashCode`; right: a **simulated** console showing the printed map and lookups. Add an inline SVG of buckets + linked entries (and treeification past the threshold), and a Pitfall box on mutating a key after insertion. 'Run locally': `javac HashMapDemo.java && java HashMapDemo`."
 
 ### ✗ Bad Example
 "Copy transcript paragraphs verbatim" — **forbid this.**
+"Emit `npm`/`ng serve` for a Java or Python course" — **wrong toolchain; forbid this.**
 
 ## What Will Be Provided
 
