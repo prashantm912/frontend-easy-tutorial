@@ -1,0 +1,1746 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java Cheatsheet</title>
+<meta name="description" content="The five Java Programming essentials courses at a glance — Collections, Multithreading &amp; Concurrency, Functional Programming (lambdas &amp; streams), Modern Java (8 to 25), and SOLID principles &amp; design patterns. Every core concept as a card: syntax, a tiny example, and the result. Condensed for quick reference.">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f5f7fa; --surface-2:#eceff4; --text:#1b1f24; --muted:#5b6470;
+  --border:#d8dee6; --accent:#0b63ce; --accent-weak:#e5f0fc; --accent-contrast:#fff;
+  --code-bg:#f3f5f8; --code-text:#1b1f24; --ok:#2f855a; --warn:#b7791f; --danger:#c0392b;
+  --tok-comment:#6a737d; --tok-string:#0a7d33; --tok-number:#b5390b; --tok-keyword:#a626a4;
+  --radius:10px; --radius-sm:6px; --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
+  --mono:ui-monospace,"SFMono-Regular","Consolas","Liberation Mono",Menlo,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; --header-h:56px;
+}
+:root[data-theme="dark"]{
+  --bg:#0f1319; --surface:#161b22; --surface-2:#1c232d; --text:#e6edf3; --muted:#9aa7b4;
+  --border:#2a323d; --accent:#4d9cff; --accent-weak:#16283f; --accent-contrast:#0f1319;
+  --code-bg:#12171e; --code-text:#e6edf3; --ok:#56d364; --warn:#e3b341; --danger:#ff7b72;
+  --tok-comment:#8b949e; --tok-string:#7ee787; --tok-number:#ffab70; --tok-keyword:#d2a8ff;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){
+  --bg:#0f1319; --surface:#161b22; --surface-2:#1c232d; --text:#e6edf3; --muted:#9aa7b4;
+  --border:#2a323d; --accent:#4d9cff; --accent-weak:#16283f; --accent-contrast:#0f1319;
+  --code-bg:#12171e; --code-text:#e6edf3; --ok:#56d364; --warn:#e3b341; --danger:#ff7b72;
+  --tok-comment:#8b949e; --tok-string:#7ee787; --tok-number:#ffab70; --tok-keyword:#d2a8ff;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+}}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.skip-link{position:absolute;left:-999px;top:0;background:var(--accent);color:#fff;padding:8px 12px;z-index:200}
+.skip-link:focus{left:8px;top:8px}
+.site-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  min-height:var(--header-h);padding:8px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.site-header h1{font-size:1.05rem;margin:0;font-weight:700}
+.site-header .sub{color:var(--muted);font-size:.85rem;font-weight:400}
+.header-links{display:flex;gap:4px;flex-wrap:wrap;margin-left:8px}
+.header-links a{color:var(--muted);font-size:.85rem;padding:5px 9px;border-radius:var(--radius-sm)}
+.header-links a:hover{color:var(--accent);background:var(--surface-2);text-decoration:none}
+.theme-toggle{margin-left:auto;font:inherit;font-size:.85rem;padding:6px 12px;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--surface-2);color:var(--text);cursor:pointer}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:0;align-items:start}
+.sidebar{position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto;padding:14px 12px;
+  border-right:1px solid var(--border);background:var(--bg)}
+.toc-search{width:100%;padding:8px 10px;margin-bottom:10px;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font:inherit;font-size:.9rem}
+.toc-search::placeholder{color:var(--muted)}
+.toc-sections{list-style:none;margin:0;padding:0;font-size:.86rem}
+.toc-sections>li{margin:1px 0}
+.toc-sections>li[hidden]{display:none}
+.toc-sections>li>a{display:block;font-weight:600;padding:5px 6px;border-radius:4px;text-decoration:none;color:var(--text)}
+.toc-sections>li>a:hover{background:var(--surface-2);color:var(--accent)}
+.toc-sections a.active{background:var(--accent-weak);color:var(--accent)}
+.toc-empty{color:var(--muted);font-size:.85rem;padding:6px}
+.content{padding:22px 28px;max-width:1280px;min-width:0}
+.intro{color:var(--muted);max-width:80ch;margin:.1em 0 1.4em}
+.cs-cat{margin:0 0 10px;scroll-margin-top:70px}
+.cs-cat[hidden]{display:none}
+.cs-cat>h2{font-size:1.3rem;border-bottom:2px solid var(--accent);padding-bottom:5px;margin:1.3em 0 .7em}
+.cat-guide{margin:-.4em 0 .9em;font-size:.85rem}
+.cat-guide a{font-weight:600}
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;align-items:start}
+.cs-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;break-inside:avoid}
+.cs-card[hidden]{display:none}
+.cs-title{font-size:.98rem;margin:0 0 3px;color:var(--text);font-weight:650}
+.cs-title code{background:none;border:none;padding:0;color:var(--accent);font-size:.95em}
+.cs-desc{margin:0 0 8px;color:var(--muted);font-size:.86rem}
+pre.code-block{margin:.4em 0 .5em;padding:10px 12px;background:var(--code-bg);color:var(--code-text);border:1px solid var(--border);
+  border-radius:var(--radius-sm);overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.5}
+pre.code-block code{font-family:inherit;white-space:pre}
+.io-output{margin:.3em 0 .2em;padding:8px 11px;background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--accent);
+  border-radius:var(--radius-sm);font-family:var(--mono);font-size:.76rem;line-height:1.45;color:var(--text);white-space:pre-wrap;word-break:break-word;overflow-x:auto}
+.io-output .io-title{display:block;font-family:var(--sans);font-weight:600;font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px}
+.io-output .io-comment{color:var(--muted)}
+figure{margin:.4em 0 .2em;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm)}
+figure svg{max-width:100%;height:auto;display:block}
+figcaption{font-size:.74rem;color:var(--muted);margin-top:4px;text-align:center}
+.tok-comment{color:var(--tok-comment);font-style:italic}.tok-string{color:var(--tok-string)}
+.tok-number{color:var(--tok-number)}.tok-keyword{color:var(--tok-keyword);font-weight:600}
+code:not(pre code){background:var(--code-bg);border:1px solid var(--border);border-radius:4px;padding:.06em .35em;font-family:var(--mono);font-size:.86em}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+  .toc-sections{max-height:200px;overflow:auto}
+  .content{padding:16px}
+}
+@media print{
+  .site-header,.sidebar,.theme-toggle,.toc-search{display:none!important}
+  .layout{grid-template-columns:1fr}.content{max-width:none;padding:0}
+  .cs-grid{grid-template-columns:1fr 1fr}
+  .cs-card{break-inside:avoid;border-color:#ccc}
+  a{color:inherit;text-decoration:none}body{color:#000;background:#fff;font-size:11px}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <h1>Java Cheatsheet <span class="sub">— quick reference</span></h1>
+  <nav class="header-links" aria-label="Site">
+    <a href="index.html">Home</a>
+    <a href="cheatsheets.html">Cheatsheets</a>
+    <a href="cheatsheet-angular.html">Angular cheatsheet</a>
+    <a href="cheatsheet-web-design.html">Web Design cheatsheet</a>
+  </nav>
+  <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">◑ Theme</button>
+</header>
+<div class="layout">
+  <nav class="sidebar" aria-label="Table of contents">
+    <input type="search" id="toc-search" class="toc-search" placeholder="Filter concepts…" autocomplete="off" aria-label="Filter concepts">
+    <div id="toc"><ul class="toc-sections">
+      <li class="toc-sec"><a href="#j-collections">1. Collections &amp; Maps</a></li>
+      <li class="toc-sec"><a href="#j-concurrency">2. Multithreading &amp; Concurrency</a></li>
+      <li class="toc-sec"><a href="#j-functional">3. Functional Programming</a></li>
+      <li class="toc-sec"><a href="#j-modern">4. Modern Java (8 &rarr; 25)</a></li>
+      <li class="toc-sec"><a href="#j-solid">5. SOLID Principles</a></li>
+      <li class="toc-sec"><a href="#j-creational">6. Creational Patterns</a></li>
+      <li class="toc-sec"><a href="#j-behavioral">7. Behavioral Patterns</a></li>
+      <li class="toc-sec"><a href="#j-structural">8. Structural Patterns</a></li>
+      <li class="toc-sec"><a href="#j-systemdesign">9. System Design</a></li>
+    </ul></div>
+    <p class="toc-empty" id="toc-empty" hidden>No concepts match your filter.</p>
+  </nav>
+  <main id="main" class="content">
+    <h2 style="font-size:1.7rem;border:none;margin:.1em 0 .2em">Java Cheatsheet</h2>
+    <p class="intro">The five <strong>Java Programming essentials</strong> courses at a glance — Collections, Multithreading &amp; Concurrency, Functional Programming, Modern Java (8&nbsp;&rarr;&nbsp;25), and SOLID principles &amp; design patterns. Every core concept is a card: the syntax, a tiny example, and the result it produces. Each card is a reminder, not a tutorial — for depth, follow the "full guide" link on each section to the matching study guide. Use the filter box to jump to any concept.</p>
+<section class="cs-cat" id="j-collections">
+  <h2>1. Collections &amp; Maps</h2>
+  <p class="cat-guide"><a href="java-collections.html">Full guide: Java Collections &rarr;</a></p>
+  <div class="cs-grid">
+
+<article class="cs-card" id="cs-j-collections-01">
+  <h3 class="cs-title">Collection hierarchy <code>List/Set/Queue/Map</code></h3>
+  <p class="cs-desc"><code>Collection</code> is the root of <code>List</code> (ordered, indexed, duplicates), <code>Set</code> (unique), and <code>Queue</code> (FIFO ends). <code>Map</code> is a separate root: key -&gt; value with unique keys.</p>
+  <pre class="code-block" data-lang="java"><code>List&lt;String&gt; list = new ArrayList&lt;&gt;();      // ordered, duplicates OK
+Set&lt;String&gt; set = new HashSet&lt;&gt;();          // unique, no index
+Queue&lt;String&gt; q = new LinkedList&lt;&gt;();        // FIFO: offer / poll
+Map&lt;String,Integer&gt; map = new HashMap&lt;&gt;();   // key -&gt; value, unique keys
+list.add("a"); list.add("a");                // duplicate kept
+set.add("a");  set.add("a");                 // duplicate ignored
+System.out.println(list.size() + " " + set.size());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>2 1</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-02">
+  <h3 class="cs-title">ArrayList <code>ArrayList&lt;E&gt;</code></h3>
+  <p class="cs-desc">Resizable array backing a <code>List</code>: O(1) random access by index and amortized O(1) append; inserting/removing in the middle is O(n) (elements shift).</p>
+  <pre class="code-block" data-lang="java"><code>List&lt;String&gt; names = new ArrayList&lt;&gt;();
+names.add("Ann");            // append
+names.add("Bob");
+names.add(1, "Cid");         // insert at index 1
+System.out.println(names.get(0));   // O(1) random access
+System.out.println(names);
+names.remove("Cid");         // remove by value
+System.out.println(names.size());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Ann
+[Ann, Cid, Bob]
+2</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-03">
+  <h3 class="cs-title">LinkedList as Deque <code>addFirst/poll</code></h3>
+  <p class="cs-desc">Doubly-linked list implementing both <code>List</code> and <code>Deque</code>: O(1) add/remove at either end (use as queue, stack, or deque). Random access by index is O(n).</p>
+  <pre class="code-block" data-lang="java"><code>Deque&lt;Integer&gt; dq = new LinkedList&lt;&gt;();
+dq.addFirst(1);              // [1]
+dq.addLast(2);              // [1, 2]
+dq.addFirst(0);              // [0, 1, 2]
+System.out.println(dq.peekFirst() + " " + dq.peekLast());
+System.out.println(dq.poll());   // removes head (0)
+System.out.println(dq);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>0 2
+0
+[1, 2]</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-04">
+  <h3 class="cs-title">HashMap <code>put/get/merge</code></h3>
+  <p class="cs-desc">Hash-table <code>Map</code> with average O(1) put/get; allows one null key. Iteration order is UNSPECIFIED (do not rely on it). <code>computeIfAbsent</code>/<code>merge</code> update atomically per key.</p>
+  <pre class="code-block" data-lang="java"><code>Map&lt;String,Integer&gt; ages = new HashMap&lt;&gt;();
+ages.put("Ann", 30);
+ages.put("Bob", 25);
+System.out.println(ages.get("Ann"));              // 30
+System.out.println(ages.getOrDefault("Zoe", -1)); // key absent
+ages.computeIfAbsent("Cid", k -&gt; 0);              // insert if missing
+ages.merge("Ann", 1, Integer::sum);               // 30 + 1
+System.out.println(ages.get("Ann"));</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>30
+-1
+31</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-05">
+  <h3 class="cs-title">LinkedHashMap <code>insertion order</code></h3>
+  <p class="cs-desc">A <code>HashMap</code> that keeps a linked list of entries, so iteration follows INSERTION order (predictable). An access-order variant enables simple LRU caches.</p>
+  <pre class="code-block" data-lang="java"><code>Map&lt;String,Integer&gt; m = new LinkedHashMap&lt;&gt;();
+m.put("c", 3);
+m.put("a", 1);
+m.put("b", 2);
+System.out.println(m);                 // insertion order kept
+m.forEach((k, v) -&gt; System.out.print(k));</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>{c=3, a=1, b=2}
+cab</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-06">
+  <h3 class="cs-title">TreeMap <code>NavigableMap</code></h3>
+  <p class="cs-desc">Red-black tree <code>Map</code> sorted by key (natural order or a <code>Comparator</code>); O(log n) ops. As a <code>NavigableMap</code> it adds <code>firstKey</code>, <code>floorKey</code>, and range views like <code>subMap</code>.</p>
+  <pre class="code-block" data-lang="java"><code>NavigableMap&lt;Integer,String&gt; tm = new TreeMap&lt;&gt;();
+tm.put(10, "ten"); tm.put(20, "twenty"); tm.put(30, "thirty");
+System.out.println(tm.firstKey());     // smallest key
+System.out.println(tm.floorKey(25));   // largest key &lt;= 25
+System.out.println(tm.subMap(10, 30)); // [10, 30)</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>10
+20
+{10=ten, 20=twenty}</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-07">
+  <h3 class="cs-title">HashSet / LinkedHashSet / TreeSet <code>Set</code></h3>
+  <p class="cs-desc">All enforce uniqueness. <code>HashSet</code> has NO guaranteed order; <code>LinkedHashSet</code> keeps insertion order; <code>TreeSet</code> keeps elements sorted (O(log n), a <code>NavigableSet</code>).</p>
+  <pre class="code-block" data-lang="java"><code>Set&lt;Integer&gt; hs = new HashSet&lt;&gt;(List.of(3, 1, 2, 2));
+Set&lt;Integer&gt; ls = new LinkedHashSet&lt;&gt;(List.of(3, 1, 2, 2));
+Set&lt;Integer&gt; ts = new TreeSet&lt;&gt;(List.of(3, 1, 2, 2));
+System.out.println(hs.size());   // duplicate 2 dropped
+System.out.println(ls);          // insertion order
+System.out.println(ts);          // sorted</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>3
+[3, 1, 2]
+[1, 2, 3]</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-08">
+  <h3 class="cs-title">Iterating a collection <code>Iterator/entrySet</code></h3>
+  <p class="cs-desc">Enhanced <code>for</code> for read-only passes; use <code>Iterator.remove()</code> to delete safely mid-iteration (avoids <code>ConcurrentModificationException</code>); iterate a map via <code>entrySet()</code>.</p>
+  <pre class="code-block" data-lang="java"><code>List&lt;Integer&gt; nums = new ArrayList&lt;&gt;(List.of(1, 2, 3, 4));
+Iterator&lt;Integer&gt; it = nums.iterator();
+while (it.hasNext()) {
+    if (it.next() % 2 == 0) it.remove();   // safe removal
+}
+System.out.println(nums);
+Map&lt;String,Integer&gt; m = Map.of("a", 1);
+for (Map.Entry&lt;String,Integer&gt; e : m.entrySet())
+    System.out.println(e.getKey() + "=" + e.getValue());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>[1, 3]
+a=1</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-09">
+  <h3 class="cs-title">Comparable vs Comparator <code>compareTo/comparing</code></h3>
+  <p class="cs-desc"><code>Comparable&lt;T&gt;</code> defines ONE natural order via <code>compareTo</code> inside the class; <code>Comparator&lt;T&gt;</code> is an external, composable order built with <code>comparing</code>, <code>thenComparing</code>, and <code>reversed</code>.</p>
+  <pre class="code-block" data-lang="java"><code>record Person(String name, int age) {}
+List&lt;Person&gt; people = new ArrayList&lt;&gt;(List.of(
+    new Person("Ann", 30), new Person("Bob", 25), new Person("Ann", 20)));
+people.sort(Comparator.comparing(Person::name)
+                      .thenComparingInt(Person::age));  // .reversed() flips
+people.forEach(p -&gt; System.out.println(p.name() + " " + p.age()));</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Ann 20
+Ann 30
+Bob 25</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-10">
+  <h3 class="cs-title">Collections utility <code>Collections.*</code></h3>
+  <p class="cs-desc">Static helpers in <code>java.util.Collections</code>: <code>sort</code>, <code>reverse</code>, <code>max</code>/<code>min</code>, <code>frequency</code>, plus read-only wrappers (<code>unmodifiableList</code>) and empties (<code>emptyList</code>).</p>
+  <pre class="code-block" data-lang="java"><code>List&lt;Integer&gt; xs = new ArrayList&lt;&gt;(List.of(3, 1, 2));
+Collections.sort(xs);            // in place -&gt; [1, 2, 3]
+Collections.reverse(xs);         // [3, 2, 1]
+System.out.println(Collections.max(xs));
+System.out.println(xs);
+List&lt;Integer&gt; ro = Collections.unmodifiableList(xs);
+// ro.add(9) throws UnsupportedOperationException
+System.out.println(Collections.emptyList());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>3
+[3, 2, 1]
+[]</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-11">
+  <h3 class="cs-title">Arrays utility &amp; array vs List <code>Arrays.*</code></h3>
+  <p class="cs-desc"><code>java.util.Arrays</code>: <code>sort</code>, <code>toString</code>, <code>stream</code>, and <code>asList</code>. <code>asList</code> is a FIXED-SIZE view (add/remove throw); wrap in <code>new ArrayList&lt;&gt;(...)</code> for a growable copy.</p>
+  <pre class="code-block" data-lang="java"><code>int[] a = {3, 1, 2};
+Arrays.sort(a);                        // sorts in place
+System.out.println(Arrays.toString(a));
+int sum = Arrays.stream(a).sum();
+System.out.println(sum);
+List&lt;String&gt; fixed = Arrays.asList("x", "y");
+// fixed.add("z") throws UnsupportedOperationException (fixed size)
+System.out.println(fixed.get(1));</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>[1, 2, 3]
+6
+y</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-12">
+  <h3 class="cs-title">equals() / hashCode() contract <code>Object</code></h3>
+  <p class="cs-desc">Hash-based keys need both: equal objects MUST return equal <code>hashCode</code>. Override the two together, or <code>HashMap</code>/<code>HashSet</code> lookups silently miss. Records generate both from their components.</p>
+  <pre class="code-block" data-lang="java"><code>record Point(int x, int y) {}          // auto equals + hashCode
+Set&lt;Point&gt; set = new HashSet&lt;&gt;();
+set.add(new Point(1, 2));
+System.out.println(set.contains(new Point(1, 2))); // equal + same hash
+Map&lt;Point,String&gt; m = new HashMap&lt;&gt;();
+m.put(new Point(0, 0), "origin");
+System.out.println(m.get(new Point(0, 0)));</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>true
+origin</div>
+</article>
+
+<article class="cs-card" id="cs-j-collections-13">
+  <h3 class="cs-title">Concurrent collections <code>ConcurrentHashMap</code></h3>
+  <p class="cs-desc">Thread-safe without external locking: <code>ConcurrentHashMap</code> (lock-free reads, atomic <code>merge</code>), <code>CopyOnWriteArrayList</code> (read-heavy, snapshot iteration), <code>BlockingQueue</code> (producer/consumer). Prefer these over <code>Collections.synchronizedList</code>, which locks the whole list and still needs manual sync while iterating.</p>
+  <pre class="code-block" data-lang="java"><code>Map&lt;String,Integer&gt; counts = new ConcurrentHashMap&lt;&gt;();
+counts.merge("hit", 1, Integer::sum);  // atomic, lock-free reads
+counts.merge("hit", 1, Integer::sum);
+System.out.println(counts.get("hit"));
+
+List&lt;String&gt; log = new CopyOnWriteArrayList&lt;&gt;();
+log.add("start");                      // copies array on write
+System.out.println(log.get(0));
+
+BlockingQueue&lt;String&gt; q = new ArrayBlockingQueue&lt;&gt;(4);
+q.offer("job");                        // put(...) blocks if full
+System.out.println(q.poll());          // take() blocks if empty</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>2
+start
+job</div>
+</article>
+
+  </div>
+</section>
+<section class="cs-cat" id="j-concurrency">
+  <h2>2. Multithreading &amp; Concurrency</h2>
+  <p class="cat-guide"><a href="java-multithreading.html">Full guide: Java Multithreading &rarr;</a></p>
+  <div class="cs-grid">
+
+<article class="cs-card" id="cs-j-concurrency-01">
+  <h3 class="cs-title">Creating threads <code>Runnable</code></h3>
+  <p class="cs-desc">Subclass <code>Thread</code> or (preferred) pass a <code>Runnable</code>/lambda. <code>start()</code> spawns a new thread; <code>run()</code> just calls the method on the current thread. <code>join()</code> waits for a thread to finish.</p>
+  <pre class="code-block" data-lang="java"><code>Runnable task = () -> System.out.println("run: " + Thread.currentThread().getName());
+Thread t = new Thread(task, "worker");
+t.start();      // spawns a NEW thread, runs task concurrently
+t.join();       // main blocks here until 'worker' finishes
+task.run();     // NO new thread -- runs on the caller (main)
+System.out.println("done on " + Thread.currentThread().getName());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>run: worker
+run: main
+done on main</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-02">
+  <h3 class="cs-title">synchronized <code>synchronized</code></h3>
+  <p class="cs-desc">Acquires an object's intrinsic monitor lock so only one thread runs the guarded code at a time (mutual exclusion). A synchronized method locks <code>this</code>; a block locks any chosen object.</p>
+  <pre class="code-block" data-lang="java"><code>class Counter {
+    private int n = 0;
+    synchronized void inc() { n++; }                 // locks 'this'
+    void incBlock() { synchronized (this) { n++; } } // block form
+    synchronized int get() { return n; }
+}
+Counter c = new Counter();
+Runnable job = () -> { for (int i = 0; i &lt; 1000; i++) c.inc(); };
+Thread a = new Thread(job), b = new Thread(job);
+a.start(); b.start(); a.join(); b.join();
+System.out.println(c.get());   // no lost updates</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>2000</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-03">
+  <h3 class="cs-title">volatile <code>volatile</code></h3>
+  <p class="cs-desc">Guarantees a field's writes are visible to other threads immediately (and prevents reordering) -- but NOT atomicity. Fine for a stop-flag; use atomics/locks for compound updates like <code>count++</code>.</p>
+  <pre class="code-block" data-lang="java"><code>class Flag { volatile boolean running = true; }   // visible across threads
+Flag f = new Flag();
+Thread w = new Thread(() -> {
+    while (f.running) { /* busy wait */ }
+    System.out.println("stopped");
+});
+w.start();
+Thread.sleep(50);
+f.running = false;   // volatile write -> the loop sees it and exits
+w.join();
+System.out.println("main done");</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>stopped
+main done</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-04">
+  <h3 class="cs-title">wait / notify <code>wait()/notifyAll()</code></h3>
+  <p class="cs-desc">Thread coordination on an object's monitor: call inside <code>synchronized</code>; <code>wait()</code> releases the lock and sleeps until <code>notify()</code>/<code>notifyAll()</code>. Always re-check the condition in a <code>while</code> loop (guards spurious wakeups).</p>
+  <pre class="code-block" data-lang="java"><code>class Box {
+    private String msg;
+    synchronized void put(String m) { msg = m; notifyAll(); }
+    synchronized String take() throws InterruptedException {
+        while (msg == null) wait();   // loop, not if
+        return msg;
+    }
+}
+Box box = new Box();
+Thread c = new Thread(() -> {
+    try { System.out.println("got: " + box.take()); }
+    catch (InterruptedException e) { }
+});
+c.start();
+Thread.sleep(50);
+box.put("hello");   // wakes the waiting consumer
+c.join();</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>got: hello</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-05">
+  <h3 class="cs-title">ReentrantLock <code>ReentrantLock</code></h3>
+  <p class="cs-desc">Explicit lock -- more flexible than <code>synchronized</code>: <code>tryLock()</code> (non-blocking/timed), interruptible acquisition, and optional fairness (FIFO). Always release in a <code>finally</code>.</p>
+  <pre class="code-block" data-lang="java"><code>ReentrantLock lock = new ReentrantLock(true);  // true = fair (FIFO)
+int[] n = {0};
+Runnable job = () -> {
+    for (int i = 0; i &lt; 500; i++) {
+        lock.lock();                 // blocking, reentrant
+        try { n[0]++; }              // critical section
+        finally { lock.unlock(); }   // MUST unlock in finally
+    }
+};
+Thread a = new Thread(job), b = new Thread(job);
+a.start(); b.start(); a.join(); b.join();
+System.out.println(n[0]);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>1000</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-06">
+  <h3 class="cs-title">ReadWriteLock <code>ReadWriteLock</code></h3>
+  <p class="cs-desc">Splits locking into a shared read lock (many readers at once) and an exclusive write lock (one writer, blocks all readers). Ideal for read-heavy shared state.</p>
+  <pre class="code-block" data-lang="java"><code>ReadWriteLock rw = new ReentrantReadWriteLock();
+Map&lt;String,Integer&gt; map = new HashMap&lt;&gt;();
+rw.writeLock().lock();               // exclusive: no other reader or writer
+try { map.put("a", 1); }
+finally { rw.writeLock().unlock(); }
+rw.readLock().lock();                // shared: readers run concurrently
+try { System.out.println(map.get("a")); }
+finally { rw.readLock().unlock(); }</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>1</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-07">
+  <h3 class="cs-title">Semaphore <code>Semaphore</code></h3>
+  <p class="cs-desc">Holds a set of permits; <code>acquire()</code> takes one (blocking if none), <code>release()</code> returns one. Bounds how many threads may enter a section at once (e.g. a connection pool).</p>
+  <pre class="code-block" data-lang="java"><code>Semaphore sem = new Semaphore(2);   // at most 2 threads hold a permit
+sem.acquire();                      // permits: 2 -> 1
+sem.acquire();                      // permits: 1 -> 0
+System.out.println(sem.availablePermits());
+boolean got = sem.tryAcquire();     // none left -> false, does not block
+System.out.println(got);
+sem.release();                      // permits: 0 -> 1
+System.out.println(sem.availablePermits());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>0
+false
+1</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-08">
+  <h3 class="cs-title">CountDownLatch <code>CountDownLatch</code></h3>
+  <p class="cs-desc">A one-shot gate initialized to N: <code>await()</code> blocks until <code>countDown()</code> has been called N times. Used to wait for several tasks to finish (or for a start signal).</p>
+  <pre class="code-block" data-lang="java"><code>CountDownLatch latch = new CountDownLatch(3);
+for (int i = 1; i &lt;= 3; i++) {
+    int id = i;
+    new Thread(() -> {
+        System.out.println("worker " + id + " done");
+        latch.countDown();          // N -> N-1
+    }).start();
+}
+latch.await();                      // blocks until count reaches 0
+System.out.println("all workers finished");</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>worker 1 done
+worker 3 done
+worker 2 done
+all workers finished
+<span class="io-comment">// the 3 worker lines print in any order; final line is always last</span></div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-09">
+  <h3 class="cs-title">ExecutorService <code>newFixedThreadPool</code></h3>
+  <p class="cs-desc">A managed thread pool: <code>submit()</code> queues tasks onto reused threads (not a <code>new Thread</code> per task). <code>shutdown()</code> stops accepting work and drains the queue.</p>
+  <pre class="code-block" data-lang="java"><code>ExecutorService pool = Executors.newFixedThreadPool(2);
+for (int i = 1; i &lt;= 3; i++) {
+    int id = i;
+    pool.submit(() -> System.out.println(
+        "task " + id + " on " + Thread.currentThread().getName()));
+}
+pool.shutdown();                              // no new tasks accepted
+pool.awaitTermination(1, TimeUnit.SECONDS);   // wait for queued tasks</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>task 1 on pool-1-thread-1
+task 2 on pool-1-thread-2
+task 3 on pool-1-thread-1
+<span class="io-comment">// task order and which thread runs each: scheduler-dependent</span></div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-10">
+  <h3 class="cs-title">Callable &amp; Future <code>Future&lt;V&gt;</code></h3>
+  <p class="cs-desc">A <code>Callable</code> returns a value (and may throw); <code>submit()</code> hands back a <code>Future</code> whose <code>get()</code> blocks until the result is ready. For non-blocking pipelines use <code>CompletableFuture</code>.</p>
+  <pre class="code-block" data-lang="java"><code>ExecutorService pool = Executors.newSingleThreadExecutor();
+Future&lt;Integer&gt; f = pool.submit(() -> {   // Callable&lt;Integer&gt;
+    int sum = 0;
+    for (int i = 1; i &lt;= 5; i++) sum += i;
+    return sum;
+});
+System.out.println(f.get());   // blocks until the task returns
+pool.shutdown();
+// async, no blocking get():
+CompletableFuture.supplyAsync(() -> 21).thenApply(x -> x * 2);  // -> 42</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>15</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-11">
+  <h3 class="cs-title">Atomics &amp; CAS <code>AtomicInteger</code></h3>
+  <p class="cs-desc">Lock-free thread-safe updates built on the CPU's compare-and-swap (CAS). <code>incrementAndGet()</code>, <code>getAndAdd()</code>, and <code>compareAndSet(expected,new)</code> avoid locks for single-variable state.</p>
+  <pre class="code-block" data-lang="java"><code>AtomicInteger counter = new AtomicInteger(0);
+Runnable job = () -> { for (int i = 0; i &lt; 1000; i++) counter.incrementAndGet(); };
+Thread a = new Thread(job), b = new Thread(job);
+a.start(); b.start(); a.join(); b.join();
+System.out.println(counter.get());              // atomic, no lock
+boolean ok = counter.compareAndSet(2000, 0);    // set 0 only if still 2000
+System.out.println(ok + " " + counter.get());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>2000
+true 0</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-12">
+  <h3 class="cs-title">ConcurrentHashMap <code>ConcurrentHashMap</code></h3>
+  <p class="cs-desc">A thread-safe map with high concurrency and no external locking. <code>merge()</code>, <code>compute()</code>, and <code>computeIfAbsent()</code> are atomic read-modify-write ops. Null keys/values are not allowed.</p>
+  <pre class="code-block" data-lang="java"><code>ConcurrentHashMap&lt;String,Integer&gt; counts = new ConcurrentHashMap&lt;&gt;();
+Runnable job = () -> {
+    for (int i = 0; i &lt; 1000; i++)
+        counts.merge("hits", 1, Integer::sum);   // atomic increment
+};
+Thread a = new Thread(job), b = new Thread(job);
+a.start(); b.start(); a.join(); b.join();
+System.out.println(counts.get("hits"));</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>2000</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-13">
+  <h3 class="cs-title">Deadlock <code>lock ordering</code></h3>
+  <p class="cs-desc">Two threads each hold a lock the other needs and wait forever. Prevent it by acquiring locks in one consistent global order. Because scheduling is non-deterministic, a deadlock-prone program may run fine on some runs and hang on others.</p>
+  <pre class="code-block" data-lang="java"><code>// DEADLOCK: opposite lock orders can freeze both threads
+// t1: synchronized (lockA) { synchronized (lockB) { ... } }
+// t2: synchronized (lockB) { synchronized (lockA) { ... } }
+
+// FIX -- global ordering: EVERY thread takes lockA before lockB
+synchronized (lockA) {
+    synchronized (lockB) {
+        // ... work needing both locks
+    }
+}</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Four Coffman conditions (all required); break any one to avoid deadlock:
+mutual exclusion | hold-and-wait | no preemption | circular wait</div>
+</article>
+
+<article class="cs-card" id="cs-j-concurrency-14">
+  <h3 class="cs-title">Virtual threads <code>Thread.ofVirtual()</code></h3>
+  <p class="cs-desc">Java 21 (JEP 444): lightweight threads scheduled by the JVM onto a few OS carrier threads. Blocking is cheap, so you can run millions -- ideal for blocking IO. Don't pool them; use one per task.</p>
+  <pre class="code-block" data-lang="java"><code>Thread vt = Thread.ofVirtual().start(() ->
+    System.out.println("on " + Thread.currentThread()));
+vt.join();
+
+// one virtual thread per task:
+try (var pool = Executors.newVirtualThreadPerTaskExecutor()) {
+    for (int i = 0; i &lt; 3; i++) {
+        int id = i;
+        pool.submit(() -> System.out.println("task " + id));
+    }
+}   // close() waits for all tasks (ExecutorService is AutoCloseable)</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>on VirtualThread[#21]/runnable@ForkJoinPool-1-worker-1
+task 0
+task 2
+task 1
+<span class="io-comment">// task order scheduler-dependent; the VirtualThread id/worker vary</span></div>
+</article>
+
+  </div>
+</section>
+<section class="cs-cat" id="j-functional">
+  <h2>3. Functional Programming</h2>
+  <p class="cat-guide"><a href="java-functional-programming.html">Full guide: Java Functional Programming &rarr;</a></p>
+  <div class="cs-grid">
+
+<article class="cs-card" id="cs-j-functional-01">
+  <h3 class="cs-title">Lambda expression <code>() -&gt; ...</code></h3>
+  <p class="cs-desc">An anonymous function passed as a value (Java 8). It supplies the single abstract method of a functional interface, replacing a verbose anonymous class. Three forms: no params, one param, or a block body.</p>
+  <pre class="code-block" data-lang="java"><code>Runnable r = () -&gt; System.out.println("Hi");      // no params
+Function&lt;Integer,Integer&gt; sq = x -&gt; x * x;         // one param, expr body
+Comparator&lt;String&gt; byLen = (a, b) -&gt; {             // block body + return
+    return a.length() - b.length();
+};
+r.run();
+System.out.println(sq.apply(5));</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Hi
+25</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-02">
+  <h3 class="cs-title">Functional interface <code>@FunctionalInterface</code></h3>
+  <p class="cs-desc">An interface with exactly one abstract method (a SAM type) is the target of a lambda or method reference. The optional <code>@FunctionalInterface</code> makes the compiler enforce the one-abstract-method rule; default/static methods do not count.</p>
+  <pre class="code-block" data-lang="java"><code>@FunctionalInterface
+interface Calculator {
+    int operate(int a, int b);          // the single abstract method
+    default int zero() { return 0; }    // allowed, does not count
+}
+
+Calculator add = (a, b) -&gt; a + b;       // lambda supplies operate()
+System.out.println(add.operate(3, 4));</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>7</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-03">
+  <h3 class="cs-title">Predicate&lt;T&gt; <code>test()</code></h3>
+  <p class="cs-desc">From <code>java.util.function</code>: maps a value to a boolean via <code>test(t)</code>. Compose with the default methods <code>and</code>, <code>or</code>, and <code>negate</code>.</p>
+  <pre class="code-block" data-lang="java"><code>Predicate&lt;Integer&gt; isEven = n -&gt; n % 2 == 0;
+Predicate&lt;Integer&gt; isPositive = n -&gt; n &gt; 0;
+
+System.out.println(isEven.test(4));                  // true
+System.out.println(isEven.and(isPositive).test(-4)); // even but not &gt;0
+System.out.println(isEven.negate().test(3));         // not even -&gt; true</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>true
+false
+true</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-04">
+  <h3 class="cs-title">Function&lt;T,R&gt; <code>apply()</code></h3>
+  <p class="cs-desc">Transforms a T into an R via <code>apply(t)</code>. <code>f.andThen(g)</code> runs <strong>f first</strong>, then g; <code>f.compose(g)</code> runs <strong>g first</strong>, then f.</p>
+  <pre class="code-block" data-lang="java"><code>Function&lt;Integer,Integer&gt; times2 = x -&gt; x * 2;
+Function&lt;Integer,Integer&gt; plus3  = x -&gt; x + 3;
+
+System.out.println(times2.andThen(plus3).apply(5)); // (5*2)+3
+System.out.println(times2.compose(plus3).apply(5)); // (5+3)*2</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>13
+16</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-05">
+  <h3 class="cs-title">Consumer&lt;T&gt; &amp; Supplier&lt;T&gt; <code>accept() / get()</code></h3>
+  <p class="cs-desc"><code>Consumer&lt;T&gt;</code> takes a value and returns nothing (a side effect) via <code>accept</code>. <code>Supplier&lt;T&gt;</code> takes no input and produces a value on demand via <code>get</code>.</p>
+  <pre class="code-block" data-lang="java"><code>Consumer&lt;String&gt; printer = s -&gt; System.out.println("Hi " + s);
+Supplier&lt;Double&gt; random  = () -&gt; 0.42;   // supplies a value
+
+printer.accept("Ranga");
+System.out.println(random.get());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Hi Ranga
+0.42</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-06">
+  <h3 class="cs-title">Method references <code>Type::method</code></h3>
+  <p class="cs-desc">Shorthand for a lambda that just calls one method. Four kinds: static (<code>Type::m</code>), bound instance (<code>obj::m</code>), unbound instance (<code>Type::instanceM</code>), and constructor (<code>Type::new</code>).</p>
+  <pre class="code-block" data-lang="java"><code>Function&lt;String,Integer&gt; parse = Integer::parseInt;  // static
+Supplier&lt;String&gt; greet = "hello"::toUpperCase;       // bound obj::m
+Function&lt;String,Integer&gt; len = String::length;       // unbound
+Supplier&lt;ArrayList&lt;String&gt;&gt; make = ArrayList::new;    // constructor
+
+System.out.println(parse.apply("42"));
+System.out.println(greet.get());
+System.out.println(len.apply("abc"));
+System.out.println(make.get());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>42
+HELLO
+3
+[]</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-07">
+  <h3 class="cs-title">Creating a Stream <code>.stream()</code></h3>
+  <p class="cs-desc">A Stream is a lazy, single-use pipeline over a source. Build one from a collection (<code>.stream()</code>), from values (<code>Stream.of</code>), or from an array (<code>Arrays.stream</code>, which yields a primitive <code>IntStream</code> for <code>int[]</code>).</p>
+  <pre class="code-block" data-lang="java"><code>List&lt;Integer&gt; list = List.of(1, 2, 3);
+Stream&lt;Integer&gt; s1 = list.stream();
+Stream&lt;String&gt;  s2 = Stream.of("a", "b", "c");
+int[] arr = {10, 20, 30};
+IntStream s3 = Arrays.stream(arr);   // primitive stream
+
+System.out.println(s1.count());
+System.out.println(s3.sum());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>3
+60</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-08">
+  <h3 class="cs-title">filter + map <code>filter / map</code></h3>
+  <p class="cs-desc">Both are <strong>lazy intermediate</strong> ops: <code>filter(predicate)</code> keeps matching elements, <code>map(fn)</code> transforms each one. Nothing runs until a terminal op (here <code>forEach</code>) pulls the pipeline.</p>
+  <pre class="code-block" data-lang="java"><code>List&lt;Integer&gt; nums = List.of(1, 2, 3, 4, 5, 6);
+nums.stream()
+    .filter(n -&gt; n % 2 == 0)   // keep evens: 2, 4, 6
+    .map(n -&gt; n * n)           // square each: 4, 16, 36
+    .forEach(System.out::println);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>4
+16
+36</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-09">
+  <h3 class="cs-title">sorted / distinct / limit / skip</h3>
+  <p class="cs-desc">Intermediate ops: <code>distinct</code> drops duplicates (by <code>equals</code>), <code>sorted</code> orders (natural or by a Comparator), <code>skip(n)</code> discards the first n, <code>limit(n)</code> truncates to n.</p>
+  <pre class="code-block" data-lang="java"><code>Stream.of(5, 3, 5, 1, 4, 2, 3)
+      .distinct()          // 5, 3, 1, 4, 2
+      .sorted()            // 1, 2, 3, 4, 5
+      .skip(1)             // drop first -&gt; 2, 3, 4, 5
+      .limit(2)            // keep 2     -&gt; 2, 3
+      .forEach(System.out::println);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>2
+3</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-10">
+  <h3 class="cs-title">reduce <code>reduce(identity, acc)</code></h3>
+  <p class="cs-desc">Terminal op that folds a stream into one value. The <em>identity</em> is the seed (and the result for an empty stream); the <em>accumulator</em> combines the running result with each element.</p>
+  <pre class="code-block" data-lang="java"><code>List&lt;Integer&gt; nums = List.of(12, 9, 13, 4, 6);
+int sum = nums.stream()
+              .reduce(0, (a, b) -&gt; a + b);   // 0+12+9+13+4+6, or Integer::sum
+System.out.println(sum);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>44</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-11">
+  <h3 class="cs-title">collect + Collectors <code>Collectors</code></h3>
+  <p class="cs-desc">The terminal <code>collect</code> gathers a stream into a container using a <code>Collectors</code> factory: <code>toList</code>, <code>joining</code>, <code>groupingBy</code> (key -&gt; list), <code>partitioningBy</code> (true/false split), <code>counting</code>.</p>
+  <pre class="code-block" data-lang="java"><code>List&lt;String&gt; words = List.of("apple", "banana", "avocado", "cherry");
+
+String joined = words.stream().collect(Collectors.joining(", "));
+Map&lt;Character,List&lt;String&gt;&gt; byInitial =
+    words.stream().collect(Collectors.groupingBy(w -&gt; w.charAt(0)));
+Map&lt;Boolean,List&lt;String&gt;&gt; parts =
+    words.stream().collect(Collectors.partitioningBy(w -&gt; w.length() &gt; 5));
+
+System.out.println(joined);
+System.out.println(byInitial);
+System.out.println(parts);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>apple, banana, avocado, cherry
+{a=[apple, avocado], b=[banana], c=[cherry]}
+{false=[apple], true=[banana, avocado, cherry]}
+<span class="io-comment">// groupingBy returns a HashMap -- key order is not guaranteed</span></div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-12">
+  <h3 class="cs-title">Optional&lt;T&gt; <code>Optional&lt;T&gt;</code></h3>
+  <p class="cs-desc">A container that may hold a value or be empty (Java 8), used to avoid null. Create with <code>of</code> / <code>ofNullable</code> / <code>empty</code>; read with <code>isPresent</code>, <code>orElse</code>, <code>orElseGet</code>, <code>map</code>, <code>ifPresent</code>.</p>
+  <pre class="code-block" data-lang="java"><code>Optional&lt;String&gt; name = Optional.of("Ranga");
+Optional&lt;String&gt; none = Optional.ofNullable(null);    // -&gt; empty
+
+System.out.println(name.isPresent());                // true
+System.out.println(none.orElse("default"));          // eager fallback
+System.out.println(name.map(String::length).get());  // 5
+name.ifPresent(System.out::println);                 // runs only if present
+System.out.println(none.orElseGet(() -&gt; "lazy"));     // supplier fallback</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>true
+default
+5
+Ranga
+lazy</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-13">
+  <h3 class="cs-title">Numeric streams <code>IntStream</code></h3>
+  <p class="cs-desc">Primitive streams (<code>IntStream</code>/<code>LongStream</code>/<code>DoubleStream</code>) avoid boxing and add numeric ops. <code>range</code>/<code>rangeClosed</code> generate; <code>mapToInt</code> converts an object stream; <code>sum</code>/<code>average</code>/<code>summaryStatistics</code> aggregate (<code>average</code> returns an <code>OptionalDouble</code>).</p>
+  <pre class="code-block" data-lang="java"><code>int sum = IntStream.range(1, 5).sum();             // 1+2+3+4 (5 excluded)
+double avg = IntStream.rangeClosed(1, 5)
+                      .average().getAsDouble();    // (1..5)/5
+
+List&lt;String&gt; words = List.of("a", "bb", "ccc");
+IntSummaryStatistics st = words.stream()
+    .mapToInt(String::length).summaryStatistics();
+
+System.out.println(sum);
+System.out.println(avg);
+System.out.println(st.getMax() + " " + st.getSum());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>10
+3.0
+3 6</div>
+</article>
+
+<article class="cs-card" id="cs-j-functional-14">
+  <h3 class="cs-title">Parallel streams <code>.parallel()</code></h3>
+  <p class="cs-desc">Split work across the fork/join common pool via <code>collection.parallelStream()</code> or <code>stream().parallel()</code>. Only worth it for large, CPU-bound, stateless, <em>associative</em> work. A reduce/count result stays correct, but element/print order is not guaranteed.</p>
+  <pre class="code-block" data-lang="java"><code>long count = IntStream.rangeClosed(1, 1_000_000)
+                      .parallel()
+                      .filter(n -&gt; n % 2 == 0)
+                      .count();
+System.out.println(count);              // deterministic
+
+List.of(1, 2, 3, 4).parallelStream()
+    .forEach(System.out::println);      // order NOT guaranteed</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>500000
+<span class="io-comment">// the forEach prints 1..4 in an unspecified, run-varying order</span></div>
+</article>
+
+  </div>
+</section>
+<section class="cs-cat" id="j-modern">
+  <h2>4. Modern Java (8 &rarr; 25)</h2>
+  <p class="cat-guide"><a href="java-modern.html">Full guide: Modern Java &rarr;</a></p>
+  <div class="cs-grid">
+
+<article class="cs-card" id="cs-j-modern-01">
+  <h3 class="cs-title">Local-variable type inference <code>var</code></h3>
+  <p class="cs-desc">Java 10: <code>var</code> infers a local's type from its initializer. Locals and for-loop variables only -- never fields, method params, or return types, and the initializer is required.</p>
+  <pre class="code-block" data-lang="java"><code>var names = new ArrayList&lt;String&gt;();  // inferred ArrayList&lt;String&gt;
+names.add("Ann");
+var count = names.size();             // inferred int
+for (var n : names) {                 // n inferred String
+    System.out.println(n + ":" + count);
+}</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Ann:1</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-02">
+  <h3 class="cs-title">Records <code>record Point(int x, int y){}</code></h3>
+  <p class="cs-desc">Java 16: an immutable data carrier. The compiler generates the canonical constructor, one accessor per component, plus <code>equals</code>, <code>hashCode</code>, and <code>toString</code>.</p>
+  <pre class="code-block" data-lang="java"><code>record Point(int x, int y) {}
+
+Point p = new Point(3, 4);
+System.out.println(p.x() + "," + p.y());       // accessors
+System.out.println(p);                         // toString
+System.out.println(p.equals(new Point(3, 4))); // value equality</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>3,4
+Point[x=3, y=4]
+true</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-03">
+  <h3 class="cs-title">Sealed classes <code>sealed ... permits</code></h3>
+  <p class="cs-desc">Java 17: restricts which types may extend/implement. Every permitted subtype must be declared <code>final</code>, <code>sealed</code>, or <code>non-sealed</code> (records are implicitly final).</p>
+  <pre class="code-block" data-lang="java"><code>sealed interface Shape permits Circle, Square {}
+record Circle(double r) implements Shape {}   // implicitly final
+record Square(double s) implements Shape {}
+
+Shape sh = new Circle(2);
+System.out.println(sh instanceof Circle);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>true</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-04">
+  <h3 class="cs-title">Pattern matching for <code>instanceof</code></h3>
+  <p class="cs-desc">Java 16: test and bind in one step -- <code>o instanceof String s</code> introduces <code>s</code> already cast, usable in the same condition once the test passes.</p>
+  <pre class="code-block" data-lang="java"><code>Object o = "hello";
+if (o instanceof String s &amp;&amp; s.length() &gt; 3) {
+    System.out.println(s.toUpperCase());  // s is a String here
+}</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>HELLO</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-05">
+  <h3 class="cs-title">Switch expressions <code>-&gt; / yield</code></h3>
+  <p class="cs-desc">Java 14: <code>switch</code> that produces a value. Arrow arms have no fall-through; a block arm returns via <code>yield</code>. Must be exhaustive (cover all cases or add <code>default</code>).</p>
+  <pre class="code-block" data-lang="java"><code>int n = 5;
+String size = switch (n) {
+    case 1, 2 -&gt; "small";
+    default   -&gt; {
+        String s = n &gt; 4 ? "big" : "medium";
+        yield s;
+    }
+};
+System.out.println(size);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>big</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-06">
+  <h3 class="cs-title">Pattern matching for <code>switch</code></h3>
+  <p class="cs-desc">Java 21: match on the runtime type with type patterns, refine with a <code>when</code> guard. Arms are tested top-down; the first match wins.</p>
+  <pre class="code-block" data-lang="java"><code>Object o = 42;
+String r = switch (o) {
+    case Integer i when i &gt; 10 -&gt; "big int " + i;
+    case Integer i             -&gt; "int " + i;
+    case String s              -&gt; "str " + s;
+    default                    -&gt; "other";
+};
+System.out.println(r);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>big int 42</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-07">
+  <h3 class="cs-title">Record patterns <code>case Point(int x, int y)</code></h3>
+  <p class="cs-desc">Java 21: deconstruct a record directly in a pattern, binding its components. Nests inside <code>switch</code>/<code>instanceof</code> and composes with type patterns.</p>
+  <pre class="code-block" data-lang="java"><code>record Point(int x, int y) {}
+
+Object o = new Point(3, 4);
+String r = switch (o) {
+    case Point(int x, int y) -&gt; "sum=" + (x + y);
+    default                  -&gt; "?";
+};
+System.out.println(r);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>sum=7</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-08">
+  <h3 class="cs-title">Text blocks <code>&quot;&quot;&quot; ... &quot;&quot;&quot;</code></h3>
+  <p class="cs-desc">Java 15: multi-line string literal. Incidental (common) leading whitespace -- measured against the least-indented line and the closing delimiter -- is stripped automatically.</p>
+  <pre class="code-block" data-lang="java"><code>String json = """
+        {
+          "name": "Ann"
+        }""";
+System.out.println(json);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>{
+  "name": "Ann"
+}</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-09">
+  <h3 class="cs-title">Date/time API <code>java.time</code></h3>
+  <p class="cs-desc">Java 8: immutable <code>LocalDate</code>/<code>LocalDateTime</code>, <code>Period</code> (date-based) and <code>Duration</code> (time-based) amounts, and <code>DateTimeFormatter</code>. Replaces the legacy <code>Date</code>/<code>Calendar</code>.</p>
+  <pre class="code-block" data-lang="java"><code>LocalDate d = LocalDate.of(2024, 1, 31);
+LocalDate later = d.plusDays(1);
+Period p = Period.between(d, later);
+Duration du = Duration.ofHours(2).plusMinutes(30);
+
+System.out.println(later);          // ISO-8601
+System.out.println(p.getDays());
+System.out.println(du.toMinutes());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>2024-02-01
+1
+150</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-10">
+  <h3 class="cs-title">Default &amp; static interface methods</h3>
+  <p class="cs-desc">Java 8: interfaces may carry <code>default</code> methods (inherited, overridable bodies) and <code>static</code> helpers -- letting APIs evolve without breaking implementers.</p>
+  <pre class="code-block" data-lang="java"><code>interface Greeter {
+    String name();
+    default String hello() { return "Hi, " + name(); }
+    static Greeter of(String n) { return () -&gt; n; }
+}
+
+Greeter g = Greeter.of("Ann");
+System.out.println(g.hello());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Hi, Ann</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-11">
+  <h3 class="cs-title">Modern <code>Optional</code></h3>
+  <p class="cs-desc">Java 9 added <code>ifPresentOrElse</code>, <code>or</code>, and <code>stream</code>; Java 10 added no-arg <code>orElseThrow()</code>. Prefer these over <code>isPresent()</code>+<code>get()</code>.</p>
+  <pre class="code-block" data-lang="java"><code>Optional&lt;String&gt; o = Optional.of("Ann");
+o.ifPresentOrElse(
+    v -&gt; System.out.println("got " + v),
+    () -&gt; System.out.println("empty"));
+
+String v = o.orElseThrow();                 // Java 10, no-arg
+Optional&lt;String&gt; f =
+    Optional.&lt;String&gt;empty().or(() -&gt; Optional.of("fallback"));
+System.out.println(v + "/" + f.get());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>got Ann
+Ann/fallback</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-12">
+  <h3 class="cs-title">Collection factories <code>List.of / Map.of</code></h3>
+  <p class="cs-desc">Java 9: concise <code>List.of</code>/<code>Set.of</code>/<code>Map.of</code> build <strong>immutable</strong> collections. Any mutating call throws <code>UnsupportedOperationException</code>; nulls are rejected.</p>
+  <pre class="code-block" data-lang="java"><code>List&lt;String&gt; names = List.of("Ann", "Bo");
+Map&lt;String,Integer&gt; ages = Map.of("Ann", 30, "Bo", 25);
+
+System.out.println(names);
+System.out.println(ages.get("Ann"));
+names.add("Cy");                    // mutation not allowed</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>[Ann, Bo]
+30
+<span class="io-comment">names.add("Cy") -&gt; throws java.lang.UnsupportedOperationException</span></div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-13">
+  <h3 class="cs-title">Stream <code>toList()</code> vs <code>collect(toList())</code></h3>
+  <p class="cs-desc">Java 16: <code>Stream.toList()</code> is a terminal shortcut returning an <em>unmodifiable</em> List. Older <code>collect(Collectors.toList())</code> gives an unspecified (usually mutable) List. Java 24: stream gatherers add custom intermediate ops via <code>gather(...)</code>.</p>
+  <pre class="code-block" data-lang="java"><code>import static java.util.stream.Collectors.toList;
+
+List&lt;Integer&gt; a = Stream.of(1, 2, 3).map(n -&gt; n * n).toList();
+List&lt;Integer&gt; b = Stream.of(1, 2, 3).collect(toList());
+System.out.println(a);   // unmodifiable
+System.out.println(b);   // mutable copy</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>[1, 4, 9]
+[1, 2, 3]</div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-14">
+  <h3 class="cs-title">HTTP client <code>java.net.http</code></h3>
+  <p class="cs-desc">Java 11: the built-in <code>HttpClient</code> replaces <code>HttpURLConnection</code>. Supports sync <code>send</code> and async <code>sendAsync</code>, HTTP/2, and body handlers.</p>
+  <pre class="code-block" data-lang="java"><code>HttpClient client = HttpClient.newHttpClient();
+HttpRequest req = HttpRequest.newBuilder()
+    .uri(URI.create("https://api.example.com/ping"))
+    .GET()
+    .build();
+HttpResponse&lt;String&gt; res =
+    client.send(req, HttpResponse.BodyHandlers.ofString());
+System.out.println(res.statusCode());
+System.out.println(res.body());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>200
+pong
+<span class="io-comment">(example server response -- depends on the endpoint)</span></div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-15">
+  <h3 class="cs-title">Virtual threads <code>Thread.ofVirtual()</code></h3>
+  <p class="cs-desc">Java 21: lightweight JVM-scheduled threads -- millions are cheap and blocking is nearly free, so you write simple thread-per-task code. See the Multithreading &amp; Concurrency category.</p>
+  <pre class="code-block" data-lang="java"><code>try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {
+    exec.submit(() -&gt;
+        System.out.println("on " + Thread.currentThread()));
+}   // try-with-resources awaits all tasks</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>on VirtualThread[#21]/runnable@ForkJoinPool-1-worker-1
+<span class="io-comment">(thread id and carrier vary per run)</span></div>
+</article>
+
+<article class="cs-card" id="cs-j-modern-16">
+  <h3 class="cs-title">Modules / JPMS <code>module-info.java</code></h3>
+  <p class="cs-desc">Java 9: the module system. A <code>module-info.java</code> at the source root declares <code>requires</code> (dependencies) and <code>exports</code> (public packages); non-exported packages are strongly encapsulated.</p>
+  <pre class="code-block" data-lang="java"><code>// module-info.java  (at the module's source root)
+module com.app {
+    requires java.net.http;   // use HttpClient
+    exports com.app.api;      // public to other modules
+    // com.app.internal stays hidden
+}</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>com.app.api      -&gt; visible to any module that requires com.app
+com.app.internal -&gt; inaccessible (compile/run-time module error)</div>
+</article>
+
+  </div>
+</section>
+<section class="cs-cat" id="j-solid">
+  <h2>5. SOLID Principles</h2>
+  <p class="cat-guide"><a href="java-design-patterns.html">Full guide: SOLID &amp; Design Patterns &rarr;</a></p>
+  <div class="cs-grid">
+
+<article class="cs-card" id="cs-j-solid-01">
+  <h3 class="cs-title">Single Responsibility (SRP) <code>class</code></h3>
+  <p class="cs-desc">A class should have only one reason to change. Split unrelated responsibilities (data, printing, persistence) into separate classes.</p>
+  <pre class="code-block" data-lang="java"><code>// One class, one reason to change: separate data, output, storage.
+class Invoice {                    // reason to change: tax / business rules
+    final double amount;
+    Invoice(double amount) { this.amount = amount; }
+    double withTax() { return amount * 1.2; }
+}
+class InvoicePrinter {             // reason to change: output format
+    void print(Invoice inv) { System.out.println("Total: " + inv.withTax()); }
+}
+class InvoiceRepository {          // reason to change: persistence
+    void save(Invoice inv) { /* insert into DB */ }
+}</code></pre>
+  <div class="io-output"><span class="io-title">Benefit</span>Three independent reasons to change live in three classes -- a format tweak touches only InvoicePrinter, never Invoice.</div>
+</article>
+
+<article class="cs-card" id="cs-j-solid-02">
+  <h3 class="cs-title">Open/Closed (OCP) <code>implements</code></h3>
+  <p class="cs-desc">Entities should be open for extension but closed for modification. Add behaviour via new types (polymorphism), not by editing existing code with type checks.</p>
+  <pre class="code-block" data-lang="java"><code>interface Shape { double area(); }
+record Circle(double r) implements Shape { public double area(){ return Math.PI*r*r; } }
+record Square(double s) implements Shape { public double area(){ return s*s; } }
+
+// total() is closed for modification, open for extension:
+static double total(List&lt;Shape&gt; shapes) {
+    return shapes.stream().mapToDouble(Shape::area).sum();
+}
+// BAD: if (s instanceof Circle) ... else if (s instanceof Square) ...
+//      -- editing total() every time a new shape type appears.</code></pre>
+  <div class="io-output"><span class="io-title">Benefit</span>Adding a Triangle = one new record. total(), Circle and Square need zero edits.</div>
+</article>
+
+<article class="cs-card" id="cs-j-solid-03">
+  <h3 class="cs-title">Liskov Substitution (LSP) <code>extends</code></h3>
+  <p class="cs-desc">Subtypes must be substitutable for their base type without breaking a caller's expectations -- each subtype honours the base contract.</p>
+  <pre class="code-block" data-lang="java"><code>interface Shape { int area(); }
+record Rectangle(int w, int h) implements Shape { public int area(){ return w*h; } }
+record Square(int side)        implements Shape { public int area(){ return side*side; } }
+
+// Any Shape substitutes for another: area() means the same everywhere.
+Shape s = new Square(4);
+System.out.println(s.area());
+// BAD: class Square extends Rectangle overriding setWidth to also set height
+//      breaks callers that set width and height independently.</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>16</div>
+</article>
+
+<article class="cs-card" id="cs-j-solid-04">
+  <h3 class="cs-title">Interface Segregation (ISP) <code>interface</code></h3>
+  <p class="cs-desc">Prefer many small, role-specific interfaces over one fat interface, so no client is forced to depend on methods it does not use.</p>
+  <pre class="code-block" data-lang="java"><code>interface Printer { void print(); }
+interface Scanner { void scan();  }
+
+// A print-only client depends on Printer alone.
+class SimplePrinter implements Printer {
+    public void print() { System.out.println("printing"); }
+}
+class AllInOne implements Printer, Scanner {
+    public void print() { System.out.println("printing"); }
+    public void scan()  { System.out.println("scanning"); }
+}
+// BAD: one fat interface Machine { print(); scan(); fax(); }
+//      forces SimplePrinter to stub scan() and fax() it never calls.</code></pre>
+  <div class="io-output"><span class="io-title">Benefit</span>SimplePrinter implements only print() -- no empty scan()/fax() stubs forced on it.</div>
+</article>
+
+<article class="cs-card" id="cs-j-solid-05">
+  <h3 class="cs-title">Dependency Inversion (DIP) <code>constructor</code></h3>
+  <p class="cs-desc">High-level modules should depend on abstractions, not concrete classes; inject the concretion. Dependency Injection is one form of Inversion of Control (IoC).</p>
+  <pre class="code-block" data-lang="java"><code>interface MessageService { void send(String msg); }
+class EmailService implements MessageService {
+    public void send(String msg) { System.out.println("Email: " + msg); }
+}
+class Notifier {                             // high-level: depends on abstraction
+    private final MessageService service;    // not `new EmailService()` inside
+    Notifier(MessageService service) { this.service = service; }   // injected
+    void notifyUser(String msg) { service.send(msg); }
+}
+// usage: new Notifier(new EmailService()).notifyUser("hi");
+// swap in SmsService without touching Notifier.</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Email: hi</div>
+</article>
+
+  </div>
+</section>
+<section class="cs-cat" id="j-creational">
+  <h2>6. Creational Patterns</h2>
+  <p class="cat-guide"><a href="java-design-patterns.html">Full guide: SOLID &amp; Design Patterns &rarr;</a></p>
+  <div class="cs-grid">
+
+<article class="cs-card" id="cs-j-creational-01">
+  <h3 class="cs-title">Singleton <code>enum INSTANCE</code></h3>
+  <p class="cs-desc">Creational: guarantee exactly ONE instance with a global access point. Participant is the class itself -- private constructor plus a static accessor. The one-line <code>enum</code> is the safest form (serialization- and reflection-proof).</p>
+  <pre class="code-block" data-lang="java"><code>enum Logger { INSTANCE;                     // enum = safest singleton
+    void log(String m) { System.out.println(m); }
+}
+final class Config {
+    private static final Config I = new Config();
+    private Config() {}                     // private ctor blocks 'new'
+    static Config get() { return I; }
+}
+// usage
+System.out.println(Config.get() == Config.get());
+Logger.INSTANCE.log("started");</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>true
+started</div>
+</article>
+
+<article class="cs-card" id="cs-j-creational-02">
+  <h3 class="cs-title">Factory Method <code>make()</code></h3>
+  <p class="cs-desc">Creational: a Creator declares a factory method that subclasses OVERRIDE to decide which single Product to instantiate; callers never call <code>new</code> on a concrete class. Participants: Product, ConcreteProducts, Creator, ConcreteCreators.</p>
+  <pre class="code-block" data-lang="java"><code>interface Shape { double area(); }
+record Circle(double r) implements Shape { public double area(){ return Math.PI*r*r; } }
+record Square(double s) implements Shape { public double area(){ return s*s; } }
+
+abstract class Factory {                     // Creator
+    abstract Shape create();                  // factory method: subclasses override
+}
+class CircleFactory extends Factory { Shape create(){ return new Circle(1); } }
+class SquareFactory extends Factory { Shape create(){ return new Square(2); } }
+
+for (Factory f : List.of(new CircleFactory(), new SquareFactory()))
+    System.out.printf("%.2f%n", f.create().area());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>3.14
+4.00</div>
+</article>
+
+<article class="cs-card" id="cs-j-creational-03">
+  <h3 class="cs-title">Abstract Factory <code>Theme</code></h3>
+  <p class="cs-desc">Creational: a factory of factories -- one object creates a whole FAMILY of related products (e.g. a matching Button + Checkbox) without naming their concrete classes. Participants: AbstractFactory, ConcreteFactory, AbstractProducts.</p>
+  <pre class="code-block" data-lang="java"><code>interface Button   { String paint(); }     // two related products
+interface Checkbox { String paint(); }
+interface Theme {                           // abstract factory (a family)
+    Button   button();
+    Checkbox checkbox();
+}
+class Dark implements Theme {               // one concrete family
+    public Button   button()   { return () -> "[dark button]"; }
+    public Checkbox checkbox() { return () -> "[dark check]"; }
+}
+Theme t = new Dark();
+System.out.println(t.button().paint() + " " + t.checkbox().paint());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>[dark button] [dark check]</div>
+</article>
+
+<article class="cs-card" id="cs-j-creational-04">
+  <h3 class="cs-title">Builder <code>.build()</code></h3>
+  <p class="cs-desc">Creational: assemble a complex/immutable object step by step through a fluent builder, avoiding telescoping constructors. Participants: Product plus Builder (fluent setters that return <code>this</code>, ending in <code>build()</code>).</p>
+  <pre class="code-block" data-lang="java"><code>final class Pizza {
+    final int size; final boolean cheese, bacon;
+    private Pizza(Builder b){ size=b.size; cheese=b.cheese; bacon=b.bacon; }
+    static class Builder {                            // no telescoping ctors
+        int size = 12; boolean cheese, bacon;
+        Builder size(int s){ this.size = s; return this; }  // fluent: return this
+        Builder cheese(){ cheese = true; return this; }
+        Builder bacon(){ bacon = true; return this; }
+        Pizza build(){ return new Pizza(this); }
+    }
+}
+Pizza p = new Pizza.Builder().size(16).cheese().build();
+System.out.println(p.size + " cheese=" + p.cheese + " bacon=" + p.bacon);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>16 cheese=true bacon=false</div>
+</article>
+
+<article class="cs-card" id="cs-j-creational-05">
+  <h3 class="cs-title">Prototype <code>clone()</code></h3>
+  <p class="cs-desc">Creational: create new objects by CLONING a prototype instead of constructing from scratch. Caveat: <code>Object.clone()</code> is a SHALLOW copy -- nested references are shared, so copy mutable fields yourself for a deep copy. Participants: Prototype, ConcretePrototype.</p>
+  <pre class="code-block" data-lang="java"><code>class Sheet implements Cloneable {
+    List&lt;String&gt; rows = new ArrayList&lt;&gt;(List.of("a", "b"));
+    public Sheet clone() {                     // shallow: shares the SAME list
+        try { return (Sheet) super.clone(); }
+        catch (CloneNotSupportedException e) { throw new AssertionError(e); }
+    }
+    Sheet deepClone() {                        // deep: copy the mutable field too
+        Sheet c = clone();
+        c.rows = new ArrayList&lt;&gt;(this.rows);
+        return c;
+    }
+}
+Sheet a = new Sheet();
+Sheet shallow = a.clone();
+shallow.rows.add("c");                         // leaks: shared list mutates 'a'
+Sheet deep = a.deepClone();
+deep.rows.add("d");                            // isolated: own copy, 'a' untouched
+System.out.println(a.rows + " | " + shallow.rows + " | " + deep.rows);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>[a, b, c] | [a, b, c] | [a, b, c, d]</div>
+</article>
+
+  </div>
+</section>
+<section class="cs-cat" id="j-behavioral">
+  <h2>7. Behavioral Patterns</h2>
+  <p class="cat-guide"><a href="java-design-patterns.html">Full guide: SOLID &amp; Design Patterns &rarr;</a></p>
+  <div class="cs-grid">
+
+<article class="cs-card" id="cs-j-behavioral-01">
+  <h3 class="cs-title">Strategy <code>interface + delegate</code></h3>
+  <p class="cs-desc">Behavioral (GoF). Encapsulates a family of interchangeable algorithms behind one interface; the Context (Cart) holds a Strategy reference and delegates to it. A one-method strategy is a functional interface, so a lambda can replace a concrete class.</p>
+  <pre class="code-block" data-lang="java"><code>interface Discount { double apply(double price); }
+
+class Cart {                       // Context
+    private final Discount strategy;
+    Cart(Discount s) { this.strategy = s; }
+    double checkout(double price) { return strategy.apply(price); }
+}
+
+// lambda supplies the algorithm -- no concrete class needed
+Cart c = new Cart(p -> p * 0.9);   // 10% off
+System.out.println(c.checkout(100));</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>90.0</div>
+</article>
+
+<article class="cs-card" id="cs-j-behavioral-02">
+  <h3 class="cs-title">Observer <code>register / notify</code></h3>
+  <p class="cs-desc">Behavioral (GoF). Defines a one-to-many dependency: the Subject keeps a list of Observers and notifies each when its state changes. Notification follows registration order (the list is iterated front to back).</p>
+  <pre class="code-block" data-lang="java"><code>interface Observer { void update(int temp); }
+
+class Station {                       // Subject
+    private final List&lt;Observer&gt; obs = new ArrayList&lt;&gt;();
+    void register(Observer o) { obs.add(o); }
+    void setTemp(int t) { for (Observer o : obs) o.update(t); }
+}
+
+Station s = new Station();
+s.register(t -> System.out.println("Phone: " + t));
+s.register(t -> System.out.println("TV: " + t));
+s.setTemp(25);</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Phone: 25
+TV: 25</div>
+</article>
+
+<article class="cs-card" id="cs-j-behavioral-03">
+  <h3 class="cs-title">Command <code>execute()</code></h3>
+  <p class="cs-desc">Behavioral (GoF). Wraps a request as an object exposing execute(); the Invoker holds Commands, not Receivers, so requests can be queued, logged, or undone. Participants: Command, ConcreteCommand, Receiver, Invoker.</p>
+  <pre class="code-block" data-lang="java"><code>interface Command { void execute(); }
+
+class Light { void on() { System.out.println("Light ON"); } }  // Receiver
+
+class OnCommand implements Command {
+    private final Light light;
+    OnCommand(Light l) { this.light = l; }
+    public void execute() { light.on(); }
+}
+
+Command c = new OnCommand(new Light());  // invoker sees only Command
+c.execute();</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Light ON</div>
+</article>
+
+<article class="cs-card" id="cs-j-behavioral-04">
+  <h3 class="cs-title">Iterator <code>hasNext() / next()</code></h3>
+  <p class="cs-desc">Behavioral (GoF). Gives sequential access to an aggregate's elements without exposing its internals. Java's <code>java.util.Iterator</code> is the built-in form; every <code>Iterable</code> returns one via <code>iterator()</code>.</p>
+  <pre class="code-block" data-lang="java"><code>List&lt;String&gt; names = List.of("Ann", "Bob", "Cy");
+
+Iterator&lt;String&gt; it = names.iterator();
+while (it.hasNext()) {
+    System.out.println(it.next());
+}</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Ann
+Bob
+Cy</div>
+</article>
+
+<article class="cs-card" id="cs-j-behavioral-05">
+  <h3 class="cs-title">Template Method <code>abstract steps</code></h3>
+  <p class="cs-desc">Behavioral (GoF). A base-class method fixes the algorithm's skeleton and calls abstract steps that subclasses fill in (inheritance-based). The template is usually <code>final</code> so the outline can't be overridden.</p>
+  <pre class="code-block" data-lang="java"><code>abstract class Game {
+    final void play() {          // template method: fixed skeleton
+        start();
+        finish();
+    }
+    abstract void start();
+    abstract void finish();
+}
+
+class Chess extends Game {
+    void start()  { System.out.println("Chess start"); }
+    void finish() { System.out.println("Chess over"); }
+}
+
+new Chess().play();</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Chess start
+Chess over</div>
+</article>
+
+<article class="cs-card" id="cs-j-behavioral-06">
+  <h3 class="cs-title">Null Object <code>neutral default</code></h3>
+  <p class="cs-desc">Behavioral pattern popularized after the GoF book (not one of the original 23). Supplies a do-nothing / neutral implementation of an interface instead of <code>null</code>, so callers can drop their null checks.</p>
+  <pre class="code-block" data-lang="java"><code>interface Customer { String name(); }
+
+class Real implements Customer {
+    public String name() { return "Ann"; }
+}
+class NullCustomer implements Customer {
+    public String name() { return "Guest"; }   // neutral, never null
+}
+
+Customer find(boolean known) {
+    return known ? new Real() : new NullCustomer();
+}
+
+System.out.println(find(false).name());         // no null check</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Guest</div>
+</article>
+
+<article class="cs-card" id="cs-j-behavioral-07">
+  <h3 class="cs-title">Visitor <code>accept / visit</code></h3>
+  <p class="cs-desc">Behavioral (GoF). Moves an operation out of the object structure: each element's <code>accept(v)</code> calls back <code>v.visit(this)</code> (double dispatch). Adding a new operation is easy (a new Visitor); adding a new element type is hard (every Visitor must change).</p>
+  <pre class="code-block" data-lang="java"><code>interface Shape { double accept(AreaVisitor v); }
+interface AreaVisitor { double visit(Circle c); double visit(Square s); }
+
+record Circle(double r) implements Shape {
+    public double accept(AreaVisitor v) { return v.visit(this); }
+}
+record Square(double side) implements Shape {
+    public double accept(AreaVisitor v) { return v.visit(this); }
+}
+
+AreaVisitor area = new AreaVisitor() {
+    public double visit(Circle c) { return Math.PI * c.r() * c.r(); }
+    public double visit(Square s) { return s.side() * s.side(); }
+};
+System.out.println(new Square(2).accept(area));</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>4.0</div>
+</article>
+
+  </div>
+</section>
+<section class="cs-cat" id="j-structural">
+  <h2>8. Structural Patterns</h2>
+  <p class="cat-guide"><a href="java-design-patterns.html">Full guide: SOLID &amp; Design Patterns &rarr;</a></p>
+  <div class="cs-grid">
+
+<article class="cs-card" id="cs-j-structural-01">
+  <h3 class="cs-title">Decorator <code>wrap + delegate</code></h3>
+  <p class="cs-desc">Attach responsibilities to an object dynamically by wrapping it in another object of the <em>same interface</em> (Component) that holds a reference to the inner one and delegates — a flexible alternative to subclassing. JDK: the <code>java.io</code> streams, e.g. <code>new BufferedReader(new FileReader(f))</code>.</p>
+  <pre class="code-block" data-lang="java"><code>interface Coffee { double cost(); }
+class Espresso implements Coffee {
+    public double cost() { return 2.0; }
+}
+// decorator implements Coffee AND wraps a Coffee
+class Milk implements Coffee {
+    private final Coffee inner;
+    Milk(Coffee inner) { this.inner = inner; }
+    public double cost() { return inner.cost() + 0.5; }
+}
+Coffee c = new Milk(new Milk(new Espresso()));  // stack decorators
+System.out.println(c.cost());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>3.0</div>
+</article>
+
+<article class="cs-card" id="cs-j-structural-02">
+  <h3 class="cs-title">Facade <code>one entry point</code></h3>
+  <p class="cs-desc">Provide one simplified interface over a complex subsystem: the Facade knows which subsystem classes to call and in what order, so clients depend only on it. Reduces coupling; the subsystem stays usable directly. JDK-style: <code>DriverManager.getConnection(...)</code>, SLF4J's <code>LoggerFactory</code>.</p>
+  <pre class="code-block" data-lang="java"><code>class Amp       { void on()  { System.out.println("Amp on"); } }
+class Projector { void on()  { System.out.println("Projector on"); } }
+class Lights    { void dim() { System.out.println("Lights dim"); } }
+
+class TheaterFacade {                 // hides the 3-step startup
+    private final Amp amp = new Amp();
+    private final Projector proj = new Projector();
+    private final Lights lights = new Lights();
+    void watchMovie() { lights.dim(); proj.on(); amp.on(); }
+}
+new TheaterFacade().watchMovie();</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Lights dim
+Projector on
+Amp on</div>
+</article>
+
+<article class="cs-card" id="cs-j-structural-03">
+  <h3 class="cs-title">Flyweight <code>share intrinsic state</code></h3>
+  <p class="cs-desc">Share many fine-grained objects to save memory. State is split: <em>intrinsic</em> (shared, immutable, stored in the flyweight) vs <em>extrinsic</em> (context-specific, passed in by the client). A factory caches and reuses instances. JDK: the <code>String</code> pool and <code>Integer.valueOf</code>'s cache of -128..127.</p>
+  <pre class="code-block" data-lang="java"><code>Integer a = 127, b = 127;   // autoboxing -&gt; Integer.valueOf, cached
+Integer c = 128, d = 128;   // 128 is outside the cache -&gt; new objects
+System.out.println(a == b); // same cached instance
+System.out.println(c == d); // distinct instances
+System.out.println(c.equals(d)); // value equality still holds</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>true
+false
+true</div>
+</article>
+
+<article class="cs-card" id="cs-j-structural-04">
+  <h3 class="cs-title">Adapter <code>Target wraps Adaptee</code></h3>
+  <p class="cs-desc">Convert an existing class's interface (Adaptee) into the interface a client expects (Target). The Adapter implements Target and delegates to the wrapped Adaptee. <em>Object adapter</em> uses composition (shown); a <em>class adapter</em> would extend the Adaptee. JDK: <code>InputStreamReader</code> adapts an <code>InputStream</code> to a <code>Reader</code>.</p>
+  <pre class="code-block" data-lang="java"><code>interface Target { String request(); }          // what the client calls
+class Adaptee { String specificRequest() { return "raw data"; } }
+
+class Adapter implements Target {                // wraps the incompatible API
+    private final Adaptee a;
+    Adapter(Adaptee a) { this.a = a; }
+    public String request() { return a.specificRequest().toUpperCase(); }
+}
+Target t = new Adapter(new Adaptee());
+System.out.println(t.request());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>RAW DATA</div>
+</article>
+
+<article class="cs-card" id="cs-j-structural-05">
+  <h3 class="cs-title">Bridge <code>abstraction has-a impl</code></h3>
+  <p class="cs-desc">Decouple an abstraction from its implementation so both vary independently — the Abstraction <em>has-a</em> Implementor (composition) rather than subclassing it, avoiding an N x M class explosion. Unlike Adapter (retrofits unrelated interfaces) it is designed up front. JDK: the JDBC API (abstraction) over vendor <code>Driver</code>s (implementation).</p>
+  <pre class="code-block" data-lang="java"><code>interface Renderer { String render(String shape); }   // implementor
+class Vector implements Renderer {
+    public String render(String s) { return "Vector:" + s; }
+}
+abstract class Shape {                                  // abstraction
+    protected final Renderer r;
+    Shape(Renderer r) { this.r = r; }
+    abstract String draw();
+}
+class Circle extends Shape {
+    Circle(Renderer r) { super(r); }
+    String draw() { return r.render("circle"); }
+}
+System.out.println(new Circle(new Vector()).draw());</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>Vector:circle</div>
+  <figure><svg viewBox="0 0 340 118" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bridge decouples shape abstraction from renderer implementation">
+    <rect x="12" y="10" width="120" height="26" rx="5" fill="var(--surface-2)" stroke="var(--border)"/>
+    <text x="72" y="27" text-anchor="middle" font-size="11" fill="var(--text)">Shape (abstraction)</text>
+    <rect x="208" y="10" width="120" height="26" rx="5" fill="var(--surface-2)" stroke="var(--border)"/>
+    <text x="268" y="27" text-anchor="middle" font-size="11" fill="var(--text)">Renderer (impl)</text>
+    <line x1="132" y1="23" x2="208" y2="23" stroke="var(--accent)" stroke-width="2"/>
+    <text x="170" y="18" text-anchor="middle" font-size="9" fill="var(--muted)">has-a</text>
+    <line x1="42" y1="36" x2="42" y2="78" stroke="var(--border)" stroke-dasharray="3 3"/>
+    <line x1="102" y1="36" x2="102" y2="78" stroke="var(--border)" stroke-dasharray="3 3"/>
+    <rect x="14" y="80" width="52" height="24" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="40" y="96" text-anchor="middle" font-size="10" fill="var(--muted)">Circle</text>
+    <rect x="78" y="80" width="52" height="24" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="104" y="96" text-anchor="middle" font-size="10" fill="var(--muted)">Square</text>
+    <line x1="238" y1="36" x2="238" y2="78" stroke="var(--border)" stroke-dasharray="3 3"/>
+    <line x1="298" y1="36" x2="298" y2="78" stroke="var(--border)" stroke-dasharray="3 3"/>
+    <rect x="210" y="80" width="52" height="24" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="236" y="96" text-anchor="middle" font-size="10" fill="var(--muted)">Vector</text>
+    <rect x="274" y="80" width="52" height="24" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="300" y="96" text-anchor="middle" font-size="10" fill="var(--muted)">Raster</text>
+  </svg><figcaption>Two axes vary independently: N+M classes, not N x M subclasses.</figcaption></figure>
+</article>
+
+<article class="cs-card" id="cs-j-structural-06">
+  <h3 class="cs-title">Composite <code>Leaf + Composite</code></h3>
+  <p class="cs-desc">Compose objects into part-whole trees and treat a single object (Leaf) and a group (Composite) uniformly through one Component interface — the Composite holds a list of Components and recurses. JDK: Swing's <code>Container</code>/<code>Component</code>, a file-system tree.</p>
+  <pre class="code-block" data-lang="java"><code>interface Node { int size(); }                 // component
+class FileLeaf implements Node {               // leaf
+    private final int bytes;
+    FileLeaf(int bytes) { this.bytes = bytes; }
+    public int size() { return bytes; }
+}
+class Dir implements Node {                     // composite holds children
+    private final List&lt;Node&gt; kids = new ArrayList&lt;&gt;();
+    Dir add(Node n) { kids.add(n); return this; }
+    public int size() {                        // recurse over the tree
+        int total = 0;
+        for (Node n : kids) total += n.size();
+        return total;
+    }
+}
+Node root = new Dir()
+    .add(new FileLeaf(10))
+    .add(new Dir().add(new FileLeaf(5)));
+System.out.println(root.size());   // 10 + 5</code></pre>
+  <div class="io-output"><span class="io-title">Output</span>15</div>
+</article>
+
+  </div>
+</section>
+<section class="cs-cat" id="j-systemdesign">
+  <h2>9. System Design</h2>
+  <p class="cat-guide"><a href="java-design-patterns.html">Full guide: SOLID &amp; Design Patterns &rarr;</a></p>
+  <div class="cs-grid">
+
+<article class="cs-card" id="cs-j-systemdesign-01">
+  <h3 class="cs-title">REST APIs <code>GET /users/42</code></h3>
+  <p class="cs-desc">Model the domain as resources addressed by URIs; map CRUD to HTTP verbs (create=POST, read=GET, update=PUT, delete=DELETE). Each request is stateless and the payload is usually JSON.</p>
+  <pre class="code-block" data-lang="text"><code>GET /users/42 HTTP/1.1
+Host: api.example.com
+Accept: application/json
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{ "id": 42, "name": "Ada", "role": "admin" }</code></pre>
+  <div class="io-output"><span class="io-title">Safe vs idempotent</span>GET    safe + idempotent (no change, repeatable)
+PUT    idempotent (repeat -> same final state)
+DELETE idempotent (repeat -> still deleted)
+POST   NEITHER  (repeat -> duplicate resource)</div>
+</article>
+
+<article class="cs-card" id="cs-j-systemdesign-02">
+  <h3 class="cs-title">SOAP vs REST vs RPC <code>SOAP / REST / gRPC</code></h3>
+  <p class="cs-desc">Three API styles: SOAP wraps calls in an XML envelope with a WSDL contract (heavyweight); REST is resource-oriented over HTTP/JSON; RPC/gRPC calls a remote procedure like a local method, action-oriented, using protobuf over HTTP/2.</p>
+  <pre class="code-block" data-lang="text"><code>SOAP  POST /users   &lt;soap:Envelope&gt;&lt;soap:Body&gt;
+                      &lt;getUser&gt;&lt;id&gt;42&lt;/id&gt;&lt;/getUser&gt;
+                    &lt;/soap:Body&gt;&lt;/soap:Envelope&gt;   (XML + WSDL)
+
+REST  GET /users/42                                (resource + JSON)
+
+gRPC  UserService.GetUser(GetUserRequest{ id: 42 })  (protobuf / HTTP2)</code></pre>
+  <div class="io-output"><span class="io-title">Trade-offs</span>SOAP: strict WSDL contract + WS-* (security, transactions); verbose XML
+REST: simple, cacheable, human-readable, ubiquitous over HTTP
+gRPC: compact binary + bi-di streaming, fast; needs .proto, not readable</div>
+</article>
+
+<article class="cs-card" id="cs-j-systemdesign-03">
+  <h3 class="cs-title">Monolith vs Microservices <code>1 vs N deploys</code></h3>
+  <p class="cs-desc">A monolith ships as one deployable over one shared DB; microservices are many small, independently deployable services that each own their data. Microservices trade simplicity for autonomy -- they add, not remove, complexity.</p>
+  <pre class="code-block" data-lang="text"><code>Monolith:
+  one codebase -> one deployable (WAR/JAR), one shared DB
+  [ UI | Orders | Billing | Users ]  run in a single process
+
+Microservices:
+  [Orders]  [Billing]  [Users]   -- separate services
+  each: own repo, own DB, deployed + scaled independently
+  communicate over REST / gRPC / async message queue</code></pre>
+  <div class="io-output"><span class="io-title">Honest trade-offs</span>Monolith: easy to build/test/deploy; scales as ONE unit, teams coupled
+Microservices: independent deploy + scale + team autonomy
+  BUT network calls, partial failure, distributed txns, eventual
+  consistency, more ops. NOT automatically better -- a real trade-off.</div>
+</article>
+
+<article class="cs-card" id="cs-j-systemdesign-04">
+  <h3 class="cs-title">Layered (n-tier) &amp; SOA <code>n-tier / SOA</code></h3>
+  <p class="cs-desc">Layering splits an app into presentation, business, and persistence tiers where each depends only on the one below. SOA composes coarse-grained enterprise services via a central ESB; microservices are the fine-grained, decentralized alternative.</p>
+  <pre class="code-block" data-lang="text"><code>Layered (n-tier)             each layer calls only downward
+  Presentation  (REST controllers, UI)
+        v
+  Business      (services, domain rules)
+        v
+  Persistence   (repositories / DAO)  ->  Database
+
+SOA           coarse services glued by a central ESB (enterprise bus)
+Microservices fine-grained services, own DB, dumb pipes (no ESB)</code></pre>
+  <div class="io-output"><span class="io-title">Layering rule</span>A lower layer must never call up into a higher one.
+SOA:   centralizes integration + reuse in a shared ESB (enterprise).
+Micro: decentralizes it -- own DB per service, lightweight messaging.</div>
+</article>
+
+<article class="cs-card" id="cs-j-systemdesign-05">
+  <h3 class="cs-title">SQL vs NoSQL <code>ACID vs BASE</code></h3>
+  <p class="cs-desc">Relational SQL uses fixed schemas, joins, and ACID transactions. NoSQL trades that for flexible schemas, BASE semantics, and horizontal scale -- in four families: key-value, document, column-family, and graph.</p>
+  <pre class="code-block" data-lang="text"><code>-- SQL: fixed schema, joins, ACID transaction
+BEGIN;
+  UPDATE accounts SET bal = bal - 100 WHERE id = 1;
+  UPDATE accounts SET bal = bal + 100 WHERE id = 2;
+COMMIT;
+
+// NoSQL (document): schema-flexible, denormalized, no join
+{ "id": 42, "name": "Ada", "orders": [ { "total": 19.99 } ] }</code></pre>
+  <div class="io-output"><span class="io-title">When each fits</span>SQL   -> strong consistency, joins, transactions: orders, payments
+NoSQL -> scale + flexible schema + high writes: feeds, sessions, catalog
+Families: key-value (Redis) doc (MongoDB) column (Cassandra) graph (Neo4j)</div>
+</article>
+
+<article class="cs-card" id="cs-j-systemdesign-06">
+  <h3 class="cs-title">Scaling data <code>replicate / shard</code></h3>
+  <p class="cs-desc">Replication copies the same data to multiple nodes for read scaling and availability/failover. Sharding (partitioning) splits data across nodes by a shard key to scale writes and storage.</p>
+  <pre class="code-block" data-lang="text"><code>Replication (every node holds ALL data):
+  Primary --writes--> Replica A
+                  \--> Replica B    reads spread across replicas
+
+Sharding / partitioning (split by shard key = user_id % 3):
+  Shard 0: ids 0,3,6...   Shard 1: 1,4,7...   Shard 2: 2,5,8...
+  each shard holds only PART of the data</code></pre>
+  <div class="io-output"><span class="io-title">Trade-offs</span>Replication: cheap read scale + failover; replicas lag (stale reads),
+             does NOT raise write throughput.
+Sharding:    scales writes + storage; cross-shard joins/txns are hard,
+             a bad shard key -> hotspots. Often combined (shard + replicas).</div>
+</article>
+
+<article class="cs-card" id="cs-j-systemdesign-07">
+  <h3 class="cs-title">CAP theorem <code>C / A / P</code></h3>
+  <p class="cs-desc">In a distributed store, when a network Partition occurs you must sacrifice either Consistency or Availability. It is NOT "pick any 2 of 3 at all times" -- with no partition you can have both C and A.</p>
+  <pre class="code-block" data-lang="text"><code>Network partition happens -> you MUST pick one:
+  CP  stay consistent, refuse/block some requests (lose availability)
+      e.g. HBase, ZooKeeper, etcd
+  AP  stay available, serve possibly-stale data (lose consistency)
+      e.g. Cassandra, DynamoDB, Riak
+  CA  only when there is NO partition (not a real distributed mode)</code></pre>
+  <div class="io-output"><span class="io-title">Key point</span>CAP is a PARTITION-TIME choice, not "pick 2 of 3 always".
+No partition -> a node can be both consistent AND available.
+PACELC extends it: Else (no partition) trade Latency vs Consistency.</div>
+  <figure>
+    <svg viewBox="0 0 340 172" role="img" aria-label="CAP triangle with Consistency, Availability, and Partition tolerance at the vertices">
+      <polygon points="170,30 34,144 306,144" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+      <circle cx="170" cy="30" r="4" fill="var(--accent)"/>
+      <text x="170" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">C</text>
+      <circle cx="34" cy="144" r="4" fill="var(--accent)"/>
+      <text x="26" y="160" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">A</text>
+      <circle cx="306" cy="144" r="4" fill="var(--accent)"/>
+      <text x="314" y="160" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">P</text>
+      <text x="170" y="118" text-anchor="middle" font-size="10.5" fill="var(--muted)">partition -> pick C or A</text>
+    </svg>
+    <figcaption>C = Consistency, A = Availability, P = Partition tolerance.</figcaption>
+  </figure>
+</article>
+
+  </div>
+</section>
+  </main>
+</div>
+<script>
+(function(){
+  "use strict";
+  function toArray(n){return Array.prototype.slice.call(n||[]);}
+  function escapeHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  var KW={
+    java:["abstract","assert","boolean","break","byte","case","catch","char","class","const","continue","default","do","double","else","enum","extends","final","finally","float","for","goto","if","implements","import","instanceof","int","interface","long","native","new","package","private","protected","public","return","short","static","strictfp","super","switch","synchronized","this","throw","throws","transient","try","void","volatile","while","var","record","sealed","permits","yield","true","false","null"],
+        js:["var","let","const","function","return","if","else","for","while","do","switch","case","break","continue","new","delete","typeof","instanceof","in","of","this","class","extends","super","import","export","default","try","catch","finally","throw","async","await","yield","void","null","undefined","true","false","static","get","set"],
+    ts:["var","let","const","function","return","if","else","for","while","do","switch","case","break","continue","new","delete","typeof","instanceof","in","of","this","class","extends","super","import","export","default","try","catch","finally","throw","async","await","yield","void","null","undefined","true","false","static","get","set","interface","type","enum","namespace","declare","readonly","public","private","protected","implements","abstract","as","is","keyof","infer","satisfies","never","unknown","any","string","number","boolean"],
+    css:["important","inherit","initial","unset","auto","none","flex","grid","block","inline","inline-block","absolute","relative","fixed","sticky","static","hidden","solid","dashed","dotted","transparent","currentColor"],
+    bash:["if","then","else","fi","for","in","do","done","while","function","return","export","echo","cd","npm","npx","node","ng","git"]
+  };
+  function mkStash(store){return function(cls,t){var k=" "+String.fromCharCode(0xF000+store.length)+" ";store.push('<span class="'+cls+'">'+t+"</span>");return k;};}
+  function restore(out,store){return out.replace(/ ([-]) /g,function(_,c){return store[c.charCodeAt(0)-0xF000];});}
+  function hlGeneric(esc,kw){
+    var s=[],st=mkStash(s),o=esc;
+    o=o.replace(/\/\*[\s\S]*?\*\//g,function(m){return st("tok-comment",m);});
+    o=o.replace(/\/\/[^\n]*/g,function(m){return st("tok-comment",m);});
+    o=o.replace(/"(?:[^"\\\n]|\\.)*"/g,function(m){return st("tok-string",m);});
+    o=o.replace(/'(?:[^'\\\n]|\\.)*'/g,function(m){return st("tok-string",m);});
+    o=o.replace(/`(?:[^`\\]|\\.)*`/g,function(m){return st("tok-string",m);});
+    o=o.replace(/@[A-Za-z][\w]*/g,function(m){return st("tok-keyword",m);});
+    o=o.replace(/\b(?:0[xX][0-9a-fA-F]+|\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g,function(m){return st("tok-number",m);});
+    if(kw&&kw.length){var re=new RegExp("\\b("+kw.join("|")+")\\b","g");o=o.replace(re,function(m){return st("tok-keyword",m);});}
+    return restore(o,s);
+  }
+  function hlMarkup(esc){
+    var s=[],st=mkStash(s),o=esc;
+    o=o.replace(/&lt;!--[\s\S]*?--&gt;/g,function(m){return st("tok-comment",m);});
+    o=o.replace(/&lt;\/?[a-zA-Z][\w-]*/g,function(m){return st("tok-keyword",m);});
+    o=o.replace(/"(?:[^"\\\n]|\\.)*"/g,function(m){return st("tok-string",m);});
+    o=o.replace(/'(?:[^'\\\n]|\\.)*'/g,function(m){return st("tok-string",m);});
+    return restore(o,s);
+  }
+  function hlCss(esc){
+    var s=[],st=mkStash(s),o=esc;
+    o=o.replace(/\/\*[\s\S]*?\*\//g,function(m){return st("tok-comment",m);});
+    o=o.replace(/"(?:[^"\\\n]|\\.)*"/g,function(m){return st("tok-string",m);});
+    o=o.replace(/'(?:[^'\\\n]|\\.)*'/g,function(m){return st("tok-string",m);});
+    o=o.replace(/#[0-9a-fA-F]{3,8}\b/g,function(m){return st("tok-number",m);});
+    o=o.replace(/\b\d+\.?\d*(?:px|em|rem|%|vh|vw|s|ms|fr|deg|pt)?\b/g,function(m){return st("tok-number",m);});
+    o=o.replace(/@[a-zA-Z-]+/g,function(m){return st("tok-keyword",m);});
+    return restore(o,s);
+  }
+  function highlight(lang,raw){
+    var e=escapeHtml(raw);
+    try{
+      if(lang==="html")return hlMarkup(e);
+      if(lang==="css")return hlCss(e);
+      if(lang==="java")return hlGeneric(e,KW.java);
+      if(lang==="ts"||lang==="typescript")return hlGeneric(e,KW.ts);
+      if(lang==="js"||lang==="javascript")return hlGeneric(e,KW.js);
+      if(lang==="bash"||lang==="sh"||lang==="shell"){
+        var h=e.replace(/(^|\n)(\s*#[^\n]*)/g,function(m,p,c){return p+'<span class="tok-comment">'+c+"</span>";});
+        return hlGeneric(h,KW.bash);
+      }
+      return e;
+    }catch(err){return e;}
+  }
+  function initHighlight(){
+    toArray(document.querySelectorAll("pre.code-block > code")).forEach(function(code){
+      var lang=(code.parentNode.getAttribute("data-lang")||"").toLowerCase();
+      code.innerHTML=highlight(lang,code.textContent);
+    });
+  }
+  var THEME_KEY="cheatsheet-theme";
+  function initTheme(){
+    var root=document.documentElement,st=null;
+    try{st=localStorage.getItem(THEME_KEY);}catch(e){}
+    if(st==="light"||st==="dark")root.dataset.theme=st;
+    else if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)root.dataset.theme="dark";
+    else root.dataset.theme="light";
+    var t=document.getElementById("theme-toggle");if(!t)return;
+    t.addEventListener("click",function(){var n=root.dataset.theme==="dark"?"light":"dark";root.dataset.theme=n;try{localStorage.setItem(THEME_KEY,n);}catch(e){}});
+  }
+  function initFilter(){
+    var input=document.getElementById("toc-search");
+    var empty=document.getElementById("toc-empty");
+    if(!input)return;
+    var cats=toArray(document.querySelectorAll("section.cs-cat"));
+    var tocLinks=toArray(document.querySelectorAll("#toc a"));
+    function apply(){
+      var q=input.value.trim().toLowerCase(),any=false;
+      cats.forEach(function(cat){
+        var cards=toArray(cat.querySelectorAll(".cs-card")),shown=0;
+        cards.forEach(function(c){
+          var hit=!q||(c.textContent||"").toLowerCase().indexOf(q)!==-1;
+          c.hidden=!hit;if(hit)shown++;
+        });
+        cat.hidden=!(shown>0);
+        var link=tocLinks.filter(function(a){return a.getAttribute("href")==="#"+cat.id;})[0];
+        if(link)link.parentNode.hidden=cat.hidden;
+        if(!cat.hidden)any=true;
+      });
+      if(empty)empty.hidden=any;
+    }
+    input.addEventListener("input",apply);input.addEventListener("search",apply);
+  }
+  function initSpy(){
+    var links=toArray(document.querySelectorAll("#toc a[href^='#']"));if(!links.length)return;
+    var secs=[];links.forEach(function(a){var el=document.getElementById(a.getAttribute("href").slice(1));if(el)secs.push(el);});
+    if(!secs.length)return;
+    function setA(id){links.forEach(function(a){a.classList.toggle("active",a.getAttribute("href")==="#"+id);});}
+    if(!("IntersectionObserver" in window)){setA(secs[0].id);return;}
+    var vis={};
+    var obs=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting)vis[e.target.id]=1;else delete vis[e.target.id];});
+      for(var i=0;i<secs.length;i++){if(vis[secs[i].id]){setA(secs[i].id);break;}}
+    },{rootMargin:"-10% 0px -75% 0px",threshold:0});
+    secs.forEach(function(s){obs.observe(s);});
+  }
+  function boot(){initTheme();initHighlight();initFilter();initSpy();}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
+</script>
+</body>
+</html>
