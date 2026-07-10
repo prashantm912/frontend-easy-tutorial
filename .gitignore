@@ -1,8 +1,5 @@
 # Downloaded course transcripts (copyrighted course content — keep local only)
-angular-core-deep-dive/
-web-design-html-css-js/
-angular-practical-lab-case-study-1/
-*-transcript.txt
+Source Files/
 
 # IDE
 .idea/
