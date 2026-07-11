@@ -461,7 +461,7 @@ class InvoiceMailer     { void send(Invoice i) { /* messaging */ } }</code></pre
 
   <article class="lecture" id="l-1-03">
     <h3>03. What are design patterns?</h3>
-    <p class="objective"><strong>Objective:</strong> Define what a design pattern is, learn its origin in the Gang of Four catalog, and see the three GoF categories with the patterns this guide works through.</p>
+    <p class="objective"><strong>Objective:</strong> Define what a design pattern is, learn its origin in the Gang of Four catalog, and see the three GoF categories with representative patterns in each.</p>
 
     <p>A <strong>design pattern</strong> is a named, reusable solution to a problem that recurs in object-oriented design. It is <em>not</em> a finished class you copy and paste, but a <strong>template</strong>: a description of the <em>participants</em> (the roles that classes play), how they collaborate, and the trade-offs involved &mdash; which you adapt to your situation. Half its value is the solution and half is the <strong>shared vocabulary</strong>: saying &ldquo;use a Strategy here&rdquo; communicates an entire design in two words.</p>
     <p>The catalog everyone means by &ldquo;design patterns&rdquo; comes from the 1994 book <em>Design Patterns: Elements of Reusable Object-Oriented Software</em> by Erich <strong>Gamma</strong>, Richard <strong>Helm</strong>, Ralph <strong>Johnson</strong>, and John <strong>Vlissides</strong> &mdash; collectively the <strong>Gang of Four (GoF)</strong>. It catalogs 23 patterns and sorts them by intent into three families:</p>
@@ -529,7 +529,7 @@ class Sorter {                                             // Context
       <text x="448" y="232" font-size="11" fill="var(--text)">&#8226; Iterator</text>
       <text x="448" y="254" font-size="11" fill="var(--text)">&#8226; Chain of Responsibility</text>
     </svg>
-    <figcaption>The GoF taxonomy: 23 patterns in three families by intent. The patterns above are the ones this guide works through.</figcaption>
+    <figcaption>The GoF taxonomy: 23 patterns in three families by intent &mdash; a representative selection shown per column, not the exact set this guide covers.</figcaption>
   </figure>
 
   <div class="box cheat"><span class="box-title">Cheat-sheet</span><pre class="code" data-lang="java"><code>// ---- SOLID (class-level design guidelines; reduce coupling &amp; rigidity) ----
@@ -578,8 +578,9 @@ class Sorter {                                             // Context
     <ul class="keypoints">
       <li>One reason to change per class — measured by <em>who</em> asks for the change, not by line count.</li>
       <li>SRP is really about <strong>cohesion</strong>: group what changes together, separate what changes apart.</li>
+      <li>Twin goal &mdash; <strong>high cohesion, low coupling</strong>: a god class binds unrelated concerns into one type (tight coupling, so a change for one stakeholder can break another's code); splitting responsibilities yields focused, independent classes that change without dragging each other along.</li>
       <li>Benefits: change isolation, easier unit testing, higher reuse, smaller merge conflicts.</li>
-      <li>It applies to methods and modules too, not just classes.</li>
+      <li>It applies to methods and modules &mdash; and even API/REST endpoints &mdash; not just classes: each endpoint should own one responsibility (fetch a collection, fetch one entity, save one, or delete one), not several.</li>
     </ul>
 
     <p>A god class collapses many concerns into one type; SRP pulls them apart:</p>
@@ -914,7 +915,7 @@ class QuestionProcessor {
 }</code></pre>
     <p class="srcnote">Source: reimplemented as an original illustration.</p>
 
-    <details class="advanced"><summary>Advanced</summary>OCP is a target, not an absolute — you cannot make code closed against <em>every</em> conceivable change. The pragmatic move is to identify the axis of change that actually varies (here: the kind of question) and close the design against <em>that</em> axis with an abstraction, while accepting it stays open along others. This is the &ldquo;strategic closure&rdquo; Robert C. Martin describes: predict the likely direction of change, and put the seam there.</details>
+    <details class="advanced"><summary>Advanced</summary>OCP is a target, not an absolute — you cannot make code closed against <em>every</em> conceivable change. The pragmatic move is to identify the axis of change that actually varies (here: the kind of question) and close the design against <em>that</em> axis with an abstraction, while accepting it stays open along others. This is the &ldquo;strategic closure&rdquo; Robert C. Martin describes: predict the likely direction of change, and put the seam there. OCP is also tightly bound to the <strong>Single Responsibility Principle</strong>: when a class has just one responsibility its behaviour is already isolated, so it can be extended behind an abstraction without editing it &mdash; and, conversely, an SRP violation usually drags OCP down with it, because a class that juggles several responsibilities must be re-opened whenever any one of them changes.</details>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> Premature abstraction. Sprinkling interfaces and extension points everywhere &ldquo;just in case&rdquo; is speculative generality — it adds indirection with no payoff and can be harder to change than the concrete code. Introduce the OCP seam when a second variation actually appears (or is clearly imminent), not before. When in doubt, follow the rule of three.</div>
   </article>
@@ -1093,7 +1094,7 @@ Merge sort is sorting the items...</div>
     </div>
     <p class="srcnote">Source: reimplemented from the course example.</p>
 
-    <details class="advanced"><summary>Advanced</summary>OCP does not stand alone — it leans on the <strong>Dependency Inversion Principle</strong>. It only holds while high-level code depends on the abstraction and never on a concrete type; the moment <code>SortingProcessor</code> does <code>new MergeSort()</code> internally, it is coupled to a concrete class and is no longer closed. Inverting that dependency — passing the algorithm in, as above — is what keeps the seam open. When the same structure carries selectable behaviour at runtime it becomes the <em>Strategy</em> pattern, covered later in this guide.</details>
+    <details class="advanced"><summary>Advanced</summary>OCP does not stand alone — it leans on the <strong>Dependency Inversion Principle</strong>. It only holds while high-level code depends on the abstraction and never on a concrete type; the moment <code>SortingProcessor</code> does <code>new MergeSort()</code> internally, it is coupled to a concrete class and is no longer closed. Inverting that dependency — passing the algorithm in, as above — is what keeps the seam open. When the same structure carries selectable behaviour at runtime it becomes the <em>Strategy</em> pattern, covered later in this guide. The course pairs a second GoF pattern with Strategy as a canonical way to honour OCP &mdash; the <em>Decorator</em> pattern, which adds behaviour by <em>wrapping</em> an object rather than editing its class (also covered later in this guide).</details>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> A processor that constructs its own algorithm (<code>new MergeSort()</code> hidden inside <code>execute()</code>) looks OCP-compliant but is not: choosing a different sort now requires editing the processor. Inject the dependency (constructor or parameter) so the choice lives with the caller.</div>
   </article>
@@ -1234,7 +1235,7 @@ Expected area 20, actual: 16</div>
     </div>
     <p class="srcnote">Source: reimplemented as an original illustration.</p>
 
-    <details class="advanced"><summary>Advanced</summary>LSP is the object-oriented face of <strong>design by contract</strong> (Meyer). An override may accept a <em>wider</em> parameter type (contravariant inputs) and return a <em>narrower</em> result type (covariant outputs) &mdash; Java supports covariant return types since 5, but not contravariant parameters, so widening a precondition safely usually means overloading or redesign, not overriding.</details>
+    <details class="advanced"><summary>Advanced</summary>LSP is the object-oriented face of <strong>design by contract</strong> (Meyer). An override may accept a <em>wider</em> parameter type (contravariant inputs) and return a <em>narrower</em> result type (covariant outputs) &mdash; Java supports covariant return types since 5, but not contravariant parameters, so widening a precondition safely usually means overloading or redesign, not overriding. An LSP violation is usually also an <strong>Open/Closed Principle</strong> violation &mdash; a subtype that breaks the base contract makes the hierarchy unsafe to extend; the <em>Strategy</em> and <em>Template Method</em> patterns are common tools for keeping subtypes substitutable.</details>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> Reaching for inheritance purely to <em>reuse code</em> when the <em>is-a</em> contract does not truly hold. <code>Square extends Rectangle</code> shares fields but violates the caller's invariant. When only the implementation is shared, prefer <strong>composition</strong> (hold a field) over inheritance.</div>
   </article>
@@ -1415,6 +1416,9 @@ Recharging the battery...</div>
 //   @Override m() { throw new UnsupportedOperationException(); }
 //   @Override m() { }   // empty no-op body
 //   if (x instanceof SpecificSubtype) { ...special-case... }
+// Note: instanceof against a narrow CAPABILITY interface (e.g. Refuelable) to
+//   invoke opt-in behaviour is a fine idiom; the smell is instanceof against a
+//   CONCRETE subtype to special-case it.
 
 // Fix: model shared behaviour in the base; push variant behaviour into
 //      narrow capability interfaces. Prefer composition over inheritance
@@ -2480,12 +2484,13 @@ Assembling a petrol Ford...</div>
     <p class="objective"><strong>Objective:</strong> See that a dependency-injection container is a generalised, configurable factory — and how that realises the Dependency Inversion Principle at application scale.</p>
 
     <p>Once you accept that creation belongs behind a factory, an <strong>IoC (Inversion of Control) container</strong> is the logical endpoint. Spring's <code>BeanFactory</code> and its richer subtype <code>ApplicationContext</code> are, at heart, extremely sophisticated factories: you declare what objects (beans) exist and how they depend on each other, and the container instantiates them, wires the dependencies, manages their scope/lifecycle, and hands them out on request via <code>getBean(...)</code>.</p>
-    <p>This is <strong>Inversion of Control</strong>: instead of your code calling <code>new</code> and pulling its collaborators, the framework <em>pushes</em> ready-wired collaborators into your objects (usually through constructors). Your classes depend only on interfaces — a direct application of the <strong>Dependency Inversion Principle</strong> — and the container is the single factory that knows the concrete implementations. Swapping an implementation (e.g. a real payment gateway for a stub in tests) becomes a configuration change, not a code change.</p>
+    <p>This is <strong>Inversion of Control</strong>: instead of your code calling <code>new</code> and pulling its collaborators, the framework <em>pushes</em> ready-wired collaborators into your objects (usually through constructors). Your classes depend only on interfaces — a direct application of the <strong>Dependency Inversion Principle</strong> — and the container is the single factory that knows the concrete implementations. Swapping an implementation (e.g. a real payment gateway for a stub in tests) becomes a configuration change, not a code change. One clarification on the &ldquo;factory&rdquo; framing: the container plays the factory&rsquo;s <em>role</em>, but it is not implemented as a hand-written factory with a <code>switch</code>/<code>if-else</code> ladder and <code>new</code>. Spring discovers beans from annotations (<code>@Component</code>/<code>@Service</code>/<code>@Repository</code>) and wires them using <strong>reflection and autowiring</strong> (<code>@Autowired</code> or constructor parameters) &mdash; which is exactly why hand-written creational factories with if/else branches become largely unnecessary once an IoC container is in play.</p>
 
     <ul class="keypoints">
       <li>A DI container (<code>ApplicationContext</code>/<code>BeanFactory</code>) is a configurable factory: it builds, wires, scopes, and serves objects.</li>
       <li><strong>Inversion of Control</strong>: the framework creates and injects collaborators; your code stops calling <code>new</code> for its dependencies.</li>
       <li>This operationalises the <strong>Dependency Inversion Principle</strong> — classes depend on abstractions; the container supplies the concretions.</li>
+      <li>Under the hood Spring does <strong>not</strong> use a factory-with-if/else + <code>new</code>; it uses <strong>reflection and autowiring</strong> driven by <code>@Component</code>/<code>@Service</code> annotations, so hand-written creational factories become largely unnecessary.</li>
     </ul>
 
     <div class="io">
@@ -2564,6 +2569,7 @@ ApplicationContext ctx = ...;  ctx.getBean(Service.class);
       <li>Each configuration method returns the builder (<code>this</code>) so calls chain fluently.</li>
       <li>Named methods make each argument self-documenting at the call site.</li>
       <li>The product can be <strong>immutable</strong>: all fields are set once, inside <code>build()</code>.</li>
+      <li><strong>Thread-safe by immutability:</strong> <code>build()</code> sets every field once and returns a finished immutable product, so it can be shared across threads with no synchronization &mdash; the JavaBeans setter approach instead publishes a mutable, partially-configured object that another thread can observe or mutate mid-construction.</li>
       <li>GoF category: <strong>creational</strong>.</li>
     </ul>
 
@@ -2790,7 +2796,7 @@ a, b, c</div>
     </div>
     <p class="srcnote">Source: reimplemented as an original illustration.</p>
 
-    <div class="box pitfall"><span class="box-title">Pitfall</span> A <code>Stream.Builder</code> (like most builders) is single-use: once <code>build()</code> is called it is closed, and calling <code>add()</code> afterwards throws <code>IllegalStateException</code>. Don't cache and reuse a builder across products unless it is explicitly documented as reusable.</div>
+    <div class="box pitfall"><span class="box-title">Pitfall</span> A <code>Stream.Builder</code> is single-use: once <code>build()</code> is called it is closed, and calling <code>add()</code> afterwards throws <code>IllegalStateException</code>. Many builders &mdash; <code>StringBuilder</code>, <code>StringJoiner</code>, the <code>User</code>/<code>Pizza</code> builders above &mdash; are instead reusable, so check each builder's contract before caching one across products.</div>
   </article>
 
   <article class="lecture" id="l-8-05">
@@ -2921,7 +2927,9 @@ Rectangle with width: 8 height: 3</div>
 
   <article class="lecture" id="l-8-07">
     <h3>07. Prototype pattern &amp; inheritance (deep vs shallow copy)</h3>
-    <p class="objective"><strong>Objective:</strong> Distinguish shallow from deep copies, and see when cloning duplicates a nested object versus merely copying a reference to it.</p>
+    <p class="objective"><strong>Objective:</strong> See two payoffs of cloning a prototype: it can replace an inheritance hierarchy of pure data variants, and &mdash; once objects hold nested state &mdash; it forces the shallow-vs-deep copy decision.</p>
+
+    <p><strong>Prototype can remove a subclass explosion.</strong> Traditional inheritance models each variation as its own subclass: to get circles in different colours you would write <code>GreenCircle extends Shape</code>, <code>BlueCircle extends Shape</code>, and so on &mdash; one class per colour. Prototype offers an alternative: keep <code>color</code> as an ordinary field on <code>Shape</code>, build a single configured prototype, then <em>clone</em> it and set only the differing field on the copy. The class hierarchy collapses into one template plus runtime cloning &mdash; you customise per-instance instead of per-subclass.</p>
 
     <p>A <strong>shallow copy</strong> duplicates the top-level object but copies each field <em>value</em> as-is — for a reference field, that value is the reference, so the original and the copy end up pointing at the <em>same</em> nested object. <code>Object.clone()</code> does exactly this. A <strong>deep copy</strong> also duplicates the nested objects, so the two graphs are fully independent. The distinction only matters for <em>mutable</em> nested state: sharing an immutable <code>String</code> is harmless, but sharing a mutable <code>Address</code> means a change through one owner is visible through the other (aliasing).</p>
 
@@ -2930,6 +2938,7 @@ Rectangle with width: 8 height: 3</div>
       <li>Deep copy: nested objects are duplicated — the two are independent.</li>
       <li>Only mutable nested state is at risk; immutable values (<code>String</code>, boxed primitives) are safe to share.</li>
       <li>A copy constructor / copy method makes the shallow-vs-deep decision explicit, field by field.</li>
+      <li>Prototype can replace variation-by-subclassing: hold the varying value as a field and clone a configured template rather than writing one subclass per colour/size variant.</li>
     </ul>
 
     <div class="io">
@@ -3111,6 +3120,7 @@ PROTOTYPE (creational) -- create objects by cloning a template
     <p>Participants: the <strong>Strategy</strong> interface declares the operation; each <strong>ConcreteStrategy</strong> implements one algorithm; the <strong>Context</strong> is configured with a strategy (usually via a setter or constructor) and calls it without knowing which concrete class it holds. Because the field can be reassigned, the behaviour can change <em>at run time</em>.</p>
 
     <ul class="keypoints">
+      <li><strong>Encapsulate what varies:</strong> isolate the frequently-changing behaviour (the algorithm) behind the <code>Strategy</code> interface, separated from the stable <code>Context</code>, so the volatile part can change without touching the static part.</li>
       <li>Participants: <code>Strategy</code> (interface), <code>ConcreteStrategy</code> (implementations), <code>Context</code> (delegates to a strategy).</li>
       <li>Uses <strong>composition</strong> (Context <em>has-a</em> Strategy), not inheritance — swap the object, swap the behaviour.</li>
       <li>Choosing/replacing the strategy is a run-time decision, not a compile-time one.</li>
@@ -3241,6 +3251,7 @@ public class App {
       <li>Type-switch anti-pattern: one big method grows a branch per type — a modification magnet.</li>
       <li>Missing branches fail <em>silently</em>; Strategy makes "does nothing" impossible.</li>
       <li>Strategy upholds OCP; it also removes the Context's dependency on concrete classes (DIP).</li>
+      <li><strong>Testability:</strong> every <code>instanceof</code>/<code>if-else</code> branch is another linearly-independent path, so it raises that method's <em>cyclomatic complexity</em> and needs its own test. Strategy holds the Context at a single polymorphic call, so complexity stays flat and each new algorithm is a class you unit-test in isolation instead of another branch in one growing method.</li>
     </ul>
 
     <div class="io">
@@ -3733,7 +3744,11 @@ public class App {
 
         // producer: create work now
         Thread producer = new Thread(() -&gt; {
-            for (int i = 1; i &lt;= 10; i++) queue.add(new TaskSolver(new Task(i)));
+            try {
+                for (int i = 1; i &lt;= 10; i++) queue.put(new TaskSolver(new Task(i)));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         });
 
         // consumer: run it later, one per second
@@ -3767,7 +3782,7 @@ Solving problem 10
     </div>
     <p class="srcnote">Source: reimplemented from the course example.</p>
 
-    <details class="advanced"><summary>Advanced</summary>This is a Command layered on top of a producer/consumer. In real code you would rarely hand-roll the threads — submit the commands to an <code>ExecutorService</code> (whose internal work queue is exactly a <code>BlockingQueue</code>) and let a thread pool drain them. Command + queue is also how undo logs, event sourcing, and message brokers persist and replay work.</details>
+    <details class="advanced"><summary>Advanced</summary>This is a Command layered on top of a producer/consumer. In real code you would rarely hand-roll the threads — submit the commands to an <code>ExecutorService</code> (whose internal work queue is exactly a <code>BlockingQueue</code>) and let a thread pool drain them. Command + queue is also how undo logs, event sourcing, and message brokers persist and replay work. <strong>Command vs Strategy:</strong> both wrap behaviour in an object, but a Command is a deferred request you can store, queue, log, and run later (even on another thread) or undo, whereas a Strategy is a swappable algorithm the context invokes immediately. Command decouples the invoker from the receiver; Strategy swaps the algorithm at run time &mdash; deferred execution is the decisive difference between the two.</details>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> Do not share a plain <code>ArrayList</code> (or any non-thread-safe collection) between the producer and consumer threads — that is a data race. Use a <code>java.util.concurrent</code> <code>BlockingQueue</code>, whose <code>put</code>/<code>take</code> also give you back-pressure (block when full/empty) for free.</div>
   </article>
@@ -4324,13 +4339,14 @@ Adam</div>
     <h3>03. Avoiding null with Optional</h3>
     <p class="objective"><strong>Objective:</strong> Contrast the Null Object pattern with <code>java.util.Optional</code> (Java 8) and know when each is the better tool for the "absence" problem.</p>
 
-    <p><code>Optional&lt;T&gt;</code> attacks the same problem from the other direction. Instead of hiding absence behind a neutral object, it makes absence <em>explicit</em> in the type: a method that returns <code>Optional&lt;Customer&gt;</code> is honestly declaring "there may be no customer", and the caller must unwrap it &mdash; via <code>orElse</code>, <code>map</code>, <code>ifPresent</code>, and friends &mdash; before reaching the value. <code>Optional.ofNullable</code> lifts a possibly-null reference into that box, and <code>orElse</code> supplies the fallback.</p>
+    <p><code>Optional&lt;T&gt;</code> attacks the same problem from the other direction. Instead of hiding absence behind a neutral object, it makes absence <em>explicit</em> in the type: a method that returns <code>Optional&lt;Customer&gt;</code> is honestly declaring "there may be no customer", and the caller must unwrap it &mdash; via <code>orElse</code>, <code>map</code>, <code>ifPresent</code>, and friends &mdash; before reaching the value. <code>Optional.ofNullable</code> lifts a possibly-null reference into that box, and <code>orElse</code> supplies the fallback. In practice <code>Optional</code> most often surfaces from a <strong>stream</strong> terminal operation &mdash; e.g. <code>books.stream().filter(b -&gt; b.type() == HISTORY).findAny().map(Book::title)</code> hands back an <code>Optional</code>, so an empty result yields <code>Optional.empty()</code> rather than a <code>NullPointerException</code>.</p>
     <p>Choose <strong>Null Object</strong> when the absent case has meaningful <em>polymorphic default behaviour</em> that should just run (a silent logger, an empty iterator, a guest user with no permissions). Choose <strong>Optional</strong> when the caller genuinely needs to <em>notice</em> absence and branch on it &mdash; the type makes the check impossible to forget. They are complementary, not competitors.</p>
 
     <ul class="keypoints">
       <li><code>Optional</code> encodes "maybe absent" in the return type; the compiler nudges you to handle it.</li>
       <li><code>ofNullable(x).orElse(d)</code> converts a nullable reference plus a default into a plain value.</li>
       <li>Null Object = <em>implicit</em> neutral behaviour; Optional = <em>explicit</em> presence check.</li>
+      <li>In real code <code>Optional</code> most often arises from <strong>stream terminal ops</strong>: <code>findAny</code>/<code>findFirst</code>/<code>max</code>/<code>min</code>/<code>reduce</code> all return <code>Optional&lt;T&gt;</code>, so an empty stream cannot throw a <code>NullPointerException</code>.</li>
     </ul>
 
     <div class="io">
@@ -5330,6 +5346,7 @@ Reader reader = new InputStreamReader(System.in, StandardCharsets.UTF_8);
       <li>Replaces an <code>N &times; M</code> inheritance grid with an <code>N + M</code> composition.</li>
       <li>Participants: Abstraction &rarr; Implementor (bridge), RefinedAbstraction, ConcreteImplementor.</li>
       <li>Bridge is <em>designed up front</em>; that is what distinguishes it from Adapter (retrofitted).</li>
+      <li>Upholds two SOLID principles: <strong>Dependency Inversion</strong> (the <code>Shape</code> abstraction depends only on the <code>Renderer</code> interface, never on a concrete renderer) and <strong>Open/Closed</strong> (a new shape or a new renderer can be added without modifying any existing class).</li>
     </ul>
 
     <pre class="code" data-lang="java"><code>// Implementor -- the "how".
@@ -5463,7 +5480,7 @@ Raster rendering: CIRCLE</div>
     <ul class="keypoints">
       <li>Abstraction = the <code>java.sql</code> interfaces you program against; Implementor = the vendor's <code>Driver</code>.</li>
       <li>The database vendor varies without your code changing &mdash; the Bridge benefit.</li>
-      <li>The <code>Connection</code> the driver returns is a ConcreteImplementor plugged in behind the API.</li>
+      <li>The vendor <code>Driver</code> (the PostgreSQL/MySQL/Oracle driver) is the Implementor/ConcreteImplementor; <code>Connection</code> and <code>Statement</code> are the Abstraction (with <code>PreparedStatement</code>/<code>CallableStatement</code> as RefinedAbstractions) that delegates to it behind the scenes.</li>
     </ul>
 
     <pre class="code" data-lang="java"><code>// Your code targets the java.sql ABSTRACTION only...
@@ -5676,6 +5693,7 @@ frame.add(outer);</code></pre>
 
 // TELLING THEM APART (same "wrap an object" shape, different intent):
 //   Adapter   = change the INTERFACE (mismatch fix)
+//   Facade    = one SIMPLER interface over a whole subsystem (convenience)
 //   Bridge    = separate two DIMENSIONS (planned)
 //   Decorator = same interface, ADD behaviour
 //   Composite = build a TREE, uniform treatment</code></pre></div>
@@ -6037,12 +6055,12 @@ Idempotency-Key: 5f3b9c2a-...                       # safe to retry, no double c
 
     <p>The <strong>layered (n-tier)</strong> architecture organises code into horizontal layers, each with one responsibility: the <strong>presentation</strong> layer (UI / controllers) handles requests and formatting; the <strong>business</strong> layer holds domain logic and rules; the <strong>persistence</strong> layer (repositories / DAOs) maps objects to storage; and the <strong>database</strong> layer stores the data. The defining rule is that each layer talks only to the layer <em>directly below it</em>, so concerns stay separated and each layer can be tested or replaced in isolation.</p>
 
-    <p>Layering is an <em>organisational</em> pattern, not a <em>deployment</em> pattern &mdash; a layered application is still typically shipped as a single deployable (a monolith). Its clarity makes it the most common enterprise structure, but taken too literally it can degrade into an <em>architecture sinkhole</em>, where requests pass straight through layers that add nothing, or into a layered monolith that is hard to scale by feature.</p>
+    <p>A <em>layer</em> is a logical unit of organisation, so a layered application is most often shipped as a single deployable (a monolith). A <em>tier</em>, by contrast, is a physical boundary: in the classic n-tier deployment the layers run on separate servers, and each tier (presentation, business, data) can then be deployed and scaled independently &mdash; you can scale, say, only the business tier under load. Its clarity makes it the most common enterprise structure, but taken too literally it can degrade into an <em>architecture sinkhole</em>, where requests pass straight through layers that add nothing, or into a layered monolith that is hard to scale by feature.</p>
 
     <ul class="keypoints">
       <li>Layers: presentation &rarr; business &rarr; persistence &rarr; database, each a single responsibility.</li>
       <li><em>Closed</em> layers: each depends only on the one below &rarr; strong separation of concerns.</li>
-      <li>An internal structure, not a deployment style &mdash; usually still one deployable (a monolith).</li>
+      <li>Logical <em>layers</em> vs physical <em>tiers</em>: usually one deployable (a monolith), but tiers can run on separate servers and deploy/scale independently.</li>
       <li>Easy to understand and test; watch for pass-through "sinkhole" layers and feature-scaling limits.</li>
     </ul>
 
@@ -6073,7 +6091,7 @@ Idempotency-Key: 5f3b9c2a-...                       # safe to retry, no double c
         <text x="260" y="264" text-anchor="middle" fill="var(--text)" font-size="14" font-weight="700">Database</text>
         <text x="260" y="282" text-anchor="middle" fill="var(--muted)" font-size="11">tables / storage</text>
       </svg>
-      <figcaption>Each layer calls only the layer below. Layering is internal structure &mdash; still usually deployed as one monolith.</figcaption>
+      <figcaption>Each layer calls only the layer below. Layers are logical (usually one monolith); as physical <em>tiers</em> they can be deployed and scaled separately.</figcaption>
     </figure>
 
     <details class="advanced"><summary>Advanced</summary>Contrast with <strong>hexagonal (ports &amp; adapters)</strong> and <strong>clean architecture</strong>, which <em>invert</em> the dependencies: the domain sits at the centre and infrastructure depends inward on it, not the other way around. That is the Dependency Inversion Principle applied at architecture scale.</details>
@@ -6355,6 +6373,13 @@ SELECT * FROM orders WHERE customer_id = 42;
 
     <details class="advanced"><summary>Advanced</summary>Replication is not automatically free of anomalies. Streaming changes to followers introduces <strong>replication lag</strong>: a read routed to a replica just after a write may return stale data (the "read your own writes" problem). Fixes include routing a user's reads to the primary briefly after they write, or using synchronous replication for critical reads &mdash; which trades latency for freshness. This foreshadows the consistency-vs-availability tension of the CAP theorem in lecture&nbsp;5.</details>
 
+    <details class="advanced"><summary>Advanced &mdash; B-tree index internals</summary>Three non-obvious rules the query planner obeys:
+<ul>
+<li><strong>Secondary indexes cost an extra hop.</strong> A secondary index's leaf nodes hold the <em>primary key</em>, not the row, so a lookup is two searches &mdash; find the PK in the secondary index, then fetch the row via the primary-key index. Searching by the primary key itself is a single search, hence fastest.</li>
+<li><strong>Composite-index column order matters (leftmost-prefix rule).</strong> An index on <code>(district, population)</code> can serve <code>WHERE district = ?</code> or <code>WHERE district = ? AND population = ?</code>, but <em>not</em> <code>WHERE population = ?</code> alone &mdash; the engine can only use the index left-to-right. If you also query by <code>population</code> by itself, add a separate index on it.</li>
+<li><strong>A range predicate stops the index at that column.</strong> Once a column is matched with a range/inequality (<code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>BETWEEN</code>), no <em>later</em> column in the same composite index is used. So put equality columns first and the range column last in the index definition &mdash; e.g. for <code>WHERE district = 'ABC' AND population &gt; 1000</code> build the index as <code>(district, population)</code>, not <code>(population, district)</code>.</li>
+</ul></details>
+
     <div class="box pitfall"><span class="box-title">Pitfall</span> Adding indexes reflexively "to make it faster." On a write-heavy table, over-indexing can make the system <em>slower</em> overall &mdash; each write pays to maintain ten indexes, most of which no query uses. Measure with the query planner (<code>EXPLAIN</code>), index the columns real queries filter and join on, and drop indexes nothing reads.</div>
   </article>
 
@@ -6471,14 +6496,14 @@ SELECT * FROM orders WHERE customer_id = 42;
     <h3>04. Scaling NoSQL &mdash; replication &amp; sharding</h3>
     <p class="objective"><strong>Objective:</strong> Distinguish the two orthogonal scaling techniques &mdash; replication (copies) and sharding (partitioning) &mdash; and the trade-offs each brings.</p>
 
-    <p><strong>Replication</strong> keeps multiple <em>copies</em> of the same data on different nodes. It buys <strong>availability</strong> (if one node dies, another serves the data) and <strong>read scaling</strong> (spread reads across copies). Two broad styles: <strong>leader-follower</strong> (single-leader) &mdash; one node accepts writes and streams them to followers, like the relational replicas of lecture&nbsp;2; and <strong>leaderless</strong> (Dynamo-style, as in Cassandra) &mdash; any replica accepts writes, and consistency is reconciled with quorum reads/writes and conflict resolution. Replication alone does <strong>not</strong> scale writes: single-leader still funnels writes through one node, and leaderless still stores every full copy on every replica.</p>
+    <p><strong>Replication</strong> keeps multiple <em>copies</em> of the same data on different nodes. It buys <strong>availability</strong> (if one node dies, another serves the data) and <strong>read scaling</strong> (spread reads across copies). Three broad styles: <strong>single-leader</strong> (leader-follower) &mdash; one node accepts writes and streams them to followers, like the relational replicas of lecture&nbsp;2; <strong>multi-leader</strong> (multi-master) &mdash; several nodes accept both reads and writes and reconcile their changes with each other; and <strong>leaderless</strong> (Dynamo-style, as in Cassandra) &mdash; any replica accepts writes, and consistency is reconciled with quorum reads/writes and conflict resolution. Once more than one node can diverge on a value, the nodes must agree on the authoritative one; that agreement is reached with <strong>consensus algorithms such as Paxos or Raft</strong> &mdash; the backbone of modern cloud coordination systems like ZooKeeper and etcd. Replication alone does <strong>not</strong> scale writes: single-leader still funnels writes through one node, and leaderless still stores every full copy on every replica.</p>
 
     <p><strong>Sharding</strong> (a.k.a. partitioning) <em>splits</em> the dataset across nodes so each holds only a slice. You pick a <strong>shard key</strong>, and a routing function (hash or range of that key) decides which shard owns each record. This is how you scale <strong>writes</strong> &mdash; different keys land on different shards, so write load spreads across the cluster instead of hammering one primary. In practice you combine both: shard for write capacity, then replicate each shard for availability.</p>
 
     <p>Sharding's power comes with sharp trade-offs. A poorly chosen shard key creates a <strong>hot shard</strong> &mdash; one partition taking most of the traffic (e.g. sharding orders by <code>country</code> when 90% are one country). <strong>Rebalancing</strong> when you add nodes means moving data, which is disruptive (consistent hashing softens this). <strong>Cross-shard queries and joins are hard</strong>: any query that isn't scoped to a single shard key must fan out to every shard and merge results, and multi-shard transactions largely disappear. The whole game is <strong>choosing a shard key</strong> with high cardinality, even distribution, and alignment with your dominant query pattern.</p>
 
     <ul class="keypoints">
-      <li><strong>Replication = copies</strong>: availability + read scale. <strong>Leader-follower</strong> vs <strong>leaderless</strong> (quorum). Does not scale writes.</li>
+      <li><strong>Replication = copies</strong>: availability + read scale. <strong>Single-leader</strong> vs <strong>multi-leader (multi-master)</strong> vs <strong>leaderless</strong> (quorum); multiple writers reach agreement via <strong>consensus (Paxos/Raft)</strong>. Does not scale writes.</li>
       <li><strong>Sharding = partition by shard key</strong>: the way to scale <em>writes</em> horizontally.</li>
       <li>They are <strong>orthogonal</strong> &mdash; real clusters shard for capacity <em>and</em> replicate each shard for resilience.</li>
       <li>Traps: <strong>hot shards</strong>, costly <strong>rebalancing</strong>, and <strong>cross-shard joins/transactions</strong> becoming impractical.</li>

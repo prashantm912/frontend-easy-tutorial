@@ -486,7 +486,7 @@ list.stream().filter(s -&gt; s.length() &gt; 3).forEach(System.out::println);
 </section>
 <section class="section" id="sec-2">
   <h2>2. Java Arrays in Depth</h2>
-  <p class="intro">Arrays are Java's most fundamental storage mechanism, and every collection you will meet later is built on top of them. This section works through single- and multi-dimensional arrays: how to declare, create and initialize them, how to traverse them, and how array references and elements behave when you assign and reassign them.</p>
+  <p class="intro">Arrays are Java's most fundamental storage mechanism, and many of the collections you will meet later are built on top of them &mdash; <code>ArrayList</code>, <code>ArrayDeque</code>, <code>Vector</code>, and the bucket table of <code>HashMap</code> all store their data in an array (others, such as <code>LinkedList</code> and <code>TreeMap</code>/<code>TreeSet</code>, use linked nodes or trees instead). This section works through single- and multi-dimensional arrays: how to declare, create and initialize them, how to traverse them, and how array references and elements behave when you assign and reassign them.</p>
 
   <div class="box runlocal"><span class="box-title">Run locally</span> Each example is a class with a <code>main</code> method. Compile and run with <code>javac ArrayDemo.java</code> then <code>java ArrayDemo</code> (JDK 17+). For quick one-liners, launch <code>jshell</code> and paste snippets directly. No build tool or external dependency is needed.</div>
 
@@ -851,12 +851,12 @@ list.stream().filter(s -&gt; s.length() &gt; 3).forEach(System.out::println);
   <article class="lecture" id="l-2-09">
     <h3>09. Arrays summary</h3>
     <p class="objective"><strong>Objective:</strong> Consolidate everything covered so you can move on to collections, which are built on arrays.</p>
-    <p>This section built up arrays from the ground: single-dimensional arrays and their fixed size and homogeneous elements; multi-dimensional arrays as arrays of arrays; the various legal declaration, creation and initialization syntaxes; traversal with for-each and indexed loops using the <code>length</code> field; the rules for what elements different array types can hold; how array references are shared and reassigned; and finally anonymous arrays for instant use. With these fundamentals in place, the collection framework — lists, sets and maps that use arrays internally — will make far more sense.</p>
+    <p>This section built up arrays from the ground: single-dimensional arrays and their fixed size and homogeneous elements; multi-dimensional arrays as arrays of arrays; the various legal declaration, creation and initialization syntaxes; traversal with for-each and indexed loops using the <code>length</code> field; the rules for what elements different array types can hold; how array references are shared and reassigned; and finally anonymous arrays for instant use. With these fundamentals in place, the collection framework — much of which (<code>ArrayList</code>, <code>ArrayDeque</code>, and <code>HashMap</code>'s bucket table) is built on arrays internally — will make far more sense.</p>
     <ul class="keypoints">
       <li>Arrays are fixed-size, indexed, homogeneous, and created with <code>new</code>.</li>
       <li>Multi-dimensional arrays are references to nested arrays; only the leaf level holds values.</li>
       <li>Traverse with for-each or a <code>length</code>-bounded loop; assignments share objects, they do not copy.</li>
-      <li>Collections (coming next) are built on top of these same arrays.</li>
+      <li>Many collections (coming next), such as <code>ArrayList</code> and <code>HashMap</code>, are built on top of these same arrays; others, like <code>LinkedList</code> and <code>TreeMap</code>/<code>TreeSet</code>, use linked nodes or trees.</li>
     </ul>
     <div class="box pitfall"><span class="box-title">Pitfall</span> The single biggest limitation to remember is that array length is fixed at creation. When you need a resizable, growable structure, that is exactly the gap the <code>Collection</code> framework (<code>ArrayList</code> and friends) fills.</div>
   </article>
@@ -1095,12 +1095,15 @@ nums.remove(Integer.valueOf(1)); // removes the VALUE 1</code></pre></div>
 
     <p>A <em>collection</em> is a group of individual objects treated as one single unit. In everyday life a bag of coins or a bundle of banknotes is a collection; in programming it is a group of discrete objects held together. The <strong>Java Collections Framework</strong> is a coherent library that bundles the interfaces, implementation classes, and algorithms for this task into one place, so a programmer does not reinvent data structures and can process data with ready-made features. It rests on three pillars: <strong>interfaces</strong> (the abstract contracts such as <code>List</code>, <code>Set</code>, <code>Map</code>), <strong>implementations</strong> (concrete classes like <code>ArrayList</code>, <code>HashSet</code>, <code>HashMap</code> that wrap an underlying data structure), and <strong>algorithms</strong> (reusable operations such as sorting and searching provided through utility methods).</p>
 
-    <p>The framework was introduced in Java 1.2 and is anchored by a set of root interfaces. The top interface is <code>Collection</code>, which declares the most common operations that apply to any group of objects. Three sub-interfaces refine it:</p>
+    <p>The framework was introduced in Java 1.2 and is anchored by a set of root interfaces. The top interface is <code>Collection</code>, which declares the most common operations that apply to any group of objects. Three sub-interfaces refine it &mdash; <code>List</code>, <code>Set</code>, and <code>Queue</code>:</p>
     <ul class="keypoints">
-      <li><strong><code>List</code></strong> — an ordered group where <em>insertion order is preserved</em> and <em>duplicates are allowed</em>. Implementations: <code>ArrayList</code>, <code>LinkedList</code>, and the legacy <code>Vector</code> (whose subclass is <code>Stack</code>).</li>
-      <li><strong><code>Set</code></strong> — a group where <em>order is not guaranteed</em> and <em>duplicates are not allowed</em>. Implementation: <code>HashSet</code>, with subclass <code>LinkedHashSet</code> (added in 1.4, which does preserve insertion order).</li>
-      <li><strong><code>SortedSet</code> &rarr; <code>NavigableSet</code></strong> — a set kept in a sorting order (no duplicates); <code>NavigableSet</code> adds navigation methods (<code>lower</code>, <code>higher</code>, <code>floor</code>, <code>ceiling</code>). Both are implemented by <code>TreeSet</code>.</li>
-      <li><strong><code>Queue</code></strong> — holds objects prior to processing, typically in first-in-first-out order. Implementations include <code>PriorityQueue</code> and the <code>BlockingQueue</code> family (<code>LinkedBlockingQueue</code>, <code>PriorityBlockingQueue</code>).</li>
+      <li><strong><code>List</code></strong> &mdash; an ordered group where <em>insertion order is preserved</em> and <em>duplicates are allowed</em>. Implementations: <code>ArrayList</code>, <code>LinkedList</code>, and the legacy <code>Vector</code> (whose subclass is <code>Stack</code>).</li>
+      <li><strong><code>Set</code></strong> &mdash; a group where <em>order is not guaranteed</em> and <em>duplicates are not allowed</em>. Implementation: <code>HashSet</code>, with subclass <code>LinkedHashSet</code> (added in 1.4, which does preserve insertion order).
+        <ul class="keypoints">
+          <li><strong><code>SortedSet</code> &rarr; <code>NavigableSet</code></strong> &mdash; a refinement of <code>Set</code> (not of <code>Collection</code> directly) kept in a sorting order, no duplicates; <code>NavigableSet</code> extends <code>SortedSet</code> to add navigation methods (<code>lower</code>, <code>higher</code>, <code>floor</code>, <code>ceiling</code>). Both are implemented by <code>TreeSet</code>.</li>
+        </ul>
+      </li>
+      <li><strong><code>Queue</code></strong> &mdash; holds objects prior to processing, typically in first-in-first-out order. Implementations include <code>PriorityQueue</code> and the <code>BlockingQueue</code> family (<code>LinkedBlockingQueue</code>, <code>PriorityBlockingQueue</code>).</li>
     </ul>
 
     <p>These <code>Collection</code>-based interfaces all model a group of <em>single</em> objects. When you instead need <strong>key/value pairs</strong>, you use <code>Map</code>. Crucially, <code>Map</code> is <em>not</em> a child of <code>Collection</code>, yet it is still part of the Collections Framework. Its main implementation is <code>HashMap</code>, with children/relatives <code>LinkedHashMap</code>, <code>WeakHashMap</code>, and <code>IdentityHashMap</code>. The legacy <code>Hashtable</code> also implements <code>Map</code> but additionally extends the abstract <code>Dictionary</code> class, and its subclass is <code>Properties</code>. The sorted view of a map is <code>SortedMap</code> &rarr; <code>NavigableMap</code>, implemented by <code>TreeMap</code>, which keeps entries ordered by their keys.</p>
@@ -1216,11 +1219,11 @@ public class OrderingDemo {
         System.out.println("TreeSet:       " + tree);   // sorted order
     }
 }</code></pre>
-      <div class="out"><span class="out-title">Console output</span>HashSet:       [banana, cherry, apple]
+      <div class="out"><span class="out-title">Console output</span>HashSet:       [banana, apple, cherry]
 LinkedHashSet: [banana, apple, cherry]
 TreeSet:       [apple, banana, cherry]</div>
     </div>
-    <p class="srcnote">The <code>HashSet</code> line above is <strong>not guaranteed</strong> — its iteration order depends on hash values and JVM internals and may differ on your machine or Java version. Only the <code>LinkedHashSet</code> (insertion) and <code>TreeSet</code> (natural sorted) lines are guaranteed. Note all three drop the duplicate <code>"apple"</code>, so each holds three elements.</p>
+    <p class="srcnote">The <code>HashSet</code> line above is <strong>not guaranteed</strong> — its iteration order depends on hash values and JVM internals and may differ on your machine or Java version. Only the <code>LinkedHashSet</code> (insertion) and <code>TreeSet</code> (natural sorted) lines are guaranteed. For this particular input the hash order happens to coincide with insertion order &mdash; which is exactly why it must never be relied on. Note all three drop the duplicate <code>"apple"</code>, so each holds three elements.</p>
 
     <details class="advanced"><summary>Advanced</summary><p>Two classic "gotcha" facts fall straight out of the hierarchy. First, <strong><code>Map</code> is not a <code>Collection</code></strong>, so a <code>Map</code> has no <code>iterator()</code> and cannot be passed where a <code>Collection</code> is expected — you iterate it through views like <code>keySet()</code>, <code>values()</code>, or <code>entrySet()</code>. Second, the "ordered" implementations exist precisely to reintroduce order that the plain hash versions drop: <code>LinkedHashSet</code>/<code>LinkedHashMap</code> preserve <em>insertion</em> order, while <code>TreeSet</code>/<code>TreeMap</code> keep <em>sorted</em> order (and expose the <code>NavigableSet</code>/<code>NavigableMap</code> navigation methods). Choosing the right one is usually about which ordering guarantee you need versus the cost of maintaining it: hash-based lookups are amortised O(1), whereas the tree-based, sorted variants are O(log n) per operation because they keep everything ordered.</p></details>
 
@@ -1286,7 +1289,7 @@ Collections.reverse(list);</code></pre></div>
   <article class="lecture" id="l-5-01">
     <h3>01. Collection Interface</h3>
     <p class="objective"><strong>Objective:</strong> Understand what the root <code>Collection</code> interface represents and learn the common methods that every list, set, and queue inherits from it.</p>
-    <p><code>Collection</code> is the first and most general interface in the collections hierarchy. It models a group of individual (discrete) objects. Java deliberately ships <em>no</em> class that implements <code>Collection</code> directly; instead it provides more specialised sub-interfaces such as <code>List</code>, <code>Set</code>, and <code>Queue</code>, and it is those that concrete classes implement. Because these methods are declared on <code>Collection</code> itself, every class throughout the hierarchy makes them available, so the same vocabulary works for any collection type you pick.</p>
+    <p><code>Collection</code> is the first and most general interface in the collections hierarchy. It models a group of individual (discrete) objects. Java deliberately ships no <em>concrete</em> class that implements <code>Collection</code> directly; instead it provides more specialised sub-interfaces such as <code>List</code>, <code>Set</code>, and <code>Queue</code>, and it is those that concrete classes implement. (The abstract skeletal class <code>AbstractCollection</code> does implement <code>Collection</code>, but you never instantiate it directly.) Because these methods are declared on <code>Collection</code> itself, every class throughout the hierarchy makes them available, so the same vocabulary works for any collection type you pick.</p>
     <p>The core methods fall into a few groups. <strong>Adding:</strong> <code>add(o)</code> inserts a single element and returns <code>true</code> if the collection changed; for a <code>Set</code> (which forbids duplicates) adding an element already present returns <code>false</code>, whereas a <code>List</code> permits duplicates and returns <code>true</code>. <code>addAll(c)</code> copies every element of another collection into the invoking one. <strong>Removing:</strong> <code>remove(o)</code> drops a single element, <code>removeAll(c)</code> drops everything the collection shares with <code>c</code> (a set difference), <code>retainAll(c)</code> keeps only the elements also present in <code>c</code> (an intersection), and <code>clear()</code> empties the collection entirely. <strong>Querying:</strong> <code>contains(o)</code> and <code>containsAll(c)</code> test membership, <code>isEmpty()</code> reports whether there are zero elements, and <code>size()</code> returns the element count. <strong>Traversal &amp; conversion:</strong> <code>iterator()</code> hands back an <code>Iterator</code> for looping, and <code>toArray()</code> converts the collection into a plain array.</p>
     <ul class="keypoints">
       <li><code>Collection</code> is the root interface; it has no direct concrete implementation.</li>
@@ -1470,7 +1473,7 @@ List&lt;E&gt; ro = Collections.unmodifiableList(list);</code></pre></div>
 
     <p>Java is a <strong>statically typed</strong> language: the type of every variable and expression is fixed and known at compile time. Arrays lean on that guarantee. An array is a homogeneous, fixed-length container — when you declare <code>String[] names = new String[20]</code>, the compiler permits only <code>String</code> values in it. Trying to drop an <code>Employee</code> into a <code>String[]</code> is rejected during compilation with <em>"incompatible types"</em>. That built-in restriction is exactly what we mean by <strong>type safety</strong>: the container is bound to a single element type, so an entire class of mistakes is caught before the program ever runs.</p>
 
-    <p>So why not use arrays everywhere? Because their length is fixed and must be decided up front at compile time. Real programs rarely know in advance how many elements they will hold, so the Collections framework adds growable structures such as <code>ArrayList</code>, where you never declare a capacity. The catch is that a <strong>raw</strong> <code>ArrayList</code> (no type parameter) stores plain <code>Object</code> references. Since every class in Java ultimately extends <code>Object</code>, a raw list will happily accept a <code>String</code> and an <code>Employee</code> side by side — it is a heterogeneous bag. (Primitives such as <code>int</code> cannot be stored directly; the list holds object references, so a primitive is <em>autoboxed</em> into its wrapper class <code>Integer</code> — since Java 5 the compiler does this for you.)</p>
+    <p>So why not use arrays everywhere? Because an array's length is fixed at creation and cannot grow afterwards &mdash; you must commit to a size before filling it (even if that size is computed at run time). Real programs rarely know in advance how many elements they will hold, so the Collections framework adds growable structures such as <code>ArrayList</code>, where you never declare a capacity. The catch is that a <strong>raw</strong> <code>ArrayList</code> (no type parameter) stores plain <code>Object</code> references. Since every class in Java ultimately extends <code>Object</code>, a raw list will happily accept a <code>String</code> and an <code>Employee</code> side by side — it is a heterogeneous bag. (Primitives such as <code>int</code> cannot be stored directly; the list holds object references, so a primitive is <em>autoboxed</em> into its wrapper class <code>Integer</code> — since Java 5 the compiler does this for you.)</p>
 
     <p>Storing mixed types is only half the trouble. When you pull an element back out with <code>get</code>, a raw list returns <code>Object</code>, so the compiler forces you to <strong>cast</strong> to the type you expect. Casting means treating a value of one declared type as another. If you cast correctly, all is well. But if you cast an element to the wrong type — say you know a slot really holds a <code>String</code> yet you cast it to <code>Employee</code> — the compiler stays silent and the mistake only surfaces at run time as a <code>ClassCastException</code>. Arrays never put you in this position: because the element type is known, retrieval needs no cast at all. This late failure with raw collections is the pain point that motivated generics in Java 5; the next section shows how a type parameter like <code>ArrayList&lt;String&gt;</code> restores compile-time safety and removes the casts.</p>
 
@@ -1518,7 +1521,7 @@ public class DataStructureDemo {
 }</code></pre>
       <div class="out"><span class="out-title">Console output</span>First name: Alice
 Exception in thread "main" java.lang.ClassCastException: class java.lang.String cannot be cast to class Employee (java.lang.String is in module java.base of loader 'bootstrap'; Employee is in unnamed module of loader 'app')
-	at DataStructureDemo.main(DataStructureDemo.java:21)</div>
+	at DataStructureDemo.main(DataStructureDemo.java:23)</div>
     </div>
     <p class="srcnote">Source: reimplemented from the course's <code>Employee.java</code> and <code>DataStructureDemo.java</code> examples (no code files were shipped for this conceptual section).</p>
 
@@ -1556,7 +1559,7 @@ Exception in thread "main" java.lang.ClassCastException: class java.lang.String 
   </figure>
 
   <div class="box cheat"><span class="box-title">Cheat-sheet</span><pre class="code" data-lang="java"><code>// Fixed-length, type-safe array
-String[] a = new String[20];      // only String allowed, size fixed at compile time
+String[] a = new String[20];      // only String allowed, size fixed at creation (can't grow)
 a[0] = "Alice";                    // no cast needed on read: String s = a[0];
 
 // Raw collection (AVOID) — stores Object, needs casts, not type-safe
@@ -2359,7 +2362,7 @@ public class NavigableSetDemo {
   <article class="lecture" id="l-8-06">
     <h3>06. TreeSet</h3>
     <p class="objective"><strong>Objective:</strong> Understand <code>TreeSet</code>'s balanced-tree storage, its four constructors, and why stored elements must be comparable and homogeneous.</p>
-    <p><code>TreeSet</code> implements <code>NavigableSet</code> (hence also <code>SortedSet</code> and <code>Set</code>). Its backing structure is a <strong>balanced tree</strong> (a red-black tree): the first element added becomes the root, smaller values go left and larger values go right, recursively. Because insertion follows a sort order, elements must be <strong>homogeneous</strong> — inserting incompatible types triggers a <code>ClassCastException</code> at runtime. Older tutorials say a <code>null</code> may be inserted as the very first element of an empty <code>TreeSet</code>; on modern JDKs (7+) that is no longer true for natural ordering — even the first <code>add(null)</code> throws <code>NullPointerException</code>, because the tree type-checks the key by comparing it against itself. Treat <code>TreeSet</code> as null-hostile.</p>
+    <p><code>TreeSet</code> implements <code>NavigableSet</code> (hence also <code>SortedSet</code> and <code>Set</code>). Its backing structure is a <strong>balanced tree</strong> (a red-black tree): smaller values sort to the left and larger values sort to the right, and after each insert the tree rotates and recolors itself (red-black balancing) to keep its height O(log n). That self-balancing is why even already-sorted input keeps add/contains at O(log n), and why the first-inserted element is not necessarily the permanent root. Because insertion follows a sort order, elements must be <strong>homogeneous</strong> — inserting incompatible types triggers a <code>ClassCastException</code> at runtime. Older tutorials say a <code>null</code> may be inserted as the very first element of an empty <code>TreeSet</code>; on modern JDKs (7+) that is no longer true for natural ordering — even the first <code>add(null)</code> throws <code>NullPointerException</code>, because the tree type-checks the key by comparing it against itself. Treat <code>TreeSet</code> as null-hostile.</p>
     <p>Four constructors exist: no-arg (natural ordering), one taking a <code>Comparator</code> (custom ordering), one taking a <code>SortedSet</code>, and one taking any <code>Collection</code> (for interchangeability, e.g. building a sorted set from a <code>HashSet</code>). Prefer the generic form <code>TreeSet&lt;Integer&gt;</code> over a raw type. Crucially, whatever you store with natural ordering must implement <code>Comparable</code> — this is why <code>Integer</code>, <code>String</code>, etc. work out of the box, and why a custom class like <code>Employee</code> must implement <code>Comparable</code> and override <code>compareTo</code>.</p>
     <ul class="keypoints">
       <li>Backed by a self-balancing (red-black) tree; keeps elements sorted, no duplicates.</li>
@@ -2388,7 +2391,7 @@ public class NavigableSetDemo {
         <text x="200" y="80" fill="var(--text)" font-size="11">&lt; root</text>
         <text x="330" y="80" fill="var(--text)" font-size="11">&gt; root</text>
       </svg>
-      <figcaption>Root first, smaller values branch left, larger values branch right — an in-order walk yields ascending output.</figcaption>
+      <figcaption>Smaller values branch left, larger values branch right; the tree rebalances (rotations) as it grows, and an in-order walk yields ascending output.</figcaption>
     </figure>
     <div class="io">
       <pre class="code" data-lang="java"><code>import java.util.HashSet;
@@ -2619,18 +2622,18 @@ Comparator&lt;Item&gt; byName = Comparator.comparing(Item::name); // java.util, 
         <rect x="300" y="118" width="110" height="28" rx="5" fill="var(--surface)" stroke="var(--border)"/>
         <text x="355" y="137" text-anchor="middle" fill="var(--text)" font-size="11">BlockingQueue</text>
 
-        <text x="40" y="195" text-anchor="middle" fill="var(--text)" font-size="11">in &#8594;</text>
+        <text x="40" y="195" text-anchor="middle" fill="var(--accent)" font-size="11">&#8592; out</text>
         <rect x="70" y="180" width="40" height="30" rx="4" fill="var(--surface)" stroke="var(--border)"/>
         <text x="90" y="200" text-anchor="middle" fill="var(--text)" font-size="12">Amit</text>
         <rect x="115" y="180" width="40" height="30" rx="4" fill="var(--surface)" stroke="var(--border)"/>
         <text x="135" y="200" text-anchor="middle" fill="var(--text)" font-size="12">Neha</text>
         <rect x="160" y="180" width="40" height="30" rx="4" fill="var(--surface)" stroke="var(--border)"/>
         <text x="180" y="200" text-anchor="middle" fill="var(--text)" font-size="12">Raj</text>
-        <text x="235" y="200" text-anchor="middle" fill="var(--accent)" font-size="11">&#8594; out (head)</text>
-        <text x="90" y="230" text-anchor="middle" fill="var(--text)" font-size="10">tail</text>
-        <text x="180" y="230" text-anchor="middle" fill="var(--accent)" font-size="10">head</text>
+        <text x="235" y="200" text-anchor="middle" fill="var(--text)" font-size="11">in &#8592;</text>
+        <text x="90" y="230" text-anchor="middle" fill="var(--accent)" font-size="10">head</text>
+        <text x="180" y="230" text-anchor="middle" fill="var(--text)" font-size="10">tail</text>
       </svg>
-      <figcaption>Queue sits directly under Collection; concrete implementations line up below it. Below, a FIFO queue: elements enter at the tail and the head (Raj here is next to leave once Amit and Neha are served) exits first.</figcaption>
+      <figcaption>Queue sits directly under Collection; concrete implementations line up below it. Below, a FIFO queue: elements are added at the tail and removed from the head. Amit was inserted first, so it sits at the head and is served first (peek/poll &#8594; Amit), then Neha, then Raj (the tail, last in).</figcaption>
     </figure>
     <div class="io">
       <pre class="code" data-lang="java"><code>import java.util.LinkedList;
@@ -2681,12 +2684,12 @@ public class QueueBasics {
         <circle cx="230" cy="30" r="20" fill="var(--surface)" stroke="var(--accent)"/>
         <text x="230" y="35" text-anchor="middle" fill="var(--accent)" font-size="13">10</text>
         <circle cx="150" cy="80" r="20" fill="var(--surface)" stroke="var(--border)"/>
-        <text x="150" y="85" text-anchor="middle" fill="var(--text)" font-size="13">20</text>
+        <text x="150" y="85" text-anchor="middle" fill="var(--text)" font-size="13">30</text>
         <circle cx="310" cy="80" r="20" fill="var(--surface)" stroke="var(--border)"/>
-        <text x="310" y="85" text-anchor="middle" fill="var(--text)" font-size="13">30</text>
+        <text x="310" y="85" text-anchor="middle" fill="var(--text)" font-size="13">20</text>
         <circle cx="110" cy="130" r="20" fill="var(--surface)" stroke="var(--border)"/>
         <text x="110" y="135" text-anchor="middle" fill="var(--text)" font-size="13">40</text>
-        <text x="230" y="180" text-anchor="middle" fill="var(--text)" font-size="11">array: [10, 20, 30, 40]  (index 0 = head/min)</text>
+        <text x="230" y="180" text-anchor="middle" fill="var(--text)" font-size="11">array: [10, 30, 20, 40]  (index 0 = head/min)</text>
         <text x="230" y="198" text-anchor="middle" fill="var(--text)" font-size="10">children of index i live at 2i+1 and 2i+2</text>
       </svg>
       <figcaption>A min-heap keeps the smallest value at the root (index 0), so <code>peek()</code> is O(1); each parent is &#8804; its children, but siblings are unordered — which is why printing the heap is not sorted.</figcaption>
@@ -2698,10 +2701,10 @@ public class PriorityQueueBasics {
     public static void main(String[] args) {
         // Natural ordering: smallest Integer has highest priority.
         PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();
-        pq.offer(40);
         pq.offer(10);
         pq.offer(30);
         pq.offer(20);
+        pq.offer(40);
 
         System.out.println("Head (peek): " + pq.peek());
         System.out.println("Internal order: " + pq); // heap layout, not sorted
@@ -2713,7 +2716,7 @@ public class PriorityQueueBasics {
         System.out.println();
     }
 }</code></pre>
-      <div class="out"><span class="out-title">Console output</span>Head (peek): 10<br>Internal order: [10, 20, 30, 40]<br>Polled in priority order: 10 20 30 40</div>
+      <div class="out"><span class="out-title">Console output</span>Head (peek): 10<br>Internal order: [10, 30, 20, 40]<br>Polled in priority order: 10 20 30 40</div>
     </div>
     <p class="srcnote">Source: reimplemented and expanded from course example <code>PriorityQueueDemo.java</code>, which showed the five constructors with raw types; here generics and a working poll loop make the priority behaviour observable.</p>
     <p>Passing a <code>Comparator</code> flips or redefines the priority. <code>Comparator.reverseOrder()</code> turns the min-heap into a <strong>max-heap</strong> (largest first), and inserting <code>30</code> twice proves duplicates are kept:</p>
@@ -3271,7 +3274,7 @@ public class TreeMapDemo {
     </figure>
     <p class="srcnote">Source: reimplemented from course examples <code>TreeMapDemo.java</code> + <code>MySorting.java</code>. The shipped <code>MySorting</code> casts keys to <code>Integer</code> (from the Set section) and would throw <code>ClassCastException</code> against the <code>String</code> keys here; I replaced it with a correct <code>Comparator&lt;String&gt;</code> that reverses the natural order, matching the lecture's intent.</p>
     <details class="advanced"><summary>Advanced</summary>The rule &ldquo;equal keys are one key&rdquo; is decided by the <em>comparator</em>, not <code>equals</code>. If your comparator returns <code>0</code> for two keys you consider distinct, the tree treats them as the same key and the second <code>put</code> overwrites the first &mdash; a subtle source of &ldquo;disappearing&rdquo; entries when a comparator only looks at part of the key.</details>
-    <div class="box pitfall"><span class="box-title">Pitfall</span> Putting a <code>null</code> key into a non-empty natural-order <code>TreeMap</code> throws <code>NullPointerException</code> (it tries to compare <code>null</code>), and putting mutually incomparable keys (e.g. a <code>String</code> and an <code>Integer</code>) throws <code>ClassCastException</code>. Keep keys homogeneous or supply a <code>Comparator</code>.</div>
+    <div class="box pitfall"><span class="box-title">Pitfall</span> Putting a <code>null</code> key into a natural-order <code>TreeMap</code> throws <code>NullPointerException</code> even when the map is empty (since Java 1.7 the first insertion type-checks the key by comparing it to itself), and putting mutually incomparable keys (e.g. a <code>String</code> and an <code>Integer</code>) throws <code>ClassCastException</code>. Keep keys homogeneous or supply a <code>Comparator</code>.</div>
   </article>
 
   <article class="lecture" id="l-10-12">
@@ -3648,18 +3651,18 @@ null</div>
   <article class="lecture" id="l-11-06">
     <h3>06. ConcurrentHashMap internal implementation</h3>
     <p class="objective"><strong>Objective:</strong> Explain how bucket/segment-level locking and the concurrency level let <code>ConcurrentHashMap</code> be both safe and fast.</p>
-    <p>Comparing the three map implementations makes the design clear. <code>HashMap</code> is not thread-safe, so in a concurrent setting it risks data inconsistency and <code>ConcurrentModificationException</code>. <code>Hashtable</code> is thread-safe but slow, because it locks the whole object so only one thread — reading or writing — can operate at a time. <code>ConcurrentHashMap</code> is thread-safe <em>and</em> performant: reads are not locked at all, and on a write only the particular segment being updated is locked, never the whole object. By default the map is divided into 16 regions (buckets 0–15), so up to 16 threads can write to different regions simultaneously. This number of regions is called the <strong>concurrency level</strong>, and although you can set it when constructing the map, you are generally advised to keep the default because a poor choice can hurt performance.</p>
+    <p>Comparing the three map implementations makes the design clear. <code>HashMap</code> is not thread-safe, so in a concurrent setting it risks data inconsistency and <code>ConcurrentModificationException</code>. <code>Hashtable</code> is thread-safe but slow, because it locks the whole object so only one thread — reading or writing — can operate at a time. <code>ConcurrentHashMap</code> is thread-safe <em>and</em> performant: reads are not locked at all, and on a write only the particular segment being updated is locked, never the whole object. In the classic (Java 7) design the map was split into 16 independently-locked segments — this count was called the <strong>concurrency level</strong> — so up to 16 threads could write at once. Since Java 8 that fixed segmentation is gone: each write locks only the individual bin being updated (via CAS + <code>synchronized</code>), so write parallelism scales with the table size rather than a fixed 16. The 16 you will still see is just the default initial table capacity, and the constructor's <code>concurrencyLevel</code> is now only a sizing hint — best left at the default.</p>
     <ul class="keypoints">
       <li><code>ConcurrentHashMap</code> locks only the segment being updated, not the entire object.</li>
       <li>It outperforms <code>Hashtable</code> and <code>Collections.synchronizedMap</code>.</li>
       <li>It is fail-safe: iteration never throws <code>ConcurrentModificationException</code>.</li>
       <li><code>null</code> is not permitted as a key or a value.</li>
-      <li>The default concurrency level is 16 and is best left unchanged.</li>
+      <li>The initial table holds 16 bins; since Java 8 there is no fixed 16-segment cap — <code>concurrencyLevel</code> is only a constructor sizing hint, best left at the default.</li>
     </ul>
     <figure>
       <svg role="img" viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" width="100%">
         <title>ConcurrentHashMap divided into 16 independently-lockable buckets</title>
-        <text x="320" y="24" text-anchor="middle" fill="var(--text)" font-size="14">ConcurrentHashMap: 16 buckets, per-bucket lock</text>
+        <text x="320" y="24" text-anchor="middle" fill="var(--text)" font-size="14">ConcurrentHashMap: initial table = 16 bins; each write locks only its bin</text>
         <g font-size="10" fill="var(--text)">
           <rect x="20"  y="60" width="34" height="70" rx="4" fill="var(--surface)" stroke="var(--border)"/><text x="37"  y="145" text-anchor="middle">0</text>
           <rect x="58"  y="60" width="34" height="70" rx="4" fill="var(--surface)" stroke="var(--border)"/><text x="75"  y="145" text-anchor="middle">1</text>
@@ -3680,7 +3683,7 @@ null</div>
         </g>
         <text x="320" y="175" text-anchor="middle" fill="var(--text)" font-size="11">Highlighted buckets are locked by 3 different writer threads — concurrently</text>
       </svg>
-      <figcaption>By default the map holds 16 buckets (the concurrency level). Each write locks only its bucket, so multiple threads write in parallel while readers proceed lock-free.</figcaption>
+      <figcaption>The initial table holds 16 bins. Each write locks only its own bin (CAS + <code>synchronized</code>), so write parallelism grows with the table, not a fixed 16 — while readers proceed lock-free. (The 16-segment 'concurrency level' is the older Java 7 model.)</figcaption>
     </figure>
     <figure>
       <svg role="img" viewBox="0 0 660 210" xmlns="http://www.w3.org/2000/svg" width="100%">
@@ -4479,7 +4482,7 @@ public class SupplierExample {
   <article class="lecture" id="l-12-19">
     <h3>19. The <code>::</code> operator &mdash; method reference</h3>
     <p class="objective"><strong>Objective:</strong> Reuse an existing method as a functional-interface implementation with the <code>::</code> operator.</p>
-    <p>When the behaviour a lambda needs already exists as a method, you can point the functional interface straight at it with the double-colon <code>::</code> operator instead of re-writing the body. The one hard rule is that the <strong>argument types must match</strong> the abstract method's signature; the method's own name and return type need not match. For a <strong>static</strong> method the syntax is <code>ClassName::methodName</code>. For an <strong>instance</strong> method you first create an object and write <code>objectRef::methodName</code>. A method reference is therefore an alternative to a lambda that promotes code reuse.</p>
+    <p>When the behaviour a lambda needs already exists as a method, you can point the functional interface straight at it with the double-colon <code>::</code> operator instead of re-writing the body. The rules are that the argument types must be compatible with the abstract method, and the referenced method's return type must be assignable to the interface method's return type: a value-returning method can satisfy a void interface method (the value is discarded), but a void method cannot satisfy a value-returning one. Only the method's own name is free to differ. For a <strong>static</strong> method the syntax is <code>ClassName::methodName</code>. For an <strong>instance</strong> method you first create an object and write <code>objectRef::methodName</code>. A method reference is therefore an alternative to a lambda that promotes code reuse.</p>
     <ul class="keypoints">
       <li>Static method: <code>ClassName::method</code> (no parentheses).</li>
       <li>Instance method: create an object, then <code>obj::method</code>.</li>
@@ -5401,7 +5404,7 @@ public class BoundedDemo {
     </div>
     <p class="srcnote">Source: reimplemented from the course <code>DataSorter</code> class and its <code>getSortedData</code> generic-method variant.</p>
     <details class="advanced"><summary>Advanced</summary>A recursive bound like <code>&lt;T extends Comparable&lt;T&gt;&gt;</code> is common: it says "<code>T</code> can be compared to itself", which is exactly what sorting needs. The course example bounds with <code>Number</code> for illustration, but real sort utilities bound with <code>Comparable</code> so the elements know how to order themselves.</details>
-    <div class="box pitfall"><span class="box-title">Pitfall</span> <code>Number</code> itself does not implement <code>Comparable</code>, so <code>copy.sort(null)</code> on a raw <code>List&lt;Number&gt;</code> can fail at runtime. In practice bound with <code>&lt;T extends Number &amp; Comparable&lt;T&gt;&gt;</code> when you intend to sort.</div>
+    <div class="box pitfall"><span class="box-title">Pitfall</span> <code>Number</code> itself does not implement <code>Comparable</code>, so <code>copy.sort(null)</code> on a <code>List&lt;Number&gt;</code> can fail at runtime. In practice bound with <code>&lt;T extends Number &amp; Comparable&lt;T&gt;&gt;</code> when you intend to sort.</div>
   </article>
 
   <article class="lecture" id="l-14-10">
@@ -5457,7 +5460,7 @@ public class LinkedListDemo {
   <article class="lecture" id="l-14-11">
     <h3>11. Lower-Bounded Wildcards</h3>
     <p class="objective"><strong>Objective:</strong> Use <code>? super Type</code> to accept a type or any of its supertypes.</p>
-    <p>The counterpart of an upper bound is the lower-bounded wildcard, written <code>? super Type</code>, where the bound may be any class or interface. It matches the named type <em>and its supertypes</em>. If a method takes <code>List&lt;? super Integer&gt;</code>, you can pass a <code>List&lt;Integer&gt;</code> or a <code>List&lt;Number&gt;</code> (because <code>Number</code> is a supertype of <code>Integer</code>), but not a plain <code>Number</code>-bounded call that expects a subtype. Where <code>extends</code> walks <em>down</em> the hierarchy toward subtypes, <code>super</code> walks <em>up</em> toward supertypes. A wildcard can carry an upper bound or a lower bound, but never both at once.</p>
+    <p>The counterpart of an upper bound is the lower-bounded wildcard, written <code>? super Type</code>, where the bound may be any class or interface. It matches the named type <em>and its supertypes</em>. If a method takes <code>List&lt;? super Integer&gt;</code>, you can pass a <code>List&lt;Integer&gt;</code> or a <code>List&lt;Number&gt;</code> (because <code>Number</code> is a supertype of <code>Integer</code>), but not a <code>List&lt;Double&gt;</code> or a <code>List&lt;String&gt;</code>, because neither <code>Double</code> nor <code>String</code> is a supertype of <code>Integer</code>. Where <code>extends</code> walks <em>down</em> the hierarchy toward subtypes, <code>super</code> walks <em>up</em> toward supertypes. A wildcard can carry an upper bound or a lower bound, but never both at once.</p>
     <ul class="keypoints">
       <li><code>? super Integer</code> is a <strong>lower-bounded</strong> wildcard: <code>Integer</code> or any supertype.</li>
       <li><code>extends</code> = "this type or below"; <code>super</code> = "this type or above".</li>

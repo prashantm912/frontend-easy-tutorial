@@ -310,6 +310,7 @@ Main thread     : main
       <li>A <strong>context switch</strong> saves/restores register + kernel state; cheaper between threads than between processes, but never free.</li>
       <li>Too many threads &rarr; <strong>thrashing</strong> (managing threads instead of running work).</li>
       <li>Six states in <code>Thread.State</code>: <code>NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, TERMINATED</code>.</li>
+      <li>Choose threads for data-sharing and speed; choose separate processes for isolation/stability &mdash; a crashing thread can down the whole app, processes cannot corrupt each other.</li>
     </ul>
 
     <div class="io">
@@ -338,6 +339,8 @@ All states: NEW RUNNABLE BLOCKED WAITING TIMED_WAITING TERMINATED</div>
     <p class="srcnote">Source: reimplemented as an original illustration (Part 2 is conceptual; the snippet uses only standard <code>java.lang.Thread</code> API).</p>
 
     <details class="advanced"><summary>Advanced</summary>A thread reporting its <em>own</em> state always sees <code>RUNNABLE</code> — a thread cannot observe itself as <code>BLOCKED</code> or <code>WAITING</code>, because to run the query it must be running. To see the other states you inspect a <em>different</em> thread (e.g. call <code>getState()</code> on a worker from the main thread). Also note Java collapses the OS "ready" and "running" distinctions into the single <code>RUNNABLE</code> state.</details>
+
+    <div class="box"><span class="box-title">Threads or separate processes?</span> The lecture closes with a practical rule of thumb. Prefer <strong>threads inside one process</strong> when the tasks <strong>share a lot of data</strong> &mdash; threads share the heap, and are far cheaper to create, destroy, and context-switch between. Prefer <strong>separate processes</strong> when <strong>isolation, security, or stability</strong> matter most: processes are fully isolated, so a crash in one cannot bring down another, whereas a single misbehaving thread (e.g. an unhandled error) can take down the <em>whole</em> multithreaded application. Unrelated tasks that share no data gain nothing from living in the same process.</div>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> Do not treat <code>Thread.getState()</code> as a synchronization tool. By the time you read a state it may already have changed — it is a snapshot for debugging and monitoring, not a lock. Coordinate threads with real primitives (locks, <code>join()</code>, latches), never by polling their state.</div>
   </article>
@@ -546,10 +549,13 @@ Inside Worker (priority 10)</div>
       <div class="out"><span class="out-title">Console output</span>Caught from Misbehaving: Intentional failure</div>
     </div>
 
+    <p>One more capability the class exposes is the static method <code>Thread.sleep(millis)</code>, which pauses the <em>current</em> thread for the given number of milliseconds. It is worth stressing that this is <em>not</em> a busy-wait — sleep does not spin in a loop burning cycles. Instead it asks the OS not to schedule the calling thread until the time elapses, so a sleeping thread consumes no CPU while parked.</p>
+
     <ul class="keypoints">
       <li><code>new Thread(runnable)</code> then <code>start()</code> — <code>run()</code> holds the code to execute.</li>
       <li>Set name/priority <em>before</em> <code>start()</code>; <code>Thread.currentThread()</code> reads the running thread.</li>
       <li><code>start()</code> returns immediately — the caller does not wait for the worker.</li>
+      <li><code>Thread.sleep(millis)</code> is static and parks the <em>current</em> thread — not a spin loop; it uses no CPU while parked.</li>
       <li>An uncaught exception terminates only its own thread; a handler lets you react.</li>
     </ul>
     <p class="srcnote">Source: reimplemented from the course examples (<code>Main1</code> and <code>Main2</code> of "Threads Creation — Part 1").</p>
@@ -946,7 +952,7 @@ public class DaemonThreadDemo {
 }</code></pre>
       <div class="out"><span class="out-title">Console output</span>Main thread is done -- JVM will exit</div>
     </div>
-    <p>The worker never prints its result: the JVM exits before the (effectively infinite) calculation can finish. Daemon threads are ideal for background chores — an auto-save timer, a metrics flusher — that should never keep the app from closing.</p>
+    <p>The worker never prints its result: the JVM exits before the (effectively infinite) calculation can finish. Daemon threads are ideal for background chores — an auto-save timer, a metrics flusher — that should never keep the app from closing. They are equally the right tool when a worker runs code you cannot make stop cooperatively — a third-party library that ignores <code>interrupt()</code>, for instance (exactly the uninterruptible loop in Variant C): since you can't force it to cancel on request, marking it daemon guarantees it can't keep the JVM alive at shutdown.</p>
 
     <p class="srcnote">Source: reimplemented from the course examples (<code>thread-termination-example</code> Main1/Main2/Main3), with clearer names and a fixed message string.</p>
 
@@ -1313,7 +1319,7 @@ public class Amdahl {
     </div>
     <p class="srcnote">Source: reimplemented as an original illustration; Part 1 is a conceptual lecture with no course code — the Amdahl helper makes the "diminishing returns" point concrete.</p>
 
-    <details class="advanced"><summary>Advanced</summary>The 8-core run reaches 5.93&times; (not 8&times;) and 1000 cores reach only 19.63&times; — barely past the hard ceiling of <code>1/(1 - 0.95) = 20&times;</code> set by the 5% serial part. This is why shaving the sequential fraction often beats adding cores: dropping the serial part from 5% to 1% raises the ceiling from 20&times; to 100&times;.</details>
+    <details class="advanced"><summary>Advanced</summary>The 8-core run reaches 5.93&times; (not 8&times;) and 1000 cores reach only 19.63&times; — just short of the hard ceiling of <code>1/(1 - 0.95) = 20&times;</code> set by the 5% serial part. This is why shaving the sequential fraction often beats adding cores: dropping the serial part from 5% to 1% raises the ceiling from 20&times; to 100&times;.</details>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> Blindly setting the thread count to a big round number like 100 for CPU-bound work. On a machine with 8 hardware threads, the 92 extra threads do not compute faster — they fight over the same cores, and constant context switching plus cache eviction makes the program <em>slower</em> than using ~8 threads.</div>
   </article>
@@ -2900,6 +2906,7 @@ try { /* mutate shared data */ } finally { writeLock.unlock(); }
 
     <ul class="keypoints">
       <li><code>acquire()</code> blocks until a permit is free; <code>release()</code> hands one back and can wake a blocked thread.</li>
+      <li>Permits aren't one-at-a-time: <code>acquire(int n)</code> takes n permits in one call (blocking until all n are free) and <code>release(int n)</code> hands n back — so a <code>Semaphore</code>, unlike a binary lock, models a pool from which one thread can reserve several units of the resource at once.</li>
       <li>Two counting semaphores model the two scarce quantities: items to consume (<code>full</code>) and free space to produce into (<code>empty</code>).</li>
       <li>A short lock still guards the queue's internal structure — the semaphores handle <em>flow control</em>, not mutual exclusion of the data structure itself.</li>
       <li>If the consumer is slower, the producer blocks on <code>empty.acquire()</code>: automatic back-pressure, no busy-waiting, no unbounded memory growth.</li>
@@ -3848,16 +3855,19 @@ public class BoundedThreadPoolDemo {
 
   <article class="lecture" id="l-10-03">
     <h3>03. Asynchronous, Non-Blocking IO with Thread-Per-Core Model</h3>
-    <p class="objective"><strong>Objective:</strong> Understand the non-blocking alternative — a tiny pool of threads driven by an OS readiness selector — and weigh its huge scalability against its readability and stability costs.</p>
+    <p class="objective"><strong>Objective:</strong> Understand the non-blocking alternative — a tiny pool of threads driven by an OS readiness selector — and weigh its huge scalability and resilience against its readability cost and event-loop fragility.</p>
 
     <p>Instead of parking a thread on every IO call, <strong>non-blocking (asynchronous) IO</strong> returns immediately and lets you register a <em>callback</em> (or complete a <code>Future</code>) that fires later, when the result is ready. That inverts the sizing problem: a single thread can start thousands of operations and then loop over whichever ones have become ready. This is the <strong>thread-per-core</strong> model — a pool of roughly <code>cores</code> threads, each running an <strong>event loop</strong>.</p>
 
     <p>The engine underneath is an OS <strong>readiness selector</strong> — <code>epoll</code> on Linux, <code>kqueue</code> on macOS/BSD, exposed in Java as NIO's <code>Selector</code>. You register many non-blocking channels with one <code>Selector</code>; a call to <code>select()</code> parks the single thread until <em>any</em> registered channel is ready, then hands back exactly the ready ones to process. One thread thus multiplexes thousands of connections with almost no memory overhead and no per-connection context switching.</p>
 
+    <p>Beyond raw throughput, non-blocking IO also buys <strong>stability</strong>. Picture a web app behind a fixed pool of <code>100</code> threads where about half the requests read an internal database and half call an external service you don't control. If that service degrades or crashes, every thread eventually parks waiting on it, so <strong>all</strong> users stall &mdash; even the half whose requests never touch that dependency. That is an <em>inversion of control</em>: instead of you driving the remote service, it starts throttling you. With non-blocking IO the request thread never parks on the call, so a degraded dependency only delays (or drops) <em>its own</em> callbacks while unrelated database-path requests keep flowing. This is why the model wins on stability and safety, not just speed.</p>
+
     <p>The <strong>upside</strong> is dramatic: minimal threads, minimal memory, and enormous scalability — the model behind Netty, Node.js, and most high-concurrency servers. The <strong>downside</strong> is human: chaining dependent async calls produces deeply nested callbacks ("callback hell") that are hard to read, test, and debug, and the raw JDK APIs are low-level enough that most teams pull in a framework. Worst of all, <strong>one accidental blocking call stalls its entire core</strong> — every connection that thread was juggling freezes until the call returns.</p>
 
     <ul class="keypoints">
       <li>Non-blocking IO returns at once; results arrive later via callbacks / <code>CompletableFuture</code>.</li>
+      <li>Resilience: with a bounded <em>blocking</em> pool, one slow or failed external dependency can consume every thread and stall <code>100%</code> of requests &mdash; even ones that never touch it; non-blocking IO isolates that blast radius.</li>
       <li>An OS selector (<code>epoll</code>/<code>kqueue</code>, Java NIO <code>Selector</code>) reports which channels are ready, so one thread serves thousands of connections.</li>
       <li>Thread-per-core: pool size &asymp; cores; add threads only to use more cores, not to cover blocking.</li>
       <li>Pros: tiny memory footprint, no context-switch storms, top-tier scalability (Netty / Node.js style).</li>

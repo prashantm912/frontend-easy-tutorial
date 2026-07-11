@@ -358,7 +358,7 @@ npm start                       # ng serve → http://localhost:4200</code></pre
   <article class="lecture" id="l-01-02">
     <h3>Recommended Software Versions</h3>
     <p class="objective"><strong>Objective:</strong> Install the runtime and tooling versions the course relies on so your setup matches the lessons.</p>
-    <p>This short reference lecture (no captions in the source) points to the software you need before writing any Angular code: a current Node.js runtime and the globally installed Angular CLI. Aligning versions up front avoids tooling mismatches later in the course. The specific numbers printed below are illustrative example values, not pinned requirements — install a current LTS Node and the latest Angular CLI rather than matching these exact digits.</p>
+    <p>This short reference lecture (no captions in the source) points to the software you need before writing any Angular code: a current Node.js runtime and the globally installed Angular CLI. Aligning versions up front avoids tooling mismatches later in the course. The specific numbers printed below are illustrative example values, not pinned requirements — the course recommends installing the latest Node.js release (not the LTS), since it tends to work best with front-end tools like the Angular CLI, together with the latest Angular CLI, rather than matching these exact digits.</p>
     <ul class="keypoints">
       <li>Install Node.js — a recent release paired with the Angular CLI works best for front-end tooling.</li>
       <li>Install the Angular CLI globally so the <code>ng</code> command is available everywhere.</li>
@@ -368,7 +368,7 @@ npm start                       # ng serve → http://localhost:4200</code></pre
       <pre class="code" data-lang="bash"><code>node --version
 npm --version
 ng version</code></pre>
-      <div class="out"><span class="out-title">Output</span>v22.x.x   (example — use a current LTS)<br>10.x.x<br>Angular CLI: &lt;latest&gt;</div>
+      <div class="out"><span class="out-title">Output</span>v22.x.x   (example — use a current release)<br>10.x.x<br>Angular CLI: &lt;latest&gt;</div>
     </div>
     <div class="box pitfall"><span class="box-title">Common pitfall</span>Running an outdated Node version can break the CLI. If <code>ng</code> is not recognized after install, ensure your global npm bin directory is on your PATH.</div>
   </article>
@@ -580,7 +580,7 @@ input.demo {
     </figure>
     <p class="srcnote">Setup mirrors branch <code>master</code> of angular-university/angular-course · reimplemented for clarity.</p>
     <div class="box pitfall"><span class="box-title">Common pitfall</span>Confusing the binding brackets: <code>[value]="'text'"</code> is an expression (note inner quotes for a literal string), whereas <code>value="text"</code> is a plain HTML attribute. Mixing them up passes the wrong value.</div>
-    <details class="advanced"><summary>Advanced</summary>The reliable default escaping comes from Angular's DomSanitizer. You can opt out with <code>[innerHTML]</code> plus <code>bypassSecurityTrustHtml</code>, but doing so reintroduces XSS risk — only bypass for content you fully trust.</details>
+    <details class="advanced"><summary>Advanced</summary>Interpolation is always escaped because Angular inserts its value as text content, not as parsed HTML — this doesn't involve <code>DomSanitizer</code> at all. <code>DomSanitizer</code> separately guards security-sensitive bindings such as <code>[innerHTML]</code>, <code>[src]</code>, and <code>[style]</code>; you can opt out with the matching <code>bypassSecurityTrust…</code> method (e.g. <code>bypassSecurityTrustHtml</code> for <code>[innerHTML]</code>), but doing so reintroduces XSS risk — only bypass for content you fully trust.</details>
   </article>
 
   <div class="box cheat"><span class="box-title">Cheat-sheet</span><pre class="code" data-lang="bash"><code>npm install -g @angular/cli      # install the ng CLI globally
@@ -1036,7 +1036,7 @@ export class AppComponent {
   <article class="lecture" id="l-02-13">
     <h3>The Angular 17 @if / @else Syntax</h3>
     <p class="objective"><strong>Objective:</strong> Conditionally render content with <code>@if</code>, add fallbacks with <code>@else</code>, and chain conditions with <code>@else if</code>.</p>
-    <p>If a course lacks an icon, showing an <code>&lt;img&gt;</code> with a missing source produces a broken-image UI. Guard it with <code>@if</code>, whose truthiness rules match JavaScript — any non-empty object or string is truthy. Provide a fallback with <code>@else</code> (for example a "no image available" placeholder), and handle multiple branches with <code>@else if</code>. The whole construct reads almost exactly like ordinary JavaScript.</p>
+    <p>If a course lacks an icon, showing an <code>&lt;img&gt;</code> with a missing source produces a broken-image UI. Guard it with <code>@if</code>, whose truthiness rules match JavaScript — every object (even an empty <code>{}</code> or <code>[]</code>) and any non-empty string is truthy; only <code>null</code>, <code>undefined</code>, <code>0</code>, the empty string, <code>NaN</code> and <code>false</code> are falsy. Provide a fallback with <code>@else</code> (for example a "no image available" placeholder), and handle multiple branches with <code>@else if</code>. The whole construct reads almost exactly like ordinary JavaScript.</p>
     <ul class="keypoints">
       <li><code>@if (condition) { … }</code> renders when the expression is truthy.</li>
       <li><code>@else { … }</code> supplies a fallback block.</li>
@@ -1724,7 +1724,7 @@ Mutating data that the view already rendered — synchronously, inside <code>ngA
 
 <ul class="keypoints">
 <li><code>@ViewChildren(CourseCardComponent)</code> yields a <code>QueryList&lt;CourseCardComponent&gt;</code>, not an array.</li>
-<li><code>QueryList</code> provides <code>first</code>, <code>last</code>, <code>length</code>, <code>map</code>, <code>forEach</code>, and the <code>changes</code> observable.</li>
+<li><code>QueryList</code> provides <code>first</code>, <code>last</code>, <code>length</code>, <code>map</code>, <code>filter</code>, <code>find</code>, <code>reduce</code>, <code>some</code>, <code>forEach</code>, <code>get</code>, <code>toArray()</code>, and the <code>changes</code> observable.</li>
 <li><code>changes</code> emits only on collection modification, re-emitting the updated <code>QueryList</code>.</li>
 <li><code>{ read: ElementRef }</code> turns the results into native DOM element references.</li>
 </ul>
@@ -1790,19 +1790,23 @@ APP-COURSE-CARD
 …</pre>
 </div>
 
-<p>Because a <code>QueryList</code> is iterable but <em>not</em> a real <code>Array</code>, genuine array operations such as <code>filter</code> or <code>reduce</code> need a conversion with <code>toArray()</code> first:</p>
+<p>A <code>QueryList</code> is iterable but <em>not</em> a real <code>Array</code> (<code>Array.isArray(this.cards)</code> is <code>false</code>). It is not limited to <code>map</code>/<code>forEach</code>, though — it defines its own <code>filter</code>, <code>find</code>, <code>reduce</code>, <code>some</code>, <code>get</code>, and <code>toArray</code> methods, so <code>filter</code>/<code>reduce</code> run directly on it. Reach for <code>toArray()</code> only when you need a genuine <code>Array</code> — to hand to code that expects one, or to call methods <code>QueryList</code> lacks (<code>slice</code>, <code>sort</code>, <code>indexOf</code>, <code>flatMap</code>, …):</p>
 
 <div class="io">
 <pre class="code" data-lang="ts"><code>ngAfterViewInit() {
-  const arr = this.cards.toArray();               // CourseCardComponent[]
-  const rest = arr.filter(c =&gt; c.course.id &gt; 1);  // now real Array methods work
-  console.log('total:', arr.length, 'filtered:', rest.length);
+  // filter/reduce run directly on the QueryList -- no toArray() needed
+  const rest = this.cards.filter(c =&gt; c.course.id &gt; 1);   // CourseCardComponent[]
+  const count = this.cards.reduce((n, _c) =&gt; n + 1, 0);   // 10
+
+  // toArray() only when you need a genuine Array method QueryList lacks
+  const sorted = this.cards.toArray().sort((a, b) =&gt; a.course.id - b.course.id);
+  console.log('total:', count, 'filtered:', rest.length);
 }</code></pre>
 <pre class="out"><span class="out-title">Console</span>total: 10 filtered: 9</pre>
 </div>
 
 <div class="box pitfall"><span class="box-title">Pitfall</span>
-<code>changes</code> does not fire for the initial population — the list already exists by <code>ngAfterViewInit</code>, so your first read must be direct, not via the subscription. Also, a <code>QueryList</code> is not an <code>Array</code>: <code>Array.isArray(this.cards)</code> is <code>false</code>, and array methods like <code>filter</code>/<code>reduce</code> are absent. Call <code>this.cards.toArray()</code> when you need a genuine array.</div>
+<code>changes</code> does not fire for the initial population — the list already exists by <code>ngAfterViewInit</code>, so your first read must be direct, not via the subscription. Also, a <code>QueryList</code> is not an <code>Array</code>: <code>Array.isArray(this.cards)</code> is <code>false</code>. It does define its own <code>map</code>, <code>filter</code>, <code>find</code>, <code>reduce</code>, <code>some</code>, <code>forEach</code>, <code>get</code>, and <code>toArray</code>, so those run directly on it — only methods it lacks (<code>slice</code>, <code>sort</code>, <code>indexOf</code>, …) need <code>this.cards.toArray()</code> first.</div>
 
 <details class="advanced"><summary>Advanced: the signal-based <code>viewChildren()</code></summary>
 <p>The reactive counterpart returns a signal of a read-only array, so change detection tracks it automatically and you no longer subscribe to <code>changes</code> manually. Read it by calling the signal, and derive from it with <code>computed()</code>.</p>
@@ -1828,7 +1832,7 @@ export class AppComponent {
 <li><strong>read:</strong> <code>ElementRef</code> for the DOM node, <code>TemplateRef</code>/<code>ViewContainerRef</code>/directive for other providers.</li>
 <li><strong>static:</strong> <code>{ static: true }</code> is resolved in the first change-detection pass, so the value is available in <code>ngOnInit</code> (only for non-conditional, single elements); default <code>false</code> resolves in <code>ngAfterViewInit</code>.</li>
 <li><strong>Timing:</strong> constructor = too early; <code>ngAfterViewInit</code> = ready.</li>
-<li><strong>QueryList:</strong> <code>first</code>, <code>last</code>, <code>length</code>, <code>map</code>, <code>forEach</code>, <code>toArray()</code>, <code>changes</code> observable.</li>
+<li><strong>QueryList:</strong> <code>first</code>, <code>last</code>, <code>length</code>, <code>map</code>, <code>filter</code>, <code>find</code>, <code>reduce</code>, <code>some</code>, <code>forEach</code>, <code>get</code>, <code>toArray()</code>, <code>changes</code> observable.</li>
 <li><strong>Scope:</strong> local only — never into child templates, never up to the parent.</li>
 <li><strong>Signals:</strong> <code>viewChild()</code> / <code>viewChild.required()</code> / <code>viewChildren()</code> — reactive, no <code>static</code> flag.</li>
 <li><strong>Don't:</strong> mutate rendered data synchronously in <code>ngAfterViewInit</code> (ExpressionChanged… error).</li>
@@ -2056,7 +2060,7 @@ export class PanelComponent {}
 
 <p>The lecture demonstrates the boundary concretely. Put a template reference such as <code>#courseImage</code> on the projected <code>&lt;img&gt;</code> and try to grab it with <code>@ViewChild('courseImage')</code>. In <code>ngAfterViewInit</code> the value is <code>undefined</code>: from the card's perspective that image is not part of its view, it lives inside <code>&lt;ng-content&gt;</code>. (In the recording the log prints <code>undefined</code> <em>twice</em>, because two course cards sit on the page and each runs its own query; removing the second card is what gives the clean single log.) Swap the decorator to <code>@ContentChild('courseImage')</code> and the same reference resolves correctly — a reference to the projected image's DOM element.</p>
 
-<p>The scope cuts both ways. A <code>@ContentChild</code> query cannot reach up into the parent's surrounding template (e.g. a top menu), nor down into the card's own fixed template. It sees exactly the content sandwiched between the host component instance's opening and closing tags. Like <code>@ViewChild</code>, it can query by template reference name <em>or</em> by component type, and the <code>read</code> option lets you choose what comes back — the component instance (default) or the raw <code>ElementRef</code>.</p>
+<p>The scope cuts both ways. A <code>@ContentChild</code> query cannot reach up into the parent's surrounding template (e.g. a top menu), nor down into the card's own fixed template. It sees exactly the content sandwiched between the host component instance's opening and closing tags. Like <code>@ViewChild</code>, it can query by template reference name <em>or</em> by component type. With no <code>read</code> option, the query returns whatever it matched: a component/directive match yields that instance, whereas a plain element (e.g. an element template reference like <code>#courseImage</code> on an <code>&lt;img&gt;</code>) yields an <code>ElementRef</code>. Pass <code>{ read: ElementRef }</code> to force the native element, or <code>{ read: SomeToken }</code> to read a specific provider.</p>
 
 <figure>
   <svg role="img" viewBox="0 0 660 320" xmlns="http://www.w3.org/2000/svg" aria-labelledby="scope-title">
@@ -2119,7 +2123,7 @@ export class PanelComponent {}
 <ul class="keypoints">
 <li><strong>Scope:</strong> <code>@ContentChild</code> queries only projected content; <code>@ViewChild</code> queries only the component's own view. Neither crosses into the other's territory.</li>
 <li><strong>Query by:</strong> template reference string, or a component/directive class.</li>
-<li><strong>read option:</strong> <code>{ read: ElementRef }</code> returns the native element instead of the component instance.</li>
+<li><strong>read option:</strong> with no <code>read</code>, the query returns what it matched (component/directive instance, or <code>ElementRef</code> for a plain element); <code>{ read: ElementRef }</code> forces the native element.</li>
 <li><strong>Timing:</strong> read results in <code>ngAfterContentInit</code> (or later) — not in the constructor or <code>ngOnInit</code>.</li>
 <li><strong>Rule of thumb:</strong> only reach for <code>@ContentChild</code> when your component uses projection <em>and</em> genuinely needs a class-level handle on the projected node.</li>
 </ul>
@@ -2382,7 +2386,7 @@ Do not read a <code>QueryList</code> in the constructor or <code>ngOnInit</code>
 <li><code>&lt;ng-content select=".header"&gt;</code> — named slot; matches element / <code>.class</code> / <code>[attr]</code> selectors on top-level nodes.</li>
 <li>One selector-less slot = catch-all for unmatched content. Each node lands in exactly one slot.</li>
 <li><code>@ContentChild(ref|Type, {read})</code> — one projected node; <code>@ContentChildren(...)</code> — a <code>QueryList</code> of them.</li>
-<li><code>{ read: ElementRef }</code> → native element; default → component/directive instance.</li>
+<li><code>{ read: ElementRef }</code> → native element; default → what was matched (component/directive instance, or <code>ElementRef</code> for a plain element).</li>
 <li><code>@ContentChildren(..., { descendants: true })</code> to reach nested projected nodes; subscribe <code>.changes</code> for dynamic updates.</li>
 <li><strong>Timing:</strong> content queries ready in <code>ngAfterContentInit</code>; view queries ready in <code>ngAfterViewInit</code>.</li>
 <li><strong>Contrast:</strong> view child = component's own template; content child = markup projected in by the parent.</li>
@@ -2489,15 +2493,18 @@ nowhere in the DOM.</pre>
 @if (course.iconUrl) {
   &lt;img class="course-thumbnail" [src]="course.iconUrl"&gt;
 } @else {
-  &lt;!-- the @else body is compiled to an ng-template --&gt;
+  &lt;!-- the @else body is compiled to an embedded view --&gt;
   &lt;div class="warn"&gt;No image available yet&lt;/div&gt;
   &lt;img class="course-thumbnail" src="/assets/empty-image.png"&gt;
 }</code></pre>
-<pre class="out"><span class="out-title">Compiles to</span>@if / @else desugar to exactly the same
-&lt;ng-template&gt; machinery as *ngIf ... else.
-The @else body is held in reserve and only
-stamped out when course.iconUrl is falsy —
-no template reference variable needed, the
+<pre class="out"><span class="out-title">Compiles to</span>Each @if / @else branch body is compiled
+into an embedded view held in reserve,
+conceptually like an &lt;ng-template&gt;, stamped
+out only when course.iconUrl is falsy.
+But built-in control flow is a compiler
+feature, NOT a structural directive: it does
+not use the NgIf directive or ngTemplateOutlet,
+and no directive does the stamping — the
 compiler wires it for you.</pre>
 </div>
 
@@ -2542,7 +2549,7 @@ Declaring an <code>&lt;ng-template&gt;</code> and expecting to "just see it" on 
 
 <details class="advanced">
 <summary>Advanced: templates are the mechanism behind every structural directive</summary>
-<p>Syntactic sugar like <code>*ngIf</code>, <code>*ngFor</code>, and <code>@if</code>/<code>@for</code> control flow all desugar into <code>&lt;ng-template&gt;</code> blocks that the directive stamps into a <code>ViewContainerRef</code> at runtime. The asterisk form <code>&lt;div *ngIf="x"&gt;</code> is shorthand for <code>&lt;ng-template [ngIf]="x"&gt;&lt;div&gt;...&lt;/div&gt;&lt;/ng-template&gt;</code>. Understanding <code>&lt;ng-template&gt;</code> therefore explains why structural directives can defer, repeat, or conditionally create DOM — they hold a template and decide when to instantiate it.</p>
+<p>Syntactic sugar like <code>*ngIf</code> and <code>*ngFor</code> desugars into <code>&lt;ng-template&gt;</code> blocks that the directive (<code>NgIf</code>/<code>NgForOf</code>) stamps into a <code>ViewContainerRef</code> at runtime. The asterisk form <code>&lt;div *ngIf="x"&gt;</code> is shorthand for <code>&lt;ng-template [ngIf]="x"&gt;&lt;div&gt;...&lt;/div&gt;&lt;/ng-template&gt;</code>. Understanding <code>&lt;ng-template&gt;</code> therefore explains why structural directives can defer, repeat, or conditionally create DOM — they hold a template and decide when to instantiate it. The newer <code>@if</code>/<code>@for</code> control flow reaches the same end result — branch bodies compiled to embedded views instantiated on demand — but it is a first-class compiler feature, not a structural directive: there is no <code>NgIf</code>/<code>NgFor</code> directive and no <code>ngTemplateOutlet</code> involved.</p>
 </details>
 </article>
 
@@ -3110,7 +3117,7 @@ and logs true; leaving removes it and logs false.</pre>
 <div class="box pitfall"><span class="box-title">Pitfall</span> Use <code>mouseleave</code>, not <code>mouseout</code>. <code>mouseout</code> bubbles and fires again every time the pointer crosses a child element, so the highlight flickers off while still inside the host. <code>mouseleave</code> fires only when the pointer truly exits the host.</div>
 
 <details class="advanced"><summary>Advanced: global targets and passive listeners</summary>
-<p><code>@HostListener</code> can target objects beyond the host: <code>@HostListener('window:resize', ['$event'])</code> or <code>@HostListener('document:keydown.escape')</code> attach to <code>window</code>/<code>document</code>. These stay active for the directive's lifetime, so keep the handlers cheap. For hot events (scroll, touchmove), a manual <code>Renderer2.listen</code> or a directly-added passive listener can outperform <code>@HostListener</code>, which always runs inside Angular's zone and triggers change detection.</p>
+<p><code>@HostListener</code> can target objects beyond the host: <code>@HostListener('window:resize', ['$event'])</code> or <code>@HostListener('document:keydown.escape')</code> attach to <code>window</code>/<code>document</code>. These stay active for the directive's lifetime, so keep the handlers cheap. <code>@HostListener</code> always runs its handler inside Angular's zone, so every fire triggers change detection. For hot events (scroll, touchmove) you can avoid that by registering the listener yourself with <code>ngZone.runOutsideAngular(() =&gt; el.addEventListener('scroll', fn, { passive: true }))</code> and only re-entering the zone when you actually need to update the view. <code>Renderer2.listen</code> does <strong>not</strong> help here — its listeners are zone-patched exactly like <code>@HostListener</code>, so they still run inside <code>NgZone</code> and still trigger change detection. The <code>{ passive: true }</code> flag is a separate optimization: it lets the browser scroll without waiting on your handler, but it does not change the change-detection behaviour.</p>
 </details>
 </article>
 
@@ -3694,10 +3701,10 @@ DOM:
 
 <p>Sometimes a component should change appearance depending on context established <em>outside</em> it — a classic case is theming, where an ancestor element carries a class like <code>salmon-theme</code> and every card beneath it should adopt a themed background. You cannot express this with a plain rule in the component stylesheet, because encapsulation scopes the whole selector to this component and the theme class lives on an ancestor. Using <code>::ng-deep</code> to escape works, but it over-reaches: the themed rule then applies to <em>any</em> matching element on the page, not just this component's instances.</p>
 
-<p><code>:host-context(selector)</code> is the precise tool. It matches the host element when any ancestor matches the parenthesized selector, and — crucially — the part of the rule <em>after</em> <code>:host-context</code> stays scoped to this component. So <code>:host-context(.salmon-theme) .course-card</code> themes only the cards inside a salmon-themed ancestor, and leaves an unrelated sibling under the same ancestor untouched. That is the difference from <code>::ng-deep</code>: the ancestor condition is generic, but the styled target remains component-specific.</p>
+<p><code>:host-context(selector)</code> is the precise tool. It matches the host element when the host itself or any ancestor matches the parenthesized selector, and — crucially — the part of the rule <em>after</em> <code>:host-context</code> stays scoped to this component. So <code>:host-context(.salmon-theme) .course-card</code> themes only the cards inside a salmon-themed ancestor, and leaves an unrelated sibling under the same ancestor untouched. That is the difference from <code>::ng-deep</code>: the ancestor condition is generic, but the styled target remains component-specific.</p>
 
 <ul class="keypoints">
-<li><code>:host-context(.x)</code> checks the host's ancestors for <code>.x</code>; the styled selector after it stays scoped to the component.</li>
+<li><code>:host-context(.x)</code> checks the host element and its ancestors for <code>.x</code>; the styled selector after it stays scoped to the component.</li>
 <li>Ideal for theming: an ancestor sets the theme class, components opt in without any <code>@Input</code>.</li>
 <li>Unlike <code>::ng-deep</code>, it does not leak the styled rule to unrelated elements sharing the same ancestor.</li>
 </ul>
@@ -4078,12 +4085,12 @@ this.courses$ = this.http.get&lt;Course[]&gt;('/api/courses')
 <pre class="code" data-lang="bash"><code>ng generate service courses/services/courses
 # CREATE src/app/courses/services/courses.service.ts
 # CREATE src/app/courses/services/courses.service.spec.ts</code></pre>
-<div class="out"><span class="out-title">Console (one page load)</span>injecting CoursesService…   &lt;-- AppComponent
+<div class="out"><span class="out-title">Console (one page load)</span>Courses service created     &lt;-- constructor: runs on the FIRST injection, EXACTLY ONCE
+injecting CoursesService…   &lt;-- AppComponent (the first injection)
 injecting CoursesService…   &lt;-- CourseCard #1
 injecting CoursesService…   &lt;-- CourseCard #2
 injecting CoursesService…   &lt;-- CourseCard #3
-…                           (once per card, many times)
-Courses service created     &lt;-- constructor: EXACTLY ONCE</div>
+…                           (once per card, many times)</div>
 </div>
 <pre class="code" data-lang="ts"><code>import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -4209,7 +4216,7 @@ export class CourseCardComponent {
   [course]="course"
   (courseChanged)="save($event)"&gt;
 &lt;/course-card&gt;</code></pre>
-<div class="box pitfall"><span class="box-title">Pitfall</span> A <code>put()</code> that is never subscribed silently does nothing — the UI may look fine while no data reaches the server. Also, calling <code>put(url, options)</code> without a body is a type error: PUT's second argument is always the body.</div>
+<div class="box pitfall"><span class="box-title">Pitfall</span> A <code>put()</code> that is never subscribed silently does nothing — the UI may look fine while no data reaches the server. Also, <code>put(url)</code> with no second argument <em>is</em> a compile error (the <code>body</code> parameter is required) — but <code>put(url, optionsObject)</code> is <strong>not</strong>: since <code>body</code> is typed <code>any</code>, an options object slipped into the body slot compiles cleanly and is silently sent as the request payload. Always pass the body 2nd and options 3rd.</div>
 <details class="advanced"><summary>Advanced: the full HttpClient verb set</summary>
 <p><code>HttpClient</code> exposes <code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>, <code>delete</code> and <code>head</code>, all returning Observables and all accepting an options object for <code>params</code>, <code>headers</code>, <code>responseType</code>, and <code>observe</code> (use <code>observe: 'response'</code> to read the full <code>HttpResponse</code> including status and headers).</p>
 <pre class="code" data-lang="ts"><code>this.http.delete(`/api/courses/${id}`).subscribe();
@@ -4400,11 +4407,12 @@ export class AppComponent {
 Angular resolves HttpClient, calls
 useFactory(http), stores the result,
 and injects it wherever COURSES_TOKEN
-is requested. Omitting deps → error:
-"Can't resolve all parameters".</pre>
+is requested. Omitting deps → factory
+runs with no args (http = undefined);
+app breaks later when http is used.</pre>
 </div>
 
-<div class="box pitfall"><span class="box-title">Pitfall</span>A <code>useFactory</code> without a matching <code>deps</code> array fails with <em>Can't resolve all parameters</em>. Angular does not introspect the factory's signature — the order of <code>deps</code> must exactly match the factory's parameters.</div>
+<div class="box pitfall"><span class="box-title">Pitfall</span>A <code>useFactory</code> whose <code>deps</code> array is missing does <em>not</em> error at injection time — Angular cannot introspect the factory's parameters, so it simply calls the factory with no arguments (each parameter becomes <code>undefined</code>). The app then breaks later, when the missing dependency is first used (e.g. <em>Cannot read properties of undefined</em>). Because Angular does not read the factory's signature, the order of <code>deps</code> must exactly match the factory's parameters. (The <em>Can't resolve all parameters</em> message is a different error — it is raised for reflective class instantiation, i.e. <code>useClass</code>/type-based injection lacking constructor metadata, not for a factory with omitted <code>deps</code>.)</div>
 
 <details class="advanced"><summary>Advanced — an interface cannot be a token</summary><p>You might wish to write <code>provide: CoursesApi</code> where <code>CoursesApi</code> is an interface. It won't compile as a value, because interfaces are erased at compile time and don't exist at runtime. Tokens must be runtime values — a class reference or an <code>InjectionToken</code> instance. This is exactly why <code>InjectionToken</code> exists.</p></details>
 </article>
@@ -4976,7 +4984,7 @@ DOM heading is patched.</pre>
 
     <p>OnPush is faster than the default strategy but demands more discipline — a deliberate trade-off. An OnPush component is <em>not</em> re-checked on every event throughout the app. Instead Angular checks it only when one of a small number of conditions holds: one of its <code>@Input</code> references changes (compared by identity, not by deep contents), an event handler fires inside the component or its own template, an observable it consumes through the async pipe emits, or — in newer Angular — a signal it reads changes. When none of these occur, Angular walks past the component and its entire subtree without inspecting a single expression.</p>
 
-    <p>There is a memory angle to the win as well, not just a CPU one. To diff each pass, the default strategy has to <em>remember</em> the previous value of every template expression so it can compare it against the next round. OnPush sidesteps that bookkeeping entirely: it decides whether to check by comparing a handful of input references by identity, so it keeps no cache of prior expression values. Fewer things to store, fewer things to compare.</p>
+    <p>The win is about CPU, not memory. <em>Every</em> component — OnPush or not — stores the previous value of each of its own template bindings in its internal view data (the <code>LView</code>) so it can diff them when it is checked. OnPush does not drop that per-binding cache: when an OnPush component actually <em>is</em> checked (a changed input reference, an internal event, an async-pipe emission, or a signal it reads), it re-diffs its bindings exactly like a default component. What OnPush saves is <em>work</em> — when a whole subtree's inputs are unchanged, Angular skips checking it at all, so those comparisons never run. Fewer components checked, not fewer values stored.</p>
 
     <p>The critical detail is the identity comparison on inputs. If a parent mutates a nested property of an object it already passed down (<code>course.description = '...'</code>), the object <em>reference</em> is unchanged, so an OnPush child sees no new input and does not re-render — a common source of "why won't my view update?" bugs. Replacing the object with a fresh copy (<code>{ ...course, description }</code>) changes the reference and the OnPush child renders correctly. This is exactly why immutable data pairs so naturally with OnPush.</p>
 
@@ -4984,7 +4992,7 @@ DOM heading is patched.</pre>
       <li>OnPush checks a component only on: input <em>reference</em> change, an event within the component, an async-pipe emission, or a signal read change.</li>
       <li>Inputs are compared by reference — mutating a nested field is invisible to OnPush.</li>
       <li>Skipping a component skips its whole subtree, which is where the performance win comes from.</li>
-      <li>Cheaper in memory too: default CD caches every expression's previous value to diff; OnPush's reference check needs no such cache.</li>
+      <li>The saving is CPU, not memory: every component caches its bindings' previous values to diff when checked; OnPush's win is skipping the check of untriggered subtrees, not omitting that cache.</li>
       <li>Prefer immutable updates (object spread, <code>Object.freeze</code>, Immer/Immutable.js) to stay safe.</li>
     </ul>
 
@@ -5036,10 +5044,21 @@ DOM heading is patched.</pre>
     <p>Below, a parent button mutates a nested field versus replacing the whole object. Only the reference swap reaches the OnPush child.</p>
 
     <div class="io">
-      <pre class="code" data-lang="ts"><code>@Component({
+      <pre class="code" data-lang="ts"><code>import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'course-card',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,   // OnPush belongs on the child that renders the input
+  template: `&lt;h2&gt;{{ course.description }}&lt;/h2&gt;`
+})
+export class CourseCardComponent {
+  @Input() course!: { id: number; description: string };
+}
+
+@Component({
   selector: 'app-root',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     &lt;button (click)="mutate()"&gt;Mutate in place&lt;/button&gt;
     &lt;button (click)="replace()"&gt;Replace reference&lt;/button&gt;
@@ -5049,13 +5068,12 @@ DOM heading is patched.</pre>
 export class AppComponent {
   courses = [{ id: 1, description: 'Angular Basics' }];
 
-  mutate() {              // reference unchanged -&gt; child NOT updated
+  mutate() {              // reference unchanged -&gt; OnPush child NOT updated
     this.courses[0].description = 'Edited';
   }
 
-  replace() {             // new reference -&gt; child IS updated
-    const copy = { ...this.courses[0], description: 'Edited' };
-    this.courses[0] = copy;
+  replace() {             // new reference -&gt; OnPush child IS updated
+    this.courses[0] = { ...this.courses[0], description: 'Edited' };
   }
 }</code></pre>
       <pre class="out"><span class="out-title">Console / view</span>Click "Mutate in place":
@@ -5513,7 +5531,7 @@ export class ParentComponent implements OnInit {
 // Inside CourseCardComponent (implements OnInit, OnChanges):
 ngOnInit()    { console.log('ngOnInit', this.course); }
 ngOnChanges() { console.log('ngOnChanges', this.course); }</code></pre>
-      <div class="out"><span class="out-title">Output</span>// case (a) synchronous binding:<br>ngOnInit &#123; id: 1, title: 'Angular Core' &#125;<br>// case (b) asynchronous binding (HTTP resolves after init):<br>ngOnInit undefined<br>ngOnChanges &#123; id: 1, title: 'Angular Core' &#125;   // value arrives later</div>
+      <div class="out"><span class="out-title">Output</span>// case (a) synchronous binding:<br>ngOnChanges &#123; id: 1, title: 'Angular Core' &#125;   // firstChange: true<br>ngOnInit &#123; id: 1, title: 'Angular Core' &#125;<br>// case (b) asynchronous binding (HTTP resolves after init):<br>ngOnChanges undefined   // firstChange: true<br>ngOnInit undefined<br>ngOnChanges &#123; id: 1, title: 'Angular Core' &#125;   // firstChange: false — value arrives later</div>
     </div>
     <figure>
       <svg role="img" viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg">
@@ -5588,12 +5606,12 @@ editCourse() {
     <h3>ngAfterContentChecked — Use Cases and Pitfalls</h3>
     <p class="objective"><strong>Objective:</strong> Understand when Angular runs <code>ngAfterContentChecked</code>, what "content" means, and why you may modify some data here but not the projected content itself.</p>
     <p>Implemented via the <code>AfterContentChecked</code> interface, this hook runs every time Angular finishes checking the component's <em>projected content</em> — the markup a parent places between the component's opening and closing tags and that lands in an <code>&lt;ng-content&gt;</code> slot. Because it runs on every change-detection pass, it fires very frequently, so any code inside it must be lightweight; expensive work (backend calls, heavy computation) placed here will degrade UI performance badly.</p>
-    <p>This hook is a valid spot for last-second data tweaks before rendering — with one strict limitation. You may modify properties that are <em>not</em> used inside the projected content (for example the card's title or category), but if you modify a value that <em>is</em> consumed by the content that Angular just checked (such as an image URL bound inside the projected element), Angular throws <code>ExpressionChangedAfterItHasBeenChecked</code>. The rule protects change detection from modifying the very data it just verified, which could otherwise cause the view to fall out of sync or loop.</p>
+    <p>This hook is a valid spot for last-second data tweaks before rendering — with one strict limitation. You may modify properties that are <em>not</em> used inside the projected content (for example the card's title or category), but if you modify a value that <em>is</em> consumed by the content that Angular just checked (such as an image URL bound inside the projected element), Angular throws <code>ExpressionChangedAfterItHasBeenCheckedError</code>. The rule protects change detection from modifying the very data it just verified, which could otherwise cause the view to fall out of sync or loop.</p>
     <ul class="keypoints">
       <li>Implement <code>AfterContentChecked</code>; it runs after Angular checks the projected (<code>ng-content</code>) part of the component.</li>
       <li>It executes on every change-detection cycle — keep the body cheap and side-effect-light.</li>
       <li>Good for final data adjustments to properties that are <em>not</em> part of the projected content.</li>
-      <li>Modifying a value used inside the checked content throws <code>ExpressionChangedAfterItHasBeenChecked</code> (dev mode).</li>
+      <li>Modifying a value used inside the checked content throws <code>ExpressionChangedAfterItHasBeenCheckedError</code> (dev mode).</li>
       <li>The restriction exists so change detection never mutates the data it just validated.</li>
     </ul>
     <div class="io">
@@ -5664,10 +5682,10 @@ export class CourseCardComponent implements AfterContentChecked {
     <h3>ngAfterViewChecked — Use Cases and Pitfalls</h3>
     <p class="objective"><strong>Objective:</strong> Learn how <code>ngAfterViewChecked</code> differs from the content hook, why it forbids all component-data changes, and when DOM operations like scrolling belong here.</p>
     <p>Implemented through <code>AfterViewChecked</code>, this hook runs immediately after Angular finishes checking the component's own template (everything outside the projected content). In the ordering it always follows <code>ngAfterContentChecked</code>, and like it, runs on every change-detection cycle. The distinction is scope: by the time <code>ngAfterViewChecked</code> runs, both the content and the full view have been checked.</p>
-    <p>Consequently you cannot modify <em>any</em> data the component displays here — neither content nor template values. Attempting to change a bound value either silently fails to reflect in the view or, with default change detection, throws <code>ExpressionChangedAfterItHasBeenChecked</code>, because Angular has already finalized the view and does not know which value to keep. The right use for this hook is direct DOM work that requires the freshly rendered elements to exist — scrolling to the bottom of a newly grown list, moving focus to a just-added input, and similar. At this point Angular has committed the new elements to the DOM, so the operation actually takes effect.</p>
+    <p>Consequently you cannot modify <em>any</em> data the component displays here — neither content nor template values. Attempting to change a bound value either silently fails to reflect in the view or, with default change detection, throws <code>ExpressionChangedAfterItHasBeenCheckedError</code>, because Angular has already finalized the view and does not know which value to keep. The right use for this hook is direct DOM work that requires the freshly rendered elements to exist — scrolling to the bottom of a newly grown list, moving focus to a just-added input, and similar. At this point Angular has committed the new elements to the DOM, so the operation actually takes effect.</p>
     <ul class="keypoints">
       <li><code>ngAfterViewChecked</code> runs after the component's own view (template) is checked, always after <code>ngAfterContentChecked</code>.</li>
-      <li>No data modification is allowed — changing displayed values throws <code>ExpressionChangedAfterItHasBeenChecked</code> or leaves the view out of sync.</li>
+      <li>No data modification is allowed — changing displayed values throws <code>ExpressionChangedAfterItHasBeenCheckedError</code> or leaves the view out of sync.</li>
       <li>Ideal for post-render DOM operations: scrolling, focusing, measuring — actions needing the new DOM in place.</li>
       <li>Runs on every cycle, so the body must stay lightweight.</li>
     </ul>
@@ -5687,7 +5705,7 @@ export class CourseListComponent implements AfterViewChecked {
     const list = this.host.nativeElement.querySelector('.scroll');
     list.scrollTop = list.scrollHeight; // scroll to the bottom
 
-    // this.title = 'changed'; // would throw ExpressionChangedAfterItHasBeenChecked
+    // this.title = 'changed'; // would throw ExpressionChangedAfterItHasBeenCheckedError
   }
 }</code></pre>
       <div class="out"><span class="out-title">Output</span>After new courses are added, the list scrolls to the bottom.<br>// If a bound value were changed here, with default change detection:<br>ERROR ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.</div>
@@ -5968,15 +5986,15 @@ export class AppModule {}</code></pre>
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HighlightedDirective } from './highlighted.directive';
+import { EllipsisDirective } from './ellipsis.directive';
 
 @NgModule({
-  declarations: [HighlightedDirective],
+  declarations: [EllipsisDirective],
   imports: [CommonModule, ReactiveFormsModule],
-  exports: [CommonModule, ReactiveFormsModule, HighlightedDirective]
+  exports: [CommonModule, ReactiveFormsModule, EllipsisDirective]
 })
 export class SharedModule {}</code></pre>
-      <div class="out"><span class="out-title">Output</span>Any feature module that imports SharedModule now has CommonModule,<br>ReactiveFormsModule, and HighlightedDirective available.</div>
+      <div class="out"><span class="out-title">Output</span>Any feature module that imports SharedModule now has CommonModule,<br>ReactiveFormsModule, and EllipsisDirective available.</div>
     </div>
     <figure>
       <svg role="img" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg">
@@ -6517,7 +6535,7 @@ ng extract-i18n</code></pre>
     <p class="objective"><strong>Objective:</strong> Replace an <code>ngSwitch</code>-style set of mutually exclusive labels with an ICU <code>select</code> expression, giving the translator grouped, related alternatives.</p>
     <p>Sometimes you pick one of several strings based on a non-numeric value — for example rendering "beginner", "intermediate", or "advanced" from a course's category. You could tag each label separately with <code>i18n</code>, but they would then appear to the translator as unrelated fragments. The ICU <strong>select</strong> expression instead groups them as clearly alternative choices, giving far better context.</p>
     <p>The syntax mirrors plural but uses the <code>select</code> keyword and string match keys instead of numbers: name the value, write <code>select</code>, then list each possible key with its braced text. This is a translation-friendly alternative to <code>ngSwitch</code> and, unlike a plain switch, it is picked up by the i18n extractor as a single unit.</p>
-    <p>A practical gotcha: the value driving the select must actually be present. If a course record is missing its <code>category</code>, no branch matches and rendering fails; ensure the property is always set (or add a fallback key). When extracted, the select — with all its alternatives — becomes one trans-unit the translator sees as a coherent group.</p>
+    <p>A practical gotcha: the value driving the select must actually match one of the keys. If a course record is missing its <code>category</code> (or its value matches no key) and there is no <code>other</code> branch, Angular renders nothing — a silent empty label, not a thrown error, which is easy to miss in production. ICU <code>select</code> supports an <code>other {…}</code> catch-all just like <code>plural</code>; add one as a fallback and/or keep the property populated. When extracted, the select — with all its alternatives — becomes one trans-unit the translator sees as a coherent group.</p>
     <ul class="keypoints">
       <li>ICU select syntax: <code>&#123; value, select, keyA &#123;…&#125; keyB &#123;…&#125; &#125;</code>.</li>
       <li>Best for a fixed set of string-keyed, mutually exclusive labels.</li>
@@ -6541,7 +6559,7 @@ ng extract-i18n</code></pre>
     ADVANCED &#123; Advanced &#125;
   &#125;
 &lt;/div&gt;</code></pre>
-      <div class="out"><span class="out-title">Output</span>category "INTERMEDIATE" &rarr; "Intermediate"<br>missing category &rarr; nothing matches (runtime error / empty label)</div>
+      <div class="out"><span class="out-title">Output</span>category "INTERMEDIATE" &rarr; "Intermediate"<br>missing/unmatched category &rarr; renders empty (silent, no error &mdash; add an <code>other {…}</code> branch)</div>
     </div>
     <div class="io">
       <pre class="code" data-lang="json"><code>&lt;trans-unit id="5f…" datatype="html"&gt;
@@ -6772,7 +6790,7 @@ ng generate component course-title
       <div class="out"><span class="out-title">Output</span>A new <code>course-title/</code> folder appears with the component's TS, template, CSS, and spec files ready to fill in.</div>
     </div>
     <div class="io">
-      <pre class="code" data-lang="ts"><code>// course-title.component.ts
+      <pre class="code" data-lang="ts"><code>// course-title/course-title.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
@@ -6790,7 +6808,7 @@ export class CourseTitleComponent &#123;
       <pre class="code" data-lang="ts"><code>// app.component.ts — register the element once
 import { Component, Injector, OnInit } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
-import { CourseTitleComponent } from './course-title.component';
+import { CourseTitleComponent } from './course-title/course-title.component';
 
 @Component({ selector: 'app-root', templateUrl: './app.component.html' })
 export class AppComponent implements OnInit &#123;
@@ -7231,7 +7249,7 @@ bootstrapApplication(AppComponent, {
     </figure>
     <p class="srcnote">Reworked from the standalone-migration lectures on branch <code>ng17-recordings</code> · reimplemented for clarity.</p>
     <div class="box pitfall"><span class="box-title">Common pitfall</span>Migrating bootstrap but forgetting a provider the old module supplied (routing, HTTP, animations). Missing <code>provideHttpClient()</code>, for instance, produces a "No provider for HttpClient" error at runtime, not at build time.</div>
-    <details class="advanced"><summary>Advanced</summary>For readability, group related providers into a feature helper that returns <code>makeEnvironmentProviders([...])</code>, then spread it into <code>bootstrapApplication</code>. This mirrors the <code>provideX()</code> convention and keeps <code>main.ts</code> declarative as the provider list grows.</details>
+    <details class="advanced"><summary>Advanced</summary>For readability, group related providers into a feature helper that returns <code>makeEnvironmentProviders([...])</code>, then add its result directly to the <code>providers</code> array — <code>providers: [provideMyFeature()]</code>. <code>makeEnvironmentProviders()</code> returns a single opaque <code>EnvironmentProviders</code> object (branded and non-iterable, so it cannot be spread with <code>...</code>); it drops in exactly like the built-in <code>provideX()</code> functions and keeps <code>main.ts</code> declarative as the provider list grows.</details>
   </article>
 
   <div class="box cheat"><span class="box-title">Cheat-sheet</span><pre class="code" data-lang="ts"><code>// 1. Make a component standalone with its own imports
@@ -7412,7 +7430,7 @@ bootstrapApplication(AppComponent, {
     </div>
     <p class="srcnote">Mirrors branch <code>ng17-recordings</code> · reimplemented for clarity.</p>
     <div class="box pitfall"><span class="box-title">Common pitfall</span>Omitting <code>after</code> and showing a loading indicator for a chunk that loads in milliseconds. The flash makes the app feel buggy — always pair a spinner with a sensible <code>after</code> threshold.</div>
-    <details class="advanced"><summary>Advanced</summary>The two parameters are <strong>not</strong> symmetric across the blocks. <code>@loading</code> is the only block that accepts both — <code>@loading (after 1s; minimum 3s)</code> — with both times measured from the moment the download starts. <code>@placeholder</code> accepts <code>minimum</code> alone (measured from when the placeholder was first shown); there is no <code>after</code> on a placeholder, so <code>@placeholder (after 1s)</code> is a compile error. Choosing these durations well is a deliberate UX decision, not a default.</details>
+    <details class="advanced"><summary>Advanced</summary>The two parameters are <strong>not</strong> symmetric across the blocks. <code>@loading</code> is the only block that accepts both — <code>@loading (after 1s; minimum 3s)</code> — where <code>after</code> is measured from the moment the download starts, while <code>minimum</code> is measured from when the <code>@loading</code> block is actually shown (after the <code>after</code> delay elapses), guaranteeing the indicator stays visible long enough to be perceived once it appears. <code>@placeholder</code> accepts <code>minimum</code> alone (measured from when the placeholder was first shown); there is no <code>after</code> on a placeholder, so <code>@placeholder (after 1s)</code> is a compile error. Choosing these durations well is a deliberate UX decision, not a default.</details>
   </article>
 
   <article class="lecture" id="l-17-05">
@@ -7534,7 +7552,10 @@ bootstrapApplication(AppComponent, {
       <li>Like all triggers, it can drive prefetch or display.</li>
     </ul>
     <div class="io">
-      <pre class="code" data-lang="html"><code>&lt;h1 #title&gt;Available Courses&lt;/h1&gt;
+      <pre class="code" data-lang="html"><code>&lt;!-- tall content above (a hero/banner, or a spacer div) keeps #title below the initial fold --&gt;
+&lt;div class="scroll-space"&gt;&lt;/div&gt;
+
+&lt;h1 #title&gt;Available Courses&lt;/h1&gt;
 
 @defer (on viewport(title); prefetch on idle) {
   &lt;courses-card-list [courses]="courses"&gt;&lt;/courses-card-list&gt;
@@ -7545,7 +7566,7 @@ bootstrapApplication(AppComponent, {
     </div>
     <p class="srcnote">Mirrors branch <code>ng17-recordings</code> · reimplemented for clarity.</p>
     <div class="box pitfall"><span class="box-title">Common pitfall</span>Expecting <code>on viewport</code> alone to also defer the download in a way that never risks a blank flash. Without a separate prefetch, the download only starts once the element nears view, so slow chunks may briefly show the placeholder before content — pair viewport display with an earlier prefetch.</div>
-    <details class="advanced"><summary>Advanced</summary><code>viewport</code> is backed by <code>IntersectionObserver</code>. Referencing an element that is initially rendered but off-screen (like the placeholder) works naturally; referencing an element inside the deferred content itself would be a chicken-and-egg error, since it does not exist until the block loads.</details>
+    <details class="advanced"><summary>Advanced</summary><code>viewport</code> is backed by <code>IntersectionObserver</code>, which reports the observed element's <em>initial</em> intersection state. Referencing an element that is initially rendered but off-screen (like the placeholder) works naturally; but referencing an element that is already inside the viewport on page load fires the trigger immediately and displays the content right away — so the observed element must start below the fold for the deferral to be meaningful. Referencing an element inside the deferred content itself would be a chicken-and-egg error, since it does not exist until the block loads.</details>
   </article>
 
   <article class="lecture" id="l-17-09">
@@ -8184,7 +8205,7 @@ export class CourseCardComponent {
       <div class="out"><span class="out-title">Output</span>course changed { ... }  // logged whenever the parent passes a new course</div>
     </div>
     <p class="srcnote">Reimplemented from branch <code>ng-17-1-signal-inputs-update</code> · rewritten for clarity.</p>
-    <div class="box pitfall"><span class="box-title">Common pitfall</span>Keeping <code>ngOnChanges</code> alongside a signal input "just in case." The hook won't observe signal-input reactivity the way you expect; commit to the signal approach and remove the redundant hook.</div>
+    <div class="box pitfall"><span class="box-title">Common pitfall</span>Assuming <code>ngOnChanges</code> stops working with a signal input. It doesn't — <code>ngOnChanges</code> still fires when a signal input receives a new value, and the change even appears in the <code>SimpleChanges</code> argument. The reason to drop it is that keeping it is <em>redundant</em>: reacting through the imperative lifecycle hook re-introduces exactly the style signals aim to remove. Prefer <code>effect()</code> for side effects and <code>computed()</code> for derived values, and delete the now-redundant hook.</div>
     <details class="advanced"><summary>Advanced</summary>Prefer <code>computed()</code> when you only need a derived value, and reserve <code>effect()</code> for genuine side effects triggered by input changes (logging, analytics, persistence). Overusing effects to compute state reintroduces the imperative style signals aim to eliminate.</details>
   </article>
 
@@ -8273,7 +8294,7 @@ ng update @angular/core @angular/cli</code></pre>
       <div class="out"><span class="out-title">Output</span>Lists available updates and any migration schematics that will run automatically.</div>
     </div>
     <div class="box pitfall"><span class="box-title">Common pitfall</span>Skipping intermediate major versions when upgrading. Angular's automated migrations assume a step-by-step path — jumping several versions at once often breaks the <code>ng update</code> schematics.</div>
-    <details class="advanced"><summary>Advanced</summary>Angular's update tooling ships schematics that rewrite your source automatically (for example migrating <code>*ngIf</code> to the <code>&#64;if</code> block, or standalone bootstrap). Running <code>ng update</code> per major version lets these codemods apply cleanly instead of leaving you to migrate by hand.</details>
+    <details class="advanced"><summary>Advanced</summary><code>ng update</code> runs Angular's <em>automatic</em> migrations — the schematics that rewrite your code for renamed or changed APIs as you step through each major version, which is why upgrading one major at a time lets them apply cleanly. The template and structural conversions, however, are <em>separate opt-in schematics you invoke yourself</em>: <code>ng generate &#64;angular/core:control-flow</code> converts <code>*ngIf</code>/<code>*ngFor</code> to the <code>&#64;if</code>/<code>&#64;for</code> blocks, and <code>ng generate &#64;angular/core:standalone</code> moves an app to standalone bootstrap. <code>ng update</code> does not perform those two for you.</details>
   </article>
 
   <article class="lecture" id="l-19-02">

@@ -579,7 +579,7 @@ code:not(pre code):not(.code-hl code){background:var(--code-bg);border:1px solid
     </div>
     <div class="box pitfall">
       <span class="box-title">Common pitfall</span>
-      An <code>id</code> must be <strong>unique</strong> on the page. If two elements share one id, <code>document.getElementById</code>, a <code>#id</code> anchor link, and a <code>#id</code> CSS selector all quietly use only the <em>first</em> match — a bug with no error message. When you need the same value on many elements, use <code>class</code> instead. Also always quote attribute values: an unquoted value that contains a space is truncated, so <code>title=Click me</code> keeps only <code>Click</code> and treats <code>me</code> as a stray attribute.
+      An <code>id</code> must be <strong>unique</strong> on the page. If two elements share one id, <code>document.getElementById</code> and a <code>#id</code> anchor link both quietly use only the <em>first</em> match — a bug with no error message. (A <code>#id</code> CSS rule behaves differently: it styles <em>every</em> element carrying that id.) When you need the same value on many elements, use <code>class</code> instead. Also always quote attribute values: an unquoted value that contains a space is truncated, so <code>title=Click me</code> keeps only <code>Click</code> and treats <code>me</code> as a stray attribute.
     </div>
     <p class="srcnote">Example reimplemented for clarity.</p>
   </article>
@@ -670,7 +670,7 @@ code:not(pre code):not(.code-hl code){background:var(--code-bg);border:1px solid
     </ul>
     <div class="example">
       <div class="example-editor">
-        <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML">&lt;img width="140"
+        <textarea class="code" data-lang="html" spellcheck="false" aria-label="HTML">&lt;img width="140" height="90"
      alt="Blue placeholder box labeled Img"
      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='90'%3E%3Crect width='140' height='90' fill='%230b63ce'/%3E%3Ctext x='70' y='52' fill='white' text-anchor='middle' font-family='sans-serif'%3EImg%3C/text%3E%3C/svg%3E"&gt;
 
@@ -1202,6 +1202,7 @@ p {
       <li>Padding takes the background colour; margin never does.</li>
       <li><code>content-box</code> (default) adds padding/border to width; <code>border-box</code> includes them.</li>
       <li>Start every project with <code>* { box-sizing: border-box; }</code>.</li>
+      <li><code>margin</code>/<code>padding</code> take 1–4 values: <code>10px</code> (all sides) · <code>10px 20px</code> (top/bottom, then left/right) · <code>10px 20px 30px</code> (top, left/right, bottom) · <code>10px 20px 30px 40px</code> (clockwise: top, right, bottom, left).</li>
     </ul>
     <figure>
       <svg viewBox="0 0 520 300" role="img" aria-label="Box model diagram: margin surrounds border, border surrounds padding, padding surrounds content" xmlns="http://www.w3.org/2000/svg">
@@ -1293,10 +1294,11 @@ long passages of text far easier to scan and read.&lt;/p&gt;</textarea>
   <article class="lecture" id="l-02-07">
     <h3>Fonts and Font Styles</h3>
     <p class="objective"><strong>Objective:</strong> Choose typefaces with <code>font-family</code> stacks and control size, weight, and style — plus how web fonts are loaded.</p>
-    <p><code>font-family</code> takes a comma-separated <strong>stack</strong>: the browser uses the first font it has and falls back down the list, so always end with a generic family (<code>serif</code>, <code>sans-serif</code>, <code>monospace</code>). <code>font-size</code> sets the size, <code>font-weight</code> the thickness (400 normal, 700 bold), and <code>font-style</code> handles italics.</p>
+    <p><code>font-family</code> takes a comma-separated <strong>stack</strong>: the browser uses the first font it has and falls back down the list, so always end with a generic family (<code>serif</code>, <code>sans-serif</code>, <code>monospace</code>). <code>font-size</code> sets the size, <code>font-weight</code> the thickness (400 normal, 700 bold), and <code>font-style</code> handles italics. Sizes take units: <code>px</code> is absolute (default body text &asymp; 16px); <code>em</code> is relative to the inherited (parent) font-size, so nested values compound; <code>rem</code> is relative to the root <code>&lt;html&gt;</code> size, which avoids that compounding and makes it the predictable choice for typography. <code>%</code> (100% = the inherited size) and <code>vw</code> (1vw = 1% of the viewport width) scale too &mdash; e.g. <code>font-size: 1.5rem;</code>.</p>
     <p>To use a font the visitor may not own — a <strong>web font</strong> — you link it from a provider such as Google Fonts or self-host it with <code>@font-face</code>. Because those files load over the network, the syntax below is shown statically; the live demos on this page use a system-font stack so they work fully offline.</p>
     <ul class="keypoints">
       <li>Always provide a fallback stack ending in a generic family.</li>
+      <li>Size units: <code>px</code> absolute; <code>em</code> relative to the parent font-size (compounds when nested); <code>rem</code> relative to the root <code>&lt;html&gt;</code> (no compounding); <code>%</code> and <code>vw</code> scale too.</li>
       <li><code>font-weight</code>: 100–900 (or <code>normal</code>/<code>bold</code>); <code>font-style: italic</code> for slanted text.</li>
       <li>The <code>font</code> shorthand sets several properties at once.</li>
       <li>Web fonts add network weight — subset and limit the styles you load.</li>
@@ -2939,11 +2941,17 @@ document.getElementById('form').addEventListener('submit', (e) =&gt; {
     <p class="objective"><strong>Objective:</strong> Respond to page-level events: knowing when the DOM is ready, and listening for keyboard input with <code>keydown</code> and <code>keyup</code>.</p>
     <p>Some events belong to the page as a whole rather than one element, so you attach them to <code>document</code> or <code>window</code>. The most important is <code>DOMContentLoaded</code> on <code>document</code>: it fires once the HTML has been fully parsed and the DOM tree exists. Running your setup code inside it guarantees your <code>querySelector</code> calls find their targets, even if the script loads in the <code>&lt;head&gt;</code>.</p>
     <p>Keyboard events also live at the document level. <code>keydown</code> fires as a key goes down (and repeats if held); <code>keyup</code> fires when it is released. The event's <code>key</code> property is the character or name (<code>'a'</code>, <code>'Enter'</code>, <code>'ArrowLeft'</code>).</p>
+    <p>Beyond the document, <code>window</code> is the top-level object that contains <code>document</code> (and <code>window.alert</code>). A few important events fire on <code>window</code> rather than a single element &mdash; most notably <code>resize</code>, which fires whenever the viewport changes size and lets you read <code>window.innerWidth</code> / <code>window.innerHeight</code>:</p>
+    <pre class="code-block" data-lang="js"><code>window.addEventListener('resize', () =&gt; {
+  out.textContent = window.innerWidth + ' x ' + window.innerHeight;
+});</code></pre>
     <ul class="keypoints">
       <li><code>DOMContentLoaded</code> fires when the DOM is parsed and safe to touch.</li>
       <li><code>keydown</code> / <code>keyup</code> report keyboard activity on the whole page.</li>
       <li><code>event.key</code> gives the pressed key's value or name.</li>
       <li>Page-level events attach to <code>document</code> or <code>window</code>.</li>
+      <li><code>resize</code> fires on <code>window</code> when the viewport changes size; read <code>window.innerWidth</code> / <code>window.innerHeight</code>.</li>
+      <li><code>window</code> is the top-level object that contains <code>document</code> (and <code>window.alert</code>).</li>
     </ul>
     <div class="example">
       <div class="example-editor">
@@ -3470,6 +3478,7 @@ cancelAnimationFrame(id);               // stop the loop</code></pre>
     <div class="box context"><span class="box-title">Background</span> The two ways to load a Google font. The <code>&lt;link&gt;</code> tag is generally preferred because the browser can start fetching it in parallel with the CSS, whereas <code>@import</code> blocks until the stylesheet is parsed.
       <pre class="code-block" data-lang="html"><code>&lt;!-- Option A: in the &lt;head&gt; of your HTML --&gt;
 &lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;
 &lt;link href="https://fonts.googleapis.com/css2?family=PT+Sans&amp;display=swap" rel="stylesheet"&gt;</code></pre>
       <pre class="code-block" data-lang="css"><code>/* Option B: the first line of your stylesheet */
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans&amp;display=swap');

@@ -244,6 +244,7 @@ code:not(pre code){background:var(--code-bg);border:1px solid var(--border);bord
       <li><a href="#l-12-04" data-lect>Period &amp; Duration</a></li>
       <li><a href="#l-12-05" data-lect>Instant &amp; time zones</a></li>
       <li><a href="#l-12-06" data-lect>Formatting &amp; parsing with DateTimeFormatter</a></li>
+      <li><a href="#l-12-07" data-lect>Converting legacy Date to java.time</a></li>
     </ul></li>
   <li class="toc-sec"><a href="#sec-13">13. Modern Language Features (Java 9 → 25)</a>
     <ul>
@@ -325,14 +326,14 @@ code:not(pre code){background:var(--code-bg);border:1px solid var(--border);bord
 
         <!-- node 3: Java 11 (LTS, above) -->
         <line x1="260" y1="131" x2="260" y2="98" stroke="var(--border)" stroke-width="1.5"/>
-        <text x="260" y="72" font-size="11" fill="var(--muted)" text-anchor="middle">HttpClient &middot; var</text>
+        <text x="260" y="72" font-size="11" fill="var(--muted)" text-anchor="middle">HttpClient &middot; var (Java 10)</text>
         <text x="260" y="90" font-size="12.5" fill="var(--text)" text-anchor="middle" font-weight="bold">Java 11 &middot; 2018</text>
         <circle cx="260" cy="140" r="9" fill="var(--accent)"/>
 
         <!-- node 4: Java 17 (LTS, below) -->
         <line x1="360" y1="149" x2="360" y2="182" stroke="var(--border)" stroke-width="1.5"/>
         <text x="360" y="200" font-size="12.5" fill="var(--text)" text-anchor="middle" font-weight="bold">Java 17 &middot; 2021</text>
-        <text x="360" y="216" font-size="11" fill="var(--muted)" text-anchor="middle">Records &middot; Sealed &middot; switch</text>
+        <text x="360" y="216" font-size="11" fill="var(--muted)" text-anchor="middle">Sealed types &middot; records (Java 16)</text>
         <circle cx="360" cy="140" r="9" fill="var(--accent)"/>
 
         <!-- node 5: Java 21 (LTS, above) -->
@@ -376,11 +377,14 @@ System.out.println(shortNames);   // ANN, BOB</code></pre>
 
     <p>Before Java 8, "passing behaviour" meant writing an <strong>anonymous inner class</strong> &mdash; several lines of boilerplate to wrap a single expression. Java 8 introduced <strong>lambda expressions</strong>, a compact literal for an instance of a <em>functional interface</em> (an interface with exactly one abstract method, such as <code>Comparator</code>, <code>Runnable</code>, or <code>Function</code>).</p>
 
+    <p>But conciseness is only the surface reason Java 8 mattered. The deeper driver was <strong>hardware</strong>: modern machines &mdash; even the phone in your pocket &mdash; have many cores, and before Java 8 the only way to use them was to write and coordinate <strong>threads by hand</strong>, which is verbose and error-prone. Expressing logic as behaviour you can pass lets a library run a pipeline across cores for you (e.g. <code>parallelStream()</code>) without you managing threads. The functional style also favours <strong>immutable data</strong>, and since shared <em>mutable</em> state is the root of a whole class of concurrency bugs, leaning on immutability removes many of them by construction.</p>
+
     <p>The three sorts below are behaviourally identical, but the code shrinks from an eight-line anonymous class to a single lambda &mdash; and then to a ready-made comparator via a <strong>method reference</strong>. Less boilerplate, and the intent (sort in natural order) is now front and centre.</p>
 
     <ul class="keypoints">
       <li>A lambda is a concise instance of a <em>functional interface</em> &mdash; one abstract method.</li>
       <li>Behaviour becomes a value you can store, pass, and return (Java 8+).</li>
+      <li>The deeper driver was <strong>multi-core hardware</strong>: passing behaviour as data lets libraries parallelise the work for you, and the functional preference for immutable data avoids a major class of concurrency bugs.</li>
       <li>Method references (<code>Comparator.naturalOrder()</code>, <code>String::toUpperCase</code>) are the shortest form when a method already does the work.</li>
       <li>The compiler infers parameter types, so <code>(a, b) -&gt; a.compareTo(b)</code> needs no type annotations.</li>
     </ul>
@@ -655,13 +659,13 @@ Running (lambda)</div>
 
     <p><code>Comparator&lt;T&gt;</code> is a functional interface whose single abstract method is <code>int compare(T a, T b)</code>. It must return a negative number when <code>a</code> should sort before <code>b</code>, zero when they are equal, and a positive number when <code>a</code> should sort after <code>b</code>. A lambda expresses this rule in one line — for example, comparing strings by length.</p>
 
-    <p>Write the body as <code>Integer.compare(a.length(), b.length())</code>, <strong>not</strong> <code>a.length() - b.length()</code>. The subtraction shortcut looks tidy but can <em>overflow</em> the <code>int</code> range for extreme values and return the wrong sign; <code>Integer.compare</code> computes the ordering without ever subtracting, so it is always correct.</p>
+    <p>Write the body as <code>Integer.compare(a.length(), b.length())</code> rather than the <code>a.length() - b.length()</code> shortcut. As a habit, prefer <code>Integer.compare(x, y)</code> over <code>x - y</code>: the subtraction trick can <em>overflow</em> the <code>int</code> range and flip the sign when the operands may be large and of <em>opposite sign</em> — for example arbitrary or negative <code>int</code> fields like <code>a.getBalance() - b.getBalance()</code>. For string <em>lengths</em> specifically the subtraction is actually safe (a length is non-negative and at most <code>Integer.MAX_VALUE</code>, so the difference always fits in an <code>int</code>), but using <code>Integer.compare</code> everywhere means you never have to stop and reason about the bounds.</p>
 
     <p>Passing the comparator to <code>List.sort</code> reorders the list in place. And because sorting by a key is so common, Java 8 also offers <code>Comparator.comparing(String::length)</code> — a key-extractor form that reads even more cleanly (its default methods, such as <code>thenComparing</code> and <code>reversed</code>, are covered in Section 11).</p>
 
     <ul class="keypoints">
       <li><code>Comparator&lt;T&gt;</code>'s single method is <code>int compare(T a, T b)</code> — negative / zero / positive.</li>
-      <li>Prefer <code>Integer.compare(x, y)</code> over <code>x - y</code>: subtraction can overflow and flip the sign.</li>
+      <li>Prefer <code>Integer.compare(x, y)</code> over <code>x - y</code> as a habit: subtraction can overflow and flip the sign for large, opposite-sign operands (string <em>lengths</em> happen to be safe, but the habit spares you from checking).</li>
       <li><code>names.sort(byLength)</code> sorts the list <em>in place</em> (needs a mutable list).</li>
       <li><code>Comparator.comparing(String::length)</code> is the cleaner key-extractor form (foreshadows Section 11).</li>
     </ul>
@@ -717,7 +721,7 @@ Comparator&lt;String&gt;   c  = (a, b) -&gt; Integer.compare(a.length(), b.lengt
 r.run();                                   // -&gt; Running
 System.out.println(f.apply(5));            // -&gt; 10
 
-// --- Comparator: sort by length; prefer Integer.compare (no overflow) ---
+// --- Comparator: sort by length; use Integer.compare as a habit (never overflows) ---
 List&lt;String&gt; names = new ArrayList&lt;&gt;(List.of("Charlie", "Al", "Bob"));
 names.sort(c);                             // [Al, Bob, Charlie]
 names.sort(Comparator.comparing(String::length));   // cleaner key extractor
@@ -733,9 +737,9 @@ names.sort(Comparator.comparing(String::length));   // cleaner key extractor
       <ol type="a"><li>Every method declared in the interface</li><li>The single abstract method of a functional interface</li><li>A new anonymous subclass with extra fields</li><li>A static method on the target type</li></ol>
       <details><summary>Answer</summary>b — A lambda supplies the body of the one abstract method of a functional interface; the compiler infers the parameter types from that method's signature.</details>
     </div>
-    <div class="q"><p>In a <code>Comparator&lt;String&gt;</code> that orders by length, why prefer <code>Integer.compare(a.length(), b.length())</code> over <code>a.length() - b.length()</code>?</p>
-      <ol type="a"><li>Subtraction is slower at runtime</li><li>Subtraction can overflow the <code>int</code> range and return the wrong sign</li><li><code>a.length()</code> returns a <code>long</code>, so subtraction won't compile</li><li>It changes the sort from ascending to descending</li></ol>
-      <details><summary>Answer</summary>b — For large magnitudes the subtraction can overflow <code>int</code> and flip the sign, corrupting the ordering. <code>Integer.compare</code> never subtracts, so it is always correct.</details>
+    <div class="q"><p>When a <code>Comparator</code> orders by an arbitrary <code>int</code> field, why prefer <code>Integer.compare(a.getX(), b.getX())</code> over <code>a.getX() - b.getX()</code>?</p>
+      <ol type="a"><li>Subtraction is slower at runtime</li><li>Subtraction can overflow the <code>int</code> range and return the wrong sign when the values are large and of opposite sign</li><li><code>getX()</code> returns a <code>long</code>, so subtraction won't compile</li><li>It changes the sort from ascending to descending</li></ol>
+      <details><summary>Answer</summary>b — If the two values are large and of opposite sign, <code>a.getX() - b.getX()</code> can overflow <code>int</code> and flip the sign, corrupting the ordering. <code>Integer.compare</code> never subtracts, so it is always correct. (For <code>String.length()</code>, which is non-negative and at most <code>Integer.MAX_VALUE</code>, the subtraction actually can't overflow — but making <code>Integer.compare</code> a habit means you never have to check.)</details>
     </div>
   </div>
 </section>
@@ -743,7 +747,7 @@ names.sort(Comparator.comparing(String::length));   // cleaner key extractor
   <h2>3. Functional Interfaces</h2>
   <p class="intro">Lambdas need a target type, and that type is always a <em>functional interface</em>: an interface with exactly one abstract method. Java 8 shipped a ready-made toolkit of them in <code>java.util.function</code> — <code>Consumer</code>, <code>Predicate</code>, <code>Function</code>, <code>Supplier</code> and their two-argument and operator variants — so you rarely have to declare your own.</p>
 
-  <div class="box context"><span class="box-title">Version note</span> Every interface in this section — the whole <code>java.util.function</code> package plus the default combinator methods (<code>andThen</code>, <code>compose</code>, <code>and</code>, <code>or</code>, <code>negate</code>) — is <strong>Java 8</strong> (2014). They have not changed since.</div>
+  <div class="box context"><span class="box-title">Version note</span> Every interface in this section — the whole <code>java.util.function</code> package plus the default combinator methods (<code>andThen</code>, <code>compose</code>, <code>and</code>, <code>or</code>, <code>negate</code>) — is <strong>Java 8</strong> (2014). The one later addition to the package is the static <code>Predicate.not(...)</code> factory in <strong>Java 11</strong>.</div>
 
   <article class="lecture" id="l-3-01">
     <h3>01. Functional interfaces &amp; @FunctionalInterface</h3>
@@ -751,7 +755,7 @@ names.sort(Comparator.comparing(String::length));   // cleaner key extractor
 
     <p>A <strong>functional interface</strong> has exactly one abstract method — the <em>SAM</em> (Single Abstract Method). Because there is only one method to implement, the compiler can treat a lambda or method reference as an instance of that interface: the lambda body <em>is</em> the implementation of that one method.</p>
     <p>Default methods, static methods, and re-declared <code>Object</code> methods (like <code>equals</code>) don't count toward the "one abstract method" rule, so an interface can have many of those and still be functional. The optional <code>@FunctionalInterface</code> annotation asks the compiler to <em>enforce</em> the SAM rule: add a second abstract method and the code won't compile.</p>
-    <p>The <code>java.util.function</code> package groups its interfaces into four families by shape: <code>Consumer&lt;T&gt;</code> takes a value and returns nothing, <code>Supplier&lt;T&gt;</code> takes nothing and returns a value, <code>Predicate&lt;T&gt;</code> takes a value and returns a <code>boolean</code>, and <code>Function&lt;T, R&gt;</code> takes a value and returns another. Each has <code>Bi</code>- and primitive-specialized cousins.</p>
+    <p>The <code>java.util.function</code> package groups its interfaces into four families by shape: <code>Consumer&lt;T&gt;</code> takes a value and returns nothing, <code>Supplier&lt;T&gt;</code> takes nothing and returns a value, <code>Predicate&lt;T&gt;</code> takes a value and returns a <code>boolean</code>, and <code>Function&lt;T, R&gt;</code> takes a value and returns another. <code>Consumer</code>, <code>Predicate</code> and <code>Function</code> each also have a two-argument <code>Bi</code>- cousin (<code>BiConsumer</code>, <code>BiPredicate</code>, <code>BiFunction</code>), and all four families have primitive-specialized cousins (<code>IntConsumer</code>, <code>IntSupplier</code>, <code>IntPredicate</code>, …) — but there is no <code>BiSupplier</code>.</p>
 
     <ul class="keypoints">
       <li>Functional interface = exactly <strong>one abstract method</strong> (SAM).</li>
@@ -1268,10 +1272,13 @@ HELLO
 
     <p>The moment the lambda does <em>anything extra</em> — a second call, an operator, a reordered or literal argument — a method reference can no longer express it. <code>s -> s.trim().toUpperCase()</code> is two calls, so it stays a lambda.</p>
 
+    <p>But "stays a lambda" only means you cannot reference a <em>pre-existing</em> method that already bundles those calls. If the logic is your own, pull it into a named method and reference <em>that</em>: <code>s -&gt; s.getRankLevel() &gt;= 3</code> has no built-in method to point at, yet becomes <code>MyClass::seniorEnough</code> once you add <code>static boolean seniorEnough(Student s){ return s.getRankLevel() &gt;= 3; }</code>.</p>
+
     <ul class="keypoints">
       <li>Refactor only when the lambda is a single call whose arguments are passed through unchanged.</li>
       <li>Chained calls (<code>s.trim().toUpperCase()</code>), arithmetic, or fixed literals block the conversion.</li>
       <li>Method references read best in pipeline stages: <code>.map(String::toUpperCase)</code>, <code>.forEach(System.out::println)</code>.</li>
+      <li><strong>Custom logic isn't a dead end:</strong> extract the body into a named method, then reference it — a lambda that can't map to an existing method often can map to one you write.</li>
     </ul>
 
     <div class="io">
@@ -1312,11 +1319,38 @@ ADA
 GRACE
 LINUS</div>
     </div>
+
+    <div class="io">
+      <pre class="code" data-lang="java"><code>import java.util.*;
+import java.util.stream.*;
+
+public class ExtractThenReference {
+    record Student(String name, int rankLevel) {}
+
+    // custom predicate logic pulled OUT of the lambda into a named method...
+    static boolean seniorEnough(Student s) {
+        return s.rankLevel() &gt;= 3;
+    }
+
+    public static void main(String[] args) {
+        List&lt;Student&gt; people = List.of(
+                new Student("Ada", 4),
+                new Student("Linus", 2));
+
+        // ...so it can be referenced instead of written inline as a lambda
+        List&lt;Student&gt; seniors = people.stream()
+                .filter(ExtractThenReference::seniorEnough)   // was: s -&gt; s.rankLevel() &gt;= 3
+                .collect(Collectors.toList());
+        System.out.println(seniors);
+    }
+}</code></pre>
+      <div class="out"><span class="out-title">Console output</span>[Student[name=Ada, rankLevel=4]]</div>
+    </div>
     <p class="srcnote">Source: reimplemented as an original illustration.</p>
 
     <details class="advanced"><summary>Advanced</summary>An IDE will offer to fold single-call lambdas into references automatically, but the two forms are not always interchangeable for the reader: a method reference hides the parameter names, which can hurt readability when the method name alone does not make the data flow obvious. Prefer the reference when it <em>clarifies</em> intent, not merely to save characters.</details>
 
-    <div class="box pitfall"><span class="box-title">Pitfall</span> Over-eager refactoring. You cannot turn <code>x -> foo(x, 2)</code> into a method reference — the fixed second argument <code>2</code> has nowhere to go. Likewise <code>s -> s.trim().toUpperCase()</code> must stay a lambda. Convert only when the body is one call with pass-through arguments.</div>
+    <div class="box pitfall"><span class="box-title">Pitfall</span> Over-eager refactoring. You cannot turn <code>x -> foo(x, 2)</code> into a method reference — the fixed second argument <code>2</code> has nowhere to go. Likewise <code>s -> s.trim().toUpperCase()</code> stays a lambda <em>unless</em> you extract the two calls into a helper method you can reference. Convert only when the body is one call with pass-through arguments — or refactor the body into a named method first.</div>
   </article>
 
   <article class="lecture" id="l-4-03">
@@ -1391,6 +1425,7 @@ ih
       <li>Reassigning a captured local &rArr; compile error: <em>local variables referenced from a lambda expression must be final or effectively final</em>.</li>
       <li>Fields escape the rule: they are read live through <code>this</code>/the class and may change.</li>
       <li>The identical rule applies to anonymous inner classes.</li>
+      <li>Distinct rule: a lambda parameter — or a local declared inside the lambda body — may not <em>reuse the name</em> of a local variable of the enclosing method. <code>int i = 0; Consumer&lt;Integer&gt; c = i -&gt; System.out.println(i);</code> fails to compile with <em>variable i is already defined in method main</em>. (A lambda adds no new naming scope; an anonymous class does, so it could shadow.)</li>
     </ul>
 
     <div class="io">
@@ -1558,7 +1593,7 @@ public class StreamIntro {
     <h3>02. How a stream pipeline works</h3>
     <p class="objective"><strong>Objective:</strong> Learn why intermediate operations are lazy, why the terminal operation is what actually runs the pipeline, and what "internal iteration" means.</p>
 
-    <p>Intermediate operations (<code>map</code>, <code>filter</code>, <code>sorted</code>, <code>distinct</code>, <code>peek</code>, …) are <strong>lazy</strong>: each returns a <em>new</em> <code>Stream</code> and does no work — it merely records the step to perform later. The <strong>terminal operation</strong> (<code>forEach</code>, <code>collect</code>, <code>reduce</code>, <code>count</code>, <code>toList</code>, …) is what triggers execution and yields a result or a side effect. With no terminal operation, nothing is processed at all.</p>
+    <p>Intermediate operations (<code>map</code>, <code>filter</code>, <code>sorted</code>, <code>distinct</code>, <code>peek</code>, …) are <strong>lazy</strong>: each returns a <em>new</em> <code>Stream</code> and does no work — it merely records the step to perform later. The <strong>terminal operation</strong> (<code>forEach</code>, <code>collect</code>, <code>reduce</code>, <code>count</code>, <code>toList</code> [Java 16+], …) is what triggers execution and yields a result or a side effect. With no terminal operation, nothing is processed at all.</p>
 
     <p>Execution uses <strong>internal iteration</strong>: you describe <em>what</em> should happen and the library controls <em>how</em> it loops. The steps are fused into a single pass, so each element is typically pulled through the entire chain before the next element starts — not stage-by-stage across the whole collection.</p>
 
@@ -1634,7 +1669,7 @@ forEach got c</div>
 
     <details class="advanced"><summary>Advanced</summary>Because the steps fuse into one pass, <em>short-circuiting</em> terminal ops such as <code>findFirst</code>, <code>anyMatch</code> and the intermediate <code>limit</code> can stop early without touching every element. That is exactly why laziness matters: it lets an <em>infinite</em> source such as <code>Stream.iterate(1, n -&gt; n + 1).limit(5)</code> terminate.</details>
 
-    <div class="box pitfall"><span class="box-title">Pitfall</span> Forgetting the terminal operation. <code>list.stream().map(String::toUpperCase);</code> compiles and runs but does <em>nothing</em> — the mapping never happens. Add a terminal op (<code>.toList()</code>, <code>.forEach(...)</code>, <code>.collect(...)</code>) to actually consume the pipeline.</div>
+    <div class="box pitfall"><span class="box-title">Pitfall</span> Forgetting the terminal operation. <code>list.stream().map(String::toUpperCase);</code> compiles and runs but does <em>nothing</em> — the mapping never happens. Add a terminal op (<code>.forEach(...)</code>, <code>.collect(...)</code>, or <code>.toList()</code> [Java 16+]) to actually consume the pipeline.</div>
   </article>
 
   <article class="lecture" id="l-5-03">
@@ -1656,6 +1691,11 @@ forEach got c</div>
           <td style="border:1px solid var(--border);padding:6px 10px">Role</td>
           <td style="border:1px solid var(--border);padding:6px 10px">Stores &amp; owns its elements</td>
           <td style="border:1px solid var(--border);padding:6px 10px">Computes over elements — stores nothing</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid var(--border);padding:6px 10px">Mutability</td>
+          <td style="border:1px solid var(--border);padding:6px 10px">Mutable — <code>add</code> / <code>remove</code> / <code>set</code> elements</td>
+          <td style="border:1px solid var(--border);padding:6px 10px">No <code>add</code> / <code>remove</code> / <code>set</code> — elements cannot be changed once the stream is created</td>
         </tr>
         <tr>
           <td style="border:1px solid var(--border);padding:6px 10px">Evaluation</td>
@@ -1769,7 +1809,7 @@ result: CCC</div>
   <div class="box cheat"><span class="box-title">Cheat-sheet</span><pre class="code" data-lang="java"><code>// Stream&lt;T&gt; (Java 8): a lazy pipeline over a source. It stores nothing.
 //   SOURCE                  INTERMEDIATE (lazy)          TERMINAL (eager)
 list.stream()            .filter(x -&gt; x &gt; 0)          .count()
-Stream.of(1, 2, 3)       .map(x -&gt; x * 2)             .collect(...) / .toList()
+Stream.of(1, 2, 3)       .map(x -&gt; x * 2)             .collect(...) / .toList() (16+)
 Arrays.stream(arr)       .sorted() / .distinct()      .reduce(...) / .forEach(...)
 
 // No terminal op            -&gt; nothing runs        (laziness)
@@ -2293,7 +2333,7 @@ x</div>
       <li><code>IntStream.range(1, 5)</code> &rarr; <code>1 2 3 4</code> (upper bound excluded).</li>
       <li><code>IntStream.rangeClosed(1, 5)</code> &rarr; <code>1 2 3 4 5</code> (upper bound included).</li>
       <li>Primitive streams avoid autoboxing — cheaper for large numeric ranges.</li>
-      <li><code>LongStream</code>/<code>DoubleStream</code> have the same shape; <code>DoubleStream</code> has no <code>range</code> factories.</li>
+      <li><code>LongStream</code>/<code>DoubleStream</code> have the same shape; <code>DoubleStream</code> has no <code>range</code> factories &mdash; build one with <code>IntStream.rangeClosed(1, 5).asDoubleStream()</code> (or <code>.asLongStream()</code> for a <code>LongStream</code>; both are Java&nbsp;8 primitive-stream conversions).</li>
     </ul>
 
     <div class="io">
@@ -2469,7 +2509,7 @@ Stream.generate(Math::random)               // INFINITE  -> .limit(n)!
 // ── Numeric (primitive) streams — no boxing ───────────────
 IntStream.range(1, 5)          // 1 2 3 4     (end-EXCLUSIVE)
 IntStream.rangeClosed(1, 5)    // 1 2 3 4 5   (end-INCLUSIVE)
-// also LongStream / DoubleStream (DoubleStream has no range)
+// also LongStream / DoubleStream (no range -> IntStream.rangeClosed(1,5).asDoubleStream())
 
 // ── Aggregates (primitive streams only) ───────────────────
 .sum()          // int / long / double  (empty -> 0)
@@ -2513,7 +2553,7 @@ intStream.mapToObj(i -&gt; "#" + i)  // IntStream -> Stream&lt;String&gt;
 
     <ul class="keypoints">
       <li><code>collect</code> is the most general terminal op — most other terminals are special cases of it.</li>
-      <li><code>Collectors.toList()</code> returns a mutable <code>ArrayList</code>; <code>toSet()</code> a <code>HashSet</code> (no defined order).</li>
+      <li><code>Collectors.toList()</code> currently returns a mutable <code>ArrayList</code> in practice, but its type/mutability are <strong>not guaranteed</strong> — treat it as read-mostly (see Pitfall below); <code>toSet()</code> a <code>HashSet</code> (no defined order).</li>
       <li><code>joining</code> has three forms: no-arg, delimiter only, and delimiter + prefix + suffix.</li>
       <li><code>counting()</code> is handy as a <em>downstream</em> collector (see <code>groupingBy</code>).</li>
     </ul>
@@ -2932,7 +2972,7 @@ Equal?         : true</div>
     <h3>02. How parallel streams work — fork/join</h3>
     <p class="objective"><strong>Objective:</strong> Understand the fork/join mechanics — a <code>Spliterator</code> recursively splits the source, worker threads process the chunks, and partial results are combined — and know the common pool's default size.</p>
 
-    <p>A parallel stream is built on the <strong>fork/join framework</strong>. The stream's <code>Spliterator</code> (&ldquo;splittable iterator&rdquo;) repeatedly divides the source in two via <code>trySplit()</code>, forking the halves until each chunk is small enough to process on its own. Each leaf chunk runs the pipeline on a <strong>worker thread</strong>, and the results are <em>joined</em> back up the tree by the combiner (for a sum, the partial sums are added).</p>
+    <p>A parallel stream is built on the <strong>fork/join framework</strong>. The stream's <code>Spliterator</code> (&ldquo;splittable iterator&rdquo;) repeatedly divides the source in two via <code>trySplit()</code>, forking the halves until each chunk is small enough to process on its own. Each leaf chunk runs the pipeline on a <strong>worker thread</strong>, and the results are <em>joined</em> back up the tree by the combiner (for a sum, the partial sums are added). The fork/join framework itself predates streams &mdash; <code>ForkJoinPool</code>, <code>RecursiveTask</code>/<code>RecursiveAction</code> shipped in <strong>Java 7</strong> (2011), and Java 8's parallel streams simply drive it for you; the <em>common</em> pool they submit to (<code>ForkJoinPool.commonPool()</code>) was the Java 8 addition layered on top.</p>
 
     <p>These worker threads live in the shared <strong>common <code>ForkJoinPool</code></strong> (<code>ForkJoinPool.commonPool()</code>). Its default parallelism is <strong>one fewer than the number of available processors</strong> (<code>availableProcessors() - 1</code>, minimum 1); the thread that submitted the pipeline also pitches in, so the effective concurrency is roughly the core count. Because the pool is <em>shared process-wide</em>, one long blocking task can starve every other parallel stream in the JVM.</p>
 
@@ -2942,6 +2982,7 @@ Equal?         : true</div>
       <li>A <code>Spliterator</code> recursively splits the source via <code>trySplit()</code> (fork); chunks run on worker threads.</li>
       <li>Partial results are merged by the combiner (join) — e.g. partial sums are added together.</li>
       <li>Threads come from the shared common <code>ForkJoinPool</code>; default parallelism is <code>availableProcessors() - 1</code> (min 1).</li>
+      <li>The fork/join framework (<code>ForkJoinPool</code>, <code>RecursiveTask</code>) is itself a <strong>Java 7</strong> feature; Java 8 streams reuse it via the Java 8 common pool.</li>
       <li>The submitting thread also does work, so effective concurrency &asymp; core count.</li>
       <li>The pool is process-wide — a blocking task inside it can stall every other parallel stream.</li>
     </ul>
@@ -3069,6 +3110,7 @@ main handled 7</div>
 
     <ul class="keypoints">
       <li>Small N, I/O-bound/blocking work, order-sensitive pipelines, and non-associative reductions all favor <em>sequential</em>.</li>
+      <li><strong>Boxed sources cost extra:</strong> a <code>Stream&lt;Integer&gt;</code> / <code>List&lt;Integer&gt;</code> numeric reduction unboxes <em>and re-boxes</em> every element on the hot path &mdash; prefer a primitive stream (<code>IntStream</code>/<code>LongStream</code>/<code>DoubleStream</code>) for parallel numeric work.</li>
       <li><code>forEach</code> is unordered across threads; use <code>forEachOrdered</code> when encounter order matters.</li>
       <li><strong>Shared mutable state is a bug:</strong> <code>parallelStream().forEach(list::add)</code> races and loses/corrupts elements.</li>
       <li>Fix by collecting: <code>collect(Collectors.toList())</code> combines per-thread partials safely.</li>
@@ -3103,6 +3145,8 @@ safe size   : 1000000</div>
     <p class="srcnote">Source: reimplemented as an original illustration.</p>
 
     <div class="box context"><span class="box-title">Use parallel only when ALL hold</span> <strong>Large N</strong> (enough work to amortize split/merge) &bull; <strong>CPU-bound</strong> (no I/O, no blocking, no locks) &bull; <strong>stateless / side-effect-free</strong> (no shared mutable state) &bull; <strong>associative</strong> reduction (order of combining does not change the result) &bull; <strong>cheaply splittable</strong> source (arrays, <code>ArrayList</code>, <code>IntStream.range</code> split well; <code>LinkedList</code>, <code>Iterator</code>-based, and I/O sources split poorly). If any one fails, stay sequential.</div>
+
+    <div class="box context"><span class="box-title">Prefer primitive streams for numeric work</span> A boxed source can make a parallel numeric reduction <em>slower</em>: <code>list.parallelStream().reduce(0, Integer::sum)</code> over a <code>List&lt;Integer&gt;</code> unboxes each element to <code>int</code> and re-boxes the running result on every add, and that per-element churn can outweigh the gain from splitting across cores. Reach for a primitive stream instead &mdash; <code>IntStream.rangeClosed(1, n).parallel().sum()</code> adds <code>int</code>s with no boxing at all. On a 10,000-element <code>List&lt;Integer&gt;</code> the boxed parallel version can even lose to sequential (illustratively ~8 ms vs ~4 ms), purely from the boxing overhead.</div>
 
     <details class="advanced"><summary>Advanced</summary>Even the &ldquo;quick fix&rdquo; of a synchronized wrapper &mdash; <code>Collections.synchronizedList(new ArrayList&lt;&gt;())</code> &mdash; is the wrong tool here: it makes <code>add</code> thread-safe (so no corruption) but every thread contends on one lock, so the parallel version ends up <em>slower</em> than sequential while gaining nothing. The stream <code>collect</code>/reduce model exists precisely so each thread works on its own container and merges once at the end &mdash; no shared lock on the hot path.</details>
 
@@ -3139,6 +3183,7 @@ Map&lt;K, List&lt;V&gt;&gt; m = src.parallelStream()
 // --- Go parallel ONLY when ALL of: ---
 //   large N | CPU-bound (no I/O/blocking) | stateless
 //   | associative reduction | cheaply splittable source
+//   | primitive element type (no boxing)
 //   ...otherwise sequential is faster and safer. Measure, don't guess.</code></pre></div>
 
   <div class="quiz"><h4>Section quiz</h4>
@@ -3386,7 +3431,13 @@ threw: no value</div>
       <pre class="code" data-lang="java"><code>import java.util.*;
 
 public class TransformingOptionals {
-    record User(String name, Optional&lt;String&gt; email) {}
+    static final class User {
+        private final String name;
+        private final String email;                 // may be null
+        User(String name, String email) { this.name = name; this.email = email; }
+        String name() { return name; }
+        Optional&lt;String&gt; email() { return Optional.ofNullable(email); }
+    }
 
     public static void main(String[] args) {
         // Chain: trim -&gt; keep non-empty -&gt; upper-case
@@ -3405,7 +3456,7 @@ public class TransformingOptionals {
         System.out.println(Optional.of(3).filter(n -&gt; n &gt; 10));
 
         // flatMap: User::email already returns Optional&lt;String&gt;
-        User u = new User("Ada", Optional.of("ada@x.io"));
+        User u = new User("Ada", "ada@x.io");
         System.out.println(Optional.of(u).flatMap(User::email));
 
         // map here would double-wrap:
@@ -3628,6 +3679,8 @@ OPS 90 Dan</div>
     <p class="srcnote">Source: reimplemented as an original illustration.</p>
 
     <details class="advanced"><summary>Advanced</summary>Ada and Eve tie on both keys (ENG, 120). <code>List.sort</code> is a <strong>stable</strong> sort (TimSort), so it preserves their original relative order — Ada was listed before Eve, so Ada stays first. The same stability keeps Bob before Dan. If you wanted a fully deterministic total order you would add a final tie-breaker such as <code>.thenComparing(Employee::name)</code>.</details>
+
+    <div class="box context"><span class="box-title">Context</span> This is what the <code>nullsFirst</code>/<code>nullsLast</code> wrappers are for. Sorting a list that contains a <code>null</code> element with an ordinary comparator throws <code>NullPointerException</code> — <code>staff.sort(comparing(Employee::name))</code> blows up because the key extractor dereferences the null element. Wrap the comparator to survive it: <code>staff.sort(Comparator.nullsFirst(comparing(Employee::name)))</code> sorts null elements to the front, and <code>Comparator.nullsLast(...)</code> sorts them to the end.</div>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> Call <code>.reversed()</code> in the wrong place and you flip too much: <code>comparing(Employee::dept).thenComparing(Employee::salary).reversed()</code> reverses the <em>entire</em> composite (dept DESC and salary DESC). To reverse only salary, reverse the sub-comparator: <code>thenComparing(comparing(Employee::salary).reversed())</code>.</div>
   </article>
@@ -4192,7 +4245,7 @@ public class InstantZoneDemo {
       <figcaption><code>Instant.atZone(zone)</code> projects one absolute moment onto each zone's wall clock.</figcaption>
     </figure>
 
-    <details class="advanced"><summary>Advanced</summary><code>ZonedDateTime</code> understands daylight-saving transitions, so arithmetic near a "spring forward" gap or "fall back" overlap adjusts correctly. If you only need a fixed UTC offset with no DST rules (say, storing an event at <code>+02:00</code>), use <code>OffsetDateTime</code> / <code>ZoneOffset</code> instead — it is lighter than a full region <code>ZoneId</code>.</details>
+    <details class="advanced"><summary>Advanced</summary><code>ZonedDateTime</code> understands daylight-saving transitions, so arithmetic near a "spring forward" gap or "fall back" overlap adjusts correctly. If you only need a fixed UTC offset with no DST rules (say, storing an event at <code>+02:00</code>), use <code>OffsetDateTime</code> / <code>ZoneOffset</code> instead — it is lighter than a full region <code>ZoneId</code>. An <code>OffsetDateTime</code> is a <code>LocalDateTime</code> plus a fixed <code>ZoneOffset</code> (e.g. <code>+02:00</code>) that carries no DST rules; build one with <code>localDateTime.atOffset(ZoneOffset.ofHours(-5))</code> or <code>zonedDateTime.toOffsetDateTime()</code>.</details>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> Avoid the ambiguous three-letter zone abbreviations. Prefer full region IDs like <code>"America/New_York"</code> or <code>"Asia/Tokyo"</code> over <code>"EST"</code>/<code>"PST"</code>, which are deprecated and cannot express daylight-saving changes. And never persist a <code>LocalDateTime</code> as a timestamp — store an <code>Instant</code> (UTC) and format it in the user's zone on the way out.</div>
   </article>
@@ -4249,6 +4302,54 @@ public class FormatterDemo {
     <details class="advanced"><summary>Advanced</summary>Month and day names are localized: <code>DateTimeFormatter.ofPattern("dd MMMM yyyy").withLocale(Locale.FRENCH)</code> formats <code>2024-01-15</code> as <code>15 janvier 2024</code>. For a locale-aware, medium-length default, use <code>DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)</code> rather than hardcoding a pattern.</details>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> Pattern letters are case-sensitive and easy to mix up: <code>mm</code> is minutes but <code>MM</code> is months, and <code>yyyy</code> is the calendar year while <code>YYYY</code> is the ISO <em>week-based</em> year (which can differ in late December / early January). Using <code>YYYY</code> where you meant <code>yyyy</code> produces subtly wrong years around New Year — a genuinely common bug.</div>
+  </article>
+
+  <article class="lecture" id="l-12-07">
+    <h3>07. Converting legacy Date to java.time</h3>
+    <p class="objective"><strong>Objective:</strong> Bridge existing <code>java.util.Date</code> / <code>java.sql.Date</code> code into <code>java.time</code> and back, so you can migrate incrementally without rewriting everything at once.</p>
+
+    <p>Real code rarely starts on a blank page: you inherit APIs that still hand you a <code>java.util.Date</code>. Java 8 added the conversion bridge directly onto the legacy classes so you never have to stay stuck. A <code>java.util.Date</code> is an absolute instant, so it maps to <code>Instant</code> via <code>toInstant()</code>; from an <code>Instant</code> you pick a zone to land on a <code>LocalDate</code>. Going the other way, <code>java.util.Date.from(instant)</code> rebuilds a legacy <code>Date</code>. The database type <code>java.sql.Date</code> is date-only and adds its own <code>valueOf(LocalDate)</code> / <code>toLocalDate()</code> pair.</p>
+
+    <ul class="keypoints">
+      <li><code>java.util.Date</code> &harr; <code>Instant</code>: <code>date.toInstant()</code> and <code>java.util.Date.from(instant)</code> (both Java 8).</li>
+      <li><code>Instant</code> &rarr; <code>LocalDate</code>: pick a zone — <code>instant.atZone(zone).toLocalDate()</code> (use <code>ZoneId.systemDefault()</code> in real code).</li>
+      <li><code>java.sql.Date</code> &harr; <code>LocalDate</code>: <code>java.sql.Date.valueOf(localDate)</code> and <code>sqlDate.toLocalDate()</code>.</li>
+      <li>All of these conversion methods are <strong>Java 8</strong> additions layered onto the old classes.</li>
+    </ul>
+
+    <div class="io">
+      <pre class="code" data-lang="java"><code>import java.time.*;
+
+public class LegacyDateBridge {
+    public static void main(String[] args) {
+        // ---- legacy java.util.Date -&gt; java.time ----
+        // fixed millis = 2024-01-15T00:00:00Z (real code: new java.util.Date())
+        java.util.Date legacy = new java.util.Date(1_705_276_800_000L);
+        Instant instant = legacy.toInstant();                 // Date -&gt; Instant (Java 8)
+        LocalDate ld = instant.atZone(ZoneOffset.UTC).toLocalDate();
+        System.out.println(instant);
+        System.out.println(ld);
+
+        // java.sql.Date -&gt; LocalDate: go straight through toLocalDate()
+        LocalDate ld2 = java.sql.Date.valueOf(LocalDate.of(2024, 1, 15)).toLocalDate();
+        System.out.println(ld2);
+
+        // ---- java.time -&gt; legacy ----
+        java.util.Date back = java.util.Date.from(instant);   // Instant -&gt; Date
+        java.sql.Date sqlDate = java.sql.Date.valueOf(LocalDate.of(2024, 1, 15));
+        System.out.println(back.toInstant());
+        System.out.println(sqlDate);
+    }
+}</code></pre>
+      <div class="out"><span class="out-title">Console output</span>2024-01-15T00:00:00Z
+2024-01-15
+2024-01-15
+2024-01-15T00:00:00Z
+2024-01-15</div>
+    </div>
+    <p class="srcnote">Source: reimplemented as an original illustration.</p>
+
+    <div class="box pitfall"><span class="box-title">Pitfall</span> A <code>java.util.Date</code> converts through <code>toInstant()</code>, but its subclass <code>java.sql.Date</code> is <em>date-only</em>: calling <code>toInstant()</code> on a <code>java.sql.Date</code> throws <code>UnsupportedOperationException</code>. For a <code>java.sql.Date</code> go straight through <code>toLocalDate()</code> instead. Also note the zone choice: an <code>Instant</code> is a single point in time, so the <code>LocalDate</code> you get depends on the <code>ZoneId</code> you convert through.</div>
   </article>
 
   <div class="box cheat"><span class="box-title">Cheat-sheet</span><pre class="code" data-lang="java"><code>// java.time -- JSR-310, ALL types immutable &amp; thread-safe (Java 8).
@@ -4688,6 +4789,69 @@ text:x
     <details class="advanced"><summary>Advanced</summary>Record patterns nest: <code>case Line(Point(var x1, var y1), Point(var x2, var y2)) -&gt; ...</code> destructures a whole tree in one label, and <code>var</code> is allowed for each component's inferred type. The compiler enforces case ordering by <em>dominance</em>: a broader pattern may not precede a narrower one it would shadow.</details>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> A guarded case must come <em>before</em> the unguarded case of the same type (<code>case Integer i when i &gt; 10</code> before <code>case Integer i</code>); the reverse is "dominated" and won't compile. And <code>switch</code>/record patterns need <strong>JDK 21</strong> — only the <code>instanceof</code> form works on 16&#8211;20.</div>
+
+    <p><strong>Case study — a sealed <code>PaymentService</code>.</strong> Here is why sealed types plus an exhaustive switch matter in real code. Model each payment method as a subclass of a <strong>sealed</strong> <code>PaymentGateway</code>, and let a <code>PaymentFactory</code> pick the implementation with an <strong>exhaustive switch</strong> over a <code>CardType</code> enum — with no <code>default</code> branch.</p>
+
+    <div class="io">
+      <pre class="code" data-lang="java"><code>// Applied case study: model payment types as a sealed hierarchy and
+// dispatch with an exhaustive switch. Combines sealed classes (Java 17),
+// switch expressions (Java 14) and the case null label (Java 21).
+
+enum CardType { CREDIT, DEBIT, REWARDS }
+enum PaymentResponse { SUCCESS, FAILURE }
+
+sealed abstract class PaymentGateway
+        permits CreditCardPayment, DebitCardPayment, RewardsCardPayment {
+    abstract PaymentResponse makePayment(int amount);
+}
+
+final class CreditCardPayment extends PaymentGateway {
+    PaymentResponse makePayment(int amount) {
+        System.out.println("Acquire credit card payment for the amount " + amount);
+        return PaymentResponse.SUCCESS;
+    }
+}
+final class DebitCardPayment extends PaymentGateway {
+    PaymentResponse makePayment(int amount) {
+        System.out.println("Acquire debit card payment for the amount " + amount);
+        return PaymentResponse.SUCCESS;
+    }
+}
+final class RewardsCardPayment extends PaymentGateway {
+    PaymentResponse makePayment(int amount) {
+        System.out.println("Acquire rewards card payment for the amount " + amount);
+        return PaymentResponse.SUCCESS;
+    }
+}
+
+class PaymentFactory {
+    // exhaustive over the enum -- NO default. Add a new CardType and this
+    // switch stops compiling until you handle it: a compile-time safety net.
+    static PaymentGateway paymentGateway(CardType type) {
+        return switch (type) {
+            case CREDIT  -&gt; new CreditCardPayment();
+            case DEBIT   -&gt; new DebitCardPayment();
+            case REWARDS -&gt; new RewardsCardPayment();
+            case null    -&gt; throw new IllegalArgumentException(
+                                "card type null not supported");
+        };
+    }
+}
+
+public class CheckoutService {
+    public static void main(String[] args) {
+        for (CardType type : CardType.values()) {
+            PaymentFactory.paymentGateway(type).makePayment(99);
+        }
+    }
+}</code></pre>
+      <div class="out"><span class="out-title">Console output</span>Acquire credit card payment for the amount 99
+Acquire debit card payment for the amount 99
+Acquire rewards card payment for the amount 99</div>
+    </div>
+    <p class="srcnote">Source: reimplemented as an original illustration.</p>
+
+    <div class="box context"><span class="box-title">Why this design pays off</span> The sealed hierarchy plus the <code>default</code>-free switch is the production payoff: because <code>PaymentGateway</code> is <strong>sealed</strong> and the switch is <strong>exhaustive over the enum</strong>, adding a new <code>CardType</code> (or a new <code>PaymentGateway</code> subtype) forces a <em>compile-time</em> gap you cannot forget to fill — the compiler, not a runtime <code>NullPointerException</code>, catches the missing case. <code>PaymentFactory</code> is the classic <strong>Factory</strong> pattern: callers ask for a card type and get the right implementation without naming a concrete class.</div>
   </article>
 
   <article class="lecture" id="l-13-08">

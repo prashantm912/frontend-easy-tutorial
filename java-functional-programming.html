@@ -702,7 +702,7 @@ System.out.println(total);         // 77</code></pre>
     </div>
     <p class="srcnote">Source: reimplemented from the course examples FP02Structured and FP02Functional.</p>
 
-    <details class="advanced"><summary>Advanced</summary>There are three <code>reduce</code> overloads. The two-argument <code>reduce(BinaryOperator&lt;T&gt;)</code> has no identity, so it returns an <code>Optional&lt;T&gt;</code> (empty on an empty stream). The three-argument <code>reduce(identity, accumulator, combiner)</code> adds a combiner that merges partial results — needed when a <em>parallel</em> stream splits the work across threads and the accumulator's input and output types differ.</details>
+    <details class="advanced"><summary>Advanced</summary>There are three <code>reduce</code> overloads. The two-argument <code>reduce(BinaryOperator&lt;T&gt;)</code> has no identity, so it returns an <code>Optional&lt;T&gt;</code> (empty on an empty stream). The three-argument <code>reduce(identity, accumulator, combiner)</code> is what you use when the reduction's result type differs from the stream's element type (a fused map-then-reduce) — the one- and two-argument forms take a <code>BinaryOperator&lt;T&gt;</code> and so can only produce the element type. The combiner merges two partial results and is what lets that reduction run in <em>parallel</em>; in a sequential stream the combiner is never actually called.</details>
 
     <div class="box pitfall"><span class="box-title">Pitfall</span> The identity must truly be neutral for the operator. <code>0</code> is correct for a sum but wrong for a product (everything becomes <code>0</code>) — use <code>1</code> there. A bad identity silently corrupts the result rather than throwing.</div>
   </article>
@@ -847,7 +847,7 @@ $5 ==&gt; 2</div>
 
     <div class="io">
       <pre class="code" data-lang="java"><code>// WRONG: squares the running aggregate too, then overflows int
-// 0,12 -&gt; 144 ; 144,9 -&gt; 20817 ; 20817,13 -&gt; ... blows past MAX_VALUE
+// 0,12 -&gt; 144 ; 144,9 -&gt; 20817 ; 20817,13 -&gt; 433347658 ; 433347658,4 -&gt; overflows int
 int bad = numbers.stream().reduce(0, (x, y) -&gt; x * x + y * y);
 
 // RIGHT: map first, then reduce
@@ -2932,6 +2932,7 @@ new Thread(task).start();</code></pre>
       <li>Declarative pipelines say <em>what</em> you want, not <em>how</em> to loop — fewer moving parts, fewer bugs.</li>
       <li>FP complements OOP; it doesn't replace class design, inheritance, or application architecture.</li>
       <li>The real shift is mindset — expect a learning curve moving from explicit loops and mutable state to declarative, stateless thinking.</li>
+      <li>Adopting FP is a <strong>team decision</strong>, not just a technical one: lambda- and stream-heavy code is hard to read for developers who don't know the constructs, so train the whole team before relying on it — and the hardest part is <em>unlearning</em> familiar imperative habits (explicit loops, mutable accumulators), not just learning the new syntax.</li>
       <li>Prefer <strong>immutable data</strong> and <strong>side-effect-free functions</strong>; it makes code easier to reason about and safe to parallelize.</li>
     </ul>
 
@@ -3064,7 +3065,7 @@ functional: 10</div>
     <p class="objective"><strong>Objective:</strong> Recall the many ways to build a stream and the intermediate-vs-terminal split that governs when a pipeline actually runs.</p>
 
     <p><strong>Q: What are the common ways to obtain a stream?</strong><br>
-    A: From a collection with <code>collection.stream()</code>; from a handful of known values with <code>Stream.of(a, b, c)</code>; from an array with <code>Arrays.stream(arr)</code>; from a numeric range with <code>IntStream.range</code> / <code>rangeClosed</code>; from a generating rule with <code>Stream.generate</code> or <code>Stream.iterate</code>; and from a file, line by line, with <code>Files.lines(path)</code>. For a map you can stream its <code>keySet()</code>, <code>values()</code>, or <code>entrySet()</code>.</p>
+    A: From a collection with <code>collection.stream()</code>; from a handful of known values with <code>Stream.of(a, b, c)</code>; from an array with <code>Arrays.stream(arr)</code>; from a numeric range with <code>IntStream.range</code> / <code>rangeClosed</code>; from a generating rule with <code>Stream.generate</code> or <code>Stream.iterate</code>; for building a stream element by element at runtime with <code>Stream.builder().add(a).add(b).build()</code>; and from a file, line by line, with <code>Files.lines(path)</code>. For a map you can stream its <code>keySet()</code>, <code>values()</code>, or <code>entrySet()</code>.</p>
 
     <p><strong>Q: What separates an intermediate from a terminal operation?</strong><br>
     A: Intermediate operations (<code>filter</code>, <code>map</code>, <code>sorted</code>, ...) are <strong>lazy</strong> and return a new stream; nothing happens until a <strong>terminal</strong> operation (<code>collect</code>, <code>forEach</code>, <code>reduce</code>, <code>count</code>, <code>anyMatch</code>, ...) consumes the pipeline.</p>
@@ -3073,7 +3074,7 @@ functional: 10</div>
     A: A stream is <strong>single-use</strong> — after one terminal op it is consumed; the <strong>source is never mutated</strong>; and laziness plus <strong>short-circuiting</strong> (e.g. <code>findFirst</code>, <code>limit</code>) means the pipeline may stop early and never touch every element.</p>
 
     <ul class="keypoints">
-      <li>Creation: <code>stream()</code>, <code>Stream.of</code>, <code>Arrays.stream</code>, <code>IntStream.range/rangeClosed/iterate</code>, <code>Files.lines</code>.</li>
+      <li>Creation: <code>stream()</code>, <code>Stream.of</code>, <code>Stream.builder()</code>, <code>Arrays.stream</code>, <code>IntStream.range/rangeClosed/iterate</code>, <code>Files.lines</code>.</li>
       <li>Intermediate ops are lazy and chainable; a terminal op fires the whole chain once.</li>
       <li>Streams do not store data — they process it on the fly, so they stay memory-efficient even for millions of elements.</li>
     </ul>
