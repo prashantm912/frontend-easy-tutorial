@@ -4660,14 +4660,14 @@ pool.shutdown();                    // ALWAYS release the pool</code></pre></div
     out=out.replace(/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'|`(?:[^`\\]|\\.)*`/g,function(m){return stash(store,'tok-string',m);});
     out=out.replace(/\b\d+\.?\d*\b/g,function(m){return stash(store,'tok-number',m);});
     if(kw&&kw.length){out=out.replace(new RegExp('\\b('+kw.join('|')+')\\b','g'),function(m){return stash(store,'tok-keyword',m);});}
-    out=out.replace(/ ([-]) /g,function(_,ch){return store[ch.charCodeAt(0)-0xF000];});
+    var _p;do{_p=out;out=out.replace(/ ([-]) /g,function(_,ch){return store[ch.charCodeAt(0)-0xF000];});}while(out!==_p);
     return out;}
   function markup(esc0){var store=[],out=esc0;
     out=out.replace(/&lt;!--[\s\S]*?--&gt;/g,function(m){return stash(store,'tok-comment',m);});
     out=out.replace(/&lt;\/?[a-zA-Z][\w-]*/g,function(m){return stash(store,'tok-keyword',m);});
     out=out.replace(/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/g,function(m){return stash(store,'tok-string',m);});
     out=out.replace(/\{\{[^}]*\}\}/g,function(m){return stash(store,'tok-number',m);});
-    out=out.replace(/ ([-]) /g,function(_,ch){return store[ch.charCodeAt(0)-0xF000];});
+    var _p;do{_p=out;out=out.replace(/ ([-]) /g,function(_,ch){return store[ch.charCodeAt(0)-0xF000];});}while(out!==_p);
     return out;}
   document.querySelectorAll('pre.code > code, pre.code[data-lang]').forEach(function(node){
     var pre=node.tagName==='PRE'?node:node.parentNode;

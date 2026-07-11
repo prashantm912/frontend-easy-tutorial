@@ -5308,7 +5308,7 @@ const n = Number(inputEl.value);</code></pre>
   };
   function mkStash(store){return function(cls,text){var t=" "+String.fromCharCode(0xF000+store.length)+" ";
     store.push('<span class="'+cls+'">'+text+"</span>");return t;};}
-  function restore(out,store){return out.replace(/ ([-]) /g,function(_,ch){return store[ch.charCodeAt(0)-0xF000];});}
+  function restore(out,store){var _p;do{_p=out;out=out.replace(/ ([-]) /g,function(_,ch){return store[ch.charCodeAt(0)-0xF000];});}while(out!==_p);return out;}
   function highlightGeneric(escaped,keywords){
     var store=[],stash=mkStash(store),out=escaped;
     out=out.replace(/\/\*[\s\S]*?\*\//g,function(m){return stash("tok-comment",m);});

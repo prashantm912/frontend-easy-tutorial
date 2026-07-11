@@ -1622,7 +1622,7 @@ git push                         # publish — live site refreshes shortly</code
     bash:["if","then","else","fi","for","in","do","done","while","function","return","export","echo","cd","npm","npx","node","ng","git"]
   };
   function mkStash(store){return function(cls,t){var k=" "+String.fromCharCode(0xF000+store.length)+" ";store.push('<span class="'+cls+'">'+t+"</span>");return k;};}
-  function restore(out,store){return out.replace(/ ([-]) /g,function(_,c){return store[c.charCodeAt(0)-0xF000];});}
+  function restore(out,store){var _p;do{_p=out;out=out.replace(/ ([-]) /g,function(_,c){return store[c.charCodeAt(0)-0xF000];});}while(out!==_p);return out;}
   function hlGeneric(esc,kw){
     var s=[],st=mkStash(s),o=esc;
     o=o.replace(/\/\*[\s\S]*?\*\//g,function(m){return st("tok-comment",m);});
