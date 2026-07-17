@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Engineer's Interview Almanac — DSA, Backend & System Design Roadmap</title>
+<meta name="description" content="A complete, opinionated roadmap for cracking software engineering interviews: DSA, backend, API design, the 25-day system design deep-dive, behavioral prep, and a 12-week plan.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AD%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Hanken+Grotesk:wght@300..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#16130e; --bg-2:#1e1a13; --bg-3:#262117; --line:#3a3225; --line-2:#4a4030;
+  --ink:#ece4d4; --ink-2:#b8ad97; --ink-3:#867c67;
+  --amber:#f0a830; --amber-2:#e88a2a; --amber-soft:rgba(240,168,48,.12);
+  --clay:#d76b52; --teal:#5fb6a8; --sky:#7aa5d8; --violet:#b088c9; --lime:#a8c157;
+  --shadow:0 18px 50px -20px rgba(0,0,0,.75); --shadow-sm:0 4px 18px -8px rgba(0,0,0,.6);
+  --radius:16px; --radius-sm:10px;
+  --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  --maxw:min(1500px,94vw);
+}
+:root[data-theme="light"]{
+  --bg:#f4ede0; --bg-2:#faf5ea; --bg-3:#efe6d4; --line:#ddd0b8; --line-2:#cabfa4;
+  --ink:#231d12; --ink-2:#5c5340; --ink-3:#8a8069;
+  --amber:#c47716; --amber-2:#b0620f; --amber-soft:rgba(196,119,22,.1);
+  --clay:#c0533a; --teal:#2f8577; --sky:#3f6aa3; --violet:#8757a3; --lime:#6c8329;
+  --shadow:0 18px 50px -24px rgba(80,60,20,.4); --shadow-sm:0 4px 16px -8px rgba(80,60,20,.28);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--sans);
+  font-size:16.5px; line-height:1.68; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden; transition:background .4s ease,color .4s ease;
+}
+/* atmospheric background */
+body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(1100px 700px at 80% -10%,rgba(240,168,48,.10),transparent 60%),
+    radial-gradient(900px 700px at -10% 20%,rgba(95,182,168,.07),transparent 55%),
+    radial-gradient(800px 800px at 60% 110%,rgba(215,107,82,.06),transparent 60%);}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");}
+
+a{color:var(--amber);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+::selection{background:var(--amber);color:#16130e}
+code,kbd{font-family:var(--mono)}
+
+/* ---- top bar / progress ---- */
+.topbar{position:fixed;top:0;left:0;right:0;height:4px;z-index:60;background:transparent}
+.topbar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--amber),var(--clay));transition:width .15s ease;box-shadow:0 0 12px var(--amber)}
+.controls{position:fixed;top:16px;right:20px;z-index:70;display:flex;gap:8px}
+.ctrl{font-family:var(--mono);font-size:12px;letter-spacing:.04em;background:var(--bg-2);border:1px solid var(--line);color:var(--ink-2);
+  padding:8px 12px;border-radius:99px;cursor:pointer;backdrop-filter:blur(8px);transition:.2s;display:flex;align-items:center;gap:6px}
+.ctrl:hover{color:var(--ink);border-color:var(--amber);transform:translateY(-1px)}
+
+/* ---- layout ---- */
+.shell{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:264px minmax(0,1fr);gap:56px;padding:0 4px}
+.sidebar{position:sticky;top:0;height:100vh;padding:34px 8px 34px 0;overflow-y:auto;align-self:start;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}.sidebar::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+.side-brand{font-family:var(--serif);font-weight:600;font-size:19px;line-height:1.15;letter-spacing:-.01em;margin-bottom:4px}
+.side-brand em{font-style:italic;color:var(--amber)}
+.side-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:26px}
+.nav-group{margin-bottom:22px}
+.nav-group-h{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px;padding-left:14px}
+.nav a{display:block;color:var(--ink-2);font-size:13.5px;padding:5px 0 5px 14px;border-left:2px solid var(--line);transition:.18s;line-height:1.35}
+.nav a:hover{color:var(--ink);border-left-color:var(--ink-2);text-decoration:none;transform:translateX(2px)}
+.nav a.active{color:var(--amber);border-left-color:var(--amber);font-weight:600}
+
+main{padding:44px 0 120px;min-width:0}
+
+/* ---- hero ---- */
+.hero{position:relative;margin-bottom:64px}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);margin-bottom:22px;display:flex;align-items:center;gap:12px}
+.kicker::before{content:"";width:34px;height:1px;background:var(--amber)}
+.hero h1{font-family:var(--serif);font-weight:340;font-size:clamp(2.9rem,7vw,5.6rem);line-height:.98;letter-spacing:-.025em;margin-bottom:8px}
+.hero h1 em{font-style:italic;color:var(--amber)}
+.hero h1 b{font-weight:600}
+.hero-sub{font-size:clamp(1.05rem,2vw,1.32rem);color:var(--ink-2);max-width:60ch;margin:22px 0 34px;line-height:1.5}
+.hero-sub b{color:var(--ink);font-weight:600}
+.stat-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:30px}
+.stat{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 20px;min-width:120px}
+.stat .n{font-family:var(--serif);font-size:2.1rem;font-weight:500;line-height:1;color:var(--amber)}
+.stat .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-top:6px}
+.meta-line{font-family:var(--mono);font-size:12px;color:var(--ink-3);letter-spacing:.02em;border-top:1px solid var(--line);padding-top:18px}
+
+/* progress card in hero */
+.prog-card{background:linear-gradient(135deg,var(--bg-2),var(--bg-3));border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-bottom:8px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.prog-ring{--p:0;width:78px;height:78px;border-radius:50%;flex:none;
+  background:conic-gradient(var(--amber) calc(var(--p)*1%),var(--bg) 0);display:grid;place-items:center;position:relative}
+.prog-ring::before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--bg-2)}
+.prog-ring span{position:relative;font-family:var(--serif);font-weight:600;font-size:1.15rem}
+.prog-txt{flex:1;min-width:200px}
+.prog-txt h4{font-family:var(--serif);font-weight:500;font-size:1.15rem;margin-bottom:3px}
+.prog-txt p{color:var(--ink-2);font-size:13.5px}
+.prog-reset{font-family:var(--mono);font-size:11px;color:var(--ink-3);background:none;border:1px solid var(--line);border-radius:8px;padding:6px 11px;cursor:pointer;transition:.2s}
+.prog-reset:hover{color:var(--clay);border-color:var(--clay)}
+
+/* ---- sections ---- */
+section{margin-bottom:76px;scroll-margin-top:80px}
+.sec-head{margin-bottom:30px}
+.sec-num{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--amber);text-transform:uppercase}
+.sec-head h2{font-family:var(--serif);font-weight:380;font-size:clamp(1.9rem,4vw,2.9rem);line-height:1.05;letter-spacing:-.02em;margin:8px 0 12px}
+.sec-head h2 em{font-style:italic;color:var(--amber)}
+.sec-intro{color:var(--ink-2);max-width:75ch;font-size:1.02rem}
+.sec-intro b{color:var(--ink)}
+h3{font-family:var(--serif);font-weight:500;font-size:1.42rem;letter-spacing:-.01em;margin:34px 0 14px}
+h4{font-family:var(--sans);font-weight:700;font-size:1.05rem;margin:22px 0 10px;color:var(--ink)}
+p{margin-bottom:14px;color:var(--ink)}
+.lead{color:var(--ink-2)}
+ul,ol{margin:0 0 16px 0;padding-left:22px}
+li{margin-bottom:8px;color:var(--ink)}
+li::marker{color:var(--amber)}
+strong,b{color:var(--ink);font-weight:700}
+em{color:var(--ink-2)}
+
+/* callout */
+.callout{border-left:3px solid var(--amber);background:var(--amber-soft);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:16px 20px;margin:20px 0;font-size:.98rem}
+.callout.teal{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 12%,transparent)}
+.callout.clay{border-color:var(--clay);background:color-mix(in srgb,var(--clay) 12%,transparent)}
+.callout .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:6px;font-weight:700}
+.callout.teal .tag{color:var(--teal)}.callout.clay .tag{color:var(--clay)}
+
+/* cards grid */
+.grid{display:grid;gap:16px}
+.grid.two{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.grid.three{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:.25s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--line-2);transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.card h4{margin-top:0}
+.card .idx{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.1em}
+.card p{font-size:.94rem;color:var(--ink-2);margin-bottom:0}
+.card p b{color:var(--ink)}
+
+/* phase header block */
+.phase{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(160deg,var(--bg-2),transparent);padding:0;overflow:hidden;margin-bottom:26px}
+.phase-top{display:flex;align-items:center;gap:20px;padding:22px 26px;border-bottom:1px solid var(--line);background:var(--bg-2)}
+.phase-badge{font-family:var(--serif);font-weight:600;font-size:1.7rem;width:60px;height:60px;border-radius:14px;display:grid;place-items:center;flex:none;color:#16130e;background:var(--amber)}
+.phase-1 .phase-badge{background:var(--teal)}.phase-2 .phase-badge{background:var(--sky)}
+.phase-3 .phase-badge{background:var(--amber)}.phase-4 .phase-badge{background:var(--clay)}
+.phase-5 .phase-badge{background:var(--violet)}.phase-6 .phase-badge{background:var(--lime)}
+.phase-meta h3{margin:0;font-size:1.4rem}
+.phase-meta .dur{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.phase-body{padding:24px 26px}
+
+/* checklist */
+.checklist{list-style:none;padding:0;margin:14px 0}
+.checklist li{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line);cursor:pointer;margin:0}
+.checklist li:last-child{border-bottom:none}
+.checklist .box{flex:none;width:20px;height:20px;border:1.5px solid var(--line-2);border-radius:6px;margin-top:3px;display:grid;place-items:center;transition:.18s}
+.checklist li.done .box{background:var(--amber);border-color:var(--amber)}
+.checklist .box::after{content:"✓";font-size:12px;color:#16130e;opacity:0;font-weight:700}
+.checklist li.done .box::after{opacity:1}
+.checklist li.done .ct{color:var(--ink-3);text-decoration:line-through}
+.ct{font-size:.96rem}
+
+/* tables */
+.twrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:var(--radius-sm)}
+table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:520px}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:12px 16px;border-bottom:1px solid var(--line-2);background:var(--bg-3)}
+td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink)}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--amber-soft)}
+td code{background:var(--bg-3);padding:2px 6px;border-radius:5px;font-size:.85em;color:var(--amber)}
+td b{color:var(--ink)}
+
+/* accordion */
+.acc{border:1px solid var(--line);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden;background:var(--bg-2)}
+.acc summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;gap:14px;align-items:center;font-weight:600;transition:.2s}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary:hover{background:var(--bg-3)}
+.acc summary .q-n{font-family:var(--mono);font-size:12px;color:var(--amber);flex:none}
+.acc summary .chev{margin-left:auto;color:var(--ink-3);transition:.25s;flex:none}
+.acc[open] summary .chev{transform:rotate(90deg);color:var(--amber)}
+.acc-body{padding:2px 20px 18px 46px;color:var(--ink-2);font-size:.96rem}
+.acc-body b{color:var(--ink)}
+.acc-body .ans{border-left:2px solid var(--teal);padding-left:14px;margin-top:8px}
+.acc-body .ans .tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:4px}
+
+/* day accordion tint by theme */
+.day summary .d-n{background:var(--bg-3);border:1px solid var(--line);border-radius:7px;padding:3px 9px;font-family:var(--mono);font-size:11px;color:var(--amber);flex:none}
+.day summary .d-topic{font-weight:600}
+.day summary .d-hook{color:var(--ink-3);font-size:.85rem;font-weight:400;margin-left:auto;margin-right:12px;font-style:italic;max-width:38%;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.day .acc-body{padding-left:20px}
+
+/* timeline roadmap */
+.roadmap{position:relative;padding-left:34px;margin:24px 0}
+.roadmap::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--teal),var(--sky),var(--amber),var(--clay),var(--violet),var(--lime))}
+.rm-node{position:relative;margin-bottom:22px}
+.rm-node::before{content:"";position:absolute;left:-31px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--amber)}
+.rm-node:nth-child(1)::before{border-color:var(--teal)}.rm-node:nth-child(2)::before{border-color:var(--sky)}
+.rm-node:nth-child(3)::before{border-color:var(--amber)}.rm-node:nth-child(4)::before{border-color:var(--clay)}
+.rm-node:nth-child(5)::before{border-color:var(--violet)}.rm-node:nth-child(6)::before{border-color:var(--lime)}
+.rm-node h4{margin:0 0 3px}
+.rm-node .wk{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber)}
+.rm-node p{font-size:.92rem;color:var(--ink-2);margin:2px 0 0}
+
+/* pill / kbd */
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.pill{font-family:var(--mono);font-size:12px;background:var(--bg-3);border:1px solid var(--line);border-radius:99px;padding:5px 13px;color:var(--ink-2);transition:.2s}
+.pill:hover{border-color:var(--amber);color:var(--ink)}
+kbd{background:var(--bg-3);border:1px solid var(--line-2);border-bottom-width:2px;border-radius:6px;padding:2px 7px;font-size:.82em;color:var(--ink)}
+
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--line-2),transparent);margin:64px 0}
+.big-quote{font-family:var(--serif);font-weight:340;font-style:italic;font-size:clamp(1.4rem,3.5vw,2.3rem);line-height:1.3;letter-spacing:-.01em;color:var(--ink);border:none;padding:8px 0;max-width:26ch}
+.big-quote span{color:var(--amber)}
+
+footer{border-top:1px solid var(--line);padding:40px 0 60px;color:var(--ink-3);font-size:.9rem}
+footer .fbrand{font-family:var(--serif);font-size:1.3rem;color:var(--ink);margin-bottom:8px}
+footer a{color:var(--ink-2)}
+
+.mobtoc{display:none}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+.no-js .reveal{opacity:1;transform:none}
+
+@media(max-width:980px){
+  .shell{grid-template-columns:1fr;gap:0}
+  .sidebar{display:none}
+  .mobtoc{display:block;position:sticky;top:0;z-index:40;background:var(--bg-2);border-bottom:1px solid var(--line);margin:0 -4px 24px}
+  .mobtoc summary{list-style:none;padding:14px 18px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);cursor:pointer;display:flex;align-items:center;gap:10px}
+  .mobtoc summary::-webkit-details-marker{display:none}
+  .mobtoc .nav{padding:4px 18px 18px;columns:2;column-gap:20px}
+  .mobtoc .nav a{border:none;padding:6px 0}
+  main{padding:14px 0 90px}
+  .day summary .d-hook{display:none}
+}
+@media print{
+  .controls,.topbar,.sidebar,.mobtoc,.prog-card{display:none}
+  body::before,body::after{display:none}
+  .acc-body{display:block!important}.acc summary .chev{display:none}
+  body{font-size:11pt;color:#000;background:#fff}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-fill" id="bar"></div></div>
+<div class="controls">
+  <button class="ctrl" id="themeBtn" title="Toggle theme">◑ <span id="themeLbl">Light</span></button>
+  <button class="ctrl" onclick="window.print()" title="Save as PDF">⎙ PDF</button>
+</div>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="side-brand">The Engineer's<br><em>Interview Almanac</em></div>
+    <div class="side-tag">DSA · Backend · System Design</div>
+    <nav class="nav">
+      <div class="nav-group">
+        <div class="nav-group-h">Start</div>
+        <a href="#how">How to use this</a>
+        <a href="#roadmap">The roadmap</a>
+        <a href="#rules">Guiding principles</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-h">Phases</div>
+        <a href="#phase0">0 · Prep strategy</a>
+        <a href="#phase1">1 · DSA foundation</a>
+        <a href="#phase2">2 · Backend</a>
+        <a href="#phase3">3 · System design</a>
+        <a href="#phase4">4 · Language depth</a>
+        <a href="#phase5">5 · AI / agentic</a>
+        <a href="#phase6">6 · Web stack</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-h">Deep dives</div>
+        <a href="#patterns">DSA pattern catalog</a>
+        <a href="#complexity">Big-O cheat sheet</a>
+        <a href="#sql">SQL essentials</a>
+        <a href="#sd-template">SD interview template</a>
+        <a href="#cases">Case studies</a>
+        <a href="#series">25-day SD series</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-h">Interview craft</div>
+        <a href="#behavioral">Behavioral / STAR</a>
+        <a href="#day-of">Interview-day tactics</a>
+        <a href="#resume">Resume & profile</a>
+        <a href="#qbank">Question bank</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-h">Reference</div>
+        <a href="#plan">12-week plan</a>
+        <a href="#glossary">Glossary</a>
+        <a href="#sources">Sources</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <details class="mobtoc">
+      <summary>☰ Contents</summary>
+      <nav class="nav">
+        <a href="#how">How to use</a><a href="#roadmap">Roadmap</a>
+        <a href="#phase0">0 · Strategy</a><a href="#phase1">1 · DSA</a>
+        <a href="#phase2">2 · Backend</a><a href="#phase3">3 · System design</a>
+        <a href="#phase4">4 · Language</a><a href="#phase5">5 · AI</a><a href="#phase6">6 · Web</a>
+        <a href="#patterns">Patterns</a><a href="#complexity">Big-O</a><a href="#sql">SQL</a>
+        <a href="#sd-template">SD template</a><a href="#cases">Case studies</a><a href="#series">25-day series</a>
+        <a href="#behavioral">Behavioral</a><a href="#day-of">Day-of</a><a href="#resume">Resume</a>
+        <a href="#qbank">Q bank</a><a href="#plan">12-week</a><a href="#glossary">Glossary</a><a href="#sources">Sources</a>
+      </nav>
+    </details>
+
+    <!-- HERO -->
+    <header class="hero reveal in">
+      <div class="kicker">The complete engineering-interview roadmap</div>
+      <h1>Learn to <em>explain</em> it,<br>not just <b>recite</b> it.</h1>
+      <p class="hero-sub">A single, opinionated study system for cracking software-engineering interviews — from the <b>13 foundational LeetCode patterns</b> to a <b>25-day system-design deep-dive</b> written by a Principal Engineer. Synthesized from the field, organized as a roadmap, and built to be worked through, not skimmed.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="n">7</div><div class="l">Phases</div></div>
+        <div class="stat"><div class="n">25</div><div class="l">SD deep-dives</div></div>
+        <div class="stat"><div class="n">12</div><div class="l">Week plan</div></div>
+        <div class="stat"><div class="n">30+</div><div class="l">Drill questions</div></div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-ring" id="ring"><span id="ringTxt">0%</span></div>
+        <div class="prog-txt">
+          <h4>Your progress</h4>
+          <p>Tick the checklist items across the phases — progress saves in your browser automatically.</p>
+        </div>
+        <button class="prog-reset" id="resetBtn">Reset</button>
+      </div>
+      <div class="meta-line">Curated from practicing engineers · Reading time ~45 min · Study time ~12 weeks · Last revised 2026</div>
+    </header>
+
+    <!-- HOW -->
+    <section id="how" class="reveal">
+      <div class="sec-head"><span class="sec-num">Orientation</span><h2>How to use <em>this guide</em></h2></div>
+      <div class="grid two">
+        <div class="card"><div class="idx">01</div><h4>Follow the phases in order</h4><p>Each phase assumes the one before it. Breadth first (know every topic exists), depth on the load-bearing few. Skip nothing in Phases 1–3.</p></div>
+        <div class="card"><div class="idx">02</div><h4>Prepare every topic in 3 layers</h4><p><b>What it is</b> (one sentence) → <b>why &amp; when</b> (the trade-off — this is what separates candidates) → <b>a failure story</b> (what breaks without it in production).</p></div>
+        <div class="card"><div class="idx">03</div><h4>Build after every phase</h4><p>Reading stores a concept temporarily; building makes it permanent. Every author repeats it: tutorial-watchers stay stuck, <b>builders get hired</b>.</p></div>
+        <div class="card"><div class="idx">04</div><h4>Rehearse out loud</h4><p>Interviewers rarely ask "define X." They ask "your API is timing out — what do you do?" You need the concepts <b>wired together</b>, spoken, not memorized as a flat list.</p></div>
+      </div>
+      <div class="callout"><span class="tag">The one meta-skill</span><b>Trade-offs are the whole game.</b> Almost every real interview question is secretly "tell me the trade-off, and when you'd choose the other way." A junior asks "what's the best database?"; a senior asks "what does <em>this workload</em> need, and what am I willing to give up to get it?"</div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section id="roadmap" class="reveal">
+      <div class="sec-head"><span class="sec-num">The map</span><h2>The <em>roadmap</em> at a glance</h2>
+        <p class="sec-intro">Seven phases from mindset to offer. The default track (backend / system-design focus) runs ~12 weeks at 3 hrs/day; the AI and web tracks are optional forks.</p></div>
+      <div class="roadmap">
+        <div class="rm-node"><div class="wk">Days 1–3 · Phase 0</div><h4>Prep strategy</h4><p>Pick one path, one small resource set. Git from day one. Practice &gt; consume.</p></div>
+        <div class="rm-node"><div class="wk">Weeks 1–3 · Phase 1</div><h4>DSA foundation</h4><p>13 starter problems → the pattern catalog → complexity fluency. Not competitive programming.</p></div>
+        <div class="rm-node"><div class="wk">Weeks 4–7 · Phase 2</div><h4>Backend fundamentals</h4><p>HTTP, the 20 API concepts, auth &amp; security, databases, caching, concurrency.</p></div>
+        <div class="rm-node"><div class="wk">Weeks 8–11 · Phase 3</div><h4>System design &amp; scale</h4><p>Load balancing → the full 25-day distributed-systems deep-dive → mock designs.</p></div>
+        <div class="rm-node"><div class="wk">Week 12 · Phase 4</div><h4>Language depth + mocks</h4><p>Runtime internals for your stack (JVM/Node/Python/Go). Behavioral. Resume. Mock interviews.</p></div>
+        <div class="rm-node"><div class="wk">Optional forks · 5 &amp; 6</div><h4>AI / agentic &amp; web stack</h4><p>Take these if the role calls for them — they layer on top of the same fundamentals.</p></div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ============ PHASE 0 ============ -->
+    <section id="phase0" class="reveal">
+      <div class="phase phase-0">
+        <div class="phase-top"><div class="phase-badge">0</div><div class="phase-meta"><h3>Prep strategy — how to run the whole thing</h3><div class="dur">2–3 days · mindset &amp; setup</div></div></div>
+        <div class="phase-body">
+          <p class="lead">Before any code, set the operating system for your prep. The single most common failure isn't lack of intelligence — it's scattered effort, tutorial hell, and quitting a path out of FOMO.</p>
+          <ul class="checklist" data-phase="0">
+            <li><span class="box"></span><span class="ct"><b>Pick one path</b> (backend / full-stack / AI) and a <b>small</b> resource set. Excessive resources cause tutorial hell.</span></li>
+            <li><span class="box"></span><span class="ct"><b>Practice &gt; consume.</b> Watching stores a concept temporarily; building makes it permanent.</span></li>
+            <li><span class="box"></span><span class="ct"><b>Use Git from day 1.</b> Every practice project on GitHub — your progress log and proof of work.</span></li>
+            <li><span class="box"></span><span class="ct"><b>Use AI within limits.</b> Generate code, then debug, test and rewrite it yourself. Interviews expose people who can't work without autocomplete.</span></li>
+            <li><span class="box"></span><span class="ct"><b>Learn the whole craft</b>, not just coding: unit testing, debugging, documenting, logging, monitoring, deploying.</span></li>
+            <li><span class="box"></span><span class="ct"><b>Ship a portfolio + tight resume</b> and <b>build a network</b> — skills without connections reach no one.</span></li>
+          </ul>
+          <div class="callout teal"><span class="tag">Mindset</span>College tier does not decide your ceiling. Time spent on regret is time not spent learning. Every author in this guide independently made the same point.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PHASE 1 ============ -->
+    <section id="phase1" class="reveal">
+      <div class="phase phase-1">
+        <div class="phase-top"><div class="phase-badge">1</div><div class="phase-meta"><h3>DSA foundation</h3><div class="dur">2–3 weeks, then ongoing maintenance</div></div></div>
+        <div class="phase-body">
+          <p class="lead">You do <b>not</b> need to be a competitive programmer. You need working fluency in the core structures and the ability to talk through operations and complexity. Depth on basics beats breadth on exotica — people with 500+ solved problems still freeze on Two&nbsp;Sum.</p>
+
+          <h4>The 13 starter problems (≈70% of beginner patterns)</h4>
+          <div class="twrap"><table>
+            <thead><tr><th>#</th><th>Problem</th><th>Pattern it teaches</th></tr></thead>
+            <tbody>
+              <tr><td><code>1</code></td><td>Two Sum</td><td>Hash-map lookup</td></tr>
+              <tr><td><code>20</code></td><td>Valid Parentheses</td><td>Stack</td></tr>
+              <tr><td><code>53</code></td><td>Maximum Subarray</td><td>Kadane's / DP</td></tr>
+              <tr><td><code>121</code></td><td>Best Time to Buy &amp; Sell Stock</td><td>One-pass, track min</td></tr>
+              <tr><td><code>125</code></td><td>Valid Palindrome</td><td>Two pointers</td></tr>
+              <tr><td><code>141</code></td><td>Linked List Cycle</td><td>Fast / slow pointers</td></tr>
+              <tr><td><code>206</code></td><td>Reverse Linked List</td><td>Pointer manipulation</td></tr>
+              <tr><td><code>169</code></td><td>Majority Element</td><td>Boyer–Moore voting</td></tr>
+              <tr><td><code>217</code></td><td>Contains Duplicate</td><td>Hash set</td></tr>
+              <tr><td><code>242</code></td><td>Valid Anagram</td><td>Frequency counting</td></tr>
+              <tr><td><code>268</code></td><td>Missing Number</td><td>Math / XOR</td></tr>
+              <tr><td><code>283</code></td><td>Move Zeroes</td><td>Two pointers, in-place</td></tr>
+              <tr><td><code>704</code></td><td>Binary Search</td><td>Binary-search template</td></tr>
+            </tbody>
+          </table></div>
+
+          <h4>Topic map — know all, deep-dive the core</h4>
+          <div class="pills">
+            <span class="pill">Arrays</span><span class="pill">Strings</span><span class="pill">Linked lists</span><span class="pill">Stacks</span><span class="pill">Queues</span><span class="pill">Hash tables</span><span class="pill">Trees / BST</span><span class="pill">AVL / B-Tree*</span><span class="pill">Heaps</span><span class="pill">Graphs</span><span class="pill">BFS / DFS</span><span class="pill">Dijkstra</span><span class="pill">Topological sort</span><span class="pill">MST</span><span class="pill">DP</span><span class="pill">Greedy</span><span class="pill">Two pointers</span><span class="pill">Sliding window</span><span class="pill">Sorting</span><span class="pill">Trie*</span><span class="pill">Union-Find*</span><span class="pill">Bit manip*</span>
+          </div>
+          <p style="font-size:.85rem;color:var(--ink-3)"><code>*</code> awareness level — know what it is and when it applies, not competitive-grade implementation.</p>
+
+          <div class="callout"><span class="tag">The answer pattern that scores</span>State brute force → <b>identify the bottleneck</b> → name the pattern that removes it → code it → state time &amp; space complexity. Narrate the whole way; interviewers grade the reasoning, not just the final code.</div>
+          <p style="font-size:.9rem;color:var(--ink-2)">The full pattern-by-pattern catalog (with when-to-reach-for-each) lives in the <a href="#patterns">DSA Pattern Catalog</a> below.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PHASE 2 ============ -->
+    <section id="phase2" class="reveal">
+      <div class="phase phase-2">
+        <div class="phase-top"><div class="phase-badge">2</div><div class="phase-meta"><h3>Backend engineering fundamentals</h3><div class="dur">4–6 weeks · the systematic core</div></div></div>
+        <div class="phase-body">
+          <p class="lead">The 8-concept spine: <b>REST API design → Auth (JWT/OAuth) → DB indexing → Caching (Redis) → Rate limiting → Logging &amp; monitoring → Docker → System-design fundamentals.</b> Once you grasp these, backend stops being mysterious and becomes systematic.</p>
+
+          <h3>2a · HTTP &amp; API design — the 20 concepts</h3>
+          <div class="grid two">
+            <div class="card"><p><b>1 Endpoint</b> — a unique URL naming a resource. Nouns not verbs: <code>/users/42/orders</code>.</p></div>
+            <div class="card"><p><b>2 HTTP methods</b> — GET/POST/PUT/PATCH/DELETE. PUT = full replace, PATCH = partial.</p></div>
+            <div class="card"><p><b>3 Request–response</b> — headers, body, status, the round-trip shape.</p></div>
+            <div class="card"><p><b>4 Status codes</b> — know each: 200/201/204/301/304/400/401/403/404/409/429/500/503. <em>401 = who are you? 403 = I know you, you still can't.</em></p></div>
+            <div class="card"><p><b>5 Authentication</b> — verify identity.</p></div>
+            <div class="card"><p><b>6 Authorization</b> — verify permissions (RBAC vs ABAC).</p></div>
+            <div class="card"><p><b>7 Access tokens</b> — short-lived credentials; pair with refresh-token rotation.</p></div>
+            <div class="card"><p><b>8 OAuth 2.0</b> — delegated access without sharing passwords; know the auth-code flow.</p></div>
+            <div class="card"><p><b>9 Rate limiting</b> — cap requests/client/window. Token bucket, leaky bucket, sliding window.</p></div>
+            <div class="card"><p><b>10 Throttling</b> — slow requests down instead of rejecting.</p></div>
+            <div class="card"><p><b>11 Pagination</b> — offset vs cursor. Cursor survives inserts/deletes; offset drifts.</p></div>
+            <div class="card"><p><b>12 Caching</b> — response caching, ETags, <code>Cache-Control</code>.</p></div>
+            <div class="card"><p><b>13 Idempotency</b> — same request repeated → same result, no double side-effects.</p></div>
+            <div class="card"><p><b>14 Webhooks</b> — server pushes event notifications; the inverse of polling.</p></div>
+            <div class="card"><p><b>15 API versioning</b> — URL / header / content-negotiation; never break existing clients.</p></div>
+            <div class="card"><p><b>16 OpenAPI / Swagger</b> — machine-readable API contracts.</p></div>
+            <div class="card"><p><b>17 REST vs GraphQL</b> — over/under-fetching trade-off; GraphQL moves complexity to resolvers &amp; caching.</p></div>
+            <div class="card"><p><b>18 API gateway</b> — one entry point: routing, auth, rate limiting, TLS termination.</p></div>
+            <div class="card"><p><b>19 Microservices</b> — small independent services talking over APIs.</p></div>
+            <div class="card"><p><b>20 Error handling</b> — consistent error envelope; never leak stack traces.</p></div>
+          </div>
+          <div class="callout clay"><span class="tag">The #1 nugget interviewers probe</span><b>Idempotency keys.</b> GET/PUT/DELETE are idempotent by spec; POST is not. To make "create charge" retry-safe, the client sends a unique <code>Idempotency-Key</code> header; the server stores the result against that key and <em>replays</em> it instead of executing twice. Without it, one timeout + one client retry = a double charge. This concept appears in four of the source threads — know it cold.</div>
+
+          <h3>2b · Security &amp; identity</h3>
+          <ul>
+            <li><b>JWT vs sessions vs cookies</b> — JWT = stateless, signed, hard to revoke; sessions = server state, easy to revoke. Know where each wins.</li>
+            <li><b>Password storage</b> — bcrypt / Argon2 (slow, salted, adaptive), never MD5/SHA alone. Salt = per-user random; pepper = server-wide secret.</li>
+            <li><b>2FA, SSO, OAuth 2.0</b> flows.</li>
+            <li><b>Web attacks</b> — CORS (a browser policy, not a security control), CSRF (SameSite cookies + tokens), XSS (escape output), SQL injection (parameterized queries), SSRF (server tricked into internal calls). For each: what it is, an attack example, the standard defense.</li>
+          </ul>
+
+          <h3>2c · Databases</h3>
+          <ul>
+            <li><b>Design &amp; normalization</b>; when to denormalize (read-heavy paths).</li>
+            <li><b>SQL vs NoSQL</b> — relational integrity + joins vs flexible schema + horizontal scale. Trade-off, not tribalism.</li>
+            <li><b>Indexing</b> — B-Tree structure, why writes slow as indexes grow, composite-index column order, covering indexes. The concept that most changes how engineers think.</li>
+            <li><b>Query optimization</b> — EXPLAIN plans, the <b>N+1 query</b> (1 query becomes 101), connection pooling.</li>
+            <li><b>ACID</b> + isolation levels &amp; their anomalies (dirty / non-repeatable / phantom reads).</li>
+            <li><b>CAP</b> — under a partition, pick consistency or availability. Know what Postgres, Cassandra, DynamoDB choose.</li>
+            <li><b>Optimistic vs pessimistic locking</b> — version-column retry vs lock-up-front, and when each fits.</li>
+          </ul>
+
+          <h3>2d · Caching &amp; performance</h3>
+          <ul>
+            <li>Strategies: cache-aside (lazy), read-through, write-through, write-behind.</li>
+            <li>Eviction: LRU / LFU / TTL. Invalidation — one of the two hard problems; have a concrete strategy (TTL + event-driven purge).</li>
+            <li><b>Cache stampede</b> — hot key expires, thousands hit the DB at once. Fix with single-flight lock, staggered TTLs, early refresh.</li>
+            <li>Redis vs Memcached; Redis pipelining for batching; CDN &amp; edge caching.</li>
+          </ul>
+
+          <h3>2e · Concurrency &amp; background work</h3>
+          <ul>
+            <li>Middleware, centralized error handling, structured logging, APM.</li>
+            <li>Async/await, event loop, thread pools, process vs thread, GC basics, memory leaks.</li>
+            <li>Race conditions &amp; deadlocks — define, detect, prevent (lock ordering, timeouts).</li>
+            <li>Background jobs, cron, workers — move slow work off the request path via queues.</li>
+          </ul>
+          <div class="callout"><span class="tag">Build target for this phase</span>A REST API with JWT auth, rate limiting, cursor pagination, an idempotency-key on writes, a Postgres schema with a deliberately-indexed hot query (measure it before/after with EXPLAIN), and a Redis cache in front. That single project answers half the Phase-2 questions on its own.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PHASE 3 ============ -->
+    <section id="phase3" class="reveal">
+      <div class="phase phase-3">
+        <div class="phase-top"><div class="phase-badge">3</div><div class="phase-meta"><h3>System design &amp; scalability</h3><div class="dur">4–6 weeks · the differentiator</div></div></div>
+        <div class="phase-body">
+          <p class="lead">This is where senior signal lives. The anchor is a 25-day scaling series written by a Principal Engineer at Atlassian — the <b>single richest resource in this guide</b>. Its Day 1 (load balancing) is below; all 25 days are in the <a href="#series">deep-dive section</a>.</p>
+
+          <h3>3a · Load balancing — interview-ready depth</h3>
+          <div class="callout"><span class="tag">Core insight</span>A load balancer <b>distributes requests</b> — that is not the same as <b>balancing load</b>. It doesn't know one request takes 2ms and the next takes 12 seconds. Real case: 4 servers, Server 3 at 95% CPU while Server 1 sits at 12% — and the balancer reports "fine."</div>
+          <h4>Algorithms &amp; where each fails</h4>
+          <div class="twrap"><table>
+            <thead><tr><th>Algorithm</th><th>How</th><th>Failure mode</th></tr></thead>
+            <tbody>
+              <tr><td><b>Round-robin</b></td><td>Rotate in order</td><td>Blind to server state; only works if all requests &amp; servers are identical</td></tr>
+              <tr><td><b>Least connections</b></td><td>Fewest active wins</td><td>Connection count ≠ load (2 report exports vs 15 sub-ms health checks)</td></tr>
+              <tr><td><b>Weighted RR</b></td><td>Manual weights for big boxes</td><td>Weights are static; traffic isn't; nobody re-tunes them</td></tr>
+              <tr><td><b>IP hash</b></td><td>Sticky sessions, no store</td><td>One corporate NAT (10k users, one IP) = instant hotspot</td></tr>
+              <tr><td><b>Least response time</b></td><td>Routes on real latency</td><td>Closest to true awareness — what production should graduate to</td></tr>
+            </tbody>
+          </table></div>
+          <h4>Layer 4 vs Layer 7</h4>
+          <p><b>L4 (transport)</b> — sees IPs/ports only; fast, cheap, content-blind. Use for raw throughput &amp; TCP passthrough. <b>L7 (application)</b> — reads URL/headers/cookies/body; enables path routing, cookie-based tiering, canary (5% to a new version), TLS termination (NGINX, HAProxy, ALB, Envoy). Production pattern: <b>L4 in front for throughput, L7 behind for intelligent routing.</b></p>
+          <h4>Health checks</h4>
+          <p><b>Active</b> polls "are you alive?" (a 10s interval = up to 10s of traffic to a dead box). <b>Passive</b> watches real responses (catches "alive but broken," but needs traffic). Production uses <b>both</b>, failure threshold ~3 (not 1), plus the part everyone forgets — <b>slow-start recovery</b>: ramp a recovered server up gradually or its backlog crushes it and it dies again.</p>
+
+          <h3>3b · Core distributed-systems concepts</h3>
+          <p class="lead">For each: definition + trade-off + a failure story. All are covered in depth in the <a href="#series">25-day series</a>.</p>
+          <div class="pills">
+            <span class="pill">Horizontal vs vertical scaling</span><span class="pill">Consistent hashing</span><span class="pill">Replication &amp; lag</span><span class="pill">Sharding &amp; partitioning</span><span class="pill">CAP / PACELC</span><span class="pill">Consistency models</span><span class="pill">Message queues</span><span class="pill">Pub/sub</span><span class="pill">Dead-letter queues</span><span class="pill">Event-driven</span><span class="pill">Sagas / 2PC</span><span class="pill">Idempotency</span><span class="pill">Timeouts</span><span class="pill">Retries + backoff + jitter</span><span class="pill">Circuit breakers</span><span class="pill">Bulkheads</span><span class="pill">Backpressure</span><span class="pill">Leader election</span><span class="pill">Fencing / split-brain</span><span class="pill">Service discovery</span><span class="pill">gRPC</span><span class="pill">WebSockets / SSE</span><span class="pill">P99 / tail latency</span><span class="pill">Data locality</span>
+          </div>
+
+          <h3>3c · Deploy &amp; operate (DevOps literacy)</h3>
+          <ul>
+            <li>Docker → Kubernetes (pods, services, liveness/readiness probes) → CI/CD.</li>
+            <li>Deployment strategies: blue-green, canary, rolling; rollbacks; feature flags.</li>
+            <li>Observability trio: logs, metrics, traces; alerting; SLO / SLI / error budgets.</li>
+            <li>IaC (Terraform, Helm), secrets, IAM, TLS, encryption at rest/in transit, WAF, DDoS.</li>
+            <li>Incidents: on-call, blameless postmortems.</li>
+          </ul>
+          <div class="callout teal"><span class="tag">The framing that lands</span>Writing code is rarely the bottleneck — <b>scaling it, observing it, and keeping it alive when real users depend on it</b> is where engineering begins. That ~100-item production checklist is exactly what separates "works on my machine" from "survives its first million users."</div>
+
+          <h3>3d · Video curriculum</h3>
+          <p style="font-size:.92rem;color:var(--ink-2)">Watch in order, take 3-layer notes: System Design Basics → Fundamentals → API Design → Load Balancing → Message Queues → Rate Limiting → Caching → Sharding &amp; Partitioning → Replication → Consistent Hashing → CAP → Microservices → Fault Tolerance → Scalability → Event-Driven Architecture → Service Discovery. (Full playlist links in <a href="#sources">Sources</a>.)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PHASE 4 ============ -->
+    <section id="phase4" class="reveal">
+      <div class="phase phase-4">
+        <div class="phase-top"><div class="phase-badge">4</div><div class="phase-meta"><h3>Language depth</h3><div class="dur">2–3 weeks · systems, not syntax</div></div></div>
+        <div class="phase-body">
+          <p class="lead">The bar moved. "HashMap vs Hashtable" and "what is the JVM" are over. Modern interviews (shown here for Java — substitute your stack) test whether you understand <b>systems, not syntax</b>.</p>
+          <div class="grid two">
+            <div class="card"><h4>Real microservices design</h4><p>Timeouts, retries, circuit breakers, idempotency — <b>implemented</b>, not defined.</p></div>
+            <div class="card"><h4>Distributed thinking</h4><p>Consistency models, partial failures, message reprocessing (consumer crashes mid-message — then what?).</p></div>
+            <div class="card"><h4>Framework internals</h4><p>Spring Boot auto-config, AOP proxies (why <code>@Transactional</code> on a self-invoked method silently does nothing), startup bottlenecks.</p></div>
+            <div class="card"><h4>DB &amp; caching strategy</h4><p>Query tuning, index design, connection-pool exhaustion, cache stampedes, eviction.</p></div>
+            <div class="card"><h4>Messaging</h4><p>Kafka partitions &amp; ordering, consumer lag, backpressure, exactly-once semantics (and why it's hard).</p></div>
+            <div class="card"><h4>Concurrency &amp; runtime depth</h4><p>Virtual vs platform threads, atomics/VarHandles, false sharing, lock elimination, escape analysis, how GC pauses hit tail latency.</p></div>
+          </div>
+          <div class="callout"><span class="tag">For your language</span>Node → event-loop internals, libuv, backpressure in streams. Python → the GIL, asyncio, C-extension boundaries. Go → the scheduler, goroutine leaks, channel semantics. Same principle: know the runtime, not just the syntax.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PHASE 5 ============ -->
+    <section id="phase5" class="reveal">
+      <div class="phase phase-5">
+        <div class="phase-top"><div class="phase-badge">5</div><div class="phase-meta"><h3>AI / agentic engineering track</h3><div class="dur">optional fork · 3–6 months</div></div></div>
+        <div class="phase-body">
+          <p class="lead">Skip for pure-backend roles; increasingly relevant everywhere else. Fundamentals outlast frameworks — build a small demo after every stage.</p>
+          <h4>The 12-stage agentic roadmap</h4>
+          <div class="twrap"><table>
+            <thead><tr><th>Stage</th><th>Focus</th><th>Key ideas</th></tr></thead>
+            <tbody>
+              <tr><td><code>1</code></td><td>Python + async foundations</td><td>asyncio, FastAPI, event-driven, error handling</td></tr>
+              <tr><td><code>2</code></td><td>LLM fundamentals for agents</td><td>context mgmt, model routing, token economics, latency trade-offs, failure modes</td></tr>
+              <tr><td><code>3</code></td><td>Tool calling + structured output</td><td>Pydantic validation, function schemas, error recovery, dynamic tool discovery</td></tr>
+              <tr><td><code>4</code></td><td>Memory + state</td><td>short-term buffers, long-term vector recall, context compression, cross-session sync</td></tr>
+              <tr><td><code>5</code></td><td>Single-agent workflows</td><td>ReAct, plan-and-execute, self-reflection, iteration limits, graceful degradation</td></tr>
+              <tr><td><code>6</code></td><td>Multi-agent orchestration</td><td>LangGraph/CrewAI, supervisor patterns, message passing, handoffs</td></tr>
+              <tr><td><code>7</code></td><td>Human-in-the-loop</td><td>uncertainty detection, approval gates, audit trails, resume logic</td></tr>
+              <tr><td><code>8</code></td><td>Evaluation + QA</td><td>eval harnesses, LLM-as-judge, regression tests, hallucination metrics</td></tr>
+              <tr><td><code>9</code></td><td>Observability</td><td>tracing (LangSmith/Arize), cost dashboards, latency monitoring</td></tr>
+              <tr><td><code>10</code></td><td>Security + guardrails</td><td>prompt-injection defense, output filtering, PII redaction, sandboxing</td></tr>
+              <tr><td><code>11</code></td><td>Production deployment</td><td>vLLM/SGLang, K8s scaling, CI/CD for agents, canary, rollbacks</td></tr>
+              <tr><td><code>12</code></td><td>Open source + portfolio</td><td>ship agents publicly, architecture docs, demos</td></tr>
+            </tbody>
+          </table></div>
+          <h4>Course path</h4>
+          <ol>
+            <li>Python — Harvard CS50P</li>
+            <li>AI with Python — Andrew Ng, <em>AI Python for Beginners</em></li>
+            <li>Understand LLMs (transformers, attention) — 3Blue1Brown neural-net series</li>
+            <li>Build LLMs — Karpathy, <em>Neural Networks: Zero to Hero</em></li>
+            <li>Agents (concepts before frameworks) — Anthropic, <em>Building Effective Agents</em></li>
+            <li>Applied multi-agent — CrewAI course</li>
+            <li>75+ projects — <code>github.com/patchy631/ai-engineering-hub</code></li>
+          </ol>
+          <div class="callout"><span class="tag">Backend depth powers AI</span>gRPC/protobufs · asyncio · connection pooling · Kafka + CDC · backpressure (surviving inference bursts) · Redis pipelining · vector indexing (HNSW/IVF) · semantic caching (saves GPU compute) · distributed locking · token-bucket rate limiting for LLM APIs · idempotency · sharding · OpenTelemetry. <b>Architecture &gt; algorithms.</b></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PHASE 6 ============ -->
+    <section id="phase6" class="reveal">
+      <div class="phase phase-6">
+        <div class="phase-top"><div class="phase-badge">6</div><div class="phase-meta"><h3>Web-dev stack track</h3><div class="dur">optional fork · full-stack roles</div></div></div>
+        <div class="phase-body">
+          <p class="lead">The mentor's fresher-to-hired sequence that landed a US remote job in three months.</p>
+          <div class="roadmap" style="margin-top:8px">
+            <div class="rm-node"><h4>HTML &amp; CSS</h4><p>Structure and layout first.</p></div>
+            <div class="rm-node"><h4>JavaScript → small projects</h4><p>Build tiny apps immediately to cement fundamentals.</p></div>
+            <div class="rm-node"><h4>TypeScript</h4><p>Types = fewer errors + easier language switches.</p></div>
+            <div class="rm-node"><h4>React (function components) → Next.js</h4><p>SSR/SSG, fast deploys.</p></div>
+            <div class="rm-node"><h4>Node.js + Express → MySQL &amp; MongoDB</h4><p>Same-language backend; one SQL, one NoSQL.</p></div>
+            <div class="rm-node"><h4>Complete projects → portfolio + resume</h4><p>Host on Vercel/Netlify; portfolio is your passport.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ============ DSA PATTERN CATALOG (added) ============ -->
+    <section id="patterns" class="reveal">
+      <div class="sec-head"><span class="sec-num">Deep dive · added</span><h2>DSA <em>pattern catalog</em></h2>
+        <p class="sec-intro">The 13 starter problems teach patterns — here is the full catalog. Most interview questions are one of these wearing a costume. Learn to recognize the costume.</p></div>
+      <div class="twrap"><table>
+        <thead><tr><th>Pattern</th><th>Signal it's this</th><th>Typical complexity</th><th>Example problems</th></tr></thead>
+        <tbody>
+          <tr><td><b>Two pointers</b></td><td>Sorted array / pair or triplet / in-place</td><td>O(n)</td><td>Valid Palindrome, 3Sum, Container With Most Water</td></tr>
+          <tr><td><b>Sliding window</b></td><td>Contiguous subarray/substring, "longest/shortest ... such that"</td><td>O(n)</td><td>Longest Substring w/o Repeat, Min Window Substring</td></tr>
+          <tr><td><b>Fast &amp; slow pointers</b></td><td>Cycle detection, middle of list</td><td>O(n)</td><td>Linked List Cycle, Happy Number</td></tr>
+          <tr><td><b>Hash map / set</b></td><td>"Have I seen this?", frequency, complement lookup</td><td>O(n)</td><td>Two Sum, Group Anagrams, Contains Duplicate</td></tr>
+          <tr><td><b>Binary search</b></td><td>Sorted, or "minimize/maximize a value that's monotonic"</td><td>O(log n)</td><td>Search in Rotated Array, Koko Eating Bananas</td></tr>
+          <tr><td><b>Stack / monotonic stack</b></td><td>Matching pairs, "next greater/smaller element"</td><td>O(n)</td><td>Valid Parentheses, Daily Temperatures</td></tr>
+          <tr><td><b>Heap / top-K</b></td><td>"K largest/smallest/most frequent", streaming median</td><td>O(n log k)</td><td>Kth Largest, Merge K Lists, Top K Frequent</td></tr>
+          <tr><td><b>Intervals</b></td><td>Overlaps, merges, scheduling</td><td>O(n log n)</td><td>Merge Intervals, Meeting Rooms</td></tr>
+          <tr><td><b>BFS (graph/tree)</b></td><td>Shortest path (unweighted), level-order</td><td>O(V+E)</td><td>Level Order, Rotting Oranges, Word Ladder</td></tr>
+          <tr><td><b>DFS / backtracking</b></td><td>All paths, permutations/combinations, connected components</td><td>O(V+E) / exp.</td><td>Number of Islands, Subsets, N-Queens</td></tr>
+          <tr><td><b>Topological sort</b></td><td>Ordering with dependencies, cycle detection in DAG</td><td>O(V+E)</td><td>Course Schedule, Alien Dictionary</td></tr>
+          <tr><td><b>Dynamic programming</b></td><td>"Count ways / min-max / can you reach", overlapping subproblems</td><td>O(n·m)</td><td>Climbing Stairs, Coin Change, LCS, Edit Distance</td></tr>
+          <tr><td><b>Greedy</b></td><td>Local optimum → global; interval/scheduling choices</td><td>O(n log n)</td><td>Jump Game, Gas Station, Task Scheduler</td></tr>
+          <tr><td><b>Union-Find (DSU)</b></td><td>Dynamic connectivity, grouping</td><td>~O(α(n))</td><td>Number of Provinces, Redundant Connection</td></tr>
+          <tr><td><b>Trie</b></td><td>Prefix search, autocomplete, word dictionaries</td><td>O(len)</td><td>Implement Trie, Word Search II</td></tr>
+          <tr><td><b>Bit manipulation</b></td><td>"Without extra space", XOR tricks, subsets via bitmask</td><td>O(n)</td><td>Single Number, Counting Bits</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout teal"><span class="tag">Practice strategy</span>Don't grind 500 random problems. Do ~8–12 per pattern until recognition is instant, then a mixed set to practice <em>identifying</em> the pattern under pressure — that recognition is the actual interview skill.</div>
+    </section>
+
+    <!-- ============ BIG-O (added) ============ -->
+    <section id="complexity" class="reveal">
+      <div class="sec-head"><span class="sec-num">Reference · added</span><h2>Big-O <em>cheat sheet</em></h2>
+        <p class="sec-intro">State complexity out loud for every solution. These are the numbers to have memorized.</p></div>
+      <h4>Data-structure operations (average case)</h4>
+      <div class="twrap"><table>
+        <thead><tr><th>Structure</th><th>Access</th><th>Search</th><th>Insert</th><th>Delete</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Array</td><td>O(1)</td><td>O(n)</td><td>O(n)</td><td>O(n)</td><td>Insert/delete at end O(1) amortized</td></tr>
+          <tr><td>Hash table</td><td>—</td><td>O(1)</td><td>O(1)</td><td>O(1)</td><td>O(n) worst case on collisions</td></tr>
+          <tr><td>Linked list</td><td>O(n)</td><td>O(n)</td><td>O(1)</td><td>O(1)</td><td>O(1) insert/delete <em>given the node</em></td></tr>
+          <tr><td>Stack / Queue</td><td>O(n)</td><td>O(n)</td><td>O(1)</td><td>O(1)</td><td>push/pop/enqueue/dequeue O(1)</td></tr>
+          <tr><td>Binary search tree (bal.)</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td>O(n) if unbalanced</td></tr>
+          <tr><td>Heap</td><td>O(1) peek</td><td>O(n)</td><td>O(log n)</td><td>O(log n)</td><td>build-heap O(n)</td></tr>
+          <tr><td>Trie</td><td>O(L)</td><td>O(L)</td><td>O(L)</td><td>O(L)</td><td>L = key length</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Sorting algorithms</h4>
+      <div class="twrap"><table>
+        <thead><tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable</th></tr></thead>
+        <tbody>
+          <tr><td>Quick sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n²)</td><td>O(log n)</td><td>No</td></tr>
+          <tr><td>Merge sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>Yes</td></tr>
+          <tr><td>Heap sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(1)</td><td>No</td></tr>
+          <tr><td>Insertion sort</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+          <tr><td>Counting / Radix</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n·k)</td><td>O(n+k)</td><td>Yes</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout"><span class="tag">Latency numbers to know</span>RAM ~100&nbsp;ns · SSD ~100&nbsp;µs (1,000× slower) · HDD ~10&nbsp;ms · same-datacenter round trip ~500&nbsp;µs · <b>cross-region round trip ~150&nbsp;ms</b>. Cross-region is over a million times slower than CPU cache — which is why caching and serving from a nearby region matter so much.</div>
+    </section>
+
+    <!-- ============ SQL (added) ============ -->
+    <section id="sql" class="reveal">
+      <div class="sec-head"><span class="sec-num">Deep dive · added</span><h2>SQL <em>essentials</em></h2>
+        <p class="sec-intro">SQL rounds are common and separate the "I use an ORM" crowd from engineers who understand the database. Master these.</p></div>
+      <div class="grid two">
+        <div class="card"><h4>Joins</h4><p>INNER (match both) · LEFT (all left + matches) · RIGHT · FULL OUTER · CROSS · SELF-join. Know exactly which rows each returns and when NULLs appear.</p></div>
+        <div class="card"><h4>Aggregation</h4><p><code>GROUP BY</code> + <code>HAVING</code> (filter groups, vs <code>WHERE</code> filtering rows). COUNT/SUM/AVG/MIN/MAX. The classic bug: filtering aggregates in WHERE.</p></div>
+        <div class="card"><h4>Window functions</h4><p><code>ROW_NUMBER()</code>, <code>RANK()</code>, <code>DENSE_RANK()</code>, <code>LAG/LEAD</code>, running totals with <code>SUM() OVER (...)</code>. The tool for "top N per group" and "compare to previous row."</p></div>
+        <div class="card"><h4>Subqueries &amp; CTEs</h4><p>Correlated vs non-correlated subqueries; <code>WITH</code> CTEs for readability; recursive CTEs for hierarchies/graphs.</p></div>
+        <div class="card"><h4>Indexing in practice</h4><p>B-Tree indexes, composite-index column order (equality first, range last), covering indexes, why <code>LIKE '%x'</code> and functions on columns kill index use.</p></div>
+        <div class="card"><h4>Transactions &amp; isolation</h4><p>ACID, isolation levels (Read Committed → Serializable) and the anomalies each prevents; deadlocks and lock ordering.</p></div>
+      </div>
+      <div class="callout"><span class="tag">Classic interview asks</span>"Second-highest salary" (window function or correlated subquery) · "Nth highest per department" (<code>ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC)</code>) · "find duplicates" (GROUP BY + HAVING COUNT &gt; 1) · "running total" (SUM window). Practice each until it's reflexive.</div>
+    </section>
+
+    <!-- ============ SD TEMPLATE (added) ============ -->
+    <section id="sd-template" class="reveal">
+      <div class="sec-head"><span class="sec-num">Deep dive · added</span><h2>How to answer <em>any</em> system-design question</h2>
+        <p class="sec-intro">A repeatable 6-step frame. Interviewers grade your <b>questions and trade-offs</b> as much as the boxes you draw. Never jump to "let's use Kafka and Cassandra" before the numbers justify it.</p></div>
+      <ol>
+        <li><b>Clarify requirements &amp; scope</b> — functional (what it must do) and non-functional (scale, latency, consistency, availability). Nail the read/write ratio.</li>
+        <li><b>Estimate (back-of-envelope)</b> — DAU × actions/day ÷ 86,400 → QPS; peak ≈ 2–3× average; storage = rows × size × retention. <em>Do the math out loud</em> — designing for the wrong scale is the #1 failure at Google/Amazon/Meta.</li>
+        <li><b>Define the API</b> — a few endpoints/signatures. Grounds the abstract in something concrete.</li>
+        <li><b>High-level design</b> — client → LB → services → cache → DB → queue. Draw the boxes and data flow.</li>
+        <li><b>Deep-dive 1–2 components</b> — the interesting ones: the datastore choice, the hot path, the consistency boundary. Show the trade-off you're making.</li>
+        <li><b>Address bottlenecks &amp; failures</b> — apply the patterns: caching, sharding, replication, queues, circuit breakers, idempotency. What happens when a node dies?</li>
+      </ol>
+      <div class="callout teal"><span class="tag">Consistency is per-feature, not per-system</span>The answer interviewers love: "It depends on the feature." An e-commerce app is AP for its product catalogue and reviews, but CP for last-item inventory and payments — same system, different guarantees. Saying that shows you understand CAP instead of reciting it.</div>
+    </section>
+
+    <!-- ============ CASE STUDIES (added) ============ -->
+    <section id="cases" class="reveal">
+      <div class="sec-head"><span class="sec-num">Deep dive · added</span><h2>Mini <em>case studies</em></h2>
+        <p class="sec-intro">Four canonical designs, each with the numbers and the decisions that fall out of them. Run each through the 6-step template above.</p></div>
+      <div class="grid two">
+        <div class="card"><h4>URL shortener (Bitly)</h4><p>100M URLs/month → ~40 writes/s (one DB, no write sharding). Read-heavy ~100:1 → ~4,000 reads/s → <b>Redis in front + read replicas</b>. ~3 TB over 5 years fits one disk + replication. <b>No queue, no sharding.</b> Base62 short codes or a hash+counter. The estimation is what saves you from over-engineering.</p></div>
+        <div class="card"><h4>Rate limiter</h4><p>Token bucket in Redis (atomic INCR + TTL). Distributed → counters must be shared, not per-instance. Return <b>429</b> with <code>Retry-After</code>; clients back off with jitter. Layer it: gateway global + per-user + per-endpoint. Whitelist health checks.</p></div>
+        <div class="card"><h4>Chat / messaging</h4><p><b>WebSockets</b> for realtime delivery; a message queue for fan-out &amp; offline delivery; shard by <code>conversation_id</code> so a chat's messages co-locate. At-least-once delivery + idempotent client dedup. Read receipts &amp; presence via pub/sub.</p></div>
+        <div class="card"><h4>News feed (Twitter timeline)</h4><p><b>Fan-out on write</b> (push to followers' feeds) for most users vs <b>fan-out on read</b> (pull) for celebrities with millions of followers — hybrid. Cache timelines in Redis; precompute; paginate with cursors. The celebrity problem is the whole interview.</p></div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ============ 25-DAY SERIES ============ -->
+    <section id="series" class="reveal">
+      <div class="sec-head"><span class="sec-num">The deep-dive · all 25 days</span><h2>The 25-day <em>scaling series</em></h2>
+        <p class="sec-intro">By a Principal Engineer at Atlassian. Every concept answers one of three questions — <b>handle more load</b>, <b>store more data than one machine holds</b>, <b>stay correct when things fail</b> — and every one is a trade-off between speed, cost, and correctness. Expand any day.</p></div>
+
+      <details class="acc day"><summary><span class="d-n">Day 1</span><span class="d-topic">Load Balancing</span><span class="d-hook">the balancer is lying to you</span><span class="chev">›</span></summary>
+        <div class="acc-body">Covered in full in Phase 3a above: algorithms &amp; failure modes, L4 vs L7, active/passive health checks, and slow-start recovery. Core lesson — distributing requests isn't balancing load.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 2</span><span class="d-topic">CDN</span><span class="d-hook">protection, not just speed</span><span class="chev">›</span></summary>
+        <div class="acc-body">A CDN's real value is <b>protection</b>: 10k req/s at 92% edge hit ratio means the origin sees ~800. Pull-based (95% of teams; first user pays a 200–300ms penalty) vs push-based (pre-warm for launches/live events). Cache-hit ratio is the one metric: &lt;80% = expensive proxy, 95%+ = origin basically retired. Cache the things that <em>look</em> dynamic but aren't (same-for-everyone API responses, HTML fragments, per-cohort via Vary). Invalidation: TTL vs purge (bulk purge = thundering herd) vs <b>stale-while-revalidate</b> (the go-to — serve stale instantly, refresh in background). Modern CDNs run code at the edge (Workers, Lambda@Edge). If read:write ≈ 100:1, the CDN is your most important layer.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 3</span><span class="d-topic">Caching — the 5 layers</span><span class="d-hook">Redis is one of five</span><span class="chev">›</span></summary>
+        <div class="acc-body"><b>1 Browser</b> (0ms, per-user; version filenames or a deploy serves stale JS). <b>2 CDN edge</b> (per-region; one fill serves thousands). <b>3 App cache</b> Redis/Memcached (cache-aside is the 90% pattern; Redis = data structures, Memcached = simple KV). <b>4 DB query cache</b> (MySQL removed it in 8.0; Postgres uses prepared statements + shared buffers — why pooling keeps caches warm). <b>5 OS page cache</b> (the OS caches disk reads in RAM automatically — why "fits in memory" is fast and why more RAM often beats more CPU). Method: start at the top; a <code>Cache-Control</code> header may do what Redis would, with zero infra.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 4</span><span class="d-topic">Cache Invalidation</span><span class="d-hook">one of two hard problems</span><span class="chev">›</span></summary>
+        <div class="acc-body">Three write strategies: <b>write-through</b> (always consistent, double writes), <b>write-behind</b> (fast, risks data loss if cache dies before flush — never for money), <b>write-around + cache-aside</b> (write DB, refill on miss — the 80% choice). The cheat code: on write <b>delete</b> the key, don't update it — updates can race and leave the older value. Invalidation: start with TTL; add event-driven purge only where staleness costs money (inventory, pricing, permissions).</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 5</span><span class="d-topic">Rate Limiting</span><span class="d-hook">enforce your known capacity</span><span class="chev">›</span></summary>
+        <div class="acc-body">Not mainly about attackers — about enforcing capacity before things break (their own batch job sent 400k requests in 90s and folded the API). Algorithms: <b>token bucket</b> (allows bursts — the default, AWS/Stripe), <b>sliding window</b> (strict — auth/payments), <b>leaky bucket</b> (perfectly smooth output). Enforce at ≥2 layers (gateway, per-service, per-user, per-endpoint). Return <b>429</b> with <code>Retry-After</code>; beware retry storms → exponential backoff + <b>jitter</b>. Whitelist health checks. Counters in Redis (local counters break behind an LB).</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 6</span><span class="d-topic">API Gateway</span><span class="d-hook">the single front door</span><span class="chev">›</span></summary>
+        <div class="acc-body">Six jobs: authn/authz at the door, rate limiting, routing, protocol translation (REST outside, gRPC inside), response caching, centralized logging. Routing at scale: header-based (version/device), <b>weighted/canary</b> (5%→25%→100%, instant rollback — "deploying without a canary is just hoping"), BFF request aggregation (1 mobile round trip instead of 3). Gateway = north-south (external in); <b>service mesh</b> = east-west (service↔service, mTLS/retries via sidecars, overkill below ~20 services). Buy don't build; keep it thin; monitor it (it's a single entry point).</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 7</span><span class="d-topic">CAP Theorem</span><span class="d-hook">"pick 2 of 3" is wrong</span><span class="chev">›</span></summary>
+        <div class="acc-body">Correct framing: <b>when a partition occurs</b>, choose consistency or availability — you don't choose P, partitions will happen. <b>CP</b>: refuse to answer rather than serve stale (banks, Spanner, ZooKeeper/etcd). <b>AP</b>: always answer, maybe stale (Cassandra, DynamoDB, DNS). The interview-winning line: <b>CAP is per-feature, not per-system</b>. <b>PACELC</b> completes it: during Partition A-vs-C; Else Latency-vs-Consistency.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 8</span><span class="d-topic">Sharding</span><span class="d-hook">the decision you can't undo</span><span class="chev">›</span></summary>
+        <div class="acc-body">Sharding splits data across independent servers (cross-shard queries, broken joins, painful rebalancing) — <b>partition before you shard</b>. Strategies: range (hotspots), hash (kills range queries), directory (SPOF). Most teams: hash + consistent hashing. Shard-key rules: shard on what you query by, high cardinality, even distribution, co-locate joined data. Try first, in order: optimize queries → pooling → read replicas → partition → vertical scale → <b>then</b> shard. Heuristic: &lt;500GB and &lt;10k writes/s → you don't need it.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 9</span><span class="d-topic">Replication</span><span class="d-hook">where your data lies to you</span><span class="chev">›</span></summary>
+        <div class="acc-body">Leader-follower via WAL. <b>Sync</b> (no loss, slower) vs <b>async</b> (fast, loses recent writes on leader death); production uses semi-sync. <b>Replication lag</b> causes read-your-own-write bugs — fix with read-from-leader-after-write, causal tokens, or leader-reads for flows that matter. Failover: election → promote most-current follower; watch for <b>split-brain</b> (fencing/STONITH), data-loss windows, connection storms (put PgBouncer between). Test failover quarterly — untested failover is a theory. Topologies: single-leader (default), multi-leader (multi-region writes + conflicts), leaderless (Dynamo/Cassandra).</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 10</span><span class="d-topic">Partitioning</span><span class="d-hook">the step before sharding</span><span class="chev">›</span></summary>
+        <div class="acc-body">Split one table within one DB. Range (dates), list (country/tenant — watch skew), hash (even spread, kills range queries). <b>Partition pruning</b> is the whole point — verify with EXPLAIN; it breaks if the WHERE omits the partition key, on type mismatch, or on functions applied to the key. Killer feature: <code>DROP PARTITION</code> for retention (ms, no locks) vs an hours-long DELETE. Sweet spot 1M–100M rows/partition; pre-create future partitions.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 11</span><span class="d-topic">Queues</span><span class="d-hook">makes failure graceful</span><span class="chev">›</span></summary>
+        <div class="acc-body">A queue doesn't make you faster — it turns an uncontrollable spike into a controllable stream. Producer → queue → consumer(ack). Delivery: at-most-once, <b>at-least-once</b> (SQS/RabbitMQ default — "sometimes twice"), exactly-once (hard). Production norm: at-least-once + <b>idempotent consumers</b>. RabbitMQ = task distributor; Kafka = replayable event log, multi-consumer, millions/s; SQS = managed. Production trio: <b>backpressure</b> (monitor depth, autoscale, shed at source), <b>dead-letter queues</b> (poison messages after 3–5 fails), <b>idempotency</b>. Pattern: sync fast path + async everything else.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 12</span><span class="d-topic">Microservices</span><span class="d-hook">an org problem, not a tech one</span><span class="chev">›</span></summary>
+        <div class="acc-body"><b>"Microservices solve an organisational problem, not a technical one."</b> Real value: independent deploy by independent teams (one team, one service). Costs: function calls become network calls (retries/circuit breakers), ACID becomes sagas, debugging becomes distributed tracing, ops multiplies. Need them when teams block each other's deploys, scaling needs diverge wildly, or fault isolation is critical. Don't at &lt;10 engineers or early-stage (Segment's 140 services became a cautionary tale). Prereqs before extracting: centralized logging + correlation IDs, health checks, gateway/mesh, circuit breakers, tracing.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 13</span><span class="d-topic">Monolith vs Microservices</span><span class="d-hook">the modular monolith</span><span class="chev">›</span></summary>
+        <div class="acc-body">The receipts: Amazon Prime Video merged back (-90% cost), Segment rebuilt their monolith, Istio re-merged. Start monolith (5–30 engineers): you don't know your boundaries until 6–12 months of real users; the bottleneck is shipping speed; operational tax doesn't pay off below ~50–80 engineers. The missing third option: the <b>modular monolith</b> (Shopify's "majestic monolith") — one deployable, service-grade internal boundaries; 80% of the benefit, none of the distributed pain. Extract one service only on real pain; most teams stop at 3–5.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 14</span><span class="d-topic">Fault Tolerance</span><span class="d-hook">four patterns</span><span class="chev">›</span></summary>
+        <div class="acc-body"><b>1 Timeouts</b> — many libraries wait forever by default; without one a slow dependency fills your pool and the failure walks upstream. Set connect 1–3s, read = p99 + buffer, total &lt; caller's timeout. <b>2 Circuit breakers</b> — closed → open (fail fast, let it recover) → half-open (probe); trip at 50% over 10s with ≥20 requests; use a library. <b>3 Bulkheads</b> — per-dependency thread pools so one hang can't starve all; size = throughput × p99 + headroom. <b>4 Retries + backoff + jitter</b> — the most dangerous pattern (retry storms helped keep S3 down in 2017); cap at 3; only retry idempotent ops. Then chaos-test in staging.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 15</span><span class="d-topic">Database Scaling</span><span class="d-hook">the 5-step ladder</span><span class="chev">›</span></summary>
+        <div class="acc-body">Each step ~10× cheaper than the next; walk top to bottom; most products never reach the bottom. <b>1 Indexes</b> (a CREATE INDEX turns 4s into 4ms; foreign-key indexes and composite indexes are the two everyone misses). <b>2 Connection pooling</b> (PgBouncer transaction mode: 5,000 app connections → 50 real ones). <b>3 Read replicas</b> (N× read throughput; mind lag). <b>4 Partitioning.</b> <b>5 Sharding</b> (last resort). Start with the symptom, not the solution — the slow-query log tells you which step. Most problems are solved at steps 1–2.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 16</span><span class="d-topic">Service Discovery</span><span class="d-hook">where is service X right now?</span><span class="chev">›</span></summary>
+        <div class="acc-body">Hardcoding works until instances go ephemeral / deploys go frequent / you cross regions. <b>DNS-based</b> (universal, but TTL caching serves dead IPs). <b>Registry-based</b> (Consul/Eureka/etcd — self-register + heartbeat + metadata routing; the registry becomes critical infra). <b>Platform-native (Kubernetes)</b> — Service objects, zero app code — use it if you're on K8s. Service mesh sits above discovery. "Discovery should be boring. The day you notice it is the day it broke."</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 17</span><span class="d-topic">Consistency Models</span><span class="d-hook">five things, not one</span><span class="chev">›</span></summary>
+        <div class="acc-body">Strongest → weakest: <b>Linearizability</b> (single real-time order; needs a primary or consensus; costs latency + availability) → <b>Sequential</b> (per-client order; mostly academic) → <b>Causal</b> (happened-before respected — comments after posts; vector clocks) → <b>Eventual</b> (stop writing, replicas converge; nearly free; breaks read-your-own-write → sticky sessions). CP examples: Spanner, etcd, ZooKeeper. AP: DynamoDB, Cassandra, S3. Pick the weakest model that doesn't break your product, per operation; test with Jepsen.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 18</span><span class="d-topic">Eventual Consistency in Production</span><span class="d-hook">Knight Capital, $440M</span><span class="chev">›</span></summary>
+        <div class="acc-body">Four failures: read-your-own-write, monotonic-reads breaking (5→4→5 orders), lost updates, causality breaks. Four fixes: <b>read-your-writes</b> (sticky sessions / read-from-primary / causal tokens), <b>monotonic reads</b> (pin user to a replica), <b>session consistency</b> (combine both per session — what Facebook/Twitter/Instagram do), <b>conflict resolution</b> (LWW = silent data loss; vector clocks; <b>CRDTs</b> — how Google Docs/Figma merge; app-defined merge). Traps: trusting the DB's default LWW; read-modify-write on eventual data (use atomic ops); hide latency with optimistic UI.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 19</span><span class="d-topic">Distributed Transactions &amp; Sagas</span><span class="d-hook">British Airways, £80M</span><span class="chev">›</span></summary>
+        <div class="acc-body">No shared transaction across services = no shared ROLLBACK; "undo a credit-card charge" ≠ ROLLBACK. <b>2PC</b>: prepare/commit — killed by being slow, coordinator SPOF (the blocking problem), and resource locking; almost never in modern microservices. <b>Sagas</b>: a sequence of local transactions + <b>compensating actions</b>; choreography (event-driven, loosely coupled, hard to debug) vs orchestration (central coordinator — use for 4+ steps / money). Hard parts: compensations that can fail, mandatory idempotency, dirty reads (mark "reserved"), stuck-saga timeouts, concurrency on the last item. Best move: restructure so you don't need the distributed transaction at all.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 20</span><span class="d-topic">Leader Election</span><span class="d-hook">GitHub, 24h outage</span><span class="chev">›</span></summary>
+        <div class="acc-body"><b>Raft</b>: leader sends heartbeats; on timeout a follower becomes candidate, increments the term, and needs a <b>majority</b> — so two leaders in one term is impossible; split votes resolve via randomized timeouts. <b>Split-brain</b> (the GitHub failure — two leaders both accepting writes) is prevented by <b>fencing tokens</b>, STONITH, or leases. Tools: etcd (modern default, K8s' brain), ZooKeeper, Consul; Redis+Redlock only for non-critical. Don't need it for stateless servers or idempotent work.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 21</span><span class="d-topic">Horizontal vs Vertical Scaling</span><span class="d-hook">Twitter's Fail Whale</span><span class="chev">›</span></summary>
+        <div class="acc-body"><b>Vertical</b> — boring, works longer than you think (one AWS box = 128 cores/4TB; Stack Overflow ran billions of pageviews on a handful of machines); ceilings are the physical max and a non-linear cost curve, plus it's a single point of failure. <b>Horizontal</b> — near-unlimited + fault tolerance for free, but demands <b>statelessness</b> (the make-or-break: sessions → Redis, files → S3, so any server handles any request). Path: scale up first, make it stateless early (highest-leverage, cheap now), add a read replica, then scale out for a real reason. Best architecture for 1,000 users is usually one good machine.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 22</span><span class="d-topic">Back-of-the-Envelope Estimation</span><span class="d-hook">the #1 interview failure</span><span class="chev">›</span></summary>
+        <div class="acc-body">Candidates fail by designing for the wrong scale. Numbers: 1 day ≈ 86,400s (round to 100k); one server ≈ 1k–10k req/s; one DB ≈ 1000s writes/s; a text record ≈ 1KB. Method: users → DAU → req/s (÷100k) → peak (×2–3) → storage (×retention) → bandwidth → read the numbers, decide the architecture. Worked URL-shortener: 100M URLs/mo → 40 writes/s, 4k reads/s → one DB + Redis + replicas, no sharding. Estimation drives design, not the reverse.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 23</span><span class="d-topic">Idempotency</span><span class="d-hook">the ₹9,998 double charge</span><span class="chev">›</span></summary>
+        <div class="acc-body"><b>Duplicate delivery is the default behaviour of every distributed system</b> — retries, LB re-routes, at-least-once queues, double-clicks. "Set balance to X" is naturally idempotent; "add X" is a landmine. <b>Idempotency keys</b>: client generates one key <em>per operation</em>; server processes-and-stores on first sight, replays the stored result on repeat (Stripe's contract). Sharp edges: the store must be shared (Redis / DB unique constraint) and fast; store the <em>result</em> not just the key; the in-flight collision is caught by the unique constraint; keys expire in 24–48h.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 24</span><span class="d-topic">Data Locality</span><span class="d-hook">closeness is speed</span><span class="chev">›</span></summary>
+        <div class="acc-body">Almost every performance problem = how far the data travels to the compute. The latency ladder spans a million-fold (CPU cache 1ns → cross-region 150ms). Three levers: <b>co-locate data used together</b> (the deep reason shard keys matter), <b>move compute to data</b> (push filtering into the DB; don't ship a billion rows to keep fifty), <b>serve from the edge</b> (CDNs + regional replicas). Caching, sharding, CDNs, replication are one idea at different layers — shorten the distance between question and answer.</div></details>
+
+      <details class="acc day"><summary><span class="d-n">Day 25</span><span class="d-topic">The One Idea Behind All 25</span><span class="d-hook">it depends — on what?</span><span class="chev">›</span></summary>
+        <div class="acc-body">The 25 concepts answer three questions: handle more load, store more than one machine holds, stay correct when things fail. The single sentence: <b>every architecture decision trades off speed, cost, and correctness — you can't maximize all three.</b> Strong consistency costs latency; low latency costs consistency; fault tolerance costs money. "It depends" is the correct answer — the skill is knowing what it depends on. The patterns are vocabulary; judgment, built by shipping and breaking things, is the craft.</div></details>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ============ BEHAVIORAL (added) ============ -->
+    <section id="behavioral" class="reveal">
+      <div class="sec-head"><span class="sec-num">Interview craft · added</span><h2>Behavioral &amp; <em>the STAR method</em></h2>
+        <p class="sec-intro">Technical skill gets you the loop; behavioral answers decide the offer and the level. Under-prepared here is the most common reason strong coders get down-leveled.</p></div>
+      <div class="callout"><span class="tag">STAR</span><b>S</b>ituation (context, 1–2 sentences) · <b>T</b>ask (your specific responsibility) · <b>A</b>ction (what <em>you</em> did — "I", not "we") · <b>R</b>esult (the outcome, quantified). Prepare 6–8 stories that flex to cover most prompts.</div>
+      <h4>Stories to have ready</h4>
+      <div class="grid two">
+        <div class="card"><p>A project you're <b>proud of</b> (technical depth + impact)</p></div>
+        <div class="card"><p>A <b>conflict</b> with a teammate and how you resolved it</p></div>
+        <div class="card"><p>A <b>failure</b> or bug you caused — and what you learned</p></div>
+        <div class="card"><p>A time you <b>disagreed</b> with a decision (data over ego)</p></div>
+        <div class="card"><p>A hard <b>trade-off</b> you made under constraints</p></div>
+        <div class="card"><p>A time you <b>led</b> or influenced without authority</p></div>
+        <div class="card"><p>Handling <b>ambiguity</b> or shifting requirements</p></div>
+        <div class="card"><p>The most <b>impactful</b> thing you shipped (with metrics)</p></div>
+      </div>
+      <div class="callout teal"><span class="tag">Tips</span>Quantify results ("cut p99 from 800ms to 120ms", "reduced infra cost 40%"). Own failures without blaming. Research the company's engineering values and map a story to each. Always prepare 2–3 sharp questions to ask <em>them</em> — it signals seniority.</div>
+    </section>
+
+    <!-- ============ DAY-OF (added) ============ -->
+    <section id="day-of" class="reveal">
+      <div class="sec-head"><span class="sec-num">Interview craft · added</span><h2>Interview-day <em>tactics</em></h2></div>
+      <div class="grid two">
+        <div class="card"><h4>Coding round</h4><p>Restate the problem &amp; confirm examples → clarify constraints &amp; edge cases → state brute force → optimize out loud → <b>narrate as you code</b> → test with a small example → state complexity. Silence is the enemy; a wrong turn you explain beats a right answer in silence.</p></div>
+        <div class="card"><h4>System design round</h4><p>Drive it: clarify → estimate → API → boxes → deep-dive → bottlenecks. Ask questions constantly — interviewers grade the questions. State trade-offs explicitly. It's a conversation, not a monologue.</p></div>
+        <div class="card"><h4>When you're stuck</h4><p>Think out loud, don't freeze. Solve a simpler version first. Ask a clarifying question. Reason from a known pattern ("this smells like sliding window"). Interviewers can only credit reasoning they can hear.</p></div>
+        <div class="card"><h4>Communication</h4><p>Structure every answer: headline → detail → trade-off. Manage time (don't over-invest in step 1). Be coachable — take hints gracefully. Stay calm; the loop is a collaboration, not an interrogation.</p></div>
+      </div>
+    </section>
+
+    <!-- ============ RESUME (added) ============ -->
+    <section id="resume" class="reveal">
+      <div class="sec-head"><span class="sec-num">Interview craft</span><h2>Resume, portfolio &amp; <em>profile</em></h2></div>
+      <div class="grid two">
+        <div class="card"><h4>Resume</h4><p>One page. <b>Impact bullets</b>: "verb + what + measurable result" ("Cut API p99 40% by adding a Redis cache-aside layer"). Keywords that pass ATS &amp; recruiter scans: your stack, "Full Stack", "REST", "microservices", "system design". Few fonts, no photo, no skill bars.</p></div>
+        <div class="card"><h4>Portfolio</h4><p>Your passport — recruiters learn a lot from it. Who you are, your best 2–3 projects with live links + GitHub, responsive, fast. Quality over quantity; a polished full-stack app beats ten tutorials.</p></div>
+        <div class="card"><h4>GitHub</h4><p>Pin your best repos, write real READMEs (what/why/how to run), keep commit history clean. It's your proof of work — used from day one, per Phase 0.</p></div>
+        <div class="card"><h4>Network</h4><p>"You may possess 1,000 skills, all in vain without connections." Be active where engineers are; write about what you build; referrals beat cold applications by an order of magnitude.</p></div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ============ QUESTION BANK ============ -->
+    <section id="qbank" class="reveal">
+      <div class="sec-head"><span class="sec-num">Drill</span><h2>Question <em>bank</em></h2>
+        <p class="sec-intro">Rapid-fire definitions you must nail in two sentences, then scenario questions to practice out loud. Reveal the answer only after you've said yours.</p></div>
+
+      <h4>Rapid-fire (say each in ≤ 2 sentences)</h4>
+      <div class="pills">
+        <span class="pill">Idempotency</span><span class="pill">401 vs 403</span><span class="pill">PUT vs PATCH</span><span class="pill">JWT vs session</span><span class="pill">authn vs authz</span><span class="pill">CAP</span><span class="pill">ACID</span><span class="pill">cursor vs offset pagination</span><span class="pill">L4 vs L7</span><span class="pill">active vs passive health checks</span><span class="pill">optimistic vs pessimistic locking</span><span class="pill">horizontal vs vertical scaling</span><span class="pill">webhook vs polling</span><span class="pill">circuit breaker</span><span class="pill">backpressure</span><span class="pill">P99 latency</span><span class="pill">cache stampede</span><span class="pill">N+1 query</span><span class="pill">saga</span><span class="pill">dead-letter queue</span><span class="pill">consistent hashing</span><span class="pill">exactly-once vs at-least-once</span>
+      </div>
+
+      <h4 style="margin-top:26px">Scenario questions</h4>
+      <details class="acc"><summary><span class="q-n">Q1</span>A payment POST times out and the client retries. How do you prevent a double charge?<span class="chev">›</span></summary>
+        <div class="acc-body"><div class="ans"><span class="tag">Answer</span>Idempotency-Key header. Client sends a unique key per operation; the server stores the result against it on first processing and replays that stored result on the retry — the card is touched once. The key store must be shared (Redis / DB unique constraint) and fast; store the result, not just the key.</div></div></details>
+      <details class="acc"><summary><span class="q-n">Q2</span>One server in your pool is at 95% CPU while others idle. Why, and what do you change?<span class="chev">›</span></summary>
+        <div class="acc-body"><div class="ans"><span class="tag">Answer</span>Round-robin blindness or an IP-hash hotspot — the balancer distributes requests without knowing their cost. Move to least-response-time routing; check the health-check config and enable slow-start so recovered nodes ramp up.</div></div></details>
+      <details class="acc"><summary><span class="q-n">Q3</span>A hot cache key expires and your DB falls over. What happened, how do you prevent it?<span class="chev">›</span></summary>
+        <div class="acc-body"><div class="ans"><span class="tag">Answer</span>Cache stampede — the hot key expired and thousands of requests hit the DB simultaneously. Fix with a single-flight lock (one request refills, others wait), staggered TTLs, or early/background refresh (stale-while-revalidate).</div></div></details>
+      <details class="acc"><summary><span class="q-n">Q4</span>Your ORM page issues 101 queries for one screen. Diagnose and fix.<span class="chev">›</span></summary>
+        <div class="acc-body"><div class="ans"><span class="tag">Answer</span>N+1 query — one query for the list, then one per row. Fix with eager loading / a JOIN / batching (an <code>IN (...)</code> query). Confirm with the query log and EXPLAIN.</div></div></details>
+      <details class="acc"><summary><span class="q-n">Q5</span>A downstream service is failing, and now your service is failing too. What pattern is missing?<span class="chev">›</span></summary>
+        <div class="acc-body"><div class="ans"><span class="tag">Answer</span>Timeouts (a slow dependency is filling your connection pool) + a circuit breaker (stop hammering the dead dependency, fail fast) + a fallback / graceful degradation. Bulkheads would isolate the blast radius.</div></div></details>
+      <details class="acc"><summary><span class="q-n">Q6</span>All users behind one corporate IP land on the same server. Which LB algorithm caused it?<span class="chev">›</span></summary>
+        <div class="acc-body"><div class="ans"><span class="tag">Answer</span>IP hash — it routes by client IP for sticky sessions, so one NAT with thousands of users hashes to a single server: an instant hotspot. Switch to a stateful session store + a load-aware algorithm.</div></div></details>
+      <details class="acc"><summary><span class="q-n">Q7</span>A recovered server dies again seconds after rejoining the pool. Why?<span class="chev">›</span></summary>
+        <div class="acc-body"><div class="ans"><span class="tag">Answer</span>No slow-start. It rejoined at full weight and the backlog (plus cold caches) crushed it. Enable slow-start recovery so traffic ramps up gradually.</div></div></details>
+      <details class="acc"><summary><span class="q-n">Q8</span>Kafka consumer lag is growing. What do you look at?<span class="chev">›</span></summary>
+        <div class="acc-body"><div class="ans"><span class="tag">Answer</span>Partition count vs number of consumers (parallelism ceiling), per-message processing time, backpressure downstream, and poison messages blocking progress → route them to a dead-letter queue. Scale consumers or speed up processing.</div></div></details>
+      <details class="acc"><summary><span class="q-n">Q9</span>Why can't you just <code>hash(key) % N</code> across cache servers?<span class="chev">›</span></summary>
+        <div class="acc-body"><div class="ans"><span class="tag">Answer</span>Adding or removing a server changes N, so nearly every key remaps and the cache is effectively flushed. Consistent hashing (with virtual nodes) remaps only ~1/N of keys when the ring changes.</div></div></details>
+      <details class="acc"><summary><span class="q-n">Q10</span>Design a URL shortener / rate limiter / chat / news feed.<span class="chev">›</span></summary>
+        <div class="acc-body"><div class="ans"><span class="tag">Answer</span>Run the 6-step template: clarify → estimate → API → boxes → deep-dive → bottlenecks. See the four worked <a href="#cases">case studies</a> above for the numbers and key decisions.</div></div></details>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ============ 12-WEEK PLAN ============ -->
+    <section id="plan" class="reveal">
+      <div class="sec-head"><span class="sec-num">Execution</span><h2>The 12-week <em>plan</em></h2>
+        <p class="sec-intro">Backend / system-design focus. Daily rhythm: ~1 hr DSA maintenance + ~2 hrs current phase + build. Adjust the pace, keep the order.</p></div>
+      <div class="twrap"><table>
+        <thead><tr><th>Weeks</th><th>Focus</th><th>Deliverable</th></tr></thead>
+        <tbody>
+          <tr><td><b>1–2</b></td><td>13 LeetCode problems + arrays/strings/linked-lists/stacks/queues</td><td>All 13 solved cold; notes per pattern</td></tr>
+          <tr><td><b>3</b></td><td>Trees, graphs, heaps, hash tables + the pattern catalog + 15 more problems</td><td>Pattern cheat sheet</td></tr>
+          <tr><td><b>4–5</b></td><td>HTTP, the 20 API concepts, auth &amp; security</td><td>REST API with JWT, rate limiting, pagination, idempotency keys</td></tr>
+          <tr><td><b>6</b></td><td>Databases — indexing, ACID, N+1, pooling, SQL essentials</td><td>Postgres w/ indexes; a query measured before/after EXPLAIN</td></tr>
+          <tr><td><b>7</b></td><td>Caching, concurrency, background jobs</td><td>Add Redis cache + a worker queue to the project</td></tr>
+          <tr><td><b>8</b></td><td>Load balancing deep-dive + Docker</td><td>Containerize; 2 instances behind NGINX; break one, watch health checks</td></tr>
+          <tr><td><b>9–10</b></td><td>The 25-day series + video curriculum</td><td>3-layer notes per concept; one failure story each</td></tr>
+          <tr><td><b>11</b></td><td>Mock designs: URL shortener, rate limiter, chat, feed</td><td>4 written design docs</td></tr>
+          <tr><td><b>12</b></td><td>Language depth + behavioral + mock interviews + resume</td><td>2+ mock interviews; portfolio live; STAR stories ready</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ============ RULES ============ -->
+    <section id="rules" class="reveal">
+      <div class="sec-head"><span class="sec-num">Principles</span><h2>Five rules the field <em>keeps repeating</em></h2></div>
+      <div class="big-quote">"<span>Fundamentals</span> outlast frameworks. <span>Builders</span> get hired. <span>Depth on basics</span> beats breadth. Code is rarely the bottleneck — <span>operating</span> it is. And the answer is almost always: <span>it depends</span> — the skill is knowing on what."</div>
+    </section>
+
+    <!-- ============ GLOSSARY (added) ============ -->
+    <section id="glossary" class="reveal">
+      <div class="sec-head"><span class="sec-num">Reference · added</span><h2><em>Glossary</em> &amp; quick reference</h2></div>
+      <h4>HTTP status codes</h4>
+      <div class="twrap"><table>
+        <thead><tr><th>Code</th><th>Meaning</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td><code>200 / 201 / 204</code></td><td>OK / Created / No Content</td><td>Success; 201 after POST create, 204 for empty-body success</td></tr>
+          <tr><td><code>301 / 304</code></td><td>Moved / Not Modified</td><td>Permanent redirect; cache validation hit</td></tr>
+          <tr><td><code>400 / 401 / 403</code></td><td>Bad Request / Unauthorized / Forbidden</td><td>Malformed input; not authenticated; authenticated but not allowed</td></tr>
+          <tr><td><code>404 / 409</code></td><td>Not Found / Conflict</td><td>Missing resource; version/state conflict (optimistic locking)</td></tr>
+          <tr><td><code>429</code></td><td>Too Many Requests</td><td>Rate limit hit — include <code>Retry-After</code></td></tr>
+          <tr><td><code>500 / 503</code></td><td>Server Error / Unavailable</td><td>Unhandled failure; overloaded or down (load shedding)</td></tr>
+        </tbody>
+      </table></div>
+      <h4>Terms in one line</h4>
+      <div class="twrap"><table>
+        <tbody>
+          <tr><td><b>Idempotency</b></td><td>Doing an operation N times = doing it once.</td></tr>
+          <tr><td><b>CAP</b></td><td>Under a network partition, choose consistency or availability.</td></tr>
+          <tr><td><b>ACID</b></td><td>Atomicity, Consistency, Isolation, Durability — the transaction guarantees.</td></tr>
+          <tr><td><b>Consistent hashing</b></td><td>Ring hashing so adding a node remaps only ~1/N of keys.</td></tr>
+          <tr><td><b>Backpressure</b></td><td>Signaling upstream to slow down when a consumer can't keep up.</td></tr>
+          <tr><td><b>Circuit breaker</b></td><td>Stop calling a failing dependency to let it recover and fail fast.</td></tr>
+          <tr><td><b>Saga</b></td><td>Distributed transaction as local steps + compensating undo actions.</td></tr>
+          <tr><td><b>Dead-letter queue</b></td><td>Where poison messages go after N failed processing attempts.</td></tr>
+          <tr><td><b>P99 latency</b></td><td>The slowest 1% of requests — where user pain actually lives.</td></tr>
+          <tr><td><b>CRDT</b></td><td>Data type that merges concurrent edits without conflicts, by construction.</td></tr>
+          <tr><td><b>Split-brain</b></td><td>Two nodes both believing they're leader, both accepting writes.</td></tr>
+          <tr><td><b>Fencing token</b></td><td>Monotonic number that lets storage reject a deposed leader's writes.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ============ SOURCES ============ -->
+    <section id="sources" class="reveal">
+      <div class="sec-head"><span class="sec-num">Provenance</span><h2><em>Sources</em> &amp; further study</h2>
+        <p class="sec-intro">Synthesized from 13 threads by practicing engineers, cross-checked against their unrolled archives, and enhanced with supplementary reference sections (marked "added" throughout: DSA pattern catalog, Big-O tables, SQL, system-design template &amp; case studies, behavioral, day-of tactics, glossary).</p></div>
+      <div class="twrap"><table>
+        <thead><tr><th>Author</th><th>Contribution</th></tr></thead>
+        <tbody>
+          <tr><td>@system_monarch (Puneet Patwari, Principal Eng @ Atlassian)</td><td>The 25-day scaling &amp; architecture series — the backbone of Phase 3</td></tr>
+          <tr><td>@systemdesignone (Neo Kim)</td><td>The 20 API-design concepts</td></tr>
+          <tr><td>@CodeEdison</td><td>Backend fundamentals mega-list &amp; the 8-concept spine</td></tr>
+          <tr><td>@swapnakpanda</td><td>20-point career roadmap, web-dev sequence, video curriculum &amp; resource links</td></tr>
+          <tr><td>@themishra4402</td><td>The 13 foundational LeetCode problems</td></tr>
+          <tr><td>@who__shivam</td><td>Complete DSA topic roadmap</td></tr>
+          <tr><td>@SumitM_X</td><td>Modern Java / language-depth interview expectations</td></tr>
+          <tr><td>@suraj_sharma14</td><td>The 12-stage agentic AI engineer roadmap</td></tr>
+          <tr><td>@Shawnife</td><td>AI-engineering course path</td></tr>
+          <tr><td>@asmah2107</td><td>Backend depth that powers AI systems</td></tr>
+          <tr><td>@_Shiva_iitp</td><td>The ~100 production-concepts checklist</td></tr>
+        </tbody>
+      </table></div>
+      <h4>System-design video playlists (@swapnakpanda)</h4>
+      <p style="font-size:.9rem;color:var(--ink-2)">System Design Basics · Fundamentals · API Design · Load Balancing · Message Queues · Rate Limiting · Caching · Sharding &amp; Partitioning · Replication · Consistent Hashing · CAP · Microservices · Fault Tolerance · Scalability · Event-Driven Architecture · Service Discovery.</p>
+      <h4>Course links</h4>
+      <p style="font-size:.9rem;color:var(--ink-2)">CS50P (Harvard) · <em>AI Python for Beginners</em> (Andrew Ng) · 3Blue1Brown neural-network series · Karpathy <em>Neural Networks: Zero to Hero</em> · Anthropic <em>Building Effective Agents</em> · CrewAI (Coursera) · <code>github.com/patchy631/ai-engineering-hub</code>. Free language playlists (Python, SQL, Java, JS, TS, HTML/CSS, React, Next, Node, Express, Django, Go, Rust, DSA &amp; more) are curated in @swapnakpanda's "30 courses" thread.</p>
+      <div class="callout clay"><span class="tag">The best nugget across everything</span>The <b>idempotency-key</b> pattern (payment retry → double charge without it) appears in four independent threads. If you learn one thing cold from this entire guide, learn that.</div>
+    </section>
+
+    <footer>
+      <div class="fbrand">The Engineer's Interview Almanac</div>
+      <p>A complete DSA · Backend · System-Design roadmap. Study it, build alongside it, and rehearse out loud.<br>Compiled &amp; enhanced from field-tested engineering threads · Revised 2026 · Your progress is stored locally in this browser.</p>
+    </footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var root=document.documentElement;
+  root.classList.remove("no-js");
+
+  /* theme */
+  var saved=localStorage.getItem("iap-theme");
+  if(saved) root.setAttribute("data-theme",saved);
+  function syncLbl(){document.getElementById("themeLbl").textContent=root.getAttribute("data-theme")==="dark"?"Light":"Dark";}
+  syncLbl();
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    var t=root.getAttribute("data-theme")==="dark"?"light":"dark";
+    root.setAttribute("data-theme",t);localStorage.setItem("iap-theme",t);syncLbl();
+  });
+
+  /* progress bar */
+  var bar=document.getElementById("bar");
+  function onScroll(){
+    var h=document.documentElement,b=document.body;
+    var st=h.scrollTop||b.scrollTop, sh=(h.scrollHeight||b.scrollHeight)-h.clientHeight;
+    bar.style.width=(sh>0?(st/sh*100):0)+"%";
+  }
+  window.addEventListener("scroll",onScroll,{passive:true});onScroll();
+
+  /* checklist + progress ring */
+  var boxes=[].slice.call(document.querySelectorAll(".checklist li"));
+  boxes.forEach(function(li,i){
+    li.setAttribute("data-k","chk-"+(li.closest("[data-phase]")?li.closest("[data-phase]").getAttribute("data-phase"):"x")+"-"+i);
+    if(localStorage.getItem(li.getAttribute("data-k"))==="1") li.classList.add("done");
+    li.addEventListener("click",function(){
+      li.classList.toggle("done");
+      localStorage.setItem(li.getAttribute("data-k"),li.classList.contains("done")?"1":"0");
+      updateRing();
+    });
+  });
+  var ring=document.getElementById("ring"),ringTxt=document.getElementById("ringTxt");
+  function updateRing(){
+    if(!boxes.length)return;
+    var done=boxes.filter(function(l){return l.classList.contains("done");}).length;
+    var pct=Math.round(done/boxes.length*100);
+    ring.style.setProperty("--p",pct);ringTxt.textContent=pct+"%";
+  }
+  updateRing();
+  document.getElementById("resetBtn").addEventListener("click",function(){
+    boxes.forEach(function(li){li.classList.remove("done");localStorage.setItem(li.getAttribute("data-k"),"0");});
+    updateRing();
+  });
+
+  /* scroll-spy */
+  var links=[].slice.call(document.querySelectorAll(".sidebar .nav a"));
+  var map={};links.forEach(function(a){var id=a.getAttribute("href").slice(1);map[id]=a;});
+  var secs=[].slice.call(document.querySelectorAll("section[id]"));
+  var spy=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){a.classList.remove("active");});
+        var a=map[e.target.id];if(a)a.classList.add("active");
+      }
+    });
+  },{rootMargin:"-15% 0px -75% 0px",threshold:0});
+  secs.forEach(function(s){spy.observe(s);});
+
+  /* reveal on scroll */
+  var rev=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");rev.unobserve(e.target);}});
+  },{rootMargin:"0px 0px -8% 0px",threshold:.05});
+  [].slice.call(document.querySelectorAll(".reveal:not(.in)")).forEach(function(el){rev.observe(el);});
+})();
+</script>
+</body>
+</html>
